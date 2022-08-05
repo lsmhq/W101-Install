@@ -3,6 +3,7 @@ const request = require('request')
 const child = require('child_process')
 var ProgressBar = require("progress");
 const readline = require('readline');
+const { on } = require('events');
 // const printDouble = require('console-png');
 // require('console-png').attachTo(console);
 // let logo = 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/e9b191af-1eb1-4f63-9270-3a27b2938704.png'
@@ -238,9 +239,9 @@ function init(){
 function help(){
     // console.png(image);
     console.log(`
-    欢迎来到🧯的说明指引\r\n               
+    欢迎来到灭火器<🧯>的说明指引\r\n               
     下面是基本的操作说明:\r\n              
-    h:   召唤🧯\r\n
+    h:   召唤灭火器<🧯>\r\n
     r:   检测最新正式版并安装\r\n
     d:   检测最新测试版并安装\r\n
     i:   初始化，删除所有补丁，谨慎操作\r\n
@@ -250,11 +251,15 @@ function help(){
     制作不易，给个赞吧`);
 }
 function like(callback){
-    let req = request('http://101.43.216.253:3001/file/like')
-    req.on('response',(res)=>{
-        console.log('\n已收到，玩得开心！')
-        callback()
-    })
+    request({
+        url: 'http://101.43.216.253:3001/file/like',
+        method: "GET",
+    }, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(`\n感谢支持，共收到<${JSON.parse(response.body).length}>个赞了，玩的开心^3^`)
+            callback()
+        }
+    }); 
 }
 // 版本号对比
 function compareVersion(v1, v2) {
