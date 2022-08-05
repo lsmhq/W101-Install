@@ -136,6 +136,7 @@ function next(){
     rl.question(`${changeColor(`是否继续安装输入yes(y)或者no(n)并回车确认? `, 96, 4)}\r\n`,(yon)=>{
         // console.log(yon.toLocaleLowerCase())
         let yn = yon.toLocaleLowerCase()
+        // console.clear()
         if(yn.includes('n') ||  yn.includes('no')){
             process.exit()
         }
@@ -144,6 +145,7 @@ function next(){
             return
         }
         next()
+        // console.clear()
     })
 }
 function question(){
@@ -163,6 +165,7 @@ ${changeColor(`输入补丁对应的英文字母并回车确认:`, 96, 4)}`, nam
                 }else{
                     downLoad()
                 }
+                // console.clear()
           });
 }
 
