@@ -191,6 +191,12 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, nam
                     question()
                     return
                 }
+                if(type == 'l'){
+                    like(()=>{
+                        question()
+                    })
+                    return
+                }
                 if(!arr.includes(type)){
                     question()
                     return
@@ -239,7 +245,16 @@ function help(){
     d:   检测最新测试版并安装\r\n
     i:   初始化，删除所有补丁，谨慎操作\r\n
     c:   聊天纯享版下载\r\n
-    p:   快速螺旋启动\r\n`);
+    p:   快速螺旋启动\r\n
+    l:   输入 (L/l) 点赞\r\n
+    制作不易，给个赞吧`);
+}
+function like(callback){
+    let req = request('http://101.43.216.253:3001/file/like')
+    req.on('response',(res)=>{
+        console.log('谢谢老板，玩得愉快！')
+        callback()
+    })
 }
 // 版本号对比
 function compareVersion(v1, v2) {
