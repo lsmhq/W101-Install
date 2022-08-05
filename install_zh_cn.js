@@ -167,7 +167,7 @@ function next(){
 // 回答
 function question(){
     rl.question(`
-${changeColor('安装测试版 (d/D)',93)} ${changeColor('安装正式稳定版 (r/R)', 94)} ${changeColor('安装聊天纯享版 (c/C)')} ${changeColor('快速螺旋启动 (p/P)',96)} ${changeColor('重置 (i/I)', 91)} 帮助 (h/H)
+${changeColor('安装测试版 (D/d)',93)} ${changeColor('安装正式稳定版 (R/r)', 94)} ${changeColor('安装聊天纯享版 (C/c)')} ${changeColor('快速螺旋启动 (P/p)',96)} ${changeColor('重置 (I/i)', 91)} ${changeColor('帮助 (H/h)',100)}
 
 ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, name => {
     let arr = ['r','c','i','d']
@@ -175,7 +175,7 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, nam
                 // console.log('out', name)
                 if(type == 'p'){
                     let exe = './Wizard101/Bin/WizardGraphicalClient.exe -L login.us.wizard101.com 12000'
-                    exe = './release/向日葵.lnk'
+                    // exe = './release/向日葵.lnk'
                     // console.log(exe)
                     child.exec(`"${exe}"`,(err, stdout, stderr)=>{
                         if(err) 
@@ -232,9 +232,9 @@ function init(){
 function help(){
     // console.png(image);
     console.log(`
-    欢迎来到使用说明指引\r\n               
+    欢迎来到🧯的说明指引\r\n               
     下面是基本的操作说明:\r\n              
-    h:   召唤灭火器进行讲解\r\n
+    h:   召唤🧯\r\n
     r:   检测最新正式版并安装\r\n
     d:   检测最新测试版并安装\r\n
     i:   初始化，删除所有补丁，谨慎操作\r\n
