@@ -3,7 +3,6 @@ const request = require('request')
 const child = require('child_process')
 var ProgressBar = require("progress");
 const readline = require('readline');
-const { on } = require('events');
 // const printDouble = require('console-png');
 // require('console-png').attachTo(console);
 // let logo = 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/e9b191af-1eb1-4f63-9270-3a27b2938704.png'
@@ -18,7 +17,7 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-let path = './Wizard101/Data/GameData/' // 打包路径
+let path = '../Data/GameData/' // 打包路径
 // let path = './' // 本地路径
 let downLoadArr = ['d', 'r', 'c']
 let params = {
@@ -75,7 +74,7 @@ function downLoad(){
             let names = files.map(file=>file.name)
             // console.log(names)
             if(names.includes(`version_zh_cn_${type}`)){
-                let ver = fs.readFileSync(`version_zh_cn_${type}`)
+                let ver = fs.readFileSync(path+`version_zh_cn_${type}`)
                 logColor(`\n当前版本: V ${ver.toString('utf-8')}`)
                 if(compareVersion(version+'', ver.toString()) == 1){
                     let out = path+'Locale_English-Root.wad.' + type
@@ -86,7 +85,7 @@ function downLoad(){
                     logColor(`\n运行过程中尽量不要终止`,93)
                     console.log('\n这可能需要几分钟，请耐心等待...')
                     getFile(url, out,()=>{
-                        fs.writeFileSync(path+`version_zh_cn_${[type]}`, version)
+                        fs.writeFileSync(path + `version_zh_cn_${[type]}`, version)
                         changeType()
                     })
                 }else{
@@ -105,7 +104,7 @@ function downLoad(){
                 logColor(`\n运行过程中尽量不要终止`,93)
                 console.log('\n这可能需要几分钟，请耐心等待...')
                 getFile(url, out,(filePath)=>{
-                    fs.writeFileSync(`version_zh_cn_${type}`,version)
+                    fs.writeFileSync(path + `version_zh_cn_${type}`,version)
                     // console.log(filePath)
                     changeType()
                     next()
@@ -169,7 +168,8 @@ function next(){
 function question(){
     fs.access(path, (err) => {
         if(err){
-            console.log('请检查是否放到了正确游戏目录下')
+            console.log('请将本程序放到游戏 Bin 目录下')
+            console.log('/Wizard101/Bin/install_zh_cn.exe')
             return
         }
     rl.question(`
@@ -179,14 +179,17 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, nam
             type = name.toLocaleLowerCase()
                 // console.log('out', name)
             if(type == 'p'){
-                let exe = './Wizard101/Bin/WizardGraphicalClient.exe -L login.us.wizard101.com 12000'
+                let exe = "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
                 // exe = './release/向日葵.lnk'
                 // console.log(exe)
-                child.exec(`"${exe}"`,(err, stdout, stderr)=>{
-                    if(err) 
-                        return console.error('出现了某些错误但,不必管他.jpg');
+                // let file = fs.readFileSync(exe)
+                // console.log(file.byteLength)
+                child.exec(`${exe}`,(err, stdout, stderr)=>{
+                    // if(err) 
+                        // console.error(err,'出现了某些错误但,不必管他.jpg');
                     // 返回结果封装在 stdout 中，字符串格式
                     // console.log('123123',stdout.toString('utf8'));
+                    console.log('启动成功!')
                 })
                 question()
                 return
