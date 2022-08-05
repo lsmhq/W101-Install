@@ -252,7 +252,7 @@ function help(){
 function like(callback){
     let req = request('http://101.43.216.253:3001/file/like')
     req.on('response',(res)=>{
-        console.log('谢谢老板，玩得愉快！')
+        console.log('\n已收到，玩得开心！')
         callback()
     })
 }
