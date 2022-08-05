@@ -167,48 +167,54 @@ function next(){
 }
 // 回答
 function question(){
+    fs.access(path, (err) => {
+        if(err){
+            console.log('请检查是否放到了正确游戏目录下')
+            return
+        }
     rl.question(`
-${changeColor('安装测试版 (D/d)',93)} ${changeColor('安装正式稳定版 (R/r)', 94)} ${changeColor('安装聊天纯享版 (C/c)')} ${changeColor('快速螺旋启动 (P/p)',96)} ${changeColor('重置 (I/i)', 91)} ${changeColor('帮助 (H/h)',100)}
-
+${changeColor('安装测试版 (D/d)',93)} ${changeColor('安装正式稳定版 (R/r)', 94)} ${changeColor('安装聊天纯享版 (C/c)')} ${changeColor('快速螺旋启动 (P/p)',96)} ${changeColor('重置 (I/i)', 91)} ${changeColor('帮助 (H/h)',100)}\r\n
 ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, name => {
-    let arr = ['r','c','i','d']
-                type = name.toLocaleLowerCase()
+            let arr = ['r','c','i','d']
+            type = name.toLocaleLowerCase()
                 // console.log('out', name)
-                if(type == 'p'){
-                    let exe = './Wizard101/Bin/WizardGraphicalClient.exe -L login.us.wizard101.com 12000'
-                    // exe = './release/向日葵.lnk'
-                    // console.log(exe)
-                    child.exec(`"${exe}"`,(err, stdout, stderr)=>{
-                        if(err) 
-                            return console.error('出现了某些错误但,不必管他.jpg');
-                        // 返回结果封装在 stdout 中，字符串格式
-                        // console.log('123123',stdout.toString('utf8'));
-                    })
+            if(type == 'p'){
+                let exe = './Wizard101/Bin/WizardGraphicalClient.exe -L login.us.wizard101.com 12000'
+                // exe = './release/向日葵.lnk'
+                // console.log(exe)
+                child.exec(`"${exe}"`,(err, stdout, stderr)=>{
+                    if(err) 
+                        return console.error('出现了某些错误但,不必管他.jpg');
+                    // 返回结果封装在 stdout 中，字符串格式
+                    // console.log('123123',stdout.toString('utf8'));
+                })
+                question()
+                return
+            }
+            if(type == 'h'){
+                help()
+                question()
+                return
+            }
+            if(type == 'l'){
+                like(()=>{
                     question()
-                    return
-                }
-                if(type == 'h'){
-                    help()
-                    question()
-                    return
-                }
-                if(type == 'l'){
-                    like(()=>{
-                        question()
-                    })
-                    return
-                }
-                if(!arr.includes(type)){
-                    question()
-                    return
-                }
-                if(type === 'i'){
-                    init()
-                }else{
-                    downLoad()
-                }
-                // console.clear()
-          });
+                })
+                return
+            }
+            if(!arr.includes(type)){
+                question()
+                return
+            }
+            if(type === 'i'){
+                init()
+            }else{
+                downLoad()
+            }
+            // console.clear()
+        });
+    });
+
 }
 // 改变type
 function changeType(){
