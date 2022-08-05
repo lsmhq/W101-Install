@@ -92,7 +92,7 @@ function downLoad(){
                     // 切换补丁
                     console.log(`\n当前已经是最新${obj[type]}版本!`)
                     changeType()
-                    next()
+                    question()
                 }
             }else{
                 let out = path+'Locale_English-Root.wad.' + type
@@ -107,12 +107,12 @@ function downLoad(){
                     fs.writeFileSync(path + `version_zh_cn_${type}`,version)
                     // console.log(filePath)
                     changeType()
-                    next()
+                    question()
                 })
             }
         } else{
             console.log('请检测本地网络环境')
-            next()
+            question()
         }
       })
 }
@@ -168,7 +168,7 @@ function next(){
 function question(){
     fs.access(path, (err) => {
         if(err){
-            console.log('请将本程序放到游戏 Bin 目录下')
+            console.log('请将本程序放到游戏 Bin 目录下,并创建一个快捷方式放到桌面，方便以后的使用')
             console.log('/Wizard101/Bin/install_zh_cn.exe')
             return
         }
@@ -184,13 +184,7 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, nam
                 // console.log(exe)
                 // let file = fs.readFileSync(exe)
                 // console.log(file.byteLength)
-                child.exec(`${exe}`,(err, stdout, stderr)=>{
-                    // if(err) 
-                        // console.error(err,'出现了某些错误但,不必管他.jpg');
-                    // 返回结果封装在 stdout 中，字符串格式
-                    // console.log('123123',stdout.toString('utf8'));
-                    console.log('启动成功!')
-                })
+                child.exec(`${exe}`,(err, stdout, stderr)=>{})
                 question()
                 return
             }
