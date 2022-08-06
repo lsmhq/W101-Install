@@ -17,8 +17,8 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-let path = '../Data/GameData/' // 打包路径
-// let path = './' // 本地路径
+// let path = '../Data/GameData/' // 打包路径
+let path = './' // 本地路径
 let downLoadArr = ['d', 'r', 'c']
 let params = {
     r:'release',
@@ -87,6 +87,7 @@ function downLoad(){
                     getFile(url, out,()=>{
                         fs.writeFileSync(path + `version_zh_cn_${[type]}`, version)
                         changeType()
+                        question()
                     })
                 }else{
                     // 切换补丁
@@ -137,14 +138,12 @@ function getFile(uri, filePath, callback, showProgress = true){
         if (bar.complete) {
             out.close()
             logColor("❤下载完成!\n");
-            // logColor(``,33)
-            callback(filePath)
         }
-    }else{
-        callback(filePath)
     }
-
    })
+    out.on('finish',()=>{
+        callback()
+    })
   }
 }
 // 继续？
@@ -199,6 +198,10 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, nam
                 })
                 return
             }
+            if(type == 'u'){
+                upDate()
+                return
+            }
             if(!arr.includes(type)){
                 question()
                 return
@@ -213,6 +216,57 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, nam
     });
 
 }
+// 更新程序
+function upDate(){
+    // 运行updata程序
+    let files = fs.readdirSync('./',{withFileTypes:true})
+    let names = files.map(file=>file.name)
+    // let exe = 'install_zh_cn_update.exe'
+    let exe = 'update.js'
+    let version 
+    // child.fork(`${exe}`,{})
+    // if(names.includes('install_zh_cn_v')){
+    //     version = fs.readFileSync('install_zh_cn_v','utf-8')
+    //     request({
+    //         url: `http://101.43.216.253:3001/file/latest?type=update`,
+    //         method: 'GET',
+    //       }, (err, response, body) => {
+    //         let url = JSON.parse(response.body).url
+    //         let latest = url.split('/')[url.split('/').length-2]
+    //         if(compareVersion(latest, version) === 1){
+    //             console.log('检测到最新版 V'+latest)
+    //             if(names.includes(exe)){
+    //                 child.exec(`${exe}`,(err, stdout, stderr)=>{
+    //                     process.exit()
+    //                 })
+    //             }else{
+    //                 console.log('正在下载更新...')
+    //                 getFile(`http://101.43.216.253:3001/file/updateexe/update.exe`,'install_zh_cn_update.exe',()=>{
+    //                     child.exec(`${exe}`,(err, stdout, stderr)=>{
+    //                         process.exit()
+    //                     })
+    //                 })
+    //             }
+    //         }else{
+    //             console.log('当前已经是最新版！')
+    //         }
+    //       })
+    // }else{
+    //     if(names.includes(exe)){
+    //         child.exec(`${exe}`,(err, stdout, stderr)=>{
+    //             process.exit()
+    //         })
+    //     }else{
+    //         console.log('正在下载更新...')
+    //         getFile(`http://101.43.216.253:3001/file/updateexe/update.exe`,'install_zh_cn_update.exe',()=>{
+    //             child.exec(`${exe}`,(err, stdout, stderr)=>{
+    //                 process.exit()
+    //             })
+    //         })
+    //     }
+    // }
+}
+
 // 改变type
 function changeType(){
     let files = fs.readdirSync(path,{withFileTypes:true})
@@ -250,6 +304,7 @@ function help(){
     i:   初始化，删除所有补丁，谨慎操作\r\n
     c:   聊天纯享版下载\r\n
     p:   快速螺旋启动\r\n
+    u:   更新一键更新程序\r\n
     l:   输入 (L/l) 点赞\r\n
     制作不易，给个赞吧`);
 }
