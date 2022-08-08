@@ -3,13 +3,6 @@ const request = require('request')
 const child = require('child_process')
 var ProgressBar = require("progress");
 const readline = require('readline');
-// const printDouble = require('console-png');
-// require('console-png').attachTo(console);
-// let logo = 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/e9b191af-1eb1-4f63-9270-3a27b2938704.png'
-// var image 
-// getFile(logo, './logo.png',()=>{
-//     image = fs.readFileSync('./logo.png');
-// }, false)
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -17,8 +10,8 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-// let path = '../Data/GameData/' // 打包路径
-let path = './' // 本地路径
+let path = '../Data/GameData/' // 打包路径
+// let path = './' // 本地路径
 let downLoadArr = ['d', 'r', 'c']
 let params = {
     r:'release',
@@ -27,9 +20,9 @@ let params = {
     u:'update'
 }
 let obj = {
-    r:'<正式>',
-    d:'<测试>',
-    c:'<聊天纯享>',
+    r:'<剧情>',
+    d:'<全汉化>',
+    c:'<轻聊>',
     u:'<一键安装>'
 }
 let type = args[0] || '-input'
@@ -37,20 +30,16 @@ let type = args[0] || '-input'
 if(type.includes('-')){
     type = type.split('-')[1]
 }
-if(type === 'help'){
+if(type === 'h'){
     console.log(`
     欢迎来到使用说明指引\r\n               
     下面是基本的命令行参数:\r\n              
     -h:   召唤灭火器进行讲解\r\n
     -r:   检测最新正式版并安装\r\n
     -d:   检测最新测试版并安装\r\n
-    -u:   检测最新一键安装并更新(暂无❌)\r\n
     -i:   初始化\r\n
     -p:   快速螺旋启动\r\n
-    -c:   聊天纯享版下载\r\n
-    -lsmhq彩蛋\r\n
-    感谢阅读！`);
-    console.png(image);
+    -c:   聊天纯享版下载\r\n`);
     process.exit();
 }else if(downLoadArr.includes(type)){
     downLoad()
@@ -68,7 +57,8 @@ function downLoad(){
       }, (err, response, body) => {
         if (!err && response.statusCode === 200) {
             let url = JSON.parse(response.body).url
-            // console.log(url)
+            let mark = JSON.parse(response.body).mark||'暂无描述内容'
+            // console.log(response.body)
             let version = url.split('/')[url.split('/').length-2]
             let files = fs.readdirSync(path,{withFileTypes:true})
             let names = files.map(file=>file.name)
@@ -82,6 +72,8 @@ function downLoad(){
                         fs.unlinkSync(path+'Locale_English-Root.wad.' + type)
                     }
                     console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length-2]}，正在更新`)
+                    console.log(`\n此次更新的内容如下:\n`)
+                    console.log(mark)
                     logColor(`\n运行过程中尽量不要终止`,93)
                     console.log('\n这可能需要几分钟，请耐心等待...')
                     getFile(url, out,()=>{
@@ -97,11 +89,14 @@ function downLoad(){
                 }
             }else{
                 let out = path+'Locale_English-Root.wad.' + type
+                let mark = JSON.parse(response.body).mark||'暂无描述内容'
                 if(names.includes('Locale_English-Root.wad.' + type)){
                     fs.unlinkSync(path+'Locale_English-Root.wad.' + type)
                 }
                 logColor('\n❌检测到未安装任何版本', 31)
                 console.log(`\n正在安装最新${obj[type]}版 V ${url.split('/')[url.split('/').length-2]}`)
+                console.log(`\n补丁内容如下:\n`)
+                console.log(mark)
                 logColor(`\n运行过程中尽量不要终止`,93)
                 console.log('\n这可能需要几分钟，请耐心等待...')
                 getFile(url, out,(filePath)=>{
@@ -137,7 +132,7 @@ function getFile(uri, filePath, callback, showProgress = true){
         bar.tick();
         if (bar.complete) {
             out.close()
-            logColor("❤下载完成!\n");
+            logColor("下载完成 ^3^ !\n");
         }
     }
    })
@@ -146,43 +141,36 @@ function getFile(uri, filePath, callback, showProgress = true){
     })
   }
 }
-// 继续？
-function next(){
-    rl.question(`${changeColor(`是否继续安装输入yes(y)或者no(n)并回车确认? `, 96, 4)}\r\n`,(yon)=>{
-        // console.log(yon.toLocaleLowerCase())
-        let yn = yon.toLocaleLowerCase()
-        // console.clear()
-        if(yn.includes('n') ||  yn.includes('no')){
-            process.exit()
-        }
-        if(yn.includes('y') ||  yn.includes('yes')){
-            question()
-            return
-        }
-        next()
-        // console.clear()
-    })
-}
 // 回答
 function question(){
     fs.access(path, (err) => {
         if(err){
-            console.log('请将本程序放到游戏 Bin 目录下,并创建一个快捷方式放到桌面，方便以后的使用')
-            console.log('/Wizard101/Bin/install_zh_cn.exe')
+            console.log(`
+ ==============<当看不见这个提示时，就成功了>====================
+
+            温馨提示: 位置放错了\n`)                     
+            console.log(`
+                1、将本程序放到游戏 Bin 目录下\n
+                2、创建一个快捷方式放到桌面\n
+                3、双击快捷方式\n
+                4、根据指引进行操作即可\n`)
+            console.log(`
+            位置如下:
+
+                /Wizard101/Bin/install_zh_cn.exe
+                
+==============<当看不见这个提示时，就成功了>====================`)
+                
             return
         }
     rl.question(`
-${changeColor('安装测试版 (D/d)',93)} ${changeColor('安装正式稳定版 (R/r)', 94)} ${changeColor('安装聊天纯享版 (C/c)')} ${changeColor('快速螺旋启动 (P/p)',96)} ${changeColor('重置 (I/i)', 91)} ${changeColor('帮助 (H/h)',100)}\r\n
+${changeColor('全汉化版 (D/d)',93)}  ${changeColor('魔法剧情版 (R/r)', 94)}  ${changeColor('轻聊版 (C/c)')}  ${changeColor('螺旋启动 (P/p)',96)}  ${changeColor('重置 (I/i)', 91)}  ${changeColor('帮助面板 (H/h)',100)}\r\n
 ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, name => {
             let arr = ['r','c','i','d']
             type = name.toLocaleLowerCase()
                 // console.log('out', name)
             if(type == 'p'){
                 let exe = "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
-                // exe = './release/向日葵.lnk'
-                // console.log(exe)
-                // let file = fs.readFileSync(exe)
-                // console.log(file.byteLength)
                 child.exec(`${exe}`,(err, stdout, stderr)=>{})
                 question()
                 return
@@ -192,14 +180,13 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, nam
                 question()
                 return
             }
+            if(type == 'q'){
+                process.exit()
+            }
             if(type == 'l'){
                 like(()=>{
                     question()
                 })
-                return
-            }
-            if(type == 'u'){
-                upDate()
                 return
             }
             if(!arr.includes(type)){
@@ -211,60 +198,8 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, nam
             }else{
                 downLoad()
             }
-            // console.clear()
         });
     });
-
-}
-// 更新程序
-function upDate(){
-    // 运行updata程序
-    let files = fs.readdirSync('./',{withFileTypes:true})
-    let names = files.map(file=>file.name)
-    // let exe = 'install_zh_cn_update.exe'
-    let exe = 'update.js'
-    let version 
-    // child.fork(`${exe}`,{})
-    // if(names.includes('install_zh_cn_v')){
-    //     version = fs.readFileSync('install_zh_cn_v','utf-8')
-    //     request({
-    //         url: `http://101.43.216.253:3001/file/latest?type=update`,
-    //         method: 'GET',
-    //       }, (err, response, body) => {
-    //         let url = JSON.parse(response.body).url
-    //         let latest = url.split('/')[url.split('/').length-2]
-    //         if(compareVersion(latest, version) === 1){
-    //             console.log('检测到最新版 V'+latest)
-    //             if(names.includes(exe)){
-    //                 child.exec(`${exe}`,(err, stdout, stderr)=>{
-    //                     process.exit()
-    //                 })
-    //             }else{
-    //                 console.log('正在下载更新...')
-    //                 getFile(`http://101.43.216.253:3001/file/updateexe/update.exe`,'install_zh_cn_update.exe',()=>{
-    //                     child.exec(`${exe}`,(err, stdout, stderr)=>{
-    //                         process.exit()
-    //                     })
-    //                 })
-    //             }
-    //         }else{
-    //             console.log('当前已经是最新版！')
-    //         }
-    //       })
-    // }else{
-    //     if(names.includes(exe)){
-    //         child.exec(`${exe}`,(err, stdout, stderr)=>{
-    //             process.exit()
-    //         })
-    //     }else{
-    //         console.log('正在下载更新...')
-    //         getFile(`http://101.43.216.253:3001/file/updateexe/update.exe`,'install_zh_cn_update.exe',()=>{
-    //             child.exec(`${exe}`,(err, stdout, stderr)=>{
-    //                 process.exit()
-    //             })
-    //         })
-    //     }
-    // }
 }
 
 // 改变type
@@ -272,13 +207,13 @@ function changeType(){
     let files = fs.readdirSync(path,{withFileTypes:true})
     let names = files.map(file=>file.name)
     if(names.includes('Locale_English-Root.wad.' + type)){
-        console.log(`检测到${obj[type]}版，正在切换...`)
+        console.log(`\n检测到${obj[type]}版，正在切换...`)
         let file = fs.createReadStream(path+'Locale_English-Root.wad.' + type)
         let out = fs.createWriteStream(path+'Locale_English-Root.wad')
         file.pipe(out)
         // out.close()
         // fs.copyFileSync(path+'Locale_English-Root.wad', path+'Locale_English-Root.wad.' + typeUnlink[type])
-        logColor("❤切换补丁完成，请重启游戏进行体验!\n");
+        logColor("\n切换补丁完成，请重启游戏进行体验 ^3^ !\n");
     }
 }
 // 初始化
@@ -295,18 +230,18 @@ function init(){
 }
 function help(){
     // console.png(image);
+    // u:   更新一键更新程序\r\n
     console.log(`
     欢迎来到灭火器<🧯>的说明指引\r\n               
     下面是基本的操作说明:\r\n              
-    h:   召唤灭火器<🧯>\r\n
-    r:   检测最新正式版并安装\r\n
-    d:   检测最新测试版并安装\r\n
-    i:   初始化，删除所有补丁，谨慎操作\r\n
-    c:   聊天纯享版下载\r\n
+    r:   检测最新剧情版并安装\r\n
+    d:   检测最新全汉版并安装\r\n
+    c:   轻聊版下载\r\n
     p:   快速螺旋启动\r\n
-    u:   更新一键更新程序\r\n
+    i:   初始化\r\n
+    h:   召唤灭火器<🧯>\r\n
     l:   输入 (L/l) 点赞\r\n
-    制作不易，给个赞吧`);
+    q:   退出\r\n`);
 }
 function like(callback){
     request({
