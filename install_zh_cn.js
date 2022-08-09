@@ -10,9 +10,9 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-let path = '../Data/GameData/' // 打包路径
-// let path = './' // 本地路径
-let downLoadArr = ['d', 'r', 'c']
+// let path = '../Data/GameData/' // 打包路径
+let path = './' // 本地路径
+// let downLoadArr = ['d', 'r', 'c']
 let params = {
     r:'release',
     d:'debug',
@@ -27,28 +27,7 @@ let obj = {
 }
 let type = args[0] || '-input'
 // 接收命令行参数
-if(type.includes('-')){
-    type = type.split('-')[1]
-}
-if(type === 'h'){
-    console.log(`
-    欢迎来到使用说明指引\r\n               
-    下面是基本的命令行参数:\r\n              
-    -h:   召唤灭火器进行讲解\r\n
-    -r:   检测最新正式版并安装\r\n
-    -d:   检测最新测试版并安装\r\n
-    -i:   初始化\r\n
-    -p:   快速螺旋启动\r\n
-    -c:   聊天纯享版下载\r\n`);
-    process.exit();
-}else if(downLoadArr.includes(type)){
-    downLoad()
-}else if(type == 'i'){
-    init()
-    process.exit()
-}else{
-    question()
-}
+question()
 // 核心
 function downLoad(){
     request({
