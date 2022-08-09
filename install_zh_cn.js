@@ -122,61 +122,62 @@ function getFile(uri, filePath, callback, showProgress = true){
 }
 // 回答
 function question(){
+
     fs.access(path, (err) => {
         if(err){
-            console.log(`
-==============<当看不见这个提示时，就成功了>====================
+            let tips = `
+====================<当看不见这个提示时，就成功了>====================
+    
+                温馨提示: 位置放错了\n
+                    1、将本程序放到游戏 Bin 目录下\n
+                    2、创建一个快捷方式放到桌面\n
+                    3、双击快捷方式\n
+                    4、根据指引进行操作即可\n
+                    位置如下:
 
-            温馨提示: 位置放错了\n`)                     
-            console.log(`
-                1、将本程序放到游戏 Bin 目录下\n
-                2、创建一个快捷方式放到桌面\n
-                3、双击快捷方式\n
-                4、根据指引进行操作即可\n`)
-            console.log(`
-            位置如下:
-
-                /Wizard101/Bin/install_zh_cn.exe
-                
-==============<当看不见这个提示时，就成功了>====================`)
-                
+                    /Wizard101/Bin/install_zh_cn.exe
+                    
+====================<当看不见这个提示时，就成功了>====================`
+            console.log(tips)                     
             return
-        }
-    rl.question(`
+        }  
+    let quiz = `
 ${changeColor('全汉化版 (D/d)',93)}  ${changeColor('魔法剧情版 (R/r)', 94)}  ${changeColor('轻聊版 (C/c)')}  ${changeColor('螺旋启动 (P/p)',96)}  ${changeColor('重置 (I/i)', 91)}  ${changeColor('帮助面板 (H/h)',100)}\r\n
-${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`, name => {
-            let arr = ['r','c','i','d']
+${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`
+    rl.question(quiz, name => {
             type = name.toLocaleLowerCase()
                 // console.log('out', name)
-            if(type == 'p'){
-                let exe = "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
-                child.exec(`${exe}`,(err, stdout, stderr)=>{})
-                question()
-                return
-            }
-            if(type == 'h'){
-                help()
-                question()
-                return
-            }
-            if(type == 'q'){
-                process.exit()
-            }
-            if(type == 'l'){
-                like(()=>{
-                    question()
-                })
-                return
-            }
-            if(!arr.includes(type)){
-                question()
-                return
-            }
-            if(type === 'i'){
-                init()
-            }else{
-                downLoad()
-            }
+                switch (type) {
+                    case 'p':
+                        let exe = "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
+                        child.exec(`${exe}`,()=>{})
+                        question()
+                        break;
+                    case 'h':
+                        help()
+                        question()
+                    break
+                    case 'l':
+                        like(question)
+                        break
+                    case 'i':
+                        init()
+                        break
+                    case 'd':
+                        downLoad()
+                        break
+                    case 'c':
+                        downLoad()
+                        break
+                    case 'r':
+                        downLoad()
+                        break
+                    case 'q':
+                        process.exit()
+                    default:
+                        question()
+                        break;
+                }
         });
     });
 }
