@@ -10,8 +10,8 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-let path = '../Data/GameData/' // 打包路径
-// let path = './' // 本地路径
+// let path = '../Data/GameData/' // 打包路径
+let path = './' // 本地路径
 // let downLoadArr = ['d', 'r', 'c']
 let params = {
     r: 'release',
@@ -169,11 +169,7 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`
                     init()
                     break
                 case 'd':
-                    downLoad()
-                    break
                 case 'c':
-                    downLoad()
-                    break
                 case 'r':
                     downLoad()
                     break
