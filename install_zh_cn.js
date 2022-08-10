@@ -146,38 +146,38 @@ ${changeColor('全汉化版 (D/d)',93)}  ${changeColor('魔法剧情版 (R/r)', 
 ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`
     rl.question(quiz, name => {
             type = name.toLocaleLowerCase()
-                // console.log('out', name)
-                switch (type) {
-                    case 'p':
-                        let exe = "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
-                        child.exec(`${exe}`,()=>{})
-                        question()
-                        break;
-                    case 'h':
-                        help()
-                        question()
+            let exe = "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
+            // console.log('out', name)
+            switch (type) {
+                case 'p':
+                    child.exec(`${exe}`,()=>{})
+                    question()
+                    break;
+                case 'h':
+                    help()
+                    question()
+                break
+                case 'l':
+                    like(question)
                     break
-                    case 'l':
-                        like(question)
-                        break
-                    case 'i':
-                        init()
-                        break
-                    case 'd':
-                        downLoad()
-                        break
-                    case 'c':
-                        downLoad()
-                        break
-                    case 'r':
-                        downLoad()
-                        break
-                    case 'q':
-                        process.exit()
-                    default:
-                        question()
-                        break;
-                }
+                case 'i':
+                    init()
+                    break
+                case 'd':
+                    downLoad()
+                    break
+                case 'c':
+                    downLoad()
+                    break
+                case 'r':
+                    downLoad()
+                    break
+                case 'q':
+                    process.exit()
+                default:
+                    question()
+                    break;
+            }
         });
     });
 }
@@ -227,7 +227,7 @@ function like(callback){
     request({
         url: 'http://101.43.216.253:3001/file/like',
         method: "GET",
-    }, function(error, response, body) {
+    }, function(error, response) {
         if (!error && response.statusCode == 200) {
             console.log(`\n感谢支持，共收到<${JSON.parse(response.body).length}>个赞了，玩的开心^3^`)
             callback()
