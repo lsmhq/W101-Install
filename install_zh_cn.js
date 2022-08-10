@@ -10,8 +10,8 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-// let path = '../Data/GameData/' // 打包路径
-let path = './' // 本地路径
+let path = '../Data/GameData/' // 打包路径
+// let path = './' // 本地路径
 // let downLoadArr = ['d', 'r', 'c']
 let userVal = 0, mhqVal = 0
 let params = {
