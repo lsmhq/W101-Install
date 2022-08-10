@@ -13,6 +13,7 @@ const args = process.argv.slice(2)
 // let path = '../Data/GameData/' // 打包路径
 let path = './' // 本地路径
 // let downLoadArr = ['d', 'r', 'c']
+let userVal = 0, mhqVal = 0
 let params = {
     r: 'release',
     d: 'debug',
@@ -173,6 +174,9 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`
                 case 'r':
                     downLoad()
                     break
+                case 'b':
+                    battle()
+                    break
                 case 'q':
                     process.exit()
                 default:
@@ -198,6 +202,45 @@ function changeType() {
         // fs.copyFileSync(path+'Locale_English-Root.wad', path+'Locale_English-Root.wad.' + typeUnlink[type])
         logColor("\n切换补丁完成，请重启游戏进行体验 ^3^ !\n");
     }
+}
+// 猜拳
+function battle(){
+    let quiz = `
+${changeColor('石头 (S/s)', 93)}  ${changeColor('剪刀 (J/j)', 94)}  ${changeColor('布 (B/b)')}  ${changeColor('退出游戏 (Q/q)', 96)}\r\n
+${changeColor(`石头剪刀布(输入对应字母):`, 96, 4)}`
+    rl.question(quiz, name => {
+        let user = name.toLocaleLowerCase()
+        if(user == 'q'){
+            question()
+            return
+        }
+        let obj = {
+            s: '石头',
+            j: "剪刀",
+            b: '布',
+        }
+        let mhq = ['s', 'j', 'b']
+        let aI = mhq[Math.floor(mhq.length*Math.random())]
+        let key = aI + user
+        let win = ['sj', 'jb', 'bs']
+        let fail = ['sb', 'js', 'bj']
+        console.log(`\r\n你出了: ${changeColor(obj[user], 93)}\r\n`)
+        setTimeout(()=>{
+            console.log(`灭火器出了: ${changeColor(obj[aI], 93)}\r\n`)
+            if(win.includes(key)){
+                console.log(`是灭火器赢了！`)
+                mhqVal++
+            }else if(fail.includes(key)){
+                console.log(`你赢了，再来！`) 
+                userVal++
+            }else{
+                console.log('平局！')
+            }
+            console.log(`\r\n你的得分: ${userVal}`)
+            console.log(`\r\n灭火器得分: ${mhqVal}`)
+            battle()
+        }, 200)
+    })
 }
 // 初始化
 function init() {
@@ -227,6 +270,7 @@ function help() {
     i:   初始化\r\n
     h:   召唤灭火器<🧯>\r\n
     l:   输入 (L/l) 点赞\r\n
+    b:   和灭火器<🧯>来一局公平公正的猜拳吧\r\n
     q:   退出\r\n`);
 }
 
