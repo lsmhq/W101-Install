@@ -227,11 +227,20 @@ function connect(){
             })
             if(hasDns){
                 // 写入
-                let dns = ['']
-                contentLine = contentLine.concat(dns)
-                console.log(contentLine)
-                fs.writeFileSync(`${pathC}\\${file.name}`, contentLine.join('\r\n'))
-                console.log('修改host文件完成, 可重启游戏尝试进入')
+                request({
+                    url: 'http://101.43.216.253:3001/file/host',
+                    method: "GET",
+                }, function (error, response) {
+                    if (!error && response.statusCode == 200) {
+                        let host = JSON.parse(response.body).host
+                        host = host.split('\r\n')
+                        contentLine = contentLine.concat(host)
+                        console.log(contentLine)
+                        fs.writeFileSync(`${pathC}\\${file.name}`, contentLine.join('\r\n'))
+                        console.log('修改host文件完成, 可重启游戏尝试进入')
+                    }
+                });
+
             }else{
                 console.log('检测到host存在裸连配置')
                 console.log(contentLine.join('\r\n'))
