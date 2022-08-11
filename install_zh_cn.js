@@ -209,13 +209,22 @@ function changeType() {
 // 修改host
 function connect(){
     let pathC = 'C:\\Windows\\System32\\drivers\\etc'
-    console.log(pathC)
+    let dns = ``
+    // console.log(pathC)
     let files = fs.readdirSync(pathC, {withFileTypes: true})
-    console.log(files)
+    // console.log(files)
     files.forEach(file=>{
         if(file.name === 'hosts'){
             let content = fs.readFileSync(`${pathC}\\${file.name}`)
-            console.log(content.toString())
+            // console.log(content.toString().split('\r\n'))
+            let contentLine = content.toString().split('\r\n')
+            let hasDns = true
+            contentLine.forEach((line, idx)=>{
+                console.log(line)
+                if(line.includes('wizard101')){
+                    hasDns = false
+                }
+            })
         }
     })
 }
