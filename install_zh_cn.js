@@ -222,7 +222,7 @@ function connect(){
             let contentLine = content.toString().split('\r\n')
             // 写入
             request({
-                url: 'http://192.168.0.101:3001/file/host',
+                url: 'http://101.43.216.253:3001/file/host',
                 method: "GET",
             }, function (error, response) {
                 if (!error && response.statusCode == 200) {
@@ -253,7 +253,7 @@ function initDns(){
             let content = fs.readFileSync(`${pathC}\\${file.name}`,'utf-8')
             // 写入
             request({
-                url: 'http://192.168.0.101:3001/file/host',
+                url: 'http://101.43.216.253:3001/file/host',
                 method: "GET",
             }, function (error, response) {
                 if (!error && response.statusCode == 200) {
