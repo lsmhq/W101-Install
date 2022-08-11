@@ -209,7 +209,6 @@ function changeType() {
 // 修改host
 function connect(){
     let pathC = 'C:\\Windows\\System32\\drivers\\etc'
-    let dns = ``
     // console.log(pathC)
     let files = fs.readdirSync(pathC, {withFileTypes: true})
     // console.log(files)
@@ -223,8 +222,22 @@ function connect(){
                 console.log(line)
                 if(line.includes('wizard101')){
                     hasDns = false
+
                 }
             })
+            if(hasDns){
+                // 写入
+                let dns = ['']
+                contentLine = contentLine.concat(dns)
+                console.log(contentLine)
+                fs.writeFileSync(`${pathC}\\${file.name}`, contentLine.join('\r\n'))
+                console.log('修改host文件完成, 可重启游戏尝试进入')
+            }else{
+                console.log('检测到host存在裸连配置')
+                console.log(contentLine.join('\r\n'))
+               
+            }
+            question()
         }
     })
 }
