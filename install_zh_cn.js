@@ -217,36 +217,34 @@ function connect(){
             let content = fs.readFileSync(`${pathC}\\${file.name}`)
             // console.log(content.toString().split('\r\n'))
             let contentLine = content.toString().split('\r\n')
-            let hasDns = true
-            contentLine.forEach((line, idx)=>{
-                console.log(line)
-                if(line.includes('wizard101')){
-                    hasDns = false
-
+            // 写入
+            request({
+                url: 'http://192.168.53.99:3001/file//host',
+                method: "GET",
+            }, function (error, response) {
+                if (!error && response.statusCode == 200) {
+                    console.log(JSON.parse(response.body).host)
+                    let dns = JSON.parse(response.body).host.split('\r\n')
+                    let obj = {}
+                    dns.forEach(item=>{
+                        obj[item.split(' ')[1]] = item.split(' ')[0]
+                    })
+                    console.log(obj)
+                    // contentLine.forEach((line, idx)=>{
+                    //     // console.log(line)
+                    //     if(line.includes('wizard101')){
+                    //         hasDns = false
+                    //         let host = JSON.parse(response.body).host
+                    //         host = host.split('\r\n')
+                    //         contentLine = contentLine.concat(host)
+                    //         console.log(host)
+                    //         // fs.writeFileSync(`${pathC}\\${file.name}`, contentLine.join('\r\n'))
+                    //         console.log('修改host文件完成, 可重启游戏尝试进入')
+                    //         question()
+                    //     }
+                    // })
                 }
-            })
-            if(hasDns){
-                // 写入
-                request({
-                    url: 'http://101.43.216.253:3001/file/host',
-                    method: "GET",
-                }, function (error, response) {
-                    if (!error && response.statusCode == 200) {
-                        let host = JSON.parse(response.body).host
-                        host = host.split('\r\n')
-                        contentLine = contentLine.concat(host)
-                        console.log(contentLine)
-                        fs.writeFileSync(`${pathC}\\${file.name}`, contentLine.join('\r\n'))
-                        console.log('修改host文件完成, 可重启游戏尝试进入')
-                    }
-                });
-
-            }else{
-                console.log('检测到host存在裸连配置')
-                console.log(contentLine.join('\r\n'))
-               
-            }
-            question()
+            });
         }
     })
 }
