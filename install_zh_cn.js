@@ -10,8 +10,8 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-// let path = '../Data/GameData/' // 打包路径
-let path = './' // 本地路径
+let path = '../Data/GameData/' // 打包路径
+// let path = './' // 本地路径
 // let downLoadArr = ['d', 'r', 'c']
 let userVal = 0, mhqVal = 0
 let params = {
@@ -180,6 +180,9 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`
                 case 'v':
                     connect()
                     break
+                case 'vi':
+                    initDns()
+                    break
                 case 'q':
                     process.exit()
                 default:
@@ -214,41 +217,61 @@ function connect(){
     // console.log(files)
     files.forEach(file=>{
         if(file.name === 'hosts'){
-            let content = fs.readFileSync(`${pathC}\\${file.name}`)
+            let content = fs.readFileSync(`${pathC}\\${file.name}`,'utf-8')
             // console.log(content.toString().split('\r\n'))
             let contentLine = content.toString().split('\r\n')
             // 写入
             request({
-                url: 'http://192.168.53.99:3001/file//host',
+                url: 'http://192.168.0.101:3001/file/host',
                 method: "GET",
             }, function (error, response) {
                 if (!error && response.statusCode == 200) {
-                    console.log(JSON.parse(response.body).host)
-                    let dns = JSON.parse(response.body).host.split('\r\n')
-                    let obj = {}
-                    dns.forEach(item=>{
-                        obj[item.split(' ')[1]] = item.split(' ')[0]
-                    })
-                    console.log(obj)
-                    // contentLine.forEach((line, idx)=>{
-                    //     // console.log(line)
-                    //     if(line.includes('wizard101')){
-                    //         hasDns = false
-                    //         let host = JSON.parse(response.body).host
-                    //         host = host.split('\r\n')
-                    //         contentLine = contentLine.concat(host)
-                    //         console.log(host)
-                    //         // fs.writeFileSync(`${pathC}\\${file.name}`, contentLine.join('\r\n'))
-                    //         console.log('修改host文件完成, 可重启游戏尝试进入')
-                    //         question()
-                    //     }
-                    // })
+                    // console.log(JSON.parse(response.body).host)
+                    let host = JSON.parse(response.body).new
+                    let oldHost = JSON.parse(response.body).old
+                    // console.log(host, oldHost)
+                    content = content.split(`\r\n${oldHost}`)[0]+ '\r\n' + host
+                    // console.log(content.split(oldHost)[0])
+                    fs.writeFileSync(`${pathC}\\${file.name}`, content)
+                    console.log('\r\n')
+                    console.log(content)
+                    console.log('\r\n修改host文件完成, 可重启游戏尝试进入')
+                    question()
                 }
             });
         }
     })
 }
-
+// 初始化host
+function initDns(){
+    let pathC = 'C:\\Windows\\System32\\drivers\\etc'
+    // console.log(pathC)
+    let files = fs.readdirSync(pathC, {withFileTypes: true})
+    // console.log(files)
+    files.forEach(file=>{
+        if(file.name === 'hosts'){
+            let content = fs.readFileSync(`${pathC}\\${file.name}`,'utf-8')
+            // 写入
+            request({
+                url: 'http://192.168.0.101:3001/file/host',
+                method: "GET",
+            }, function (error, response) {
+                if (!error && response.statusCode == 200) {
+                    // console.log(JSON.parse(response.body).host)
+                    let oldHost = JSON.parse(response.body).old
+                    // console.log(oldHost)
+                    content = content.split(`\r\n${oldHost}`)[0]
+                    // console.log(content.split(oldHost)[0])
+                    fs.writeFileSync(`${pathC}\\${file.name}`, content)
+                    console.log('\r\n')
+                    console.log(content)
+                    console.log('\r\n还原host文件完成')
+                    question()
+                }
+            });
+        }
+    })
+}
 // 猜拳
 function battle(){
     let quiz = `
@@ -257,12 +280,12 @@ ${changeColor(`石头剪刀布(输入对应字母):`, 96, 4)}`
     rl.question(quiz, name => {
         let arr = ['s', 'j', 'b']
         let user = name.toLocaleLowerCase()
-        if(!arr.includes(user)){
-            battle()
-            return
-        }
         if(user == 'q'){
             question()
+            return
+        }
+        if(!arr.includes(user)){
+            battle()
             return
         }
         let obj = {
@@ -335,10 +358,12 @@ function help() {
     c:   轻聊版下载\r\n
     p:   快速螺旋启动\r\n
     i:   初始化\r\n
-    h:   召唤灭火器<🧯>\r\n
+    v:   修改hosts文件尝试裸连\r\n
+    vi:  恢复hosts文件到初始状态\r\n
     l:   输入 (L/l) 点赞\r\n
     b:   和灭火器<🧯>来一局公平公正的猜拳吧（五局三胜）\r\n
-    q:   退出\r\n`);
+    h:   召唤灭火器<🧯>\r\n
+    q:   退出程序\r\n`);
 }
 
 function like(callback) {
