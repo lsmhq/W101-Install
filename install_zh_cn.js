@@ -10,8 +10,8 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-let path = '../Data/GameData/' // 打包路径
-// let path = './' // 本地路径
+// let path = '../Data/GameData/' // 打包路径
+let path = './' // 本地路径
 // let downLoadArr = ['d', 'r', 'c']
 let userVal = 0, mhqVal = 0
 let params = {
@@ -177,6 +177,9 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`
                 case 'b':
                     battle()
                     break
+                case 'v':
+                    connect()
+                    break
                 case 'q':
                     process.exit()
                 default:
@@ -203,13 +206,32 @@ function changeType() {
         logColor("\n切换补丁完成，请重启游戏进行体验 ^3^ !\n");
     }
 }
+// 修改host
+function connect(){
+    let pathC = 'C:\\Windows\\System32\\drivers\\etc'
+    console.log(pathC)
+    let files = fs.readdirSync(pathC, {withFileTypes: true})
+    console.log(files)
+    files.forEach(file=>{
+        if(file.name === 'hosts'){
+            let content = fs.readFileSync(`${pathC}\\${file.name}`)
+            console.log(content.toString())
+        }
+    })
+}
+
 // 猜拳
 function battle(){
     let quiz = `
 ${changeColor('石头 (S/s)', 93)}  ${changeColor('剪刀 (J/j)', 94)}  ${changeColor('布 (B/b)')}  ${changeColor('退出游戏 (Q/q)', 96)}\r\n
 ${changeColor(`石头剪刀布(输入对应字母):`, 96, 4)}`
     rl.question(quiz, name => {
+        let arr = ['s', 'j', 'b']
         let user = name.toLocaleLowerCase()
+        if(!arr.includes(user)){
+            battle()
+            return
+        }
         if(user == 'q'){
             question()
             return
@@ -228,18 +250,34 @@ ${changeColor(`石头剪刀布(输入对应字母):`, 96, 4)}`
         setTimeout(()=>{
             console.log(`灭火器出了: ${changeColor(obj[aI], 93)}\r\n`)
             if(win.includes(key)){
-                console.log(`是灭火器赢了！`)
                 mhqVal++
+                if(mhqVal!==3)
+                    console.log(`是灭火器赢了！`)
             }else if(fail.includes(key)){
-                console.log(`你赢了，再来！`) 
                 userVal++
+                if(userVal !== 3)
+                    console.log(`你赢了，再来！`)
             }else{
                 console.log('平局！')
+            }
+            if(userVal === 3){
+                console.log(`\r\n运气不错！你赢了！`)
+                mhqVal = 0
+                userVal = 0
+                question()
+                return
+            }
+            if(mhqVal === 3){
+                console.log('\r\n灭火器赢了本次猜拳！')
+                userVal = 0
+                mhqVal = 0
+                question()
+                return
             }
             console.log(`\r\n你的得分: ${userVal}`)
             console.log(`\r\n灭火器得分: ${mhqVal}`)
             battle()
-        }, 200)
+        }, 50)
     })
 }
 // 初始化
@@ -270,7 +308,7 @@ function help() {
     i:   初始化\r\n
     h:   召唤灭火器<🧯>\r\n
     l:   输入 (L/l) 点赞\r\n
-    b:   和灭火器<🧯>来一局公平公正的猜拳吧\r\n
+    b:   和灭火器<🧯>来一局公平公正的猜拳吧（五局三胜）\r\n
     q:   退出\r\n`);
 }
 
