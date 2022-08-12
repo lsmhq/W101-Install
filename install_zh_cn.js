@@ -3,7 +3,6 @@ const request = require('request')
 const child = require('child_process')
 var ProgressBar = require("progress");
 const readline = require('readline');
-const iconv = require('iconv-lite')
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
