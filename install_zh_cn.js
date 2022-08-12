@@ -192,7 +192,6 @@ ${changeColor(`输入操作对应的英文字母并回车确认:`, 96, 4)}`
         });
     });
 }
-
 // 改变type
 function changeType() {
     let files = fs.readdirSync(path, {
