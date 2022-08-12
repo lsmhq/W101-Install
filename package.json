@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build12":"pkg -t node12-win-x64 install_zh_cn.js",
+    "build16":"pkg -t node16-win-x64 install_zh_cn.js"
+  },
   "dependencies": {
     "alphabetjs": "^0.1.4",
     "console-png": "^1.2.1",
