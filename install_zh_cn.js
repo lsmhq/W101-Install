@@ -3,6 +3,7 @@ const request = require('request')
 const child = require('child_process')
 var ProgressBar = require("progress");
 const readline = require('readline');
+const iconv = require('iconv-lite')
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -10,8 +11,8 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-let path = '../Data/GameData/' // 打包路径
-// let path = './' // 本地路径
+// let path = '../Data/GameData/' // 打包路径
+let path = './' // 本地路径
 // let downLoadArr = ['d', 'r', 'c']
 let userVal = 0, mhqVal = 0
 let params = {
@@ -218,8 +219,6 @@ function connect(){
     files.forEach(file=>{
         if(file.name === 'hosts'){
             let content = fs.readFileSync(`${pathC}\\${file.name}`,'utf-8')
-            // console.log(content.toString().split('\r\n'))
-            let contentLine = content.toString().split('\r\n')
             // 写入
             request({
                 url: 'http://101.43.216.253:3001/file/host',
@@ -233,10 +232,7 @@ function connect(){
                     content = content.split(`\r\n${oldHost}`)[0]+ '\r\n' + host
                     // console.log(content.split(oldHost)[0])
                     fs.writeFileSync(`${pathC}\\${file.name}`, content)
-                    console.log('\r\n')
-                    console.log(content)
-                    console.log('\r\n修改host文件完成, 可重启游戏尝试进入')
-                    question()
+                    refreshDns(content)
                 }
             });
         }
@@ -263,13 +259,36 @@ function initDns(){
                     content = content.split(`\r\n${oldHost}`)[0]
                     // console.log(content.split(oldHost)[0])
                     fs.writeFileSync(`${pathC}\\${file.name}`, content)
-                    console.log('\r\n')
-                    console.log(content)
-                    console.log('\r\n还原host文件完成')
-                    question()
+                    refreshDns(content, true)
                 }
             });
         }
+    })
+}
+// 刷新dns
+function refreshDns(content, init = false){
+    let child1 = child.exec('ipconfig /displaydns',(err,stdout,stderr)=>{
+        if(err){
+            console.log('出现错误，可自行到cmd中运行 ipconfig /displaydns 和 ipconfig /flushdns')
+        }
+    })
+    child1.on('exit',()=>{
+        let child2 = child.exec('ipconfig /flushdns',(err,stdout,stderr)=>{
+            if(err){
+                console.log('出现错误，可自行到cmd中运行 ipconfig /displaydns 和 ipconfig /flushdns')
+            }
+        })
+        child2.on('exit',()=>{
+            console.log('\r\n')
+            console.log(content)
+            if(init){
+                console.log('\r\n还原host文件完成')
+            }else{
+                console.log('\r\n修改host文件完成')
+            }
+            console.log('\r\n刷新成功')
+            question()
+        })
     })
 }
 // 猜拳
