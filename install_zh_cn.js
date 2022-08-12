@@ -364,7 +364,7 @@ function init() {
     logColor('\n重置完成！请重新安装...')
     question()
 }
-
+// 帮助界面
 function help() {
     // console.png(image);
     // u:   更新一键更新程序\r\n
@@ -383,7 +383,7 @@ function help() {
     h:   召唤灭火器<🧯>\r\n
     q:   退出程序\r\n`);
 }
-
+// 点赞
 function like(callback) {
     request({
         url: 'http://101.43.216.253:3001/file/like',
