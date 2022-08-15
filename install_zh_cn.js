@@ -10,8 +10,8 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-// let path = '../Data/GameData/' // 打包路径
-let path = './' // 本地路径
+let path = '../Data/GameData/' // 打包路径
+// let path = './' // 本地路径
 // let downLoadArr = ['d', 'r', 'c']
 let userVal = 0, mhqVal = 0
 let params = {
@@ -277,9 +277,9 @@ function refreshDns(content, init = false){
             console.log('\r\n')
             console.log(content)
             if(init){
-                console.log('\r\n还原host文件完成')
+                console.log('\r\n还原hosts文件完成')
             }else{
-                console.log('\r\n修改host文件完成')
+                console.log('\r\n修改hosts文件完成')
             }
             console.log('\r\n刷新成功')
             question()
