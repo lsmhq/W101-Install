@@ -10,8 +10,8 @@ const rl = readline.createInterface({
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 const args = process.argv.slice(2)
-let path = '../Data/GameData/' // 打包路径
-// let path = './' // 本地路径
+// let path = '../Data/GameData/' // 打包路径
+let path = './' // 本地路径
 // let downLoadArr = ['d', 'r', 'c']
 let userVal = 0, mhqVal = 0
 let params = {
@@ -214,27 +214,36 @@ function connect(){
     // console.log(pathC)
     let files = fs.readdirSync(pathC, {withFileTypes: true})
     // console.log(files)
-    files.forEach(file=>{
-        if(file.name === 'hosts'){
-            let content = fs.readFileSync(`${pathC}\\${file.name}`,'utf-8')
-            // 写入
-            request({
-                url: 'http://101.43.216.253:3001/file/host',
-                method: "GET",
-            }, function (error, response) {
-                if (!error && response.statusCode == 200) {
-                    // console.log(JSON.parse(response.body).host)
-                    let host = JSON.parse(response.body).new
-                    let oldHost = JSON.parse(response.body).old
-                    // console.log(host, oldHost)
-                    content = content.split(`\r\n${oldHost}`)[0]+ '\r\n' + host
-                    // console.log(content.split(oldHost)[0])
-                    fs.writeFileSync(`${pathC}\\${file.name}`, content)
-                    refreshDns(content)
-                }
-            });
+    let names = files.map(file=>file.name)
+    // 写入
+    request({
+        url: 'http://101.43.216.253:3001/file/host',
+        method: "GET",
+    }, function (error, response) {
+        if (!error && response.statusCode == 200) {
+            if(names.includes('hosts.bf')){
+                // 存在备份 , 备份+new
+                let content = fs.readFileSync(`${pathC}\\hosts.bf`,'utf-8') 
+                // console.log(JSON.parse(response.body).host)
+                let host = JSON.parse(response.body).new
+                // console.log(host, oldHost)
+                content = content + '\r\n' + host
+                // console.log(content.split(oldHost)[0])
+                fs.writeFileSync(`${pathC}\\hosts`, content)
+                refreshDns(content)
+            }else{
+                let content = fs.readFileSync(`${pathC}\\hosts`,'utf-8')
+                fs.writeFileSync(`${pathC}\\hosts.bf`, content)
+                // console.log(JSON.parse(response.body).host)
+                let host = JSON.parse(response.body).new
+                // console.log(host, oldHost)
+                content = content + '\r\n' + host
+                // console.log(content.split(oldHost)[0])
+                fs.writeFileSync(`${pathC}\\hosts`, content, 'utf-8')
+                refreshDns(content)
+            }
         }
-    })
+    });
 }
 // 初始化host
 function initDns(){
@@ -242,26 +251,14 @@ function initDns(){
     // console.log(pathC)
     let files = fs.readdirSync(pathC, {withFileTypes: true})
     // console.log(files)
-    files.forEach(file=>{
-        if(file.name === 'hosts'){
-            let content = fs.readFileSync(`${pathC}\\${file.name}`,'utf-8')
-            // 写入
-            request({
-                url: 'http://101.43.216.253:3001/file/host',
-                method: "GET",
-            }, function (error, response) {
-                if (!error && response.statusCode == 200) {
-                    // console.log(JSON.parse(response.body).host)
-                    let oldHost = JSON.parse(response.body).old
-                    // console.log(oldHost)
-                    content = content.split(`\r\n${oldHost}`)[0]
-                    // console.log(content.split(oldHost)[0])
-                    fs.writeFileSync(`${pathC}\\${file.name}`, content)
-                    refreshDns(content, true)
-                }
-            });
-        }
-    })
+    let names = files.map(file=> file.name)
+    if(names.includes('hosts.bf')){
+        let content = fs.readFileSync(`${pathC}\\hosts.bf`, 'utf-8')
+        fs.writeFileSync(`${pathC}\\hosts`, content)
+        refreshDns(content, true)
+    }else{
+        console.log('\r\n还未进行过hosts修改')
+    }
 }
 // 刷新dns
 function refreshDns(content, init = false){
