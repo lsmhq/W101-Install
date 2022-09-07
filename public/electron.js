@@ -8,10 +8,13 @@ const { app, BrowserWindow, nativeImage, ipcMain } = require('electron');
 
 function createWindow () {
   let mainWindow = new BrowserWindow({
-    width: 800, // 窗口宽度
-    height: 600, // 窗口高度
+    width: 1250, // 窗口宽度
+    height: 650, // 窗口高度
     title: "Subata汉化", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./Subata_logo.png'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
+    frame: false,
+    resizable: false,
+    darkTheme: true,
     webPreferences: { // 网页功能设置
       nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
       webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
@@ -42,10 +45,19 @@ function createWindow () {
     mainWindow = null;
   });
   // 自定义
-  ipcMain.on("setTitle",(e,data)=>{
-    console.log(data);
-    // {msg:"给主进程异步发送消息"}
+  ipcMain.on("openGame",(e,data)=>{
+    // 打开游戏
+    
   });
+  ipcMain.on("downLoadFile",(e,type)=>{
+    // 打开游戏
+    console.log(type)
+  });
+  // 移动
+  ipcMain.on('move-application',(event,pos) => {
+    console.log(pos)
+    // mainWindow && mainWindow.setPosition(event.posX,event.posY)
+  })
 }
 
 app.whenReady().then(createWindow);

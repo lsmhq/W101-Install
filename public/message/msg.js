@@ -1,4 +1,11 @@
-const { ipcRenderer } = require('electron')
+const { ipcRenderer, shell } = require('electron')
+function openB(url){
+    shell.openExternal(url);
+}
+
 window.electronAPI = {
-    setTitle: (title) => ipcRenderer.send('setTitle', title)
+    openGame: (title) => ipcRenderer.send('openGame', title),
+    downLoadFile:(type)=>ipcRenderer.send('downLoadFile',type),
+    openBroswer:openB,
+    sendXY:(e)=>{ipcRenderer.send('move-application',{posX:e.x,posY:e.y})}
 }
