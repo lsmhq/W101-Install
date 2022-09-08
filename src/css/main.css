@@ -76,6 +76,7 @@
 .body{
     flex: 1;
     width: 100%;
+    min-width: 1000px;
     display: flex;
 }
 .body-main{
@@ -118,9 +119,12 @@
 }
 .right{
     flex: 1;
+    min-width: 300px;
+    position: relative;
 }
 .right-nav{
     width: 50px;
+    min-width: 50px;
     height: 100%;
     background-color: rgb(24, 24, 24);
     display: flex;
@@ -202,9 +206,13 @@
 }
 .arco-collapse-item-header{
     background-color: #4b4b4b !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .arco-collapse-item-content-box{
     font-size: 20px !important;
+    padding: 10px 20px !important;
 }
 .tabPane{
     height: 210px;

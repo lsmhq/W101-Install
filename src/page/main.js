@@ -25,15 +25,16 @@ let imgMap = {
 }
 let isDown = false;  // 鼠标状态
 let baseX = 0,baseY = 0; //监听坐标
+let timer = null // 计时器
 function Main(){
-    const [loading, setLoading] = useState(true)
-    const [imgs, setImgs] = useState([])
-    const [show, setShow] = useState(false)
-    const [zfType, setZf] = useState('')
-    const [img, setImg] = useState('')
-    const [percent, setPercent] = useState(0)
-    const [drawer, setDrawer] = useState(false)
-    const [count, setCount] = useState(0)
+    let [loading, setLoading] = useState(true)
+    let [imgs, setImgs] = useState([])
+    let [show, setShow] = useState(false)
+    let [zfType, setZf] = useState('')
+    let [img, setImg] = useState('')
+    let [percent, setPercent] = useState(0)
+    let [drawer, setDrawer] = useState(false)
+    let [count, setCount] = useState(0)
     useEffect(() => {
         // window.requestData.getImgs().then(res=>{
         //     setImgs([...res])
@@ -53,7 +54,7 @@ function Main(){
             isDown = false
         })
         document.body.setAttribute('arco-theme', 'dark');
-        // upDate()
+        upDate()
         // let ws = new WebSocket('')
         // ws.onmessage(()=>{
             
@@ -63,8 +64,7 @@ function Main(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     useEffect(()=>{
-        if(zfType !== '')
-            setImg(imgMap[zfType])
+        setImg(imgMap[zfType])
     },[zfType])
     useEffect(()=>{
         if(img)
@@ -84,15 +84,29 @@ function Main(){
                     type='primary'
                     size='small'
                     style={{ margin: '0 12px' }}
+                    onClick={downLoad}
                   >
                     全汉化更新
                   </Button>
-                  <Button type='primary' size='small'>
+                  <Button onClick={downLoad} type='primary' size='small'>
                     仅剧情更新
                   </Button>
                 </span>
             ),
         })
+    }
+    function downLoad(){
+        clearInterval(timer)
+        let p = 0
+        timer = setInterval(() => {
+            if(p >= 100){
+                p = 0
+                setPercent(0)
+                clearInterval(timer)
+                return
+            }
+            setPercent(p++)
+        }, 100);
     }
     return <div className="main">
         <div className='bottom-bg'></div>
@@ -135,20 +149,17 @@ function Main(){
                                 style={{ width: 350}}
                                 autoPlay={true}
                                 >
-                                    
-                                        {imgs.map((src, index) => (
-                                            <div
-                                            key={index}
+                                    {imgs.map((src, index) => <div
+                                        key={index}
+                                        style={{ width: '100%' }}
+                                        >
+                                        <img
+                                            src={src}
                                             style={{ width: '100%' }}
-                                            >
-                                            <img
-                                                src={src}
-                                                style={{ width: '100%' }}
-                                                alt=""
-                                            />
-                                            </div>
-                                        ))}
-
+                                            alt=""
+                                        />
+                                        </div>
+                                    )}
                                 </Carousel>
                             </Spin>
                         </div>
@@ -158,20 +169,20 @@ function Main(){
                                     <List
                                         dataSource={[
                                         '事件1',
-                                        '事件1',
-                                        '事件1',
+                                        '事件2',
+                                        '事件3',
                                         ]}
-                                        render={(item, index) => <List.Item key={index}>{item}</List.Item>}
+                                        render={(item, index) => <List.Item key={item}>{item}</List.Item>}
                                     />
                                 </TabPane>
                                 <TabPane key='2' title='活动'>
                                     <List
                                         dataSource={[
-                                        '活动',
-                                        '活动',
-                                        '活动',
+                                        '活动1',
+                                        '活动2',
+                                        '活动3',
                                         ]}
-                                        render={(item, index) => <List.Item key={index}>{item}</List.Item>}
+                                        render={(item, index) => <List.Item key={item}>{item}</List.Item>}
                                     />
                                 </TabPane>
                             </Tabs>
@@ -180,14 +191,7 @@ function Main(){
                     <div className='right'>
                         <div className='op-btn'>
                             <Button onClick={()=>{
-                                setInterval(() => {
-                                    // if(percent === 100){
-                                    //     setPercent(0)
-                                    //     return
-                                    // }
-                                    // percent = percent + 1
-                                    // setPercent(percent)
-                                }, 100);
+
                             }} status='success' type='primary' className='openGame'>开始游戏</Button>
                         </div>
                     </div>
@@ -332,7 +336,7 @@ function Main(){
             >
                 {
                     [1,2,3,4,5].map((v)=>{
-                        return <CollapseItem style={{fontSize:'20px'}} header='消息标题' name={v}>
+                        return <CollapseItem style={{fontSize:'20px'}} key={v} header='消息标题' name={v}>
                             消息1消息1消息1消息1消息1消息1消息1消息1消息1
                         </CollapseItem>
                     })
