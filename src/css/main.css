@@ -151,7 +151,10 @@
     margin: 0 auto;
 }
 .arco-spin-loading{
-    height: 70%;
+    height: 90%;
+}
+.arco-spin-tip{
+    color: white !important;
 }
 .tips{
     width: 350px;
@@ -185,7 +188,7 @@
     background-color: rgb(29, 29, 29);
 }
 .arco-list-item-content{
-    color: white !important;
+    /* color: white !important; */
     font-size: 17px !important;
     white-space: nowrap;
     overflow: hidden;
@@ -193,6 +196,15 @@
 }
 .arco-list{
     border: none !important;
+}
+.arco-drawer-header-title{
+    font-size: 20px !important;
+}
+.arco-collapse-item-header{
+    background-color: #4b4b4b !important;
+}
+.arco-collapse-item-content-box{
+    font-size: 20px !important;
 }
 .tabPane{
     height: 210px;

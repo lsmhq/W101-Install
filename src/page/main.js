@@ -1,14 +1,23 @@
 import { useEffect, useState} from 'react';
 import '../css/main.css'
-import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Tooltip } from '@arco-design/web-react';
+import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Badge, Collapse  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconWechat, IconAlipayCircle, IconLink, IconHeart, IconQq, IconSettings, IconClose, IconMinus } from '@arco-design/web-react/icon';
+import { IconWechat, IconAlipayCircle, IconLink, IconThumbUp, IconQq, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
 import wechat from '../image/wechat.jpg'
 import Icon from './components/Icon';
 import QQ from '../image/QQ_share.jpg'
 import su from '../image/Subata_logo.png'
 let { TabPane } = Tabs
+let CollapseItem = Collapse.Item
+let style = {
+    right:'40px',
+    top:'30px'
+}
+Notification.config({
+    maxCount:'3',
+    duration:5000
+})
 let imgMap = {
     qq:QQ,
     wx:wechat,
@@ -23,6 +32,8 @@ function Main(){
     const [zfType, setZf] = useState('')
     const [img, setImg] = useState('')
     const [percent, setPercent] = useState(0)
+    const [drawer, setDrawer] = useState(false)
+    const [count, setCount] = useState(0)
     useEffect(() => {
         // window.requestData.getImgs().then(res=>{
         //     setImgs([...res])
@@ -40,6 +51,25 @@ function Main(){
         document.addEventListener('mouseup',()=>{
             isDown = false
         })
+        document.body.setAttribute('arco-theme', 'dark');
+        // upDate()
+        // let ws = new WebSocket('')
+        // ws.onmessage(()=>{
+            
+        // })
+        // ws.send()
+        return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+    useEffect(()=>{
+        if(zfType !== '')
+            setImg(imgMap[zfType])
+    },[zfType])
+    useEffect(()=>{
+        if(img)
+            setShow(true)
+    },[img])
+    function upDate(){
         Notification.warning({
             title:'当前有最新的补丁！是否进行更新？',
             style:{
@@ -62,19 +92,7 @@ function Main(){
                 </span>
             ),
         })
-        return () => {
-            
-        };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-    useEffect(()=>{
-        if(zfType !== '')
-            setImg(imgMap[zfType])
-    },[zfType])
-    useEffect(()=>{
-        if(img)
-            setShow(true)
-    },[img])
+    }
     return <div className="main">
         <div className='bottom-bg'></div>
         <div className='nav' 
@@ -104,7 +122,7 @@ function Main(){
                             <img src={logo} alt=''/>
                         </div>
                         <div className='carousel-main'>
-                            <Spin dot loading={loading}>
+                            <Spin dot tip="拼命中" style={{color:'white'}} loading={loading}>
                                 <Carousel
                                 showArrow='hover'
                                 indicatorClassName="indicatorClassName"
@@ -183,52 +201,24 @@ function Main(){
                     tips="前往社区"
                 />
                 <Icon
-                    Child={<IconHeart className="icon-child"/>}
+                    Child={<IconThumbUp className="icon-child"/>}
                     onClick={()=>{
                         Notification.success({
                             closable: false,
                             title: '',
                             content: '您的支持就是我们最大的动力！',
-                            style:{
-                                right:'40px',
-                                top:'30px'
-                            },
+                            style,
                             showIcon:false
                         })
                     }}
                     tips="给灭火器点个赞"
                 />              
                 <Icon
-                    Child={<IconSettings className="icon-child"/>}
+                    Child={<IconThunderbolt className="icon-child"/>}
                     onClick={()=>{
-                        Notification.info({
-                            title:'切换补丁',
-                            closable:false,
-                            style:{
-                                top:'30px',
-                                right:'40px'
-                            },
-                            btn: (
-                                <span style={{display:'flex'}}>
-                                  <Button
-                                    type='primary'
-                                    size='small'
-                                    status= 'warning'
-                                    style={{ margin: '0 12px' }}
-                                  >
-                                    全汉化
-                                  </Button>
-                                  <Button type='primary' status='success' size='small' style={{ margin: '0 12px 0 0' }}>
-                                    仅剧情
-                                  </Button>
-                                  <Button type='primary' size='small'>
-                                    仅聊天
-                                  </Button>
-                                </span>
-                            ),
-                        })
+                        // setZf('qq')
                     }}
-                    tips="补丁设置"
+                    tips="一键裸连"
                 />
                 <Icon
                     Child={<IconQq className="icon-child"/>}
@@ -236,6 +226,55 @@ function Main(){
                         setZf('qq')
                     }}
                     tips="联系我们"
+                />
+                <Icon
+                    Child={<IconNotification className="icon-child"/>}
+                    count={count}
+                    onClick={()=>{
+                        setDrawer(true)
+                    }}
+                    tips="通知中心"
+                />
+                <Icon
+                    Child={<IconSettings className="icon-child"/>}
+                    onClick={()=>{
+                        Notification.info({
+                            title:'切换补丁',
+                            closable:false,
+                            showIcon:false,
+                            id:'change_bd',
+                            style,
+                            btn: (
+                                <span style={{display:'flex'}}>
+                                  <Button
+                                    type='primary'
+                                    size='small'
+                                    status= 'warning'
+                                    style={{ margin: '0 12px' }}
+                                    onClick={()=>{
+                                        Notification.remove('change_bd')
+                                        Notification.success({content:'切换成功', style})
+                                    }}
+                                  >
+                                    全汉化
+                                  </Button>
+                                  <Button onClick={()=>{
+                                        Notification.remove('change_bd')
+                                        Notification.success({content:'切换成功', style})
+                                    }} type='primary' status='success' size='small' style={{ margin: '0 12px 0 0' }}>
+                                    仅剧情
+                                  </Button>
+                                  <Button onClick={()=>{
+                                        Notification.remove('change_bd')
+                                        Notification.success({content:'切换成功', style})
+                                    }} type='primary' size='small'>
+                                    仅聊天
+                                  </Button>
+                                </span>
+                            ),
+                        })
+                    }}
+                    tips="补丁设置"
                 />
                 <div className='nav-bottom'>
                     <Icon
@@ -267,6 +306,34 @@ function Main(){
             children={[<img className='zf-img' src={img} alt=''/>]}
             footer={null}
         />
+        <Drawer 
+            visible={drawer}
+            footer={null}
+            title="通知中心"
+            escToExit
+            maskClosable
+            style={{
+                height:'94%',
+                top:'6%'
+            }}
+            bodyStyle={{
+                background:'rgb(104 104 104)',
+                padding:0
+            }}
+            onCancel={()=>{setDrawer(false)}}
+        >
+            <Collapse       
+                style={{ width: '100%' }}
+            >
+                {
+                    [1,2,3,4,5].map((v)=>{
+                        return <CollapseItem style={{fontSize:'20px'}} header='消息标题' name={v}>
+                            消息1消息1消息1消息1消息1消息1消息1消息1消息1
+                        </CollapseItem>
+                    })
+                }
+            </Collapse>
+        </Drawer>
     </div>    
 
 }
