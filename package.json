@@ -42,14 +42,12 @@
     "dist-mac": "electron-builder --mac"
   },
   "build": {
-    "productName": "my-project",
-    "appId": "org.my-project.electron-react-antd",
+    "productName": "Subata",
+    "appId": "Subata",
     "directories": {
       "output": "release"
     },
-    "files": [
-      "build/**/*"
-    ]
+    "target": ["portable"]
   },
   "eslintConfig": {
     "extends": [
