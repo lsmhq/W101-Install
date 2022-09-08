@@ -3,6 +3,7 @@ html,body{
   overflow: hidden;
   height: 100%;
   width: 100%; 
+  border-radius: 5px;
   /* 抗锯齿性,避免文字被放大后会产生锯齿 */
 	-webkit-font-smoothing: antialiased;
 	/* background-color: rgb(50, 50, 50); */

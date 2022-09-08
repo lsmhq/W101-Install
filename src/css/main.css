@@ -92,8 +92,10 @@
 }
 .body-main-bottom{
     width: 100%;
-    height: 10px;
-    background-color: #1c1c1c;
+    height: 20px;
+    /* background-color: #1c1c1c; */
+    box-sizing: border-box;
+    padding: 0 10px;
 }
 .bottom-bg{
     position: absolute;
@@ -151,7 +153,7 @@
     height: 190px;
     border-radius: 15px;
     overflow: hidden;
-    background-color: #2e58ae;
+    background-color: #3d3d3d8e;
     margin: 0 auto;
 }
 .arco-spin-loading{
@@ -214,14 +216,22 @@
     font-size: 20px !important;
     padding: 10px 20px !important;
 }
+.arco-progress-line-outer{
+    height: 8px !important;
+}
+.arco-notification-wrapper{
+    /* position: relative; */
+    top: 40px !important;
+    right: 50px !important;
+}
 .tabPane{
     height: 210px;
     overflow: scroll;
 }
 .op-btn{
     position: absolute;
-    bottom: 40px;
-    right: 90px;
+    bottom: 20px;
+    right: 60px;
     border-radius: 5px;
     overflow: hidden;
 }
@@ -240,6 +250,7 @@
     height: 50px;
     overflow: hidden;
     cursor: pointer;
+    -webkit-user-drag: none;
 }
 .icon{
     width: 100%;
@@ -247,6 +258,7 @@
     box-sizing: border-box;
     padding: 10px;
     transition: all ease 0.4s;
+    -webkit-user-drag: none;
 }
 .icon:hover{
     background-color: rgb(255, 255, 255);

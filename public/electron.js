@@ -8,7 +8,7 @@ const { app, BrowserWindow, nativeImage, ipcMain } = require('electron');
 
 function createWindow () {
   let mainWindow = new BrowserWindow({
-    width: 1250, // 窗口宽度
+    width: 1150, // 窗口宽度
     height: 650, // 窗口高度
     title: "Subata汉化", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./Subata_logo.png'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
@@ -56,8 +56,8 @@ function createWindow () {
   });
   // 移动
   ipcMain.on('move-application',(event,pos) => {
-    console.log(pos)
-    mainWindow && mainWindow.setPosition(event.posX,event.posY, true)
+    // console.log(pos.posX)
+    mainWindow.setPosition(parseInt(pos.posX), parseInt(pos.posY))
   })
   //接收关闭命令
   ipcMain.on('close', function() {
