@@ -15,6 +15,7 @@ function createWindow () {
     frame: false,
     resizable: false,
     darkTheme: true,
+    transparent:true,
     webPreferences: { // 网页功能设置
       nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
       webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
@@ -56,7 +57,7 @@ function createWindow () {
   // 移动
   ipcMain.on('move-application',(event,pos) => {
     console.log(pos)
-    // mainWindow && mainWindow.setPosition(event.posX,event.posY)
+    mainWindow && mainWindow.setPosition(event.posX,event.posY, true)
   })
 }
 

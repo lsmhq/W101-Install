@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
     background-color: #2e58ae;
+    /* border: 3px solid rgb(45, 45, 45); */
 }
 .nav{
     width: 100%;
@@ -11,12 +12,87 @@
     display: flex;
     z-index: 100;
     background-color: #1c1c1c;
+    position: relative;
     /* background-color: rgb(40, 40, 40); */
+}
+.nav-logo{
+    /* position: absolute; */
+    left: 10px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+.nav-logo img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.nav-title{
+    /* position: absolute; */
+    left: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 17px;
+    padding-left: 5px;
+    color: white
+}
+.nav-bottom{
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-end; */
+    justify-content: flex-end;
+}
+.nav-control{
+    display: flex;
+    flex: 1;
+    height: 100%;
+    justify-content: flex-end;
+}
+.control-btn{
+    width: 70px;
+    height: 100%;
+    overflow: hidden;
+    transition: all ease 0.1s;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    /* background-color: #d30000; */
+}
+.control-btn:hover{
+    background-color: #5b5b5b;
+}
+.btn-danger:hover{
+    background-color: #ff1100;
 }
 .body{
     flex: 1;
     width: 100%;
     display: flex;
+}
+.body-main{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.body-main-top{
+    display: flex;
+    width: 100%;
+    flex: 1;
+}
+.body-main-bottom{
+    width: 100%;
+    height: 10px;
+    background-color: #1c1c1c;
 }
 .bottom-bg{
     position: absolute;
@@ -72,6 +148,10 @@
     border-radius: 15px;
     overflow: hidden;
     background-color: #2e58ae;
+    margin: 0 auto;
+}
+.arco-spin-loading{
+    height: 70%;
 }
 .tips{
     width: 350px;
@@ -120,19 +200,26 @@
 }
 .op-btn{
     position: absolute;
-    bottom: 30px;
+    bottom: 40px;
     right: 90px;
+    border-radius: 5px;
+    overflow: hidden;
 }
 .openGame{
     width: 250px;
     height: 80px !important;
     font-size: 25px !important;
     color: rgb(240, 240, 240) !important;
+    transition: all ease 0.3s;
+}
+.openGame:hover{
+    font-size: 35px !important;
 }
 .icon-container{
     width: 100%;
     height: 50px;
     overflow: hidden;
+    cursor: pointer;
 }
 .icon{
     width: 100%;
