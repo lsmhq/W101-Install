@@ -1,9 +1,13 @@
 {
   "name": "electron-app",
   "version": "0.1.0",
+  "author": {
+    "name": "lsmhq"
+  },
+  "description": "一款游戏启动器",
   "private": true,
-  "homepage": ".",
-  "main": "public/electron.js",
+  "homepage": "./public",
+  "main": "electron.js",
   "dependencies": {
     "@arco-design/web-react": "^2.39.3",
     "@testing-library/jest-dom": "^5.16.5",
@@ -12,10 +16,7 @@
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
     "concurrently": "^7.3.0",
-    "electron-builder": "^23.3.3",
     "electron-is-dev": "^2.0.0",
-    "electron-packager": "^16.0.0",
-    "electron-rebuild": "^3.2.9",
     "path": "^0.12.7",
     "puppeteer": "^17.1.1",
     "react": "^18.2.0",
@@ -24,13 +25,31 @@
     "request": "^2.88.2",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "electron-rebuild": "^3.2.9",
+    "electron-packager": "^16.0.0",
+    "electron-builder": "^23.3.3",
+    "electron": "^20.1.2"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "el-start": "electron .",
-    "package":"electron-packager . demoName --platform=win32 --arch=x64 --icon=favicon.ico --out=./out --asar --app-version=0.0.1 --overwrite --ignore=node_modules"
+    "dist-win32": "electron-builder --win --ia32",
+    "dist-win64": "electron-builder --win --x64",
+    "dist-mac": "electron-builder --mac"
+  },
+  "build": {
+    "productName": "my-project",
+    "appId": "org.my-project.electron-react-antd",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "build/**/*"
+    ]
   },
   "eslintConfig": {
     "extends": [

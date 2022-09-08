@@ -7,7 +7,7 @@
 *.wad
 # testing
 /coverage
-
+/release
 # production
 /build
 
