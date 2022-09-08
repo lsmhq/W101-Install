@@ -51,13 +51,21 @@ function createWindow () {
     
   });
   ipcMain.on("downLoadFile",(e,type)=>{
-    // 打开游戏
+    // 下载补丁
     console.log(type)
   });
   // 移动
   ipcMain.on('move-application',(event,pos) => {
     console.log(pos)
     mainWindow && mainWindow.setPosition(event.posX,event.posY, true)
+  })
+  //接收关闭命令
+  ipcMain.on('close', function() {
+    mainWindow.close();
+  })
+  // 最小化
+  ipcMain.on('mini', function() {
+    mainWindow.minimize();
   })
 }
 

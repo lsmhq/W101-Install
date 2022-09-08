@@ -1,6 +1,6 @@
 import { useEffect, useState} from 'react';
 import '../css/main.css'
-import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Badge, Collapse  } from '@arco-design/web-react';
+import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import { IconWechat, IconAlipayCircle, IconLink, IconThumbUp, IconQq, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
@@ -107,10 +107,14 @@ function Main(){
             <div className='nav-logo'><img alt='' src={su}/></div>
             <div className='nav-title'>Subata</div>
             <div className='nav-control'>
-                <div className='control-btn'>
+                <div className='control-btn' onClick={()=>{
+                    window.electronAPI.mini()
+                }}>
                     <IconMinus style={{fontSize:'20px'}}/>
                 </div>
-                <div className='control-btn btn-danger'>
+                <div className='control-btn btn-danger' onClick={()=>{
+                    window.electronAPI.close()
+                }}>
                     <IconClose style={{fontSize:'20px'}}/>
                 </div>
             </div>

@@ -31,8 +31,11 @@ const puppeteerTest = async (imgsArr = []) => {
         }
     })
 }
+function checkUpdate(){
+
+}
 
 window.requestData = {
     getImgs:puppeteerTest,
-
+    checkUpdate:checkUpdate
 }
