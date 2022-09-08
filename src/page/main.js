@@ -43,9 +43,10 @@ function Main(){
             if(isDown){
               const x = ev.screenX - baseX
               const y = ev.screenY - baseY
-                window.electronAPI.sendXY({
-                    x,y
-                })
+              console.log(x, y)
+                // window.electronAPI.sendXY({
+                //     x,y
+                // })
             }
         })
         document.addEventListener('mouseup',()=>{
@@ -98,9 +99,9 @@ function Main(){
         <div className='nav' 
             onMouseDown={(e)=>{
                 isDown = true 
-                baseX = e.pageX
-                baseY = e.pageY
-                console.log(e)
+                baseX = e.clientX
+                baseY = e.clientY
+                console.log(baseX, baseY)
             }}
         >
             <div className='nav-logo'><img alt='' src={su}/></div>
