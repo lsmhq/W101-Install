@@ -247,8 +247,14 @@ function Main(){
                     Child={<IconThunderbolt className="icon-child"/>}
                     onClick={()=>{
                         // setZf('qq')
+                        window.tools.connect(()=>{
+                            Notification.success({
+                                content:'修改host文件成功，可以尝试在不用加速器的情况下进行游戏！',
+                                style
+                            })
+                        })
                     }}
-                    tips="一键裸连"
+                    tips="一键加速"
                 />
                 <Icon
                     Child={<IconNotification className="icon-child"/>}
@@ -317,8 +323,17 @@ function Main(){
                                     status= 'warning'
                                     style={{ margin: '0 12px' }}
                                     onClick={()=>{
-                                        Notification.remove('change_bd')
-                                        Notification.success({content:'切换成功', style})
+                                        window.tools.downLoad('d',(mark)=>{
+                                            Notification.info({
+                                                content:mark,style
+                                            })
+                                        },(total, currentTotal)=>{
+                                            console.log(currentTotal / total)
+                                            setPercent(Number.parseInt((( currentTotal / total ).toFixed(2) * 100)))
+                                        }, (err)=>{
+                                            if(err)
+                                                console.log(err)
+                                        })
                                     }}
                                   >
                                     全汉化
