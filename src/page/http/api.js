@@ -1,6 +1,7 @@
 import { Message } from '@arco-design/web-react'
 import axios from 'axios'
 let basePath = 'https://www.fastmock.site/mock/b5b6645016e18efee03631edb9ec9123/config'
+let serverPath = 'http://192.168.53.99:4000'
 // let servicePath = ''
 let instance = axios.create({
     headers: {
@@ -36,12 +37,18 @@ let http = {
         return await instance.post(basePath + path, {
             params,
         }) 
-    }
+    },
+    getServer: async (path, params, cookie = false)=>{
+      return await instance.get(serverPath + path, {
+          params,
+      })
+  },
 }
 
 let apiPath = {
     // 登录
     mainPage: params => http.get('/list', params, true), // 获取列表信息
+    getCurl: params=> http.getServer('/curl/lunbo', params), // 获取轮播
 }
 
 export default apiPath

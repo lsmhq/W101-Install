@@ -2,7 +2,7 @@ import { useEffect, useState} from 'react';
 import '../css/main.css'
 import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconWechat, IconAlipayCircle, IconLink, IconThumbUp, IconQq, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification } from '@arco-design/web-react/icon';
+import { IconWechat, IconAlipayCircle, IconLink, IconThumbUp, IconQq, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
 import wechat from '../image/wechat.jpg'
 import Icon from './components/Icon';
@@ -24,6 +24,7 @@ let obj = {
     d: '<全汉化>',
     c: '<轻聊>',
 }
+let ws = null
 let imgMap = {
     qq:QQ,
     wx:wechat,
@@ -49,7 +50,7 @@ function Main(){
         // 检查补丁更新
         // checkUpdate()
         // 获取轮播
-        // getCarousel()
+        getCarousel()
         // 拖拽
         // drag()
         // 黑主题
@@ -85,13 +86,23 @@ function Main(){
         }
     },[percent])
     function createSocket(){
-        let ws = new WebSocket('ws://192.168.53.99:8000')
+        ws = new WebSocket('ws://192.168.53.99:8000')
         console.log(ws)
         ws.onmessage = (msg)=>{
-            console.log(msg)
-        }
-        ws.onopen = (client)=>{
-            console.log('open', client)
+            console.log(msg.data)
+            let data = JSON.parse(msg.data)
+            if(data === 'success'){
+                Notification.success({
+                    style,
+                    title:'发布成功'
+                })
+            }else{
+                Notification.info({
+                    style,
+                    content:data.msg,
+                    title:data.title
+                })
+            }
         }
     }
     function resize(){
@@ -132,9 +143,12 @@ function Main(){
         })
     }
     function getCarousel(){
-        window.requestData.getImgs().then(res=>{
-            setImgs([...res])
-            setLoading(false)
+        // window.requestData.getImgs().then(res=>{
+        //     setImgs([...res])
+        //     setLoading(false)
+        // })
+        apiPath.getCurl().then(res=>{
+            console.log(res)
         })
     }
     function checkUpdate(){
@@ -146,7 +160,7 @@ function Main(){
                     break;
                 case 2:
                     // 没有需要的更新
-
+                    window.tools.changeType(localStorage.getItem('type'))
                     break
                 case 3:
                     // 未安装
@@ -354,7 +368,8 @@ function Main(){
                         <div className='op-btn'>
                             <Button onClick={()=>{
                                 
-                                // downLoad()
+                                ws.send(JSON.stringify({msg:'1111', title:'123123'}))
+
                             }} status='success' loading={btnLoading} type='primary' className='openGame'>开始游戏</Button>
                         </div>
                     </div>
@@ -433,22 +448,21 @@ function Main(){
                                     status= 'warning'
                                     style={{ margin: '0 12px' }}
                                     onClick={()=>{
-
-                                        Notification.remove('change_bd')
-                                        
+                                        localStorage.setItem('type','d')
+                                        upDate()
                                     }}
                                   >
                                     全汉化
                                   </Button>
                                   <Button onClick={()=>{
-                                        Notification.remove('change_bd')
-                                        Notification.success({content:'切换成功', style})
+                                        localStorage.setItem('type','r')
+                                        upDate()
                                     }} type='primary' loading={btnLoading} status='success' size='small' style={{ margin: '0 12px 0 0' }}>
                                     仅剧情
                                   </Button>
                                   <Button onClick={()=>{
-                                        Notification.remove('change_bd')
-                                        Notification.success({content:'切换成功', style})
+                                        localStorage.setItem('type','c')
+                                        upDate()
                                     }} loading={btnLoading} type='primary' size='small'>
                                     仅聊天
                                   </Button>
@@ -459,7 +473,7 @@ function Main(){
                     tips="补丁切换"
                 />
                 <Icon
-                    Child={<IconQq className="icon-child"/>}
+                    Child={<IconBug className="icon-child"/>}
                     onClick={()=>{
                         setZf('qq')
                     }}
@@ -521,18 +535,19 @@ function Main(){
             onCancel={()=>{
                 setZf('')
                 setShow(false)
-                Notification.info({
-                    content:'打赏的全部收入将用于Subata服务器中，谢谢老板！',
-                    style,
-                    showIcon:false,
-                    duration:2000
-                })
+                if(zfType !== 'qq'){
+                    Notification.info({
+                        content:'打赏将全部用于网站的维护，谢谢老板支持！',
+                        style,
+                        showIcon:false,
+                        duration:2000
+                    })
+                }
             }}
             children={[<img key={1} className='zf-img' src={img} alt=''/>]}
             footer={null}
         />
     </div>    
-
 }
 
 export default Main
