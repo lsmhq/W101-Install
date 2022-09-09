@@ -81,6 +81,35 @@ function init() {
     })
 }
 
+function checkUpdate(type, success, failed){
+    request({
+        url: `http://101.43.216.253:3001/file/latest?type=${params[type]}`,
+        method: 'GET',
+    },(err, response, body)=>{
+        if (!err && response.statusCode === 200) {
+            let url = JSON.parse(response.body).url
+            let version = url.split('/')[url.split('/').length - 2]
+            let files = fs.readdirSync(path, {
+                withFileTypes: true
+            })
+            let names = files.map(file => file.name)
+            if (names.includes(`version_zh_cn_${type}`)) {
+                let ver = fs.readFileSync(path + `version_zh_cn_${type}`)
+                if (compareVersion(version + '', ver.toString()) == 1) {
+                    console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
+                    success(1) // 有最新
+                } else {
+                    success(2) // 没有
+                }
+            }else{
+                success(3) // 未安装
+            }
+        }else{
+            failed(err)
+        }
+    })
+}
+
 function downLoad(type, getMark, getProcess, failed) {
     request({
         url: `http://101.43.216.253:3001/file/latest?type=${params[type]}`,
@@ -127,7 +156,7 @@ function downLoad(type, getMark, getProcess, failed) {
                 }, getProcess)
             }
         } else {
-            failed('请检查本地网络')
+            failed(err)
         }
     })
 }
@@ -192,10 +221,22 @@ function compareVersion(v1, v2) {
     }
     return 0
 }
-
+// 点赞
+function like(callback) {
+    request({
+        url: 'http://101.43.216.253:3001/file/like',
+        method: "GET",
+    }, function (error, response) {
+        if (!error && response.statusCode === 200) {
+            callback()
+        }
+    });
+}
 window.tools = {
     initDns,
     connect,
     init,
-    downLoad
+    downLoad,
+    checkUpdate,
+    like
 }

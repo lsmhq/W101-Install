@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer')
-
+const child_process = require('child_process');//引入模块
 const puppeteerTest = async (imgsArr = []) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage()
@@ -32,10 +32,25 @@ const puppeteerTest = async (imgsArr = []) => {
     })
 }
 function checkUpdate(){
+    
+}
 
+function getPath(callback){
+    //查
+    child_process.exec(`Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam`,function(error,stdout,stderr){
+        if(error != null){
+            console.log('exec error:'+error);
+            callback(error)
+            return
+        }
+        console.log('stdout:'+stdout);
+        console.log('stderr:'+stderr);
+        callback(stdout, stderr)
+    });
 }
 
 window.requestData = {
     getImgs:puppeteerTest,
-    checkUpdate:checkUpdate
+    checkUpdate:checkUpdate,
+    getPath
 }

@@ -26,10 +26,10 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "electron-rebuild": "^3.2.9",
-    "electron-packager": "^16.0.0",
+    "electron": "^20.1.2",
     "electron-builder": "^23.3.3",
-    "electron": "^20.1.2"
+    "electron-packager": "^16.0.0",
+    "electron-rebuild": "^3.2.9"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -44,10 +44,23 @@
   "build": {
     "productName": "Subata",
     "appId": "Subata",
+    "win": {
+      "target": "release",
+      "icon": "app/images/logo.ico"
+    },
     "directories": {
       "output": "release"
     },
-    "target": ["portable"]
+    "target": [
+      "portable"
+    ],
+    "nsis": {
+      "shortcutName": "Subata",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "app/images/logo.ico",
+      "uninstallerIcon": "app/images/uninstall.ico"
+    }
   },
   "eslintConfig": {
     "extends": [
