@@ -1,6 +1,8 @@
 const request = require('request')
 const fs = require('fs')
+const child_process = require('child_process');//引入模块
 let path = './' // 打包路径
+let wizPath = '' // Wiz路径
 let params = {
     r: 'release',
     d: 'debug',
@@ -69,7 +71,7 @@ function connect(callback){
 }
 
 // 初始化
-function init() {
+function init(callback) {
     let files = fs.readdirSync(path, {
         withFileTypes: true
     })
@@ -79,6 +81,7 @@ function init() {
             fs.unlinkSync(path + file.name)
         }
     })
+    callback()
 }
 
 function checkUpdate(type, success, failed){
@@ -184,7 +187,7 @@ function getFile(uri, filePath, callback, onData) {
 }
 
 // 改变type
-function changeType(type) {
+function changeType(type, callback) {
     let files = fs.readdirSync(path, {
         withFileTypes: true
     })
@@ -194,6 +197,7 @@ function changeType(type) {
         let file = fs.createReadStream(path + 'Locale_English-Root.wad.' + type)
         let out = fs.createWriteStream(path + 'Locale_English-Root.wad')
         file.pipe(out)
+        callback()
         // out.close()
     }
 }
@@ -232,11 +236,41 @@ function like(callback) {
         }
     });
 }
+// 获取Steam
+function getPath(callback, error){
+    //查
+    child_process.exec(`REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam /v InstallPath`,function(error,stdout,stderr){
+        if(error != null){
+            console.log('exec error:'+error);
+            error(error)
+            return
+        }
+        callback(stdout, stderr)
+    });
+}
+getPath((stdout, stderr)=>{
+    // console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
+    let steamPath = stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101\\Data\\GameData\\'
+    path = steamPath
+    wizPath = stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101\\Bin\\'
+}, (error)=>{
+    console.log(error)
+}) 
+function startGame(){
+    let shell = require('shelljs')
+    shell.config.execPath = shell.which('node')
+    let exe = wizPath + "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
+    // child_process.exec(`${exe}`, () => {})
+    shell.exec(exe)
+}
 window.tools = {
     initDns,
     connect,
     init,
     downLoad,
     checkUpdate,
-    like
+    like,
+    changeType,
+    getPath,
+    startGame
 }

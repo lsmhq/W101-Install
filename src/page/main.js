@@ -2,7 +2,7 @@ import { useEffect, useState} from 'react';
 import '../css/main.css'
 import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconWechat, IconAlipayCircle, IconLink, IconThumbUp, IconQq, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
+import { IconWechat, IconAlipayCircle, IconLink, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
 import wechat from '../image/wechat.jpg'
 import Icon from './components/Icon';
@@ -46,13 +46,15 @@ function Main(){
     let [activity, setActivity] = useState([])
     let [msgHeight, setHeight] = useState(window.screen.height - 40 + 'px')
     let [btnLoading, setBtnLoad] = useState(false)
+    let [current, setCurrent] = useState(0)
+    let [total, setTotal] = useState(0)
     useEffect(() => {
         // 检查补丁更新
-        // checkUpdate()
+        checkUpdate() 
         // 获取轮播
-        getCarousel()
+        // getCarousel()
         // 拖拽
-        // drag()
+        drag()
         // 黑主题
         dark()
         // 获取活动新闻
@@ -77,11 +79,13 @@ function Main(){
     useEffect(()=>{
         if(percent === 100){
             setBtnLoad(false)
+            setPercent(0)
             Notification.success({
                 id:'download',
                 style,
-                title:'切换/安装完成',
-                content:''
+                title:'安装完成!',
+                content:'请点击下方开始游戏进行体验!',
+                duration: 2000
             })
         }
     },[percent])
@@ -152,6 +156,7 @@ function Main(){
         })
     }
     function checkUpdate(){
+        Notification.remove('change_bd')
         window.tools.checkUpdate(localStorage.getItem('type'), (num)=>{
             switch (num) {
                 case 1:
@@ -160,11 +165,18 @@ function Main(){
                     break;
                 case 2:
                     // 没有需要的更新
-                    window.tools.changeType(localStorage.getItem('type'))
+                    window.tools.changeType(localStorage.getItem('type'),()=>{
+                        Notification.success({
+                            style,
+                            id:'change_success',
+                            content:'切换成功!'
+                        })
+                    })
                     break
                 case 3:
                     // 未安装
                     Notification.error({
+                        id:'notInstall_bd',
                         style,
                         title:'检测到未安装汉化补丁',
                         btn: (
@@ -193,7 +205,7 @@ function Main(){
                                     type='primary' 
                                     size='small'
                                 >
-                                    仅剧情安装
+                                    剧情汉化安装
                                 </Button>
                               }
                               {
@@ -264,13 +276,16 @@ function Main(){
     }
     function downLoad(type){
         setBtnLoad(true)
+        Notification.remove('notInstall_bd')
         window.tools.downLoad(type || localStorage.getItem('type') ,(mark)=>{
             Notification.warning({
                 id:'download',
                 title:'请耐心等待下载...',
-                content:mark,style
+                content:mark,style,duration:10000000
             })
         },(total, currentTotal)=>{
+            setCurrent(currentTotal)
+            setTotal(total)
             setPercent(Number.parseInt((( currentTotal / total ).toFixed(2) * 100)))
         }, (err)=>{
             if(err){
@@ -368,14 +383,14 @@ function Main(){
                         <div className='op-btn'>
                             <Button onClick={()=>{
                                 
-                                ws.send(JSON.stringify({msg:'1111', title:'123123'}))
-
+                                // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
+                                window.tools.startGame()
                             }} status='success' loading={btnLoading} type='primary' className='openGame'>开始游戏</Button>
                         </div>
                     </div>
                 </div>
                 <div className='body-main-bottom'>
-                    <Progress percent={percent} width='100%' color={'#00b42a'} style={{display:'block'}}/>
+                    {percent > 0 && <Progress formatText={()=><span>{`${(current / 1024 / 1024).toFixed(2)}MB / ${(total / 1024 / 1024).toFixed(2)}MB`}</span>} percent={percent} width='100%' color={'#00b42a'} style={{display:'block'}}/>}
                 </div>
             </div>
 
@@ -437,6 +452,7 @@ function Main(){
                             title:'切换/更新',
                             // closable:false,
                             showIcon:false,
+                            duration:100000,
                             id:'change_bd',
                             style,
                             btn: (
@@ -449,20 +465,20 @@ function Main(){
                                     style={{ margin: '0 12px' }}
                                     onClick={()=>{
                                         localStorage.setItem('type','d')
-                                        upDate()
+                                        checkUpdate(localStorage.getItem('type'))
                                     }}
                                   >
                                     全汉化
                                   </Button>
                                   <Button onClick={()=>{
                                         localStorage.setItem('type','r')
-                                        upDate()
+                                        checkUpdate(localStorage.getItem('type'))
                                     }} type='primary' loading={btnLoading} status='success' size='small' style={{ margin: '0 12px 0 0' }}>
                                     仅剧情
                                   </Button>
                                   <Button onClick={()=>{
                                         localStorage.setItem('type','c')
-                                        upDate()
+                                        checkUpdate(localStorage.getItem('type'))
                                     }} loading={btnLoading} type='primary' size='small'>
                                     仅聊天
                                   </Button>
@@ -471,6 +487,20 @@ function Main(){
                         })
                     }}
                     tips="补丁切换"
+                />
+                
+                <Icon
+                    Child={<IconDelete className="icon-child"/>}
+                    onClick={()=>{
+                        window.tools.init(()=>{
+                            Notification.success({
+                                title:'卸载成功!',
+                                style,
+                                duration:2000
+                            })
+                        })
+                    }}
+                    tips="卸载补丁"
                 />
                 <Icon
                     Child={<IconBug className="icon-child"/>}

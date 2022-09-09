@@ -6,8 +6,8 @@
   },
   "description": "一款游戏启动器",
   "private": true,
-  "homepage": "./public",
-  "main": "electron.js",
+  "homepage": ".",
+  "main": "./public/electron.js",
   "dependencies": {
     "@arco-design/web-react": "^2.39.3",
     "@testing-library/jest-dom": "^5.16.5",
@@ -23,6 +23,7 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "request": "^2.88.2",
+    "shelljs": "^0.8.5",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
