@@ -265,15 +265,22 @@ getPath((stdout, stderr)=>{
 }, (error)=>{
     console.log(error)
 }) 
-function startGame(){
-    let shell = require('shelljs')
-    shell.config.execPath = shell.which('node')
-    let exe = wizPath + "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
-    console.log(exe)
-    child_process.execFile(`${exe}`, (stdout, stderr) => {
-        console.log(stdout, stderr)
-    })
-    // shell.exec(exe)
+function startGame(callback){
+    // let exe = wizPath + "startGame.exe"
+    // let exe = wizPath + "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
+    // console.log(exe)
+    // child_process.exec(exe, (stdout, stderr) => {
+    //     console.log(stdout, stderr)
+    // })
+    let exe = __dirname + '/startGame.bat'
+    console.log(__dirname)
+    // let files = fs.readdirSync(wizPath,{withFileTypes:true})
+    // let names = files.map(file=>file.name)
+    // if(names.includes('startGame.exe')){
+        shell.openPath(exe)
+    // }else{
+        // callback()
+    // }
 }
 window.tools = {
     initDns,

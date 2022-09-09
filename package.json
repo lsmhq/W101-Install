@@ -6,7 +6,7 @@
   },
   "description": "一款游戏启动器",
   "private": true,
-  "homepage": ".",
+  "homepage": "./",
   "main": "./public/electron.js",
   "dependencies": {
     "@arco-design/web-react": "^2.39.3",
@@ -14,16 +14,14 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
-    "cheerio": "^1.0.0-rc.12",
     "concurrently": "^7.3.0",
     "electron-is-dev": "^2.0.0",
+    "http-server": "^14.1.1",
     "path": "^0.12.7",
-    "puppeteer": "^17.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "request": "^2.88.2",
-    "shelljs": "^0.8.5",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
@@ -45,22 +43,8 @@
   "build": {
     "productName": "Subata",
     "appId": "Subata",
-    "win": {
-      "target": "release",
-      "icon": "app/images/logo.ico"
-    },
     "directories": {
       "output": "release"
-    },
-    "target": [
-      "portable"
-    ],
-    "nsis": {
-      "shortcutName": "Subata",
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "installerIcon": "app/images/logo.ico",
-      "uninstallerIcon": "app/images/uninstall.ico"
     }
   },
   "eslintConfig": {

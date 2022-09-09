@@ -96,9 +96,10 @@ function Main(){
             console.log(msg.data)
             let data = JSON.parse(msg.data)
             if(data === 'success'){
-                Notification.success({
-                    style,
-                    title:'发布成功'
+                Message.success({
+                    style:{top:'20px'},
+                    content:'发布成功',
+                    
                 })
             }else{
                 Notification.info({
@@ -147,10 +148,6 @@ function Main(){
         })
     }
     function getCarousel(){
-        // window.requestData.getImgs().then(res=>{
-        //     setImgs([...res])
-        //     setLoading(false)
-        // })
         apiPath.getCurl().then(res=>{
             console.log(res)
         })
@@ -174,7 +171,10 @@ function Main(){
                         //     id:'change_success',
                         //     content:'切换成功!'
                         // })
-                        Message.success(`切换${obj[localStorage.getItem('type')]}成功!`)
+                        Message.success({
+                            style:{top:'20px'},
+                            content:`切换${obj[localStorage.getItem('type')]}成功!`
+                        })
                     })
                     break
                 case 3:
@@ -421,12 +421,13 @@ function Main(){
                 <Icon
                     Child={<IconThumbUp className="icon-child"/>}
                     onClick={()=>{
-                        Notification.success({
-                            // closable: false,
-                            title: '',
-                            content: '您的支持就是我最大的动力！',
-                            style,
-                            showIcon:false
+                        window.tools.like(()=>{
+                            Message.success({
+                                // showIcon:false,
+                                content:'您的支持就是我最大的动力！',
+                                style:{top:'20px'},
+                                duration:2000
+                            })
                         })
                     }}
                     tips="给灭火器点个赞"
@@ -436,9 +437,9 @@ function Main(){
                     onClick={()=>{
                         // setZf('qq')
                         window.tools.connect(()=>{
-                            Notification.success({
+                            Message.success({
                                 content:'修改host文件成功，可以尝试在不用加速器的情况下进行游戏！',
-                                style
+                                style:{top:'20px'}
                             })
                         })
                     }}
@@ -503,10 +504,9 @@ function Main(){
                     Child={<IconDelete className="icon-child"/>}
                     onClick={()=>{
                         window.tools.init(()=>{
-                            Notification.success({
+                            Message.success({
                                 title:'卸载成功!',
-                                style,
-                                duration:2000
+                                style:{top:'20px'},
                             })
                         })
                     }}
@@ -576,10 +576,9 @@ function Main(){
                 setZf('')
                 setShow(false)
                 if(zfType !== 'qq'){
-                    Notification.info({
+                    Message.info({
                         content:'打赏将全部用于网站的维护，谢谢老板支持！',
-                        style,
-                        showIcon:false,
+                        style:{top:'20px'},
                         duration:2000
                     })
                 }

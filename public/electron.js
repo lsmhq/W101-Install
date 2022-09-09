@@ -3,9 +3,9 @@
 // BrowserWindow 创建和控制浏览器窗口。new BrowserWindow([options]) 事件和方法调用同app
 // Electron参考文档 https://www.electronjs.org/docs
 const { app, BrowserWindow, nativeImage, ipcMain } = require('electron');
-// const url = require('url');
-// const path = require('path');
-
+const url = require('url');
+const path = require('path');
+const httpServer = require('http-server');
 function createWindow () {
   let mainWindow = new BrowserWindow({
     width: 1250, // 窗口宽度
@@ -21,15 +21,16 @@ function createWindow () {
       webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
       webSecurity: false, // 禁用同源策略
       contextIsolation: false,
-      nodeIntegrationInSubFrames: true // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
+      nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
+      preload: path.join(__dirname, 'preload.js')
     }
   });
-
+  mainWindow.webContents.openDevTools() // 打开窗口调试
   // 加载应用 --打包react应用后，__dirname为当前文件路径
-//   mainWindow.loadURL(__dirname + '../build/index.html');
+  mainWindow.loadURL(`file://${__dirname}/../build/index.html`);
 
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:3000/');
+  // mainWindow.loadURL('http://localhost:3000/');
 
   // 解决应用启动白屏问题
   mainWindow.on('ready-to-show', () => {
