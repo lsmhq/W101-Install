@@ -76,6 +76,7 @@ function init(callback) {
         withFileTypes: true
     })
     let unlinkArr = ['version_zh_cn_d', 'version_zh_cn_r', 'version_zh_cn_u', 'version_zh_cn_c', 'Locale_English-Root.wad', 'Locale_English-Root.wad.d', 'Locale_English-Root.wad.r', 'Locale_English-Root.wad.c']
+    console.log('卸载')
     files.forEach(file => {
         if (unlinkArr.includes(file.name)) {
             fs.unlinkSync(path + file.name)
@@ -92,19 +93,25 @@ function checkUpdate(type, success, failed){
         if (!err && response.statusCode === 200) {
             let url = JSON.parse(response.body).url
             let version = url.split('/')[url.split('/').length - 2]
+            // console.log(version)
             let files = fs.readdirSync(path, {
                 withFileTypes: true
             })
             let names = files.map(file => file.name)
+            // console.log(names.includes(`version_zh_cn_${type}`))
             if (names.includes(`version_zh_cn_${type}`)) {
+                // console.log('判断')
                 let ver = fs.readFileSync(path + `version_zh_cn_${type}`)
                 if (compareVersion(version + '', ver.toString()) == 1) {
-                    console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
+                    // console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
+                    // console.log(1)
                     success(1) // 有最新
                 } else {
+                    // console.log(2)
                     success(2) // 没有
                 }
             }else{
+                // console.log(3)
                 success(3) // 未安装
             }
         }else{
@@ -165,6 +172,7 @@ function downLoad(type, getMark, getProcess, failed) {
 }
 // 下载文件
 function getFile(uri, filePath, callback, onData) {
+    console.log(filePath)
     if (uri) {
         let currentTotal = 0
         let total = 0
@@ -176,6 +184,7 @@ function getFile(uri, filePath, callback, onData) {
             total = res.headers['content-length']
         })
         req.on('data', (data) => {
+            // console.log(data.byteLength)
             currentTotal += data.byteLength
             onData(total, currentTotal)
         })
@@ -260,8 +269,11 @@ function startGame(){
     let shell = require('shelljs')
     shell.config.execPath = shell.which('node')
     let exe = wizPath + "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
-    // child_process.exec(`${exe}`, () => {})
-    shell.exec(exe)
+    console.log(exe)
+    child_process.execFile(`${exe}`, (stdout, stderr) => {
+        console.log(stdout, stderr)
+    })
+    // shell.exec(exe)
 }
 window.tools = {
     initDns,

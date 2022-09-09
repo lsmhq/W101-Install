@@ -1,6 +1,6 @@
 import { useEffect, useState} from 'react';
 import '../css/main.css'
-import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse  } from '@arco-design/web-react';
+import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse, Message  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import { IconWechat, IconAlipayCircle, IconLink, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
@@ -50,7 +50,7 @@ function Main(){
     let [total, setTotal] = useState(0)
     useEffect(() => {
         // 检查补丁更新
-        checkUpdate() 
+        checkUpdate(false) 
         // 获取轮播
         // getCarousel()
         // 拖拽
@@ -155,9 +155,11 @@ function Main(){
             console.log(res)
         })
     }
-    function checkUpdate(){
+    function checkUpdate(show = true){
+        console.log(obj[localStorage.getItem('type')])
         Notification.remove('change_bd')
         window.tools.checkUpdate(localStorage.getItem('type'), (num)=>{
+            console.log('num----->',num)
             switch (num) {
                 case 1:
                     // 有更新
@@ -165,16 +167,20 @@ function Main(){
                     break;
                 case 2:
                     // 没有需要的更新
+                    if(show)
                     window.tools.changeType(localStorage.getItem('type'),()=>{
-                        Notification.success({
-                            style,
-                            id:'change_success',
-                            content:'切换成功!'
-                        })
+                        // Notification.success({
+                        //     style,
+                        //     id:'change_success',
+                        //     content:'切换成功!'
+                        // })
+                        Message.success(`切换${obj[localStorage.getItem('type')]}成功!`)
                     })
                     break
                 case 3:
                     // 未安装
+                    console.log('未安装')
+                    if(show)
                     Notification.error({
                         id:'notInstall_bd',
                         style,
@@ -231,8 +237,9 @@ function Main(){
         })
     }
     function upDate(){
+        console.log(obj[localStorage.getItem('type')])
         Notification.warning({
-            title:`当前<${obj[localStorage.getItem('type')]}>有最新的补丁！是否进行更新？`,
+            title:`检测到${obj[localStorage.getItem('type')]}有最新的补丁！`,
             id:'update',
             style,
             duration:1000000000,
@@ -465,6 +472,7 @@ function Main(){
                                     style={{ margin: '0 12px' }}
                                     onClick={()=>{
                                         localStorage.setItem('type','d')
+                                        // Notification.remove('change_success')
                                         checkUpdate(localStorage.getItem('type'))
                                     }}
                                   >
@@ -472,12 +480,14 @@ function Main(){
                                   </Button>
                                   <Button onClick={()=>{
                                         localStorage.setItem('type','r')
+                                        // Notification.remove('change_success')
                                         checkUpdate(localStorage.getItem('type'))
                                     }} type='primary' loading={btnLoading} status='success' size='small' style={{ margin: '0 12px 0 0' }}>
                                     仅剧情
                                   </Button>
                                   <Button onClick={()=>{
                                         localStorage.setItem('type','c')
+                                        // Notification.remove('change_success')
                                         checkUpdate(localStorage.getItem('type'))
                                     }} loading={btnLoading} type='primary' size='small'>
                                     仅聊天
