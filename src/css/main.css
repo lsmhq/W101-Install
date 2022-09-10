@@ -13,6 +13,7 @@
     z-index: 100;
     background-color: #1c1c1c;
     position: relative;
+    z-index: 1000000;
     /* background-color: rgb(40, 40, 40); */
 }
 .nav-logo{
@@ -39,7 +40,8 @@
     align-items: center;
     font-size: 17px;
     padding-left: 5px;
-    color: white
+    color: white;
+    flex: 1;
 }
 .nav-bottom{
     flex: 1;
@@ -51,7 +53,8 @@
 }
 .nav-control{
     display: flex;
-    flex: 1;
+    /* flex: 1; */
+    width: auto;
     height: 100%;
     justify-content: flex-end;
 }
@@ -109,11 +112,18 @@
     background-size: cover;
     filter: blur(1.5);
 }
-.arrowClassName{
-    background-color: rgb(39, 39, 39);
+/* class="arco-carousel-indicator-wrapper arco-carousel-indicator-wrapper-bottom" */
+.arco-carousel-indicator-wrapper{
+    height: 20px !important;
+    display: none;
+    width: 100%;
+    background-color: #474747da !important;
 }
-.indicatorClassName{
-    display: none !important;
+.arco-carousel-indicator{
+    bottom: 7px !important;
+}
+.arco-carousel-indicator-item{
+    margin-right: 5px !important;
 }
 .left{
     position: relative;
@@ -148,17 +158,31 @@
 }
 .carousel-main{
     position: absolute;
-    top: 130px;
+    top: 125px;
     left: 40px;
     width: 350px;
-    height: 200px;
+    height: 205px;
     border-radius: 5px;
     overflow: hidden;
     background-color: #0052881d;
     margin: 0 auto;
 }
+.carousel-img{
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
 .arco-spin-loading{
     height: 90%;
+}
+.arco-spin{
+    height: 100% !important;
+}
+.arco-spin-children{
+    height: 100% !important;
+}
+.arco-carousel{
+    height: 100% !important;
 }
 .arco-spin-tip{
     color: white !important;
@@ -169,7 +193,7 @@
     position: absolute;
     top: 340px;
     left: 40px;
-    border-radius: 10px;
+    border-radius: 5px;
     background-color: rgba(45, 45, 45, 0.805);
 }
 .arco-tabs-header-title{
@@ -217,7 +241,7 @@
 .arco-collapse-item-content-box{
     font-size: 17px !important;
     padding: 10px 20px !important;
-    max-height: 200px;
+    max-height: 500px;
     overflow: scroll;
     width: 100%;
     word-break: break-all;

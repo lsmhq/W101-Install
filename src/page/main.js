@@ -1,6 +1,6 @@
 import { useEffect, useState} from 'react';
 import '../css/main.css'
-import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse, Message, Input  } from '@arco-design/web-react';
+import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import { IconWechat, IconAlipayCircle, IconCompass, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
@@ -402,6 +402,7 @@ function Main(){
         <div className='bottom-bg'></div>
         <div className='nav' 
             onMouseDown={(e)=>{
+                e.stopPropagation()
                 isDown = true 
                 baseX = e.clientX
                 baseY = e.clientY
@@ -410,13 +411,21 @@ function Main(){
         >
             <div className='nav-logo'><img alt='' src={su}/></div>
             <div className='nav-title'>Subata</div>
-            <div className='nav-control'>
-                <div className='control-btn' onClick={()=>{
+            <div className='nav-control'
+                onMouseDown={(e)=>{
+                    e.stopPropagation()
+                    isDown = false
+                    // console.log(baseX, baseY)
+                }}
+            >
+                <div className='control-btn' onClick={(e)=>{
+                    e.stopPropagation()
                     window.electronAPI.mini()
                 }}>
                     <IconMinus style={{fontSize:'20px'}}/>
                 </div>
-                <div className='control-btn btn-danger' onClick={()=>{
+                <div className='control-btn btn-danger' onClick={(e)=>{
+                    e.stopPropagation()
                     window.electronAPI.close()
                 }}>
                     <IconClose style={{fontSize:'20px'}}/>
@@ -435,14 +444,15 @@ function Main(){
                         <div className='carousel-main'>
                             <Spin dot tip="拼命中" style={{color:'white'}} loading={loading}>
                                 <Carousel
-                                showArrow='hover'
-                                indicatorClassName="indicatorClassName"
-                                arrowClassName='arrowClassName'
-                                animation='card'
-                                style={{ width: 350}}
-                                autoPlay={true}
+                                    showArrow='hover'
+                                    indicatorClassName="indicatorClassName"
+                                    arrowClassName='arrowClassName'
+                                    animation='card'
+                                    style={{ width: 350}}
+                                    autoPlay={true}
                                 >
                                     {imgs.map((img, index) => <div
+                                        className='carousel-img'
                                         key={index}
                                         style={{ width: '100%' }}
                                         onClick={()=>{
@@ -451,10 +461,10 @@ function Main(){
                                         }}
                                         >
                                         <img
+                                            className='carousel-img'
                                             style={{borderRadius:'10px'}}
                                             key={index}
                                             src={img.src}
-                                            style={{ width: '100%' }}
                                             alt=""
                                         />
                                         </div>
@@ -728,11 +738,11 @@ function Main(){
                 style={{ width: '100%' }}
             >
                 {
-                    message.map((v, idx)=>{
+                    message.reverse().map((v, idx)=>{
                         if(v.del){
                             return null
                         }
-                        return <CollapseItem style={{fontSize:'20px'}} key={v.id} header={<span>{`${v.title}-${v.username||'Subata'}`} {localStorage.getItem('userid')===v.id && <Button type='text' onClick={(e)=>{
+                        return <CollapseItem style={{fontSize:'20px'}} key={idx} header={<span><Tooltip position='bottom' content={v.time.split(' ')[0]}>{`${v.title}-${v.username||'Subata'}`}</Tooltip> {localStorage.getItem('userid')===v.id && <Button type='text' onClick={(e)=>{
                             e.preventDefault()
                             Notification.warning({
                                 style,
