@@ -1,14 +1,18 @@
 import { useEffect, useState} from 'react';
 import '../css/main.css'
-import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse, Message  } from '@arco-design/web-react';
+import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse, Message, Input  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconWechat, IconAlipayCircle, IconLink, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
+import { IconWechat, IconAlipayCircle, IconBulb, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
 import wechat from '../image/wechat.jpg'
 import Icon from './components/Icon';
 import QQ from '../image/QQ_share.jpg'
 import su from '../image/Subata_logo.png'
 import apiPath from './http/api'
+
+//'ws://localhost:8000'
+let wsPath = 'ws://101.43.216.253:8000'
+
 let { TabPane } = Tabs
 let CollapseItem = Collapse.Item
 let style = {
@@ -24,7 +28,7 @@ let obj = {
     d: '<全汉化>',
     c: '<轻聊>',
 }
-let ws = null
+let ws = null, socketError = false
 let imgMap = {
     qq:QQ,
     wx:wechat,
@@ -44,15 +48,22 @@ function Main(){
     let [count, setCount] = useState(0)
     let [news, setNews] = useState([])
     let [activity, setActivity] = useState([])
-    let [msgHeight, setHeight] = useState(window.screen.height - 40 + 'px')
+    let [msgHeight, setHeight] = useState(window.innerHeight - 40 + 'px')
     let [btnLoading, setBtnLoad] = useState(false)
     let [current, setCurrent] = useState(0)
     let [total, setTotal] = useState(0)
+    let [msgShow, setMsgShow] = useState(false)
+    let [text, setText] = useState('')
+    let [title, setTitle] = useState('')
+    let [user, setUser] = useState(localStorage.getItem('username'))
+    let [message, setMessage] = useState([])
+    let [root, setRoot] = useState(localStorage.getItem('root')||'')
     useEffect(() => {
         // 检查补丁更新
+        if(localStorage.getItem('type'))
         checkUpdate(false) 
         // 获取轮播
-        // getCarousel()
+        getCarousel()
         // 拖拽
         drag()
         // 黑主题
@@ -77,9 +88,13 @@ function Main(){
             setShow(true)
     },[img])
     useEffect(()=>{
+        setCount(0)
+    },[drawer])
+    useEffect(()=>{
         if(percent === 100){
             setBtnLoad(false)
             setPercent(0)
+            window.electronAPI.sound()
             Notification.success({
                 id:'download',
                 style,
@@ -87,27 +102,57 @@ function Main(){
                 content:'请点击下方开始游戏进行体验!',
                 duration: 2000
             })
+            // window.tools.changeType(localStorage.getItem('type'))
         }
     },[percent])
     function createSocket(){
-        ws = new WebSocket('ws://192.168.53.99:8000')
-        console.log(ws)
+        ws = new WebSocket(wsPath)
+        ws.onopen =()=>{
+            console.log('连接成功')   
+            getMessage()   
+        }
+        ws.onerror = ()=>{
+            reconnet()
+        }
+        ws.onclose = ()=>{
+            reconnet()
+        }
+        
+        // console.log(ws)
         ws.onmessage = (msg)=>{
-            console.log(msg.data)
+            // console.log(msg.data)
             let data = JSON.parse(msg.data)
-            if(data === 'success'){
+            if(data.id === localStorage.getItem('userid')){
                 Message.success({
                     style:{top:'20px'},
                     content:'发布成功',
-                    
+                    duration:3000,
+                    onClose:()=>{
+                        setTitle('')
+                        setText('')
+                    }
                 })
+            }else if(data.type === 'del'){
+                getMessage()
             }else{
+                window.electronAPI.sound()
                 Notification.info({
                     style,
-                    content:data.msg,
-                    title:data.title
+                    content:data.title,
+                    title:`您收到了一条来自${data.username || '神秘人'}的消息`
                 })
+                setCount(1)
             }
+            getMessage()
+        }
+        let reconnet = ()=>{ //重新连接websock函数
+            if(socketError)
+                return false
+            socketError = true
+            setTimeout(()=>{
+                ws = new WebSocket(wsPath)
+                socketError = false
+            },2000)
         }
     }
     function resize(){
@@ -149,14 +194,113 @@ function Main(){
     }
     function getCarousel(){
         apiPath.getCurl().then(res=>{
-            console.log(res)
+            // console.log(res.data.lunbo)
+            setImgs([...res.data.lunbo])
+            setLoading(false)
+        })
+    }
+    function getMessage(){
+        apiPath.getMessage().then(res=>{
+            // console.log(res.data.message)
+            setMessage([...res.data.messages])
+        })
+    }
+    function install(type){
+        Notification.error({
+            id:'notInstall_bd',
+            style,
+            title:'检测到未安装汉化补丁',
+            btn: (
+                <span style={{display:'flex', flexDirection:'column'}}>
+                  {
+                    type ? type==='d' && <Button
+                        loading = {btnLoading}
+                        type='primary'
+                        size='small'
+                        style={{ margin: '5px' }}
+                        status='warning'
+                        onClick={()=>{
+                            downLoad('d')
+                            localStorage.setItem('type', 'd')
+                        }}
+                    >
+                        全汉化安装
+                    </Button>: <Button
+                        loading = {btnLoading}
+                        type='primary'
+                        size='small'
+                        style={{ margin: '5px' }}
+                        status='warning'
+                        onClick={()=>{
+                            downLoad('d')
+                            localStorage.setItem('type', 'd')
+                        }}
+                    >
+                        全汉化安装
+                    </Button>
+                  }
+                  {
+                    type?type === 'r'&&<Button 
+                        loading={btnLoading}
+                        style={{ margin: '5px' }}
+                        status='success'
+                        onClick={()=>{
+                            downLoad('r')
+                            localStorage.setItem('type', 'r')
+                        }}
+                        type='primary' 
+                        size='small'
+                    >
+                        剧情汉化安装
+                    </Button>:<Button 
+                        loading={btnLoading}
+                        style={{ margin: '5px' }}
+                        status='success'
+                        onClick={()=>{
+                            downLoad('r')
+                            localStorage.setItem('type', 'r')
+                        }}
+                        type='primary' 
+                        size='small'
+                    >
+                        剧情汉化安装
+                    </Button>
+                  }
+                  {
+                    type?type==='c'&&<Button 
+                        loading={btnLoading}
+                        style={{ margin: '5px' }}
+                        onClick={()=>{
+                            downLoad('c')
+                            localStorage.setItem('type', 'c')
+                        }}
+                        type='primary' 
+                        size='small'
+                    >
+                        聊天纯享安装
+                    </Button>:<Button 
+                        loading={btnLoading}
+                        style={{ margin: '5px' }}
+                        onClick={()=>{
+                            downLoad('c')
+                            localStorage.setItem('type', 'c')
+                        }}
+                        type='primary' 
+                        size='small'
+                    >
+                        聊天纯享安装
+                    </Button>
+                  }
+                </span>
+            ),
         })
     }
     function checkUpdate(show = true){
-        console.log(obj[localStorage.getItem('type')])
-        Notification.remove('change_bd')
+        // console.log(obj[localStorage.getItem('type')])
+        Notification.remove('change_bd') 
+        // console.log(window.tools)
         window.tools.checkUpdate(localStorage.getItem('type'), (num)=>{
-            console.log('num----->',num)
+            // console.log('num----->',num)
             switch (num) {
                 case 1:
                     // 有更新
@@ -166,11 +310,7 @@ function Main(){
                     // 没有需要的更新
                     if(show)
                     window.tools.changeType(localStorage.getItem('type'),()=>{
-                        // Notification.success({
-                        //     style,
-                        //     id:'change_success',
-                        //     content:'切换成功!'
-                        // })
+                        window.electronAPI.sound()
                         Message.success({
                             style:{top:'20px'},
                             content:`切换${obj[localStorage.getItem('type')]}成功!`
@@ -179,65 +319,19 @@ function Main(){
                     break
                 case 3:
                     // 未安装
-                    console.log('未安装')
+                    // console.log('未安装')
                     if(show)
-                    Notification.error({
-                        id:'notInstall_bd',
-                        style,
-                        title:'检测到未安装汉化补丁',
-                        btn: (
-                            <span>
-                              {
-                                localStorage.getItem('type') === 'd' && <Button
-                                    loading = {btnLoading}
-                                    type='primary'
-                                    size='small'
-                                    style={{ margin: '0 12px' }}
-                                    onClick={()=>{
-                                        downLoad('d')
-                                        localStorage.setItem('type', 'd')
-                                    }}
-                                >
-                                    全汉化安装
-                                </Button>
-                              }
-                              {
-                                localStorage.getItem('type') === 'r' && <Button 
-                                    loading={btnLoading}
-                                    onClick={()=>{
-                                        downLoad('r')
-                                        localStorage.setItem('type', 'r')
-                                    }}
-                                    type='primary' 
-                                    size='small'
-                                >
-                                    剧情汉化安装
-                                </Button>
-                              }
-                              {
-                                localStorage.getItem('type') === 'c' && <Button 
-                                    loading={btnLoading}
-                                    onClick={()=>{
-                                        downLoad('c')
-                                        localStorage.setItem('type', 'c')
-                                    }}
-                                    type='primary' 
-                                    size='small'
-                                >
-                                    聊天纯享安装
-                                </Button>
-                              }
-                            </span>
-                        ),
-                    })
+                        install(localStorage.getItem('type'))
                     break
                 default:
                     break;
             }
+        },(err)=>{
+            console.log(err)
         })
     }
     function upDate(){
-        console.log(obj[localStorage.getItem('type')])
+        // console.log(obj[localStorage.getItem('type')])
         Notification.warning({
             title:`检测到${obj[localStorage.getItem('type')]}有最新的补丁！`,
             id:'update',
@@ -311,7 +405,7 @@ function Main(){
                 isDown = true 
                 baseX = e.clientX
                 baseY = e.clientY
-                console.log(baseX, baseY)
+                // console.log(baseX, baseY)
             }}
         >
             <div className='nav-logo'><img alt='' src={su}/></div>
@@ -391,7 +485,22 @@ function Main(){
                             <Button onClick={()=>{
                                 
                                 // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
-                                window.tools.startGame()
+                                // console.log(localStorage.getItem('steamInstall'))
+                                if(localStorage.getItem('steamInstall') === 'true'){
+                                    window.tools.startGame((err)=>{
+                                        Notification.error({
+                                            style,
+                                            title:'检测到未安装Wizard101',
+                                            content: err.path
+                                        })
+                                    })
+                                }else{
+                                    Notification.error({
+                                        style,
+                                        title:'检测到未安装Steam',
+                                    })
+                                }
+
                             }} status='success' loading={btnLoading} type='primary' className='openGame'>开始游戏</Button>
                         </div>
                     </div>
@@ -412,11 +521,11 @@ function Main(){
                 }
             }>
                 <Icon
-                    Child={<IconLink className="icon-child"/>}
+                    Child={<IconBulb className='icon-child'/>}
                     onClick={()=>{
                         window.electronAPI.openBroswer('https://www.subata.top/')
                     }}
-                    tips="前往社区"
+                    tips="前往社区"  
                 />
                 <Icon
                     Child={<IconThumbUp className="icon-child"/>}
@@ -437,7 +546,9 @@ function Main(){
                     onClick={()=>{
                         // setZf('qq')
                         window.tools.connect(()=>{
+                            window.electronAPI.sound()
                             Message.success({
+                                style:{top:'20px'},
                                 content:'修改host文件成功，可以尝试在不用加速器的情况下进行游戏！',
                                 style:{top:'20px'}
                             })
@@ -503,11 +614,42 @@ function Main(){
                 <Icon
                     Child={<IconDelete className="icon-child"/>}
                     onClick={()=>{
-                        window.tools.init(()=>{
-                            Message.success({
-                                title:'卸载成功!',
+                        if(btnLoading){
+                            Message.error({
                                 style:{top:'20px'},
-                            })
+                                content:'正在安装中，请稍后再试！',
+                                style:{top:'20px'},
+                            }) 
+                            return
+                        }
+                        window.tools.checkUpdate(localStorage.getItem('type') || 'r', (num)=>{
+                            if(num !== 3){
+                                Notification.warning({
+                                    title:'确定要狠心卸载吗?',
+                                    style,
+                                    id:'unInstall',
+                                    content:(
+                                        <span>
+                                            <Button type='primary' status='success' style={{marginRight:'10px'}} onClick={()=>{
+                                                window.tools.init(()=>{
+                                                    Notification.remove('unInstall')
+                                                    window.electronAPI.sound()
+                                                    Message.success({
+                                                        style:{top:'20px'},
+                                                        content:'卸载成功!',
+                                                        duration:2000
+                                                    })
+                                                })
+                                            }}>确定</Button>
+                                            <Button onClick={()=>{Notification.remove('unInstall')}}>取消</Button>
+                                        </span>
+                                    )
+                                },(err)=>{
+                                    console.log(err)
+                                })
+                            }else{
+                                install()
+                            }
                         })
                     }}
                     tips="卸载补丁"
@@ -539,7 +681,19 @@ function Main(){
         </div>
         <Drawer 
             visible={drawer}
-            footer={null}
+            footer={(
+                <span>
+                    {<Button onClick={()=>{
+                        setMsgShow(true)
+                    }}>发布通知</Button>}
+                </span>
+            )}
+            onOk={() => {
+                setDrawer(false);
+            }}
+            onCancel={() => {
+                setDrawer(false);
+            }}
             title="通知中心"
             escToExit
             width={350}
@@ -553,15 +707,36 @@ function Main(){
                 background:'rgb(104 104 104)',
                 padding:0
             }}
-            onCancel={()=>{setDrawer(false)}}
         >
             <Collapse       
                 style={{ width: '100%' }}
             >
                 {
-                    [1,2,3,4,5].map((v)=>{
-                        return <CollapseItem style={{fontSize:'20px'}} key={v} header='消息标题' name={v}>
-                            消息1消息1消息1消息1消息1消息1消息1消息1消息1
+                    message.map((v, idx)=>{
+                        if(v.del){
+                            return null
+                        }
+                        return <CollapseItem style={{fontSize:'20px'}} key={v.id} header={<span>{`${v.title}-${v.username||'Subata'}`} {localStorage.getItem('userid')===v.id && <Button type='text' onClick={(e)=>{
+                            e.preventDefault()
+                            Notification.warning({
+                                style,
+                                id:'delmessage',
+                                title:'确定要删除这条通知吗?',
+                                content:<><Button onClick={()=>{
+                                    apiPath.delMessage({id:v.msgid}).then(res=>{
+                                        if(res.data.success){
+                                            Message.success({
+                                                style:{top:'20px'},
+                                                content:'删除成功'
+                                            })
+                                        }
+                                        Notification.remove('delmessage')
+                                        ws.send(JSON.stringify({type:'del'}))
+                                    })
+                                }}>确定</Button></>
+                            })
+                        }}>删除</Button>}</span>} name={idx}>
+                            <span dangerouslySetInnerHTML={{__html:v.msg.replace(/[\n]/g,'<br/>')}}></span>
                         </CollapseItem>
                     })
                 }
@@ -585,6 +760,77 @@ function Main(){
             }}
             children={[<img key={1} className='zf-img' src={img} alt=''/>]}
             footer={null}
+        />
+        <Modal
+            title='通知发布'
+            style={{textAlign:'center'}}
+            visible={msgShow}
+            maskClosable={false}
+            onCancel={()=>{
+                setMsgShow(false)
+            }}
+            children={<>
+                <Input 
+                    placeholder='发布者'
+                    type='text'
+                    maxLength={15}
+                    value={user}
+                    onChange = {(val)=>{
+                        setUser(val)
+                        localStorage.setItem('username',val)
+                    }}
+                />
+                <Input 
+                    placeholder='标题'
+                    type='text'
+                    value={title}
+                    onChange = {(val)=>{
+                        setTitle(val)
+                    }}
+                />
+                <Input.TextArea
+                    placeholder='消息内容'
+                    style={{
+                        height:'300px'
+                    }}
+                    value={text}
+                    onChange={(val)=>{
+                        setText(val)
+                    }}
+                />
+                {
+                    root !== 'wizard101-subata-lsmhq' && <Input 
+                        placeholder='管理员口令'
+                        type='text'
+                        value={root}
+                        onChange = {(val)=>{
+                            setRoot(val)
+                            if(val === 'wizard101-subata-lsmhq'){
+                                localStorage.setItem('root','wizard101-subata-lsmhq')
+                            }
+                        }}
+                    />
+                }
+            </>}
+            footer={(<span>
+                {
+                   root === 'wizard101-subata-lsmhq' && <Button type='primary' status='success' onClick={()=>{
+                        
+                        let data = {
+                            msg:text,
+                            title:title,
+                            id:localStorage.getItem('userid'),
+                            username:user,
+                            msgid:Math.random()
+                        }
+                        if(text.length === 0) return
+                        if(title.length === 0) return
+                        if(user.length === 0) return
+                        ws.send(JSON.stringify(data))
+                        setMsgShow(false)
+                    }}>发布</Button>
+                }
+            </span>)}
         />
     </div>    
 }

@@ -76,7 +76,7 @@ function init(callback) {
         withFileTypes: true
     })
     let unlinkArr = ['version_zh_cn_d', 'version_zh_cn_r', 'version_zh_cn_u', 'version_zh_cn_c', 'Locale_English-Root.wad', 'Locale_English-Root.wad.d', 'Locale_English-Root.wad.r', 'Locale_English-Root.wad.c']
-    console.log('卸载')
+    // console.log('卸载')
     files.forEach(file => {
         if (unlinkArr.includes(file.name)) {
             fs.unlinkSync(path + file.name)
@@ -142,9 +142,9 @@ function downLoad(type, getMark, getProcess, failed) {
                     if (names.includes('Locale_English-Root.wad.' + type)) {
                         fs.unlinkSync(path + 'Locale_English-Root.wad.' + type)
                     }
-                    console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
-                    console.log(`\n此次更新的内容如下:\n`)
-                    console.log(mark)
+                    // console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
+                    // console.log(`\n此次更新的内容如下:\n`)
+                    // console.log(mark)
                     getMark(mark)
                     getFile(url, out, () => {
                         fs.writeFileSync(path + `version_zh_cn_${[type]}`, version)
@@ -163,6 +163,7 @@ function downLoad(type, getMark, getProcess, failed) {
                 getMark(mark)
                 getFile(url, out, (filePath) => {
                     fs.writeFileSync(path + `version_zh_cn_${type}`, version)
+                    changeType(type)
                 }, getProcess)
             }
         } else {
@@ -172,7 +173,7 @@ function downLoad(type, getMark, getProcess, failed) {
 }
 // 下载文件
 function getFile(uri, filePath, callback, onData) {
-    console.log(filePath)
+    // console.log(filePath)
     if (uri) {
         let currentTotal = 0
         let total = 0
@@ -202,7 +203,7 @@ function changeType(type, callback) {
     })
     let names = files.map(file => file.name)
     if (names.includes('Locale_English-Root.wad.' + type)) {
-        console.log(`\n检测到${obj[type]}版，正在切换...`)
+        // console.log(`\n检测到${obj[type]}版，正在切换...`)
         let file = fs.createReadStream(path + 'Locale_English-Root.wad.' + type)
         let out = fs.createWriteStream(path + 'Locale_English-Root.wad')
         file.pipe(out)
@@ -250,7 +251,7 @@ function getPath(callback, error){
     //查
     child_process.exec(`REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam /v InstallPath`,function(error,stdout,stderr){
         if(error != null){
-            console.log('exec error:'+error);
+            // console.log('exec error:'+error);
             error(error)
             return
         }
@@ -261,27 +262,38 @@ getPath((stdout, stderr)=>{
     // console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
     let steamPath = stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101\\Data\\GameData\\'
     path = steamPath
-    wizPath = stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101\\Bin\\'
+    wizPath = stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101'
 }, (error)=>{
     console.log(error)
 }) 
+
+// 开始游戏
 function startGame(callback){
-    // let exe = wizPath + "startGame.exe"
-    // let exe = wizPath + "WizardGraphicalClient.exe -L login.us.wizard101.com 12000"
-    // console.log(exe)
-    // child_process.exec(exe, (stdout, stderr) => {
-    //     console.log(stdout, stderr)
-    // })
-    let exe = __dirname + '/startGame.bat'
-    console.log(__dirname)
-    // let files = fs.readdirSync(wizPath,{withFileTypes:true})
-    // let names = files.map(file=>file.name)
-    // if(names.includes('startGame.exe')){
-        shell.openPath(exe)
-    // }else{
-        // callback()
-    // }
+    // console.log(wizPath)
+    try {
+        let files = fs.readdirSync('D:\\steam\\steamapps\\common\\Wizard101', {withFileTypes:true})
+        let names = files.map(file=>file.name)
+        // console.log(names)
+        if(names.includes('startGame.bat')){
+            let exe = wizPath + "\\startGame.bat"
+            // console.log(exe)
+            shell.openPath(exe)
+        }else{
+            getFile(`http://101.43.216.253:3001/bat/startGame.bat`, `${wizPath}\\startGame.bat`,()=>{
+                // console.log('添加bat成功')
+                let exe = wizPath + "\\startGame.bat"
+                // console.log(exe)
+                shell.openPath(exe)
+            },()=>{})
+        }
+    } catch (error) {
+        if(error){
+            callback(error)
+        }
+    }
+
 }
+
 window.tools = {
     initDns,
     connect,

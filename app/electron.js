@@ -11,11 +11,12 @@ function createWindow () {
     width: 1250, // 窗口宽度
     height: 700, // 窗口高度
     title: "Subata汉化", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
-    icon: nativeImage.createFromPath('./Subata_logo.png'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
+    icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: false,
     resizable: false,
     darkTheme: true,
     transparent:true,
+    backgroundColor:'#282b30',
     webPreferences: { // 网页功能设置
       nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
       webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
@@ -27,10 +28,10 @@ function createWindow () {
   });
   mainWindow.webContents.openDevTools() // 打开窗口调试
   // 加载应用 --打包react应用后，__dirname为当前文件路径
-  mainWindow.loadURL(`file://${__dirname}/../build/index.html`);
+  // mainWindow.loadURL(`https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/`);
 
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:3000/');
+  mainWindow.loadURL('http://localhost:3000/');
 
   // 解决应用启动白屏问题
   mainWindow.on('ready-to-show', () => {

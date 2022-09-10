@@ -165,7 +165,7 @@
 }
 .tips{
     width: 350px;
-    height: 230px;
+    /* height: 230px; */
     position: absolute;
     top: 340px;
     left: 30px;
@@ -214,8 +214,14 @@
     white-space: nowrap;
 }
 .arco-collapse-item-content-box{
-    font-size: 20px !important;
+    font-size: 17px !important;
     padding: 10px 20px !important;
+    max-height: 200px;
+    overflow: scroll;
+    width: 100%;
+    word-break: break-all;
+    box-sizing: border-box;
+    user-select: text;
 }
 .arco-progress-line-outer{
     height: 8px !important;
@@ -232,7 +238,7 @@
 .op-btn{
     position: absolute;
     bottom: 20px;
-    right: 60px;
+    right: 40px;
     border-radius: 5px;
     overflow: hidden;
 }
