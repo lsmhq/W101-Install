@@ -810,6 +810,7 @@ function Main(){
                     placeholder='标题'
                     type='text'
                     value={title}
+                    maxLength={20}
                     onChange = {(val)=>{
                         setTitle(val)
                     }}
