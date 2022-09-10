@@ -2,7 +2,7 @@ import { useEffect, useState} from 'react';
 import '../css/main.css'
 import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse, Message, Input  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconWechat, IconAlipayCircle, IconBulb, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
+import { IconWechat, IconAlipayCircle, IconCompass, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
 import wechat from '../image/wechat.jpg'
 import Icon from './components/Icon';
@@ -427,7 +427,9 @@ function Main(){
             <div className='body-main'>
                 <div className='body-main-top'>
                     <div className='left'>
-                        <div className='logo'>
+                        <div className='logo' onClick={()=>{
+                            window.electronAPI.openBroswer('https://www.wizard101.com')
+                        }}>
                             <img src={logo} alt=''/>
                         </div>
                         <div className='carousel-main'>
@@ -440,13 +442,18 @@ function Main(){
                                 style={{ width: 350}}
                                 autoPlay={true}
                                 >
-                                    {imgs.map((src, index) => <div
+                                    {imgs.map((img, index) => <div
                                         key={index}
                                         style={{ width: '100%' }}
+                                        onClick={()=>{
+                                            if(img.href)
+                                                window.electronAPI.openBroswer(img.href)
+                                        }}
                                         >
                                         <img
+                                            style={{borderRadius:'10px'}}
                                             key={index}
-                                            src={src}
+                                            src={img.src}
                                             style={{ width: '100%' }}
                                             alt=""
                                         />
@@ -463,17 +470,19 @@ function Main(){
                                         loading={loading1}
                                         noDataElement={<></>}
                                         render={(item, index) => <List.Item key={item} onClick={()=>{
-                                            window.electronAPI.openBroswer(item.url)
+                                            if(item.url)
+                                                window.electronAPI.openBroswer(item.url)
                                         }}>{item.title}</List.Item>}
                                     />
                                 </TabPane>
-                                <TabPane key='2' title='活动'>
+                                <TabPane key='2' className='tabPane' title='活动'>
                                     <List
                                         dataSource={activity}
                                         loading={loading1}
                                         noDataElement={<></>}
                                         render={(item, index) => <List.Item key={item} onClick={()=>{
-                                            window.electronAPI.openBroswer(item.url)
+                                            if(item.url)
+                                                window.electronAPI.openBroswer(item.url)
                                         }}>{item.title}</List.Item>}
                                     />
                                 </TabPane>
@@ -481,6 +490,13 @@ function Main(){
                         </div>
                     </div>
                     <div className='right'>
+                        <div className='subata-btn'>
+                            <Button color='#4cc6e7' onClick={()=>{
+                                window.electronAPI.openBroswer('https://www.subata.top')
+                            }} type='primary' className='openGame'>
+                                中文攻略(Subata)
+                            </Button>
+                        </div>
                         <div className='op-btn'>
                             <Button onClick={()=>{
                                 
@@ -521,11 +537,11 @@ function Main(){
                 }
             }>
                 <Icon
-                    Child={<IconBulb className='icon-child'/>}
+                    Child={<IconCompass className='icon-child'/>}
                     onClick={()=>{
-                        window.electronAPI.openBroswer('https://www.subata.top/')
+                        window.electronAPI.openBroswer('https://www.wizard101.com/')
                     }}
-                    tips="前往社区"  
+                    tips="前往官网"  
                 />
                 <Icon
                     Child={<IconThumbUp className="icon-child"/>}
