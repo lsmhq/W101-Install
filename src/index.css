@@ -1,8 +1,8 @@
 html,body{
   margin: 0 auto;
   overflow: hidden;
-  height: 100%;
-  width: 100%; 
+  height: 100% !important;
+  width: 100% !important; 
   border-radius: 5px;
   /* 抗锯齿性,避免文字被放大后会产生锯齿 */
 	-webkit-font-smoothing: antialiased;

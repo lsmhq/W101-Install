@@ -3,7 +3,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: #2e58ae;
+    background-color: #505050;
     /* border: 3px solid rgb(45, 45, 45); */
 }
 .nav{
@@ -11,7 +11,7 @@
     height: 40px;
     display: flex;
     z-index: 100;
-    background-color: #1c1c1c;
+    background-color: #2c2c2c;
     position: relative;
     z-index: 1000000;
     /* background-color: rgb(40, 40, 40); */
@@ -106,11 +106,13 @@
     height: 100%;
     bottom: -20px;
     left: 0;
-    background: url(../image/bottom_bg.jpg);
+    filter: blur(1.5) brightness(0.5) !important;
+    /* background: url(../image/bottom_bg.jpg); */
+    background:url(../image//bottom_bg_1.jpg);
     background-repeat: no-repeat;
     background-position: right;
     background-size: cover;
-    filter: blur(1.5);
+    
 }
 /* class="arco-carousel-indicator-wrapper arco-carousel-indicator-wrapper-bottom" */
 .arco-carousel-indicator-wrapper{
@@ -132,24 +134,28 @@
 }
 .right{
     flex: 1;
-    min-width: 300px;
+    /* min-width: 300px; */
     position: relative;
 }
 .right-nav{
-    width: 50px;
+    width: 80px;
     min-width: 50px;
     height: 100%;
-    background-color: rgb(24, 24, 24);
+    background-color: rgba(24, 24, 24, 0.69);
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     z-index: 100;
     overflow: hidden;
+    color: rgb(199, 199, 199) !important;
 }
 .logo{
     position: absolute;
     top: 10px;
     left: 40px;
     width: 180px;
+    height: 20%;
 }
 .logo img{
     width: 100%;
@@ -186,6 +192,9 @@
 }
 .arco-spin-tip{
     color: white !important;
+}
+.arco-drawer{
+    height: 95% !important;
 }
 .tips{
     width: 350px;
@@ -260,17 +269,24 @@
     height: 210px;
     overflow: scroll;
 }
+.btn-group{
+    position: absolute;
+    width: 100%;
+    /* height: 220px; */
+    right: 10px;
+    bottom: 0px;
+}
 .op-btn{
     position: absolute;
-    top: 535px;
-    right: 60px;
+    bottom: 40px;
+    right: 20px;
     border-radius: 5px;
     overflow: hidden;
 }
 .subata-btn{
     position: absolute;
     bottom: 125px;
-    right: 60px;
+    right: 20px;
     border-radius: 5px;
     overflow: hidden;
 }
@@ -278,8 +294,10 @@
     width: 250px;
     height: 70px !important;
     font-size: 25px !important;
-    color: rgb(240, 240, 240) !important;
+    color: rgb(255, 255, 255) !important;
     transition: all ease 0.3s;
+    box-shadow: #2c2c2c 5px !important;
+    /* border: 1px solid rgb(108, 108, 108) !important; */
 }
 /* .openGame:hover{
     font-size: 35px !important;
@@ -290,19 +308,34 @@
     overflow: hidden;
     cursor: pointer;
     -webkit-user-drag: none;
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    justify-content: center;
+}
+.icon-container:hover{
+    background-color: #464646;
 }
 .icon{
-    width: 100%;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 4px;
     transition: all ease 0.4s;
     -webkit-user-drag: none;
+    border-radius: 50%;
 }
-.icon:hover{
-    background-color: rgb(255, 255, 255);
-    transform:scale(1.3);
+.icon-content{
+    font-size: 13px;
+    writing-mode: vertical-lr;
 }
+/* .icon:hover{
+    background-color: rgb(50, 50, 50);
+    transform:scale(1.1);
+    background-color: #373737;
+    border-radius: 50%;
+    color: #ffffff !important;
+} */
 .icon-child{
     width: 100% !important; 
     height: 100% !important;

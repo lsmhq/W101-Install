@@ -1,6 +1,6 @@
 {
   "name": "electron-app",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "author": {
     "name": "lsmhq"
   },
@@ -88,11 +88,18 @@
   "build": {
     "productName": "Subata",
     "appId": "Subata",
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "app/images/logo.ico",
+      "uninstallerIcon": "app/images/uninstall.ico",
+      "uninstallDisplayName": "${productName}${version}"
+    },
     "win":{
       "icon":"app/images/logo.ico"
     },
     "directories": {
-      "output": "release"
+      "output": "app/release"
     }
   },
   "eslintConfig": {

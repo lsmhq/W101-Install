@@ -4,6 +4,7 @@ import './App.css';
 import Main from './page/main';
 function App() {
   let [show, setShow] = useState(false)
+  // getSteam() 
   useEffect(() => {
       document.onkeydown = function(){
         var e = window.event || arguments[0];
@@ -17,22 +18,12 @@ function App() {
           return false;
         }
     }
+    console.log('加载')
+    window.electronAPI.getScale()
     if(localStorage.getItem('userid') === null){
       localStorage.setItem('userid',Math.random())
     }  
-    getSteam() 
   }, [])
-  function getSteam(){
-    window.tools.getPath((stdout, stderr)=>{
-      // console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
-      let steamPath = stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101\\'
-      localStorage.setItem('steamPath', steamPath)
-      localStorage.setItem('steamInstall', true)
-    }, (error)=>{
-      Message.warning('检测到未安装Steam')
-      localStorage.setItem('steamInstall', false)
-    }) 
-  }
   return (
     <div className="App">
       <Main/>

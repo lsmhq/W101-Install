@@ -2,7 +2,7 @@ import { useEffect, useState} from 'react';
 import '../css/main.css'
 import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconWechat, IconAlipayCircle, IconCompass, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
+import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
 import wechat from '../image/wechat.jpg'
 import Icon from './components/Icon';
@@ -10,13 +10,14 @@ import QQ from '../image/QQ_share.jpg'
 import su from '../image/Subata_logo.png'
 import apiPath from './http/api'
 
+
 //'ws://localhost:8000'
 let wsPath = 'ws://101.43.216.253:8000'
-
+let timerr
 let { TabPane } = Tabs
 let CollapseItem = Collapse.Item
 let style = {
-    right:'20px',
+    right:'50px',
     top:'20px'
 }
 Notification.config({
@@ -36,6 +37,7 @@ let imgMap = {
 }
 let isDown = false;  // 鼠标状态
 let baseX = 0,baseY = 0; //监听坐标
+let prveX = 0, prveY = 0 // 上次XY
 function Main(){
     let [loading, setLoading] = useState(true)
     let [loading1, setLoading1] = useState(true)
@@ -48,7 +50,7 @@ function Main(){
     let [count, setCount] = useState(0)
     let [news, setNews] = useState([])
     let [activity, setActivity] = useState([])
-    let [msgHeight, setHeight] = useState(window.innerHeight - 40 + 'px')
+    let [msgHeight, setHeight] = useState('95%')
     let [btnLoading, setBtnLoad] = useState(false)
     let [current, setCurrent] = useState(0)
     let [total, setTotal] = useState(0)
@@ -58,10 +60,16 @@ function Main(){
     let [user, setUser] = useState(localStorage.getItem('username'))
     let [message, setMessage] = useState([])
     let [root, setRoot] = useState(localStorage.getItem('root')||'')
+    let [play, setPlay] = useState(localStorage.getItem('wizInstall'))
     useEffect(() => {
-        // 检查补丁更新
-        if(localStorage.getItem('type'))
-        checkUpdate(false) 
+        // 初始化地址
+        getSteam(()=>{
+            // 检查补丁更新
+            if(localStorage.getItem('type')){
+                checkUpdate(false) 
+            }
+        })
+        
         // 获取轮播
         getCarousel()
         // 拖拽
@@ -70,13 +78,31 @@ function Main(){
         dark()
         // 获取活动新闻
         getData()
+        clearInterval(timerr)
+        timerr = setInterval(()=>{
+            getData()
+        },60000)
         // 创建WebSocket
         createSocket()
         // 窗口自适应
         resize()
+        if(localStorage.getItem('wizInstall') === 'false'){
+            Notification.error({
+                style,
+                id:'notInstallWizard101',
+                title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
+                content: <span>
+                    <Button onClick={()=>{
+                        let fileSelect = document.getElementById('selectWiz')
+                        fileSelect.click()
+                    }}>手动选择游戏路径</Button>
+                </span>
+            })
+        }
         return () => {
             // 注销
             destroy()
+            localStorage.setItem('msgLength', message.length)
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -105,6 +131,45 @@ function Main(){
             // window.tools.changeType(localStorage.getItem('type'))
         }
     },[percent])
+    function getSteam(callback){
+        // console.log('getSteam')
+        window.tools.getPath((stdout, stderr)=>{
+          console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
+          if(localStorage.getItem('gameDataPath') === null){
+              localStorage.setItem('gameDataPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101\\Data\\GameData\\')
+          }
+          if(localStorage.getItem('wizPath') === null){  
+              localStorage.setItem('wizPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101')
+          } 
+          if(localStorage.getItem('steamPath') === null){
+              localStorage.setItem('steamPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
+          }
+          window.wizPath = localStorage.getItem('wizPath')
+          window.path = localStorage.getItem('gameDataPath')
+          console.log(window.wizPath)
+          console.log(window.path)
+          console.log('============')
+          window.tools.checkGameInstall((type, err)=>{
+            console.log(type, err)
+            if(type === 1){
+              // Message.warning('检测到未安装Steam')
+              localStorage.setItem('steamInstall', false)
+              return   
+            }
+            localStorage.setItem('steamInstall', true)
+            if(type === 2){
+              localStorage.setItem('wizInstall', false)
+              // Message.warning('没有找到Wizard101安装目录')
+              return
+            }
+            localStorage.setItem('wizInstall', true)
+            setPlay('true')
+          }) 
+          callback()  
+      }, (error)=>{
+          console.log(error)
+      }) 
+      }
     function createSocket(){
         ws = new WebSocket(wsPath)
         ws.onopen =()=>{
@@ -183,9 +248,14 @@ function Main(){
               const x = ev.screenX - baseX
               const y = ev.screenY - baseY
             //   console.log(x, y)
-              window.electronAPI.sendXY({
-                  x,y
-              })
+              if(prveX !== x || prveY !== y){
+                console.log(x, y)
+                prveX = x
+                prveY = y
+                window.electronAPI.sendXY({
+                    x, y
+                })
+              }
             }
         })
         document.addEventListener('mouseup',()=>{
@@ -202,7 +272,11 @@ function Main(){
     function getMessage(){
         apiPath.getMessage().then(res=>{
             // console.log(res.data.message)
-            setMessage([...res.data.messages])
+            setMessage([...res.data.messages.reverse()])
+            if(localStorage.getItem('msgLength') && res.data.messages.length != localStorage.getItem('msgLength')){
+                setCount(1)
+            }
+            localStorage.setItem('msgLength', res.data.messages.length)
         })
     }
     function install(type){
@@ -296,11 +370,11 @@ function Main(){
         })
     }
     function checkUpdate(show = true){
-        // console.log(obj[localStorage.getItem('type')])
+        console.log(obj[localStorage.getItem('type')])
         Notification.remove('change_bd') 
         // console.log(window.tools)
         window.tools.checkUpdate(localStorage.getItem('type'), (num)=>{
-            // console.log('num----->',num)
+            console.log('num----->',num)
             switch (num) {
                 case 1:
                     // 有更新
@@ -319,7 +393,7 @@ function Main(){
                     break
                 case 3:
                     // 未安装
-                    // console.log('未安装')
+                    console.log('未安装')
                     if(show)
                         install(localStorage.getItem('type'))
                     break
@@ -328,10 +402,23 @@ function Main(){
             }
         },(err)=>{
             console.log(err)
+        },(err)=>{
+            console.log(err)
+            Notification.error({
+                style,
+                id:'notInstallWizard101',
+                title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
+                content: <span>
+                    <Button onClick={()=>{
+                        let fileSelect = document.getElementById('selectWiz')
+                        fileSelect.click()
+                    }}>手动选择游戏路径</Button>
+                </span>
+            })
         })
     }
     function upDate(){
-        // console.log(obj[localStorage.getItem('type')])
+        console.log(obj[localStorage.getItem('type')])
         Notification.warning({
             title:`检测到${obj[localStorage.getItem('type')]}有最新的补丁！`,
             id:'update',
@@ -346,7 +433,9 @@ function Main(){
                         type='primary'
                         size='small'
                         style={{ margin: '0 12px' }}
-                        onClick={downLoad}
+                        onClick={()=>{
+                            downLoad()
+                        }} 
                     >
                         全汉化更新
                     </Button>
@@ -354,7 +443,9 @@ function Main(){
                   {
                     localStorage.getItem('type') === 'r' && <Button 
                         loading={btnLoading}
-                        onClick={downLoad} 
+                        onClick={()=>{
+                            downLoad()
+                        }} 
                         type='primary' 
                         size='small'
                     >
@@ -364,7 +455,9 @@ function Main(){
                   {
                     localStorage.getItem('type') === 'c' && <Button 
                         loading={btnLoading}
-                        onClick={downLoad} 
+                        onClick={()=>{
+                            downLoad()
+                        }} 
                         type='primary' 
                         size='small'
                     >
@@ -378,6 +471,7 @@ function Main(){
     function downLoad(type){
         setBtnLoad(true)
         Notification.remove('notInstall_bd')
+        Notification.remove('update')
         window.tools.downLoad(type || localStorage.getItem('type') ,(mark)=>{
             Notification.warning({
                 id:'download',
@@ -394,6 +488,28 @@ function Main(){
                     content:err,
                     style,
                     title:'请将本消息提供给<灭火器>'
+                })
+            }
+        },(num)=>{
+            console.log(num)
+            if(num === 1){
+                setBtnLoad(false)
+                setPercent(0)
+                window.electronAPI.sound()
+                Notification.success({
+                    id:'download',
+                    style,
+                    title:'安装完成!',
+                    content:'请点击下方开始游戏进行体验!',
+                    duration: 2000
+                })
+            }
+            if(num === 2){
+                window.electronAPI.sound()
+                Notification.remove('download')
+                Message.success({
+                    style:{top:'20px'},
+                    content:`切换${obj[localStorage.getItem('type')]}成功!`
                 })
             }
         })
@@ -479,7 +595,7 @@ function Main(){
                                         dataSource={news}
                                         loading={loading1}
                                         noDataElement={<></>}
-                                        render={(item, index) => <List.Item key={item} onClick={()=>{
+                                        render={(item, index) => <List.Item key={item.url} onClick={()=>{
                                             if(item.url)
                                                 window.electronAPI.openBroswer(item.url)
                                         }}>{item.title}</List.Item>}
@@ -490,7 +606,7 @@ function Main(){
                                         dataSource={activity}
                                         loading={loading1}
                                         noDataElement={<></>}
-                                        render={(item, index) => <List.Item key={item} onClick={()=>{
+                                        render={(item, index) => <List.Item key={item.url} onClick={()=>{
                                             if(item.url)
                                                 window.electronAPI.openBroswer(item.url)
                                         }}>{item.title}</List.Item>}
@@ -500,39 +616,41 @@ function Main(){
                         </div>
                     </div>
                     <div className='right'>
-                        <div className='subata-btn'>
-                            <Button color='#4cc6e7' onClick={()=>{
-                                window.electronAPI.openBroswer('https://www.subata.top')
-                            }} type='primary' className='openGame'>
-                                中文攻略(Subata)
-                            </Button>
-                        </div>
-                        <div className='op-btn'>
-                            <Button onClick={()=>{
-                                
-                                // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
-                                // console.log(localStorage.getItem('steamInstall'))
-                                if(localStorage.getItem('steamInstall') === 'true'){
-                                    window.tools.startGame((err)=>{
-                                        Notification.error({
-                                            style,
-                                            title:'检测到未安装Wizard101',
-                                            content: err.path
+                        <div className='btn-group'>
+                            <div className='subata-btn'>
+                                <Button color='#4cc6e7' onClick={()=>{
+                                    window.electronAPI.openBroswer('https://www.subata.top')
+                                }} type='primary' className='openGame'>
+                                    中文攻略(Subata)
+                                </Button>
+                            </div>
+                            <div className='op-btn'>
+                                <Button onClick={()=>{
+                                    
+                                    // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
+                                    console.log(localStorage.getItem('wizInstall'))
+                                    if(localStorage.getItem('wizInstall') === 'true'){
+                                        window.tools.startGame((err)=>{
+                                            Notification.error({
+                                                id:'notInstallWizard101',
+                                                style,
+                                                title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
+                                                content: err.path
+                                            })
                                         })
-                                    })
-                                }else{
-                                    Notification.error({
-                                        style,
-                                        title:'检测到未安装Steam',
-                                    })
-                                }
-
-                            }} status='success' loading={btnLoading} type='primary' className='openGame'>开始游戏</Button>
+                                    }else{   
+                                        let fileSelect = document.getElementById('selectWiz')
+                                        fileSelect.click()
+                                    }
+                                }} status='success' loading={btnLoading} type='primary' className='openGame'>{play==='true'?'开始游戏':'选择Wizard.exe'}</Button>
+                            </div>
                         </div>
+
+              
                     </div>
                 </div>
                 <div className='body-main-bottom'>
-                    {percent > 0 && <Progress formatText={()=><span>{`${(current / 1024 / 1024).toFixed(2)}MB / ${(total / 1024 / 1024).toFixed(2)}MB`}</span>} percent={percent} width='100%' color={'#00b42a'} style={{display:'block'}}/>}
+                    {percent > 0 && <Progress formatText={()=><span style={{color:'white'}}>{`${(current / 1024 / 1024).toFixed(2)}MB / ${(total / 1024 / 1024).toFixed(2)}MB`}</span>} percent={percent} width='100%' color={'#00b42a'} style={{display:'block'}}/>}
                 </div>
             </div>
 
@@ -551,7 +669,8 @@ function Main(){
                     onClick={()=>{
                         window.electronAPI.openBroswer('https://www.wizard101.com/')
                     }}
-                    tips="前往官网"  
+                    tips="前往官网"
+                    content="官网"
                 />
                 <Icon
                     Child={<IconThumbUp className="icon-child"/>}
@@ -565,7 +684,9 @@ function Main(){
                             })
                         })
                     }}
+                    // color="#d2881c"
                     tips="给灭火器点个赞"
+                    content="点赞"
                 />              
                 <Icon
                     Child={<IconThunderbolt className="icon-child"/>}
@@ -580,7 +701,9 @@ function Main(){
                             })
                         })
                     }}
+                    // color="#fef9bf"
                     tips="一键加速"
+                    content="加速"
                 />
                 <Icon
                     Child={<IconNotification className="icon-child"/>}
@@ -589,10 +712,19 @@ function Main(){
                         setDrawer(true)
                     }}
                     tips="通知中心"
+                    content="通知"
                 />
                 <Icon
                     Child={<IconSettings className="icon-child"/>}
                     onClick={()=>{
+                        if(btnLoading){
+                            Message.error({
+                                style:{top:'20px'},
+                                content:'正在安装中，请稍后再试！',
+                                style:{top:'20px'},
+                            }) 
+                            return
+                        }
                         Notification.info({
                             title:'切换/更新',
                             // closable:false,
@@ -603,7 +735,7 @@ function Main(){
                             btn: (
                                 <span style={{display:'flex'}}>
                                   <Button
-                                    loading={btnLoading}  
+                                    // loading={btnLoading}  
                                     type='primary'
                                     size='small'
                                     status= 'warning'
@@ -620,14 +752,14 @@ function Main(){
                                         localStorage.setItem('type','r')
                                         // Notification.remove('change_success')
                                         checkUpdate(localStorage.getItem('type'))
-                                    }} type='primary' loading={btnLoading} status='success' size='small' style={{ margin: '0 12px 0 0' }}>
+                                    }} type='primary' status='success' size='small' style={{ margin: '0 12px 0 0' }}>
                                     仅剧情
                                   </Button>
                                   <Button onClick={()=>{
                                         localStorage.setItem('type','c')
                                         // Notification.remove('change_success')
                                         checkUpdate(localStorage.getItem('type'))
-                                    }} loading={btnLoading} type='primary' size='small'>
+                                    }} type='primary' size='small'>
                                     仅聊天
                                   </Button>
                                 </span>
@@ -635,6 +767,8 @@ function Main(){
                         })
                     }}
                     tips="补丁切换"
+                    // color="#27c346"
+                    content="汉化"
                 />
                 
                 <Icon
@@ -649,6 +783,7 @@ function Main(){
                             return
                         }
                         window.tools.checkUpdate(localStorage.getItem('type') || 'r', (num)=>{
+                            console.log('num ----->',num)
                             if(num !== 3){
                                 Notification.warning({
                                     title:'确定要狠心卸载吗?',
@@ -656,7 +791,7 @@ function Main(){
                                     id:'unInstall',
                                     content:(
                                         <span>
-                                            <Button type='primary' status='success' style={{marginRight:'10px'}} onClick={()=>{
+                                            <Button type='primary' size='small' status='success' style={{marginRight:'10px'}} onClick={()=>{
                                                 window.tools.init(()=>{
                                                     Notification.remove('unInstall')
                                                     window.electronAPI.sound()
@@ -667,18 +802,33 @@ function Main(){
                                                     })
                                                 })
                                             }}>确定</Button>
-                                            <Button onClick={()=>{Notification.remove('unInstall')}}>取消</Button>
+                                            <Button size='small' onClick={()=>{Notification.remove('unInstall')}}>取消</Button>
                                         </span>
                                     )
-                                },(err)=>{
-                                    console.log(err)
                                 })
                             }else{
                                 install()
                             }
+                        },(err)=>{
+                            console.log(err)
+                        },(err)=>{
+                            console.log(err)
+                            Notification.error({
+                                id:'notInstallWizard101',
+                                style,
+                                title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
+                                content: <span>
+                                    <Button onClick={()=>{  
+                                        let fileSelect = document.getElementById('selectWiz')
+                                        fileSelect.click()
+                                    }}>手动选择游戏路径</Button>
+                                </span>
+                            })
                         })
                     }}
+                    // textStyle={{fontSize:'12px'}}
                     tips="卸载补丁"
+                    content="卸载"
                 />
                 <Icon
                     Child={<IconBug className="icon-child"/>}
@@ -686,6 +836,8 @@ function Main(){
                         setZf('qq')
                     }}
                     tips="联系我们"
+                    // color="#e4e517"
+                    content="建议"
                 />
                 <div className='nav-bottom'>
                     <Icon
@@ -693,6 +845,7 @@ function Main(){
                         onClick={()=>{
                             setZf('wx')
                         }}
+                        color='#27c346'
                         tips="微信打赏"
                     />
                     <Icon
@@ -700,6 +853,16 @@ function Main(){
                         onClick={()=>{
                             setZf('zf')
                         }}
+                        color='#3c7eff'
+                        tips="支付宝打赏"
+                    />
+                    
+                    <Icon
+                        Child={<IconHeartFill className="icon-child"/>}
+                        onClick={()=>{
+                            window.electronAPI.openBroswer('https://subata.top/index.php/about/')
+                        }}
+                        color="#d1080e"
                         tips="支付宝打赏"
                     />
                 </div>
@@ -726,7 +889,6 @@ function Main(){
             closable={false}
             maskClosable
             style={{
-                height:msgHeight,
                 top:'40px'
             }}
             bodyStyle={{
@@ -738,11 +900,11 @@ function Main(){
                 style={{ width: '100%' }}
             >
                 {
-                    message.reverse().map((v, idx)=>{
+                    message.map((v, idx)=>{
                         if(v.del){
                             return null
                         }
-                        return <CollapseItem style={{fontSize:'20px'}} key={idx} header={<span><Tooltip position='bottom' content={v.time.split(' ')[0]}>{`${v.title}-${v.username||'Subata'}`}</Tooltip> {localStorage.getItem('userid')===v.id && <Button type='text' onClick={(e)=>{
+                        return <CollapseItem style={{fontSize:'20px'}} key={idx} header={<span><Tooltip position='right' content={v.time.split(' ')[0]}>{`${v.title}-${v.username||'Subata'}`}</Tooltip> {localStorage.getItem('userid')===v.id && <Button type='text' onClick={(e)=>{
                             e.preventDefault()
                             Notification.warning({
                                 style,
@@ -859,6 +1021,29 @@ function Main(){
                 }
             </span>)}
         />
+        <input id='selectWiz' directory="" nwdirectory="" type='file' accept='.exe' onChange={(e)=>{
+            console.log(e.target.files[0].path)
+            if(e.target.files[0].path.includes('Wizard101.exe')){
+                localStorage.setItem('wizPath', e.target.files[0].path.split('Wizard101.exe')[0])
+                localStorage.setItem('gameDataPath', e.target.files[0].path.split('Wizard101.exe')[0]+'Data\\GameData\\')
+                getSteam(()=>{
+                    if(localStorage.getItem('type')){
+                        checkUpdate(false) 
+                    }
+                    localStorage.setItem('wizInstall', 'true')
+                    setPlay('true')
+                })
+            }else{
+                Message.error({
+                    content:'路径错误请重新选择 PS:请选择游戏目录下的Wizard101.exe',
+                    style:{
+                        top:'20px'
+                    }
+                })
+            }
+            e.target.value = ''
+            // e.target.files = []
+        }} style={{opacity:0, position:'absolute',width:0, height:0, top:'1000px'}}/>
     </div>    
 }
 
