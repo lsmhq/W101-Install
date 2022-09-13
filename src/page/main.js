@@ -59,6 +59,11 @@ function Main(){
     let [text, setText] = useState('')
     let [title, setTitle] = useState('')
     let [user, setUser] = useState(localStorage.getItem('username'))
+    let [msgShow1, setMsgShow1] = useState(false)
+    let [text1, setText1] = useState('')
+    let [title1, setTitle1] = useState('')
+    let [user1, setUser1] = useState('')
+
     let [message, setMessage] = useState([])
     let [root, setRoot] = useState(localStorage.getItem('root')||'')
     let [play, setPlay] = useState(localStorage.getItem('wizInstall'))
@@ -958,33 +963,36 @@ function Main(){
                 style={{ width: '100%' }}
             >
                 {
-                    message.map((v, idx)=>{
-                        if(v.del){
-                            return null
-                        }
-                        return <CollapseItem style={{fontSize:'20px'}} key={idx} header={<span><Tooltip position='right' content={v.time.split(' ')[0]}>{`${v.title}-${v.username||'Subata'}`}</Tooltip> {localStorage.getItem('userid')===v.id && <Button type='text' onClick={(e)=>{
-                            e.preventDefault()
-                            Notification.warning({
-                                style,
-                                id:'delmessage',
-                                title:'确定要删除这条通知吗?',
-                                content:<><Button onClick={()=>{
-                                    apiPath.delMessage({id:v.msgid}).then(res=>{
-                                        if(res.data.success){
-                                            Message.success({
-                                                style:{top:'20px'},
-                                                content:'删除成功'
-                                            })
-                                        }
-                                        Notification.remove('delmessage')
-                                        ws.send(JSON.stringify({type:'del'}))
-                                    })
-                                }}>确定</Button></>
-                            })
-                        }}>删除</Button>}</span>} name={idx}>
-                            <span dangerouslySetInnerHTML={{__html:v.msg.replace(/[\n]/g,'<br/>')}}></span>
-                        </CollapseItem>
-                    })
+                        <List
+                            dataSource={message}
+                            noDataElement={<></>}
+                            render={(item, index) => item.del? null : <List.Item key={index} onClick={()=>{
+                                setMsgShow1(true)
+                                setTitle1(item.title)
+                                setUser1(item.username)
+                                setText1(item.msg)
+                            }}><span><Tooltip position='bl' content={item.time.split(' ')[0]}>{`${item.title}-${item.username||'Subata'}`}</Tooltip> {localStorage.getItem('userid')===item.id && <Button type='text' onClick={(e)=>{
+                                e.preventDefault()
+                                Notification.warning({
+                                    style,
+                                    id:'delmessage',
+                                    title:'确定要删除这条通知吗?',
+                                    content:<><Button onClick={()=>{
+                                        apiPath.delMessage({id:item.msgid}).then(res=>{
+                                            if(res.data.success){
+                                                Message.success({
+                                                    style:{top:'20px'},
+                                                    content:'删除成功'
+                                                })
+                                            }
+                                            Notification.remove('delmessage')
+                                            ws.send(JSON.stringify({type:'del'}))
+                                        })
+                                    }}>确定</Button></>
+                                })
+                            }}>删除</Button>}</span></List.Item>}
+                        />
+                    
                 }
             </Collapse>
         </Drawer>
@@ -1078,6 +1086,49 @@ function Main(){
                     }}>发布</Button>
                 }
             </span>)}
+        />
+         <Modal
+            title={title1}
+            style={{textAlign:'center'}}
+            visible={msgShow1}
+            maskClosable={true}
+            onCancel={()=>{
+                setMsgShow1(false)
+            }}
+            children={<>
+                <Input 
+                    placeholder='发布者'
+                    type='text'
+                    maxLength={15}
+                    readOnly
+                    value={user1}
+                    autoFocus={false}
+                />
+                <Input 
+                    placeholder='标题'
+                    type='text'
+                    value={title1}
+                    readOnly
+                    autoFocus={false}
+                    // maxLength={20}
+                    onChange = {(val)=>{
+                        setTitle1(val)
+                    }}
+                />
+                <Input.TextArea
+                    placeholder='消息内容'
+                    style={{
+                        height:'300px'
+                    }}
+                    readOnly
+                    autoFocus={false}
+                    value={text1}
+                    onChange={(val)=>{
+                        setText1(val)
+                    }}
+                />
+            </>}
+            footer={null}
         />
         <input id='selectWiz' directory="" nwdirectory="" type='file' accept='.exe' onChange={(e)=>{
             console.log(e.target.files[0].path)

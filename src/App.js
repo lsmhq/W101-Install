@@ -20,7 +20,9 @@ function App() {
     }
     console.log('加载')
     window.electronAPI.getScale((scale)=>{
-      document.body.style.zoom = 1-(1-scale)
+      console.log(scale)
+      document.body.style.zoom = 1-(scale - 1)
+      console.log(1-(scale - 1))
     })
     if(localStorage.getItem('userid') === null){
       localStorage.setItem('userid',Math.random())
