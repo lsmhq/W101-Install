@@ -14,16 +14,23 @@
         sendXY:(e)=>{ipcRenderer.send('move-application',{posX:e.x,posY:e.y})},
         mini:()=>{ipcRenderer.send('mini')},
         close:()=>{ipcRenderer.send('close')},
-        getScale:()=>{ipcRenderer.on('scale',(event, scale)=>{
-            console.log(scale)
-            document.body.style.zoom = 1 + (1 - scale)
-            localStorage.setItem('scale', scale)
-        })},
         sound,
-        getScaleFactor:()=>{
-            // let scaleFactor = screen.getAllDisplays()[0].scaleFactor
-            console.log(screen)
-            // return scaleFactor
+        getScale:(getZoom)=>{ipcRenderer.on('scale',(event, scale)=>{
+            console.log(scale)
+            localStorage.setItem('scale', scale)
+            getZoom && getZoom(scale)
+        })},
+        getPath:(getExe)=>{
+            ipcRenderer.on('install-path',(event, path)=>{
+                console.log('install-path')
+                getExe && getExe(path)
+            })
+        },
+        getVersion:(getVer)=>{
+            ipcRenderer.on('install-version',(event, path)=>{
+                console.log('install-version')
+                getVer && getVer(path)
+            })
         }
     }
 })()

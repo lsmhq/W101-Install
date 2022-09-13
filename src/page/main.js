@@ -13,6 +13,7 @@ import apiPath from './http/api'
 
 //'ws://localhost:8000'
 let wsPath = 'ws://101.43.216.253:8000'
+let update = false
 let timerr
 let { TabPane } = Tabs
 let CollapseItem = Collapse.Item
@@ -99,6 +100,61 @@ function Main(){
                 </span>
             })
         }
+        // 获取安装目录
+        window.electronAPI.getPath((path)=>{
+            console.log(path)
+            window.electronAPI.getVersion((version)=>{
+                console.log(version)
+                window.tools.checkUpdateExe('s', version, (num, url, newVersion, mark)=>{
+                    console.log(num)
+                    switch(num){
+                        case 1:
+                            // 有更新
+                            console.log('有更新', url)
+                            Notification.warning({
+                                title:`检测到启动器有最新版本 V${newVersion}`,
+                                id:'update-subata',
+                                style,
+                                duration:100000,
+                                content:<span>
+                                    <Button onClick={()=>{
+                                        Notification.remove('update-subata')
+                                        Notification.warning({
+                                            style,
+                                            content:mark,
+                                            title:'此次更新内容如下，请耐心等待',
+                                            id:'download-subata',
+                                            duration:500000
+                                        })
+                                        let downloadPath = path.split('\\')
+                                        downloadPath.pop()
+                                        window.tools.getFile(url, `${downloadPath.join('\\')}\\setup.exe`, ()=>{
+                                            console.log('下载完成')
+                                            update = true
+                                            Notification.remove('download-subata')
+                                            Notification.success({
+                                                style,
+                                                title:'下载完成',
+                                                id:'download-subata'
+                                            })
+                                            window.tools.openFile(`${downloadPath.join('\\')}\\setup.exe`)
+                                        },(total, currentTotal)=>{
+                                            setCurrent(currentTotal)
+                                            setTotal(total)
+                                            setPercent(Number.parseInt((( currentTotal / total ).toFixed(2) * 100)))
+                                        })
+                                    }} type='primary'>点击更新</Button>
+                                </span>
+                            })
+                            break
+                        case 2:
+                            console.log('无更新', url)
+                            break
+                    }
+                }, ()=>{})
+            })
+
+        })
         return () => {
             // 注销
             destroy()
@@ -121,13 +177,15 @@ function Main(){
             setBtnLoad(false)
             setPercent(0)
             window.electronAPI.sound()
-            Notification.success({
-                id:'download',
-                style,
-                title:'安装完成!',
-                content:'请点击下方开始游戏进行体验!',
-                duration: 2000
-            })
+            if(!update){
+                Notification.success({
+                    id:'download',
+                    style,
+                    title:'安装完成!',
+                    content:'请点击下方开始游戏进行体验!',
+                    duration: 2000
+                })
+            }
             // window.tools.changeType(localStorage.getItem('type'))
         }
     },[percent])
@@ -249,7 +307,7 @@ function Main(){
               const y = ev.screenY - baseY
             //   console.log(x, y)
               if(prveX !== x || prveY !== y){
-                console.log(x, y)
+                // console.log(x, y)
                 prveX = x
                 prveY = y
                 window.electronAPI.sendXY({

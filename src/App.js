@@ -19,7 +19,9 @@ function App() {
         }
     }
     console.log('加载')
-    window.electronAPI.getScale()
+    window.electronAPI.getScale((scale)=>{
+      document.body.style.zoom = 1-(1-scale)
+    })
     if(localStorage.getItem('userid') === null){
       localStorage.setItem('userid',Math.random())
     }  

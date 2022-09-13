@@ -2,18 +2,20 @@
     const request = require('request')
     const fs = require('fs')
     const child_process = require('child_process');//引入模块
-    const { shell } = require('electron')
+    const { shell, app } = require('electron')
     window.path = '' // 打包路径
     window.wizPath = '' // Wiz路径
     let params = {
         r: 'release',
         d: 'debug',
         c: 'chatonly',
+        s: 'subata'
     }
     let obj = {
         r: '<剧情>',
         d: '<全汉化>',
         c: '<轻聊>',
+        s: '<启动器>'
     }
     // 初始化host
     function initDns(callback){
@@ -130,6 +132,37 @@
         })
     }
     
+    function checkUpdateExe(type, current, success, error){
+        // console.log(path)
+        request({
+            url: `http://101.43.216.253:3001/file/latest?type=${params[type]}`,
+            method: 'GET',
+        },(err, response, body)=>{
+            if (!err && response.statusCode === 200) {
+                try {
+                    let url = JSON.parse(response.body).url
+                    let mark = JSON.parse(response.body).mark
+                    let version = url.split('/')[url.split('/').length - 2]
+                    console.log(version)
+                    console.log(current)
+                    if (compareVersion(version + '', current) == 1) {
+                        // console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
+                        // console.log(1)
+                        success(1, url, version, mark) // 有最新
+                        
+                    } else {
+                        // console.log(2)
+                        success(2) // 没有
+                    }
+                } catch (err) {
+                    error && error(err)
+                }
+            }else{
+                error && error(err)
+            }
+        })
+    }
+
     function downLoad(type, getMark, getProcess, failed, changed) {
         request({
             url: `http://101.43.216.253:3001/file/latest?type=${params[type]}`,
@@ -307,6 +340,14 @@
         }
     
     }
+    // 打开文件
+    function openFile(path){
+        console.log('打开', path)
+        shell.openPath(path)
+        setTimeout(()=>{
+            window.electronAPI.close()
+        }, 2000)
+    }
     // 检测Wizard和Steam
     function checkGameInstall(callback){
         let steamPath = localStorage.getItem('steamPath')
@@ -343,6 +384,9 @@
         changeType,
         getPath,
         startGame,
-        checkGameInstall
+        checkGameInstall,
+        checkUpdateExe,
+        getFile,
+        openFile
     }
 })()

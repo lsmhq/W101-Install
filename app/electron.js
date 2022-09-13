@@ -28,18 +28,20 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  mainWindow.webContents.openDevTools() // 打开窗口调试
+  // mainWindow.webContents.openDevTools() // 打开窗口调试
   // 加载应用 --打包react应用后，__dirname为当前文件路径
-  // mainWindow.loadURL(`https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/`);
+  mainWindow.loadURL(`https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/`);
   // mainWindow.loadFile(__dirname+'/../build/loading.html')
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:3000/');
+  // mainWindow.loadURL('http://localhost:3000/');
 
   // 解决应用启动白屏问题
   mainWindow.on('ready-to-show', () => {
     mainWindow.show();
     mainWindow.focus();
     mainWindow.webContents.send('scale', scaleFactor)
+    mainWindow.webContents.send('install-path', app.getPath('exe'))
+    mainWindow.webContents.send('install-version', app.getVersion())
   });
   mainWindow.on('will-resize',()=>{
     mainWindow.setMinimumSize(parseInt(1250/scaleFactor) , parseInt(700/scaleFactor))
@@ -79,11 +81,6 @@ function createWindow () {
   // 最小化
   ipcMain.on('mini', function() {
     mainWindow.minimize();
-  })
-  // getScale
-  ipcMain.on('get-scale', (getScale)=>{
-    console.log(scaleFactor)
-    // getScale(scaleFactor)
   })
 }
 
