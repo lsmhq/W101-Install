@@ -5,6 +5,7 @@
 const { app, BrowserWindow, nativeImage, ipcMain, screen, webFrame } = require('electron');
 const path = require('path');
 const url = require('url')
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 function createWindow () {
   let scaleFactor = screen.getAllDisplays()[0].scaleFactor
   // localStorage.setItem('scale', scaleFactor)
@@ -29,10 +30,10 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  mainWindow.webContents.openDevTools() // 打开窗口调试
+  // mainWindow.webContents.openDevTools() // 打开窗口调试
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/`);
-  // mainWindow.loadURL('http://101.43.216.253:3001/lsmhq')
+  mainWindow.loadURL('http://101.43.216.253:3001/lsmhq')
   // mainWindow.loadFile(__dirname+'/../build/index.html')
   // mainWindow.loadURL(url.format({
   //   pathname: path.join(__dirname, '../build/index.html'),
@@ -40,7 +41,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:3000/');
+  // mainWindow.loadURL('http://localhost:3000/');
 
   // 解决应用启动白屏问题
   mainWindow.on('ready-to-show', () => {
