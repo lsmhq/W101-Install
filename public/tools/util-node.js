@@ -296,12 +296,12 @@
         });
     }
     // 获取Steam
-    function getPath(callback, error){
+    function getPath(callback, r){
         //查
         child_process.exec(`REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam /v InstallPath`,function(error,stdout,stderr){
             if(error != null){
                 console.log('exec error:'+error);
-                error(error)
+                r(error)
                 return
             }
             callback(stdout, stderr)

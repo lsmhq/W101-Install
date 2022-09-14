@@ -20,9 +20,19 @@ function App() {
     }
     console.log('加载')
     window.electronAPI.getScale((scale)=>{
-      console.log(scale)
-      document.body.style.zoom = 1-(scale - 1)
-      console.log(1-(scale - 1))
+      // window.onload = ()=>{
+        
+        console.log(1-(scale - 1))
+        console.log(scale)
+        let timer = setInterval(()=>{
+          // console.log(1)
+          if(document.body.style.zoom == '')
+            document.body.style.zoom = 1-(scale - 1)
+          else
+            clearInterval(timer)
+        })
+      // }
+
     })
     if(localStorage.getItem('userid') === null){
       localStorage.setItem('userid',Math.random())
