@@ -1,10 +1,10 @@
 {
   "name": "electron-app",
-  "version": "0.1.5",
+  "version": "1.1.1",
   "author": {
     "name": "lsmhq"
   },
-  "description": "一款游戏启动器",
+  "description": "Wizard 启动器",
   "private": true,
   "homepage": "./",
   "main": "./app/electron.js",
