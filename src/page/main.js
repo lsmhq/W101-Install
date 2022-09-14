@@ -131,11 +131,11 @@ function Main(){
                                             id:'download-subata',
                                             duration:500000
                                         })
+                                        update = true
                                         let downloadPath = path.split('\\')
                                         downloadPath.pop()
                                         window.tools.getFile(url, `${downloadPath.join('\\')}\\setup.exe`, ()=>{
                                             console.log('下载完成')
-                                            update = true
                                             Notification.remove('download-subata')
                                             Notification.success({
                                                 style,
