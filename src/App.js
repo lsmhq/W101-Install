@@ -19,6 +19,7 @@ function App() {
         }
     }
     console.log('加载')
+    // window.tools.openFile()
     window.electronAPI.getScale((scale)=>{
       // window.onload = ()=>{
         

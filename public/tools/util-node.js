@@ -345,9 +345,7 @@
     function openFile(path){
         console.log('打开', path)
         shell.openPath(path)
-        setTimeout(()=>{
-            window.electronAPI.close()
-        }, 1000)
+        window.confirm('请关闭程序之后进行更新')
     }
     // 检测Wizard和Steam
     function checkGameInstall(callback){
