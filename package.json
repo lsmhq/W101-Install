@@ -1,6 +1,6 @@
 {
   "name": "electron-app",
-  "version": "1.1.1",
+  "version": "1.1.6",
   "author": {
     "name": "lsmhq"
   },
@@ -31,6 +31,7 @@
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
     "electron-is-dev": "^2.0.0",
+    "electron-updater": "^5.2.1",
     "eslint": "^8.3.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-webpack-plugin": "^3.1.1",
@@ -95,8 +96,12 @@
       "uninstallerIcon": "app/images/uninstall.ico",
       "uninstallDisplayName": "${productName}${version}"
     },
-    "win":{
-      "icon":"app/images/logo.ico"
+    "publish": {
+      "provider": "generic",
+      "url": "http://101.43.216.253:3001/file/subataUpdate"
+    },
+    "win": {
+      "icon": "app/images/logo.ico"
     },
     "directories": {
       "output": "app/release"

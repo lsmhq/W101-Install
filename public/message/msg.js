@@ -31,6 +31,11 @@
                 console.log('install-version')
                 getVer && getVer(path)
             })
+        },
+        getUpdater:(getUpdate)=>{
+            ipcRenderer.on('message', (e, data)=>{
+                getUpdate && getUpdate(data)
+            })
         }
     }
 })()
