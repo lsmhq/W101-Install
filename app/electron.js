@@ -61,7 +61,6 @@ function createWindow () {
     mainWindow.webContents.send('scale', scaleFactor)
     mainWindow.webContents.send('install-path', app.getPath('exe'))
     mainWindow.webContents.send('install-version', app.getVersion())
-    mainWindow.webContents.send('message', app.getVersion())
   });
   mainWindow.on('will-resize',()=>{
     mainWindow.setMinimumSize(parseInt(1250/scaleFactor) , parseInt(700/scaleFactor))

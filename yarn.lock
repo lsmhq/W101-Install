@@ -4758,7 +4758,7 @@ electron-to-chromium@^1.4.202:
 
 electron-updater@^5.2.1:
   version "5.2.1"
-  resolved "https://registry.npmmirror.com/electron-updater/-/electron-updater-5.2.1.tgz#297795e6e8ad9179c7ae2738a7b67cf0a5022be1"
+  resolved "https://registry.npmjs.org/electron-updater/-/electron-updater-5.2.1.tgz#297795e6e8ad9179c7ae2738a7b67cf0a5022be1"
   integrity sha512-OQZVIvqcK8j03HjT07uVPgvguP/r8RY2wZcwCM26+fcDOjtrm01Dfz3G8Eru+69znbrR+F9pDzr98ewMavBrWQ==
   dependencies:
     "@types/semver" "^7.3.6"

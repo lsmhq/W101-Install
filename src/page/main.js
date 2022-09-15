@@ -67,6 +67,7 @@ function Main(){
     let [type, setType] = useState(localStorage.getItem('type'))
     let [root, setRoot] = useState(localStorage.getItem('root')||'')
     let [play, setPlay] = useState(localStorage.getItem('wizInstall'))
+    let [version, setVersion] = useState('')
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -111,6 +112,7 @@ function Main(){
             window.electronAPI.getUpdater((data)=>{
                 // console.log('message---->',data)
                 if(data.cmd==='downloadProgress'){
+                    update = true
                     setPercent(parseInt(data.progressObj.percent))
                     setTotal(data.progressObj.total)
                     setCurrent(data.progressObj.transferred)
@@ -123,6 +125,10 @@ function Main(){
                 }
             })
         }, 500)
+        // 获取version
+        window.electronAPI.getVersion((version)=>{
+            setVersion(version)
+        })
 
         return () => {
             // 注销
@@ -560,7 +566,9 @@ function Main(){
             }}
         >
             <div className='nav-logo'><img alt='' src={su}/></div>
-            <div className='nav-title'>Subata</div>
+            <div className='nav-title'>Subata{`@${version}`}<Button onMouseDown={(e)=>{e.stopPropagation()}} type='text' onClick={(e)=>{
+                e.stopPropagation()
+            }} status='success'>使用介绍</Button></div>
             {/* <div className='nav-title'> {obj[type]}</div> */}
             <div className='nav-control'
                 onMouseDown={(e)=>{
