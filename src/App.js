@@ -1,4 +1,3 @@
-import { Message } from '@arco-design/web-react';
 import { useEffect, useState } from 'react';
 import './App.css';
 import Main from './page/main';
@@ -19,22 +18,10 @@ function App() {
         }
     }
     console.log('加载')
+    let scale = getRatio() / 100
     // window.tools.openFile()
-    window.electronAPI.getScale((scale)=>{
-      // window.onload = ()=>{
-        
-        console.log(1-(scale - 1))
-        console.log(scale)
-        let timer = setInterval(()=>{
-          // console.log(1)
-          if(document.body.style.zoom == '')
-            document.body.style.zoom = 1-(scale - 1)
-          else
-            clearInterval(timer)
-        })
+    document.body.style.zoom = 1-(scale - 1)
       // }
-
-    })
     if(localStorage.getItem('userid') === null){
       localStorage.setItem('userid',Math.random())
     }  
@@ -46,4 +33,24 @@ function App() {
   );
 }
 
+  //获取屏幕缩放比例
+  function getRatio(){
+    var ratio=0;
+    var screen=window.screen;
+    var ua=navigator.userAgent.toLowerCase();
+ 
+    if(window.devicePixelRatio !== undefined){
+        ratio=window.devicePixelRatio;    
+    }else if(~ua.indexOf('msie')){
+        if(screen.deviceXDPI && screen.logicalXDPI){
+            ratio=screen.deviceXDPI/screen.logicalXDPI;        
+        }
+    }else if(window.outerWidth !== undefined && window.innerWidth !== undefined){
+        ratio=window.outerWidth/window.innerWidth;
+    }
+    if(ratio){
+        ratio=Math.round(ratio*100);    
+    }
+    return ratio;
+}
 export default App;
