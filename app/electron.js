@@ -3,13 +3,23 @@
 // BrowserWindow 创建和控制浏览器窗口。new BrowserWindow([options]) 事件和方法调用同app
 // Electron参考文档 https://www.electronjs.org/docs
 const { app, BrowserWindow, nativeImage, ipcMain, screen, webFrame } = require('electron');
+const { autoUpdater } = require('electron-updater') 
+
+let mainWindow
+const message = {
+  error: '检查更新出错',
+  checking: '正在检查更新…',
+  updateAva: '正在更新',
+  updateNotAva: '已经是最新版本',
+  downloadProgress: '正在下载...'
+}
 const path = require('path');
 const url = require('url')
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 function createWindow () {
   let scaleFactor = screen.getAllDisplays()[0].scaleFactor
   // localStorage.setItem('scale', scaleFactor)
-  let mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: parseInt(1250/scaleFactor), // 窗口宽度
     height: parseInt(700/scaleFactor) , // 窗口高度
     // useContentSize:true,
@@ -31,6 +41,7 @@ function createWindow () {
   });
   // let size = mainWindow.getSize()
   // mainWindow.webContents.openDevTools() // 打开窗口调试
+
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/`);
   mainWindow.loadURL('http://101.43.216.253:3001/lsmhq')
@@ -50,6 +61,7 @@ function createWindow () {
     mainWindow.webContents.send('scale', scaleFactor)
     mainWindow.webContents.send('install-path', app.getPath('exe'))
     mainWindow.webContents.send('install-version', app.getVersion())
+    mainWindow.webContents.send('message', app.getVersion())
   });
   mainWindow.on('will-resize',()=>{
     mainWindow.setMinimumSize(parseInt(1250/scaleFactor) , parseInt(700/scaleFactor))
@@ -94,6 +106,43 @@ function createWindow () {
 
 app.whenReady().then(createWindow);
 
+app.on('ready', () => {
+  console.log('app-ready')
+  sendUpdateMessage({ cmd: 'app-ready', message: message.error })
+  autoUpdater.checkForUpdates()
+})
+
+autoUpdater.on('update-downloaded', () => {
+  sendUpdateMessage({ cmd: 'update-downloaded', message: message.error })
+  autoUpdater.quitAndInstall()
+})
+
+autoUpdater.on('error', function (e) {
+  console.log('error', e);
+  sendUpdateMessage({ cmd: 'error', message: message.error })
+})
+autoUpdater.on('checking-for-update', function () {
+  console.log(message.checking)
+  sendUpdateMessage({ cmd: 'checking-for-update', message: message.checking })
+})
+autoUpdater.on('update-available', function (info) {
+  console.log(message.updateAva)
+  sendUpdateMessage({ cmd: 'update-available', message: message.updateAva, info })
+})
+autoUpdater.on('update-not-available', function (info) {
+  console.log(message.updateNotAva)
+  sendUpdateMessage({ cmd: 'update-not-available', message: message.updateNotAva, info: info })
+})
+// 更新下载进度事件
+autoUpdater.on('download-progress', function (progressObj) {
+  console.log('触发下载。。。')
+  console.log(progressObj)
+  sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })
+})
+
+function sendUpdateMessage(data) {
+  mainWindow && mainWindow.webContents.send('message', data)
+}
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()

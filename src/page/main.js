@@ -63,8 +63,8 @@ function Main(){
     let [text1, setText1] = useState('')
     let [title1, setTitle1] = useState('')
     let [user1, setUser1] = useState('')
-
     let [message, setMessage] = useState([])
+    let [type, setType] = useState(localStorage.getItem('type'))
     let [root, setRoot] = useState(localStorage.getItem('root')||'')
     let [play, setPlay] = useState(localStorage.getItem('wizInstall'))
     useEffect(() => {
@@ -106,60 +106,24 @@ function Main(){
             })
         }
         // 获取安装目录
-        window.electronAPI.getPath((path)=>{
-            console.log(path)
-            window.electronAPI.getVersion((version)=>{
-                console.log(version)
-                window.tools.checkUpdateExe('s', version, (num, url, newVersion, mark)=>{
-                    console.log(num)
-                    switch(num){
-                        case 1:
-                            // 有更新
-                            console.log('有更新', url)
-                            Notification.warning({
-                                title:`检测到启动器有最新版本 V${newVersion}`,
-                                id:'update-subata',
-                                style,
-                                duration:100000,
-                                content:<span>
-                                    <Button onClick={()=>{
-                                        Notification.remove('update-subata')
-                                        Notification.warning({
-                                            style,
-                                            content:mark,
-                                            title:'此次更新内容如下，请耐心等待',
-                                            id:'download-subata',
-                                            duration:500000
-                                        })
-                                        update = true
-                                        let downloadPath = path.split('\\')
-                                        downloadPath.pop()
-                                        window.tools.getFile(url, `${downloadPath.join('\\')}\\setup.exe`, ()=>{
-                                            console.log('下载完成')
-                                            Notification.remove('download-subata')
-                                            Notification.success({
-                                                style,
-                                                title:'下载完成',
-                                                id:'download-subata'
-                                            })
-                                            window.tools.openFile(`${downloadPath.join('\\')}\\setup.exe`)
-                                        },(total, currentTotal)=>{
-                                            setCurrent(currentTotal)
-                                            setTotal(total)
-                                            setPercent(Number.parseInt((( currentTotal / total ).toFixed(2) * 100)))
-                                        })
-                                    }} type='primary'>点击更新</Button>
-                                </span>
-                            })
-                            break
-                        case 2:
-                            console.log('无更新', url)
-                            break
-                    }
-                }, ()=>{})
+        setInterval(()=>{
+            console.log('检测更新')
+            window.electronAPI.getUpdater((data)=>{
+                // console.log('message---->',data)
+                if(data.cmd==='downloadProgress'){
+                    setPercent(parseInt(data.progressObj.percent))
+                    setTotal(data.progressObj.total)
+                    setCurrent(data.progressObj.transferred)
+                    Notification.warning({
+                        title:'检测到有最新版本',
+                        style,
+                        id:'subata-up',
+                        content:'正在进行下载，稍后进行更新'
+                    })
+                }
             })
+        }, 500)
 
-        })
         return () => {
             // 注销
             destroy()
@@ -358,6 +322,7 @@ function Main(){
                         status='warning'
                         onClick={()=>{
                             downLoad('d')
+                            setType('d')
                             localStorage.setItem('type', 'd')
                         }}
                     >
@@ -370,6 +335,7 @@ function Main(){
                         status='warning'
                         onClick={()=>{
                             downLoad('d')
+                            setType('d')
                             localStorage.setItem('type', 'd')
                         }}
                     >
@@ -383,6 +349,7 @@ function Main(){
                         status='success'
                         onClick={()=>{
                             downLoad('r')
+                            setType('r')
                             localStorage.setItem('type', 'r')
                         }}
                         type='primary' 
@@ -395,6 +362,7 @@ function Main(){
                         status='success'
                         onClick={()=>{
                             downLoad('r')
+                            setType('r')
                             localStorage.setItem('type', 'r')
                         }}
                         type='primary' 
@@ -409,6 +377,7 @@ function Main(){
                         style={{ margin: '5px' }}
                         onClick={()=>{
                             downLoad('c')
+                            setType('c')
                             localStorage.setItem('type', 'c')
                         }}
                         type='primary' 
@@ -420,6 +389,7 @@ function Main(){
                         style={{ margin: '5px' }}
                         onClick={()=>{
                             downLoad('c')
+                            setType('c')
                             localStorage.setItem('type', 'c')
                         }}
                         type='primary' 
@@ -452,6 +422,7 @@ function Main(){
                             style:{top:'20px'},
                             content:`切换${obj[localStorage.getItem('type')]}成功!`
                         })
+                        setType(localStorage.getItem('type'))
                     })
                     break
                 case 3:
@@ -590,6 +561,7 @@ function Main(){
         >
             <div className='nav-logo'><img alt='' src={su}/></div>
             <div className='nav-title'>Subata</div>
+            {/* <div className='nav-title'> {obj[type]}</div> */}
             <div className='nav-control'
                 onMouseDown={(e)=>{
                     e.stopPropagation()
@@ -803,8 +775,10 @@ function Main(){
                                     size='small'
                                     status= 'warning'
                                     style={{ margin: '0 12px' }}
+                                    disabled={type === 'd'}
                                     onClick={()=>{
                                         localStorage.setItem('type','d')
+                                        setType('d')
                                         // Notification.remove('change_success')
                                         checkUpdate(localStorage.getItem('type'))
                                     }}
@@ -814,12 +788,14 @@ function Main(){
                                   <Button onClick={()=>{
                                         localStorage.setItem('type','r')
                                         // Notification.remove('change_success')
+                                        setType('r')
                                         checkUpdate(localStorage.getItem('type'))
-                                    }} type='primary' status='success' size='small' style={{ margin: '0 12px 0 0' }}>
+                                    }} type='primary' disabled={type === 'r'} status='success' size='small' style={{ margin: '0 12px 0 0' }}>
                                     仅剧情
                                   </Button>
-                                  <Button onClick={()=>{
+                                  <Button disabled={type === 'c'} onClick={()=>{
                                         localStorage.setItem('type','c')
+                                        setType('c')
                                         // Notification.remove('change_success')
                                         checkUpdate(localStorage.getItem('type'))
                                     }} type='primary' size='small'>
