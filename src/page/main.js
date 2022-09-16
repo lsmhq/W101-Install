@@ -568,7 +568,7 @@ function Main(){
             <div className='nav-logo'><img alt='' src={su}/></div>
             <div className='nav-title'>Subata{`@${version}`}<Button onMouseDown={(e)=>{e.stopPropagation()}} type='text' onClick={(e)=>{
                 e.stopPropagation()
-                window.electronAPI.openBroswer('https://gitee.com/lsmhq/one-click-installation-script/tree/web-install/')
+                window.electronAPI.openBroswer('https://subata.top/index.php/2022/09/16/startgame/')
             }} status='success'>简介</Button></div>
             {/* <div className='nav-title'> {obj[type]}</div> */}
             <div className='nav-control'
