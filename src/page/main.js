@@ -1054,7 +1054,7 @@ function Main(){
             </>}
             footer={(<span>
                 {
-                   root === '/' && <Button type='primary' status='success' onClick={()=>{
+                   root === 'wizard-subata-lsmhq' && <Button type='primary' status='success' onClick={()=>{
                         
                         let data = {
                             msg:text,
