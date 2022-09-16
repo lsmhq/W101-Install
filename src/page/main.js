@@ -722,7 +722,7 @@ function Main(){
                         window.tools.like(()=>{
                             Message.success({
                                 // showIcon:false,
-                                content:'您的支持就是我最大的动力！',
+                                content:'你的支持就是我最大的动力！',
                                 style:{top:'20px'},
                                 duration:2000
                             })
@@ -1039,14 +1039,14 @@ function Main(){
                     }}
                 />
                 {
-                    root !== 'wizard101-subata-lsmhq' && <Input 
+                    root !== '/' && <Input 
                         placeholder='管理员口令'
                         type='text'
                         value={root}
                         onChange = {(val)=>{
                             setRoot(val)
-                            if(val === 'wizard101-subata-lsmhq'){
-                                localStorage.setItem('root','wizard101-subata-lsmhq')
+                            if(val === '/'){
+                                localStorage.setItem('root','/')
                             }
                         }}
                     />
@@ -1054,7 +1054,7 @@ function Main(){
             </>}
             footer={(<span>
                 {
-                   root === 'wizard101-subata-lsmhq' && <Button type='primary' status='success' onClick={()=>{
+                   root === '/' && <Button type='primary' status='success' onClick={()=>{
                         
                         let data = {
                             msg:text,
