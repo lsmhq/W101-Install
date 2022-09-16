@@ -26,8 +26,8 @@ Notification.config({
     duration:5000
 })
 let obj = {
-    r: '<剧情>',
-    d: '<全汉化>',
+    r: '<稳定版>',
+    d: '<测试版>',
     c: '<轻聊>',
 }
 let ws = null, socketError = false
@@ -332,7 +332,7 @@ function Main(){
                             localStorage.setItem('type', 'd')
                         }}
                     >
-                        全汉化安装
+                        测试版安装
                     </Button>: <Button
                         loading = {btnLoading}
                         type='primary'
@@ -345,7 +345,7 @@ function Main(){
                             localStorage.setItem('type', 'd')
                         }}
                     >
-                        全汉化安装
+                        测试版安装
                     </Button>
                   }
                   {
@@ -361,7 +361,7 @@ function Main(){
                         type='primary' 
                         size='small'
                     >
-                        剧情汉化安装
+                        稳定版安装
                     </Button>:<Button 
                         loading={btnLoading}
                         style={{ margin: '5px' }}
@@ -374,7 +374,7 @@ function Main(){
                         type='primary' 
                         size='small'
                     >
-                        剧情汉化安装
+                        稳定版安装
                     </Button>
                   }
                   {
@@ -477,7 +477,7 @@ function Main(){
                             downLoad()
                         }} 
                     >
-                        全汉化更新
+                        测试版更新
                     </Button>
                   }
                   {
@@ -489,7 +489,7 @@ function Main(){
                         type='primary' 
                         size='small'
                     >
-                        仅剧情更新
+                        稳定版更新
                     </Button>
                   }
                   {
@@ -792,7 +792,7 @@ function Main(){
                                         checkUpdate(localStorage.getItem('type'))
                                     }}
                                   >
-                                    全汉化
+                                    测试版
                                   </Button>
                                   <Button onClick={()=>{
                                         localStorage.setItem('type','r')
@@ -800,7 +800,7 @@ function Main(){
                                         setType('r')
                                         checkUpdate(localStorage.getItem('type'))
                                     }} type='primary' disabled={type === 'r'} status='success' size='small' style={{ margin: '0 12px 0 0' }}>
-                                    仅剧情
+                                    稳定版
                                   </Button>
                                   <Button disabled={type === 'c'} onClick={()=>{
                                         localStorage.setItem('type','c')
@@ -834,7 +834,7 @@ function Main(){
                             console.log('num ----->',num)
                             if(num !== 3){
                                 Notification.warning({
-                                    title:'确定要狠心卸载吗?',
+                                    title:'确定要狠心卸载汉化补丁吗?',
                                     style,
                                     id:'unInstall',
                                     content:(
