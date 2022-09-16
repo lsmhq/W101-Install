@@ -18,7 +18,7 @@ function App() {
         }
     }
     console.log('加载')
-    let scale = (getRatio() / 100)>2 ? 1 : (getRatio() / 100)
+    let scale = (getRatio() / 100)>=2 ? 1 : (getRatio() / 100)
     // window.tools.openFile()
     document.body.style.zoom = 1 - ( scale - 1 )
       // }
