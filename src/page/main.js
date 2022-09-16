@@ -40,34 +40,34 @@ let isDown = false;  // 鼠标状态
 let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 function Main(){
-    let [loading, setLoading] = useState(true)
-    let [loading1, setLoading1] = useState(true)
-    let [imgs, setImgs] = useState([])
-    let [show, setShow] = useState(false)
-    let [zfType, setZf] = useState('')
-    let [img, setImg] = useState('')
-    let [percent, setPercent] = useState(0)
-    let [drawer, setDrawer] = useState(false)
-    let [count, setCount] = useState(0)
-    let [news, setNews] = useState([])
-    let [activity, setActivity] = useState([])
-    let [msgHeight, setHeight] = useState('95%')
-    let [btnLoading, setBtnLoad] = useState(false)
-    let [current, setCurrent] = useState(0)
-    let [total, setTotal] = useState(0)
-    let [msgShow, setMsgShow] = useState(false)
-    let [text, setText] = useState('')
-    let [title, setTitle] = useState('')
-    let [user, setUser] = useState(localStorage.getItem('username'))
-    let [msgShow1, setMsgShow1] = useState(false)
-    let [text1, setText1] = useState('')
-    let [title1, setTitle1] = useState('')
-    let [user1, setUser1] = useState('')
-    let [message, setMessage] = useState([])
-    let [type, setType] = useState(localStorage.getItem('type'))
-    let [root, setRoot] = useState(localStorage.getItem('root')||'')
-    let [play, setPlay] = useState(localStorage.getItem('wizInstall'))
-    let [version, setVersion] = useState('')
+    let [loading, setLoading] = useState(true) // 轮播加载
+    let [loading1, setLoading1] = useState(true) // List加载
+    let [imgs, setImgs] = useState([]) // 轮播图片
+    let [show, setShow] = useState(false) // ModalShow
+    let [zfType, setZf] = useState('') // zf类型
+    let [img, setImg] = useState('')  // zf图片
+    let [percent, setPercent] = useState(0) // 进度百分比
+    let [drawer, setDrawer] = useState(false) // 通知显隐
+    let [count, setCount] = useState(0)  // 通知条数
+    let [news, setNews] = useState([]) // 新闻
+    let [activity, setActivity] = useState([])  // 活动
+     let [msgHeight, setHeight] = useState('95%') // 弃用高度
+    let [btnLoading, setBtnLoad] = useState(false) // 按钮加载
+    let [current, setCurrent] = useState(0)  // 当前进度
+    let [total, setTotal] = useState(0) // 总进度
+    let [msgShow, setMsgShow] = useState(false) // 消息
+    let [text, setText] = useState('')  // 内容
+    let [title, setTitle] = useState('')  // 标题
+    let [user, setUser] = useState(localStorage.getItem('username')) // 用户名
+    let [msgShow1, setMsgShow1] = useState(false)  // 反显
+    let [text1, setText1] = useState('')  // 反显 
+    let [title1, setTitle1] = useState('')// 反显
+    let [user1, setUser1] = useState('')// 反显
+    let [message, setMessage] = useState([]) // 通知
+    let [type, setType] = useState(localStorage.getItem('type')) // 汉化type
+    let [root, setRoot] = useState(localStorage.getItem('root')||'') // 是否可以进行发布通知
+    let [play, setPlay] = useState(localStorage.getItem('wizInstall')) // 是否可以开始游戏
+    let [version, setVersion] = useState('') // 版本号
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -568,7 +568,8 @@ function Main(){
             <div className='nav-logo'><img alt='' src={su}/></div>
             <div className='nav-title'>Subata{`@${version}`}<Button onMouseDown={(e)=>{e.stopPropagation()}} type='text' onClick={(e)=>{
                 e.stopPropagation()
-            }} status='success'>使用介绍</Button></div>
+                window.electronAPI.openBroswer('https://gitee.com/lsmhq/one-click-installation-script/tree/web-install/')
+            }} status='success'>简介</Button></div>
             {/* <div className='nav-title'> {obj[type]}</div> */}
             <div className='nav-control'
                 onMouseDown={(e)=>{
