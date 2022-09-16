@@ -17,11 +17,11 @@ const path = require('path');
 const url = require('url')
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 function createWindow () {
-  let scaleFactor = screen.getAllDisplays()[0].scaleFactor
+  let scaleFactor = (screen.getAllDisplays()[0].scaleFactor >= 2) ? 1 : screen.getAllDisplays()[0].scaleFactor
   // localStorage.setItem('scale', scaleFactor)
   mainWindow = new BrowserWindow({
     width: parseInt(1250/scaleFactor), // 窗口宽度
-    height: parseInt(700/scaleFactor) , // 窗口高度
+    height: parseInt(700/scaleFactor), // 窗口高度
     // useContentSize:true,
     title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
@@ -34,6 +34,7 @@ function createWindow () {
       webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
       webSecurity: false, // 禁用同源策略
       contextIsolation: false,
+      v8CacheOptions:'none',
       scrollBounce:true,
       nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
       preload: path.join(__dirname, 'preload.js'),
