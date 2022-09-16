@@ -1039,14 +1039,14 @@ function Main(){
                     }}
                 />
                 {
-                    root !== '/' && <Input 
+                    root !== 'wizard-subata-lsmhq' && <Input 
                         placeholder='管理员口令'
                         type='text'
                         value={root}
                         onChange = {(val)=>{
                             setRoot(val)
-                            if(val === '/'){
-                                localStorage.setItem('root','/')
+                            if(val === 'wizard-subata-lsmhq'){
+                                localStorage.setItem('root','wizard-subata-lsmhq')
                             }
                         }}
                     />

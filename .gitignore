@@ -10,7 +10,7 @@
 /app/release
 /app/debug
 # production
-/build
+# /build
 
 # misc
 .DS_Store
