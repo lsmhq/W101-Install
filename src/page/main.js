@@ -554,6 +554,76 @@ function Main(){
             }
         })
     }
+
+    function changeBd(){
+        Notification.info({
+            title:'切换/更新',
+            // closable:false,
+            showIcon:false,
+            duration:100000,
+            id:'change_bd',
+            style,
+            btn: (
+                <span style={{display:'flex'}}>
+                  <Button
+                    // loading={btnLoading}  
+                    type='primary'
+                    size='small'
+                    status= 'warning'
+                    style={{ margin: '0 12px' }}
+                    disabled={type === 'd'}
+                    onClick={()=>{
+                        Notification.warning({
+                            title:'提示:测试版为全面汉化版本',
+                            style,
+                            duration:100000,
+                            id:'change_bd',
+                            content:<span>
+                                <Button onClick={()=>{
+                                    localStorage.setItem('type','d')
+                                    setType('d')
+                                    // Notification.remove('change_success')
+                                    checkUpdate(localStorage.getItem('type'))
+                                }} type='primary' status='warning' size='small' style={{ margin: '0 12px 0 0' }}>
+                                    仍要下载
+                                </Button>
+                                <Button onClick={()=>{
+                                    changeBd()
+                                }} type='primary' status='success' size='small' style={{ margin: '0 12px 0 0' }}>
+                                    返回
+                                </Button>
+                            </span>
+                        })
+                    }}
+                  >
+                    <Tooltip content={`全面汉化，包含NPC名称、地图名称、剧情文本，适合体验尝鲜，不适合查阅Wiki和群内大佬解答。`}>
+                        测试版
+                    </Tooltip>
+                  </Button>
+                  <Button onClick={()=>{
+                        localStorage.setItem('type','r')
+                        // Notification.remove('change_success')
+                        setType('r')
+                        checkUpdate(localStorage.getItem('type'))
+                    }} type='primary' disabled={type === 'r'} status='success' size='small' style={{ margin: '0 12px 0 0' }}>
+                    <Tooltip content={`仅汉化剧情文本内容,npc、地图名等依旧英文, 适合剧情党`}>
+                        稳定版
+                    </Tooltip>
+                  </Button>
+                  <Button disabled={type === 'c'} onClick={()=>{
+                        localStorage.setItem('type','c')
+                        setType('c')
+                        // Notification.remove('change_success')
+                        checkUpdate(localStorage.getItem('type'))
+                    }} type='primary' size='small'>
+                    <Tooltip content={`仅支持中文输入聊天的补丁`}>
+                        仅聊天
+                    </Tooltip>
+                  </Button>
+                </span>
+            ),
+        })
+    }
     return <div className="main">
         <div className='bottom-bg'></div>
         <div className='nav' 
@@ -769,50 +839,7 @@ function Main(){
                             }) 
                             return
                         }
-                        Notification.info({
-                            title:'切换/更新',
-                            // closable:false,
-                            showIcon:false,
-                            duration:100000,
-                            id:'change_bd',
-                            style,
-                            btn: (
-                                <span style={{display:'flex'}}>
-                                  <Button
-                                    // loading={btnLoading}  
-                                    type='primary'
-                                    size='small'
-                                    status= 'warning'
-                                    style={{ margin: '0 12px' }}
-                                    disabled={type === 'd'}
-                                    onClick={()=>{
-                                        localStorage.setItem('type','d')
-                                        setType('d')
-                                        // Notification.remove('change_success')
-                                        checkUpdate(localStorage.getItem('type'))
-                                    }}
-                                  >
-                                    测试版
-                                  </Button>
-                                  <Button onClick={()=>{
-                                        localStorage.setItem('type','r')
-                                        // Notification.remove('change_success')
-                                        setType('r')
-                                        checkUpdate(localStorage.getItem('type'))
-                                    }} type='primary' disabled={type === 'r'} status='success' size='small' style={{ margin: '0 12px 0 0' }}>
-                                    稳定版
-                                  </Button>
-                                  <Button disabled={type === 'c'} onClick={()=>{
-                                        localStorage.setItem('type','c')
-                                        setType('c')
-                                        // Notification.remove('change_success')
-                                        checkUpdate(localStorage.getItem('type'))
-                                    }} type='primary' size='small'>
-                                    仅聊天
-                                  </Button>
-                                </span>
-                            ),
-                        })
+                        changeBd()
                     }}
                     tips="补丁切换"
                     // color="#27c346"
