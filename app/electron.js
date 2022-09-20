@@ -138,7 +138,7 @@ const showLoading = (cb) => {
 
 
 // app.whenReady().then(createWindow);
-
+app.commandLine.appendSwitch("--disable-http-cache")
 app.on('ready', () => {
   // console.log('app-ready')
   showLoading(createWindow)
