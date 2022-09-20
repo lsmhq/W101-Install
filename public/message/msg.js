@@ -36,6 +36,9 @@
             ipcRenderer.on('message', (e, data)=>{
                 getUpdate && getUpdate(data)
             })
+        },
+        ready:()=>{
+            ipcRenderer.send('ready', true)
         }
     }
 })()

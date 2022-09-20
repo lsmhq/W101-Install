@@ -130,6 +130,7 @@ function Main(){
             setVersion(version)
         })
 
+        window.electronAPI.ready()
         return () => {
             // 注销
             destroy()

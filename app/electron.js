@@ -5,7 +5,7 @@
 const { app, BrowserWindow, nativeImage, ipcMain, screen, webFrame } = require('electron');
 const { autoUpdater } = require('electron-updater') 
 
-let mainWindow
+let mainWindow, loading
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -27,11 +27,13 @@ function createWindow () {
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: false,
     resizable: false,
-    // transparent:true,
-    backgroundColor:'#282b30',
+    transparent: true, 
+    // backgroundColor:'#282b30',
+    focusable:true,
+    show:false,
     webPreferences: { // 网页功能设置
       nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
-      webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
+      // webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
       webSecurity: false, // 禁用同源策略
       contextIsolation: false,
       v8CacheOptions:'none',
@@ -45,7 +47,9 @@ function createWindow () {
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/`);
-  mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    // mainWindow.loadFile(__dirname+'/../build/index.html')
+    
   // mainWindow.loadFile(__dirname+'/../build/index.html')
   // mainWindow.loadURL(url.format({
   //   pathname: path.join(__dirname, '../build/index.html'),
@@ -53,12 +57,12 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:3000/');
+  // mainWindow.loadURL('http://localhos:3000/');t
 
   // 解决应用启动白屏问题
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show();
-    mainWindow.focus();
+  mainWindow.once('ready-to-show', () => {
+    loading.hide();
+    loading.close();
     mainWindow.webContents.send('scale', scaleFactor)
     mainWindow.webContents.send('install-path', app.getPath('exe'))
     mainWindow.webContents.send('install-version', app.getVersion())
@@ -102,12 +106,42 @@ function createWindow () {
   ipcMain.on('mini', function() {
     mainWindow.minimize();
   })
+  // 准备好显示
+  ipcMain.on('ready', function(e, flag){
+    if(flag){
+      mainWindow.focus();
+      mainWindow.show();
+    }
+  })
 }
 
-app.whenReady().then(createWindow);
+
+const showLoading = (cb) => {
+  loading = new BrowserWindow({
+      show: false,
+      frame: false, // 无边框（窗口、工具栏等），只包含网页内容
+      width: 180,
+      height: 220,
+      transparent:true,
+      // backgroundColor:'#282b30',
+      resizable: false,
+  });
+
+  loading.once("show", cb);
+  loading.loadURL('https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/');
+  loading.on('ready-to-show',()=>{
+    loading.focus()
+    loading.show();
+  })
+};
+
+
+
+// app.whenReady().then(createWindow);
 
 app.on('ready', () => {
-  console.log('app-ready')
+  // console.log('app-ready')
+  showLoading(createWindow)
   sendUpdateMessage({ cmd: 'app-ready', message: message.error })
   autoUpdater.checkForUpdates()
 })
@@ -149,11 +183,11 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
-  }
-});
+// app.on('activate', () => {
+//   if (BrowserWindow.getAllWindows().length === 0) {
+//     createWindow()
+//   }
+// });
 
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
