@@ -16,7 +16,6 @@ let wsPath = 'ws://101.43.216.253:8000'
 let update = false
 let timerr
 let { TabPane } = Tabs
-let CollapseItem = Collapse.Item
 let style = {
     right:'50px',
     top:'20px'
@@ -51,7 +50,7 @@ function Main(){
     let [count, setCount] = useState(0)  // 通知条数
     let [news, setNews] = useState([]) // 新闻
     let [activity, setActivity] = useState([])  // 活动
-     let [msgHeight, setHeight] = useState('95%') // 弃用高度
+    let [msgHeight, setHeight] = useState('95%') // 弃用高度
     let [btnLoading, setBtnLoad] = useState(false) // 按钮加载
     let [current, setCurrent] = useState(0)  // 当前进度
     let [total, setTotal] = useState(0) // 总进度
