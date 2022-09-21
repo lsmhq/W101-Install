@@ -79,7 +79,7 @@ function createWindow () {
   });
   mainWindow.on('resize',()=>{
     // return false
-    mainWindow.setMinimumSize(parseInt(1250/scaleFactor) , parseInt(700/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
     mainWindow.setMaximumSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
     mainWindow.setSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
   })
