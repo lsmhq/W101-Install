@@ -48,9 +48,9 @@ function Main(){
     let [percent, setPercent] = useState(0) // 进度百分比
     let [drawer, setDrawer] = useState(false) // 通知显隐
     let [count, setCount] = useState(0)  // 通知条数
-    let [news, setNews] = useState([]) // 新闻
-    let [activity, setActivity] = useState([])  // 活动
-    let [msgHeight, setHeight] = useState('95%') // 弃用高度
+    // let [news, setNews] = useState([]) // 新闻
+    // let [activity, setActivity] = useState([])  // 活动
+    // let [msgHeight, setHeight] = useState('95%') // 弃用高度
     let [btnLoading, setBtnLoad] = useState(false) // 按钮加载
     let [current, setCurrent] = useState(0)  // 当前进度
     let [total, setTotal] = useState(0) // 总进度
@@ -170,10 +170,10 @@ function Main(){
         window.tools.getPath((stdout, stderr)=>{
           console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
           if(localStorage.getItem('gameDataPath') === null){
-              localStorage.setItem('gameDataPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101\\Data\\GameData\\')
+              localStorage.setItem('gameDataPath',`${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101\\Data\\GameData\\`)
           }
           if(localStorage.getItem('wizPath') === null){  
-              localStorage.setItem('wizPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim() + '\\' + 'steamapps\\common\\Wizard101')
+              localStorage.setItem('wizPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101`)
           } 
           if(localStorage.getItem('steamPath') === null){
               localStorage.setItem('steamPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
@@ -256,22 +256,23 @@ function Main(){
     }
     function resize(){
         window.onresize = ()=>{
-            setHeight(window.screen.height - 40 + 'px')
+            // setHeight(window.screen.height - 40 + 'px')
         }
     }
     function getData(){
-        apiPath.mainPage().then(res=>{
-            if(res.status === 200){
-                setActivity([...res.data.activity])
-                setNews([...res.data.news])
-                setLoading1(false)
-            }
-        })
+        // apiPath.mainPage().then(res=>{
+        //     if(res.status === 200){
+        //         setActivity([...res.data.activity])
+        //         setNews([...res.data.news])
+        //         setLoading1(false)
+        //     }
+        // })
         apiPath.getNav().then(res=>{
             // console.log(res)
             if(res.status === 200){
                 console.log(res.data.messages)
                 setNavs(res.data.messages)
+                setLoading1(false)
             }
         })
     }
@@ -314,7 +315,7 @@ function Main(){
         apiPath.getMessage().then(res=>{
             // console.log(res.data.message)
             setMessage([...res.data.messages.reverse()])
-            if(localStorage.getItem('msgLength') && res.data.messages.length != localStorage.getItem('msgLength')){
+            if(localStorage.getItem('msgLength') && res.data.messages.length !== localStorage.getItem('msgLength')){
                 setCount(1)
             }
             localStorage.setItem('msgLength', res.data.messages.length)
@@ -771,7 +772,7 @@ function Main(){
 
             <div className='right-nav'             
                 onMouseDown={(e)=>{
-                    if(e.target.className == 'nav-bottom'){
+                    if(e.target.className === 'nav-bottom'){
                         isDown = true 
                         baseX = e.clientX
                         baseY = e.clientY
@@ -812,7 +813,6 @@ function Main(){
                             Message.success({
                                 style:{top:'20px'},
                                 content:'修改host文件成功，可以尝试在不用加速器的情况下进行游戏！',
-                                style:{top:'20px'}
                             })
                         })
                     }}
@@ -836,7 +836,6 @@ function Main(){
                             Message.error({
                                 style:{top:'20px'},
                                 content:'正在安装中，请稍后再试！',
-                                style:{top:'20px'},
                             }) 
                             return
                         }
@@ -854,7 +853,6 @@ function Main(){
                             Message.error({
                                 style:{top:'20px'},
                                 content:'正在安装中，请稍后再试！',
-                                style:{top:'20px'},
                             }) 
                             return
                         }

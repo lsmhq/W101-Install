@@ -1,4 +1,4 @@
-import { Tooltip, Badge } from "@arco-design/web-react"
+import { Badge } from "@arco-design/web-react"
 
 function Icon(props){
     let {tips, onClick, Child, count} = props
