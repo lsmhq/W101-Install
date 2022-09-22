@@ -711,7 +711,7 @@ function Main(){
                             </Spin>
                         </div>
                         <div className='tips'>
-                            <Tabs defaultActiveTab='1'  animation={true}>
+                            <Tabs defaultActiveTab='0'  animation={true}>
                                 {
                                     Object.keys(nav).sort((a, b) => b.length - a.length).map((title, idx)=>{
                                         return <TabPane key={idx} className='tabPane' title={title}>
