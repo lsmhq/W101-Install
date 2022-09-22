@@ -128,9 +128,9 @@
 .arco-carousel-indicator-item{
     margin-right: 5px !important;
 }
-/* .arco-carousel-card{
+.arco-carousel-card{
     overflow: visible !important;
-} */
+}
 .left{
     position: relative;
     width: 550px;
