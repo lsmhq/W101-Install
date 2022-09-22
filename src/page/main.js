@@ -714,7 +714,7 @@ function Main(){
                             <Tabs defaultActiveTab='1'  animation={true}>
                                 {
                                     Object.keys(nav).sort((a, b) => b.length - a.length).map((title, idx)=>{
-                                        return <TabPane key={idx} className='tabPane' title={<Tooltip content={'右滚动查看更多'}>{title}</Tooltip>}>
+                                        return <TabPane key={idx} className='tabPane' title={title}>
                                         <List
                                             dataSource={nav[title]}
                                             loading={loading1}

@@ -127,9 +127,9 @@
 .arco-carousel-indicator-item{
     margin-right: 5px !important;
 }
-.arco-carousel-card{
+/* .arco-carousel-card{
     overflow: visible !important;
-}
+} */
 .left{
     position: relative;
     width: 550px;
@@ -169,7 +169,7 @@
     position: absolute;
     top: 125px;
     left: 40px;
-    width: 550px;
+    width: 500px;
     height: 205px;
     border-radius: 5px;
     /* overflow: hidden; */
@@ -203,7 +203,7 @@
     height: 95% !important;
 }
 .tips{
-    width: 550px;
+    width: 500px;
     /* height: 230px; */
     position: absolute;
     top: 340px;
@@ -272,7 +272,7 @@
     right: 50px !important;
 }
 .tabPane{
-    height: 250px;
+    height: 230px;
     font-size: 24px;
     overflow: scroll;
 }
