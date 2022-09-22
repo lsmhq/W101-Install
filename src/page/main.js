@@ -15,6 +15,7 @@ import apiPath from './http/api'
 let wsPath = 'ws://101.43.216.253:8000'
 let update = false
 let timerr
+let carouselIndex = 0
 let { TabPane } = Tabs
 let style = {
     right:'50px',
@@ -683,19 +684,25 @@ function Main(){
                         <div className='carousel-main'>
                             <Spin dot tip="拼命中" style={{color:'white'}} loading={loading}>
                                 <Carousel
-                                    showArrow='hover'
+                                    // showArrow='hover'
+                                    showArrow='never'
                                     indicatorClassName="indicatorClassName"
+                                    // indicatorPosition='outer'
                                     arrowClassName='arrowClassName'
                                     animation='card'
                                     style={{ width: 350}}
                                     autoPlay={true}
+                                    onChange={(index)=>{
+                                        carouselIndex = index
+                                        // console.log(index)
+                                    }}
                                 >
                                     {imgs.map((img, index) => <div
                                         className='carousel-img'
                                         key={index}
                                         style={{ width: '100%' }}
                                         onClick={()=>{
-                                            if(img.href)
+                                            if(img.href && carouselIndex === index)
                                                 window.electronAPI.openBroswer(img.href)
                                         }}
                                         >
