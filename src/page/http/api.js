@@ -52,6 +52,7 @@ let apiPath = {
     getCurl: params=> http.getServer('/curl/lunbo', params), // 获取轮播
     getMessage: params =>http.getServer('/curl/messages',params),// 获取通知
     delMessage: params=>http.getServer('/curl/delmessage', params), // 删除通知
+    getNav: params=> http.getServer('/curl/nav', params), // 获取Nav
 }
 
 export default apiPath

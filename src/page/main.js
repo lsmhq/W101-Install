@@ -67,6 +67,7 @@ function Main(){
     let [root, setRoot] = useState(localStorage.getItem('root')||'') // 是否可以进行发布通知
     let [play, setPlay] = useState(localStorage.getItem('wizInstall')) // 是否可以开始游戏
     let [version, setVersion] = useState('') // 版本号
+    let [nav, setNavs] = useState({})
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -264,6 +265,13 @@ function Main(){
                 setActivity([...res.data.activity])
                 setNews([...res.data.news])
                 setLoading1(false)
+            }
+        })
+        apiPath.getNav().then(res=>{
+            // console.log(res)
+            if(res.status === 200){
+                console.log(res.data.messages)
+                setNavs(res.data.messages)
             }
         })
     }
@@ -703,29 +711,22 @@ function Main(){
                             </Spin>
                         </div>
                         <div className='tips'>
-                            <Tabs defaultActiveTab='1' animation={true}>
-                                <TabPane key='1' className='tabPane' title='新闻'>
-                                    <List
-                                        dataSource={news}
-                                        loading={loading1}
-                                        noDataElement={<></>}
-                                        render={(item, index) => <List.Item key={item.url} onClick={()=>{
-                                            if(item.url)
-                                                window.electronAPI.openBroswer(item.url)
-                                        }}>{item.title}</List.Item>}
-                                    />
-                                </TabPane>
-                                <TabPane key='2' className='tabPane' title='活动'>
-                                    <List
-                                        dataSource={activity}
-                                        loading={loading1}
-                                        noDataElement={<></>}
-                                        render={(item, index) => <List.Item key={item.url} onClick={()=>{
-                                            if(item.url)
-                                                window.electronAPI.openBroswer(item.url)
-                                        }}>{item.title}</List.Item>}
-                                    />
-                                </TabPane>
+                            <Tabs defaultActiveTab='1'  animation={true}>
+                                {
+                                    Object.keys(nav).sort((a, b) => b.length - a.length).map((title, idx)=>{
+                                        return <TabPane key={idx} className='tabPane' title={<Tooltip content={'右滚动查看更多'}>{title}</Tooltip>}>
+                                        <List
+                                            dataSource={nav[title]}
+                                            loading={loading1}
+                                            // noDataElement={<></>}
+                                            render={(item, index) => <List.Item key={item.href} onClick={()=>{
+                                                if(item.href)
+                                                    window.electronAPI.openBroswer(item.href)
+                                            }}>{item.title}</List.Item>}
+                                        />
+                                    </TabPane>
+                                    })
+                                }
                             </Tabs>
                         </div>
                     </div>
