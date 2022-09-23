@@ -257,8 +257,10 @@
             let file = fs.createReadStream(path + 'Locale_English-Root.wad.' + type)
             let out = fs.createWriteStream(path + 'Locale_English-Root.wad')
             file.pipe(out)
-            callback()
+            callback(true)
             // out.close()
+        }else{
+            callback(false)
         }
     }
     // 版本号对比

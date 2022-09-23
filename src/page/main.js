@@ -449,7 +449,13 @@ function Main(){
                 case 2:
                     // 没有需要的更新
                     if(show)
-                    window.tools.changeType(localStorage.getItem('type'),()=>{
+                    window.tools.changeType(localStorage.getItem('type'),(sign)=>{
+                        console.log(sign)
+                        if(!sign){
+                            if(show)
+                                install(localStorage.getItem('type'))
+                            return
+                        }
                         window.electronAPI.sound()
                         Message.success({
                             style:{top:'20px'},
