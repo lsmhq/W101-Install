@@ -47,7 +47,7 @@ function createWindow () {
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/`);
-    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
@@ -57,7 +57,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:3000/#/');
+  // mainWindow.loadURL('http://localhost:3000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
