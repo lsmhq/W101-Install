@@ -3,8 +3,8 @@
     const fs = require('fs')
     const child_process = require('child_process');//引入模块
     const { shell, app } = require('electron')
-    window.path = '' // 打包路径
-    window.wizPath = '' // Wiz路径
+    window.path = localStorage.getItem('gameDataPath') || '' // 打包路径
+    window.wizPath = localStorage.getItem('wizPath') || '' // Wiz路径
     let params = {
         r: 'release',
         d: 'debug',
@@ -123,6 +123,7 @@
                         success(3) // 未安装
                     }
                 } catch (err) {
+                    // console.log(err)
                     error && error(err)
                 }
     
@@ -352,25 +353,35 @@
         let steamPath = localStorage.getItem('steamPath')
         let wizPath = localStorage.getItem('wizPath')
         console.log(steamPath, wizPath)
+        let steamInstall = false
+        let wizInstall = false
+        let errors = []
         // let gameDataPath = localStorage.getItem('gameDataPath')
         try {
             let files = fs.readdirSync(steamPath)
-            callback(0)
+            // callback(0)
+            steamInstall = true
         } catch (error) {
             if(error){
                 // steam未安装
-                callback(1, error)
+                steamInstall = false
+                errors.push(error)
+                // callback(1, error)
             }
         }
         try {
             let files = fs.readdirSync(wizPath)
-            callback(0)
+            // callback(0)
+            wizInstall = true
         } catch (error) {
             if(error){
+                wizInstall =false
+                errors.push(error)
                 // Wizard101未安装或是自定义路径
-                callback(2, error)
+                // callback(2, error)
             }
         }
+        callback(steamInstall, wizInstall, errors)
     }
     
     window.tools = {

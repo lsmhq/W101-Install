@@ -1,4 +1,4 @@
-import { Spin, Carousel, Tabs, List, Button, Progress } from '@arco-design/web-react'
+import { Spin, Carousel, Tabs, List, Button, Progress, Notification } from '@arco-design/web-react'
 let carouselIndex = 0
 let { TabPane } = Tabs
 let style = {

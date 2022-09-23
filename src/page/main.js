@@ -2,7 +2,7 @@ import { useEffect, useState} from 'react';
 import '../css/main.css'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconClose, IconMinus } from '@arco-design/web-react/icon';
+import { IconClose, IconMinus, IconTool } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
 import wechat from '../image/wechat.jpg'
 import QQ from '../image/QQ_share.jpg'
@@ -10,6 +10,7 @@ import su from '../image/Subata_logo.png'
 import apiPath from './http/api'
 import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
+import Setting from './components/setting';
 
 
 //'ws://localhost:8000'
@@ -68,6 +69,7 @@ function Main(){
     let [play, setPlay] = useState(localStorage.getItem('wizInstall')) // 是否可以开始游戏
     let [version, setVersion] = useState('') // 版本号
     let [nav, setNavs] = useState({})
+    let [settingShow, setSetShow] = useState(false)
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -108,7 +110,7 @@ function Main(){
         }
         // 获取安装目录
         setInterval(()=>{
-            console.log('检测更新')
+            // console.log('检测更新')
             window.electronAPI.getUpdater((data)=>{
                 // console.log('message---->',data)
                 if(data.cmd==='downloadProgress'){
@@ -124,7 +126,7 @@ function Main(){
                     })
                 }
             })
-        }, 500)
+        }, 1000)
         // 获取version
         window.electronAPI.getVersion((version)=>{
             setVersion(version)
@@ -183,25 +185,41 @@ function Main(){
           console.log(window.wizPath)
           console.log(window.path)
           console.log('============')
-          window.tools.checkGameInstall((type, err)=>{
-            console.log(type, err)
-            if(type === 1){
+          window.tools.checkGameInstall((steam, wizard, err)=>{
+            console.log(steam, wizard, err)
+            if(steam){
               // Message.warning('检测到未安装Steam')
-              localStorage.setItem('steamInstall', false)
-              return   
+              localStorage.setItem('steamInstall', true)
+            }else{
+                localStorage.setItem('steamInstall', false)
             }
-            localStorage.setItem('steamInstall', true)
-            if(type === 2){
-              localStorage.setItem('wizInstall', false)
-              // Message.warning('没有找到Wizard101安装目录')
-              return
+            if(wizard){
+                localStorage.setItem('wizInstall', true)
+                setPlay('true')
+            }else{
+                localStorage.setItem('wizInstall', false)
             }
-            localStorage.setItem('wizInstall', true)
-            setPlay('true')
           }) 
           callback()  
       }, (error)=>{
+          console.log('没安装Steam')
           console.log(error)
+          window.tools.checkGameInstall((steam, wizard, err)=>{
+            console.log(steam, wizard, err)
+            if(steam){
+              // Message.warning('检测到未安装Steam')
+              localStorage.setItem('steamInstall', true)
+            }else{
+                localStorage.setItem('steamInstall', false)
+            }
+            if(wizard){
+                localStorage.setItem('wizInstall', true)
+                setPlay('true')
+            }else{
+                localStorage.setItem('wizInstall', false)
+            }
+          }) 
+          callback()  
       }) 
       }
     function createSocket(){
@@ -659,6 +677,14 @@ function Main(){
             >
                 <div className='control-btn' onClick={(e)=>{
                     e.stopPropagation()
+                    // 设置
+                    setSetShow(true)
+                }}>
+                    
+                    <IconTool style={{fontSize:'20px'}}/>
+                </div>
+                <div className='control-btn' onClick={(e)=>{
+                    e.stopPropagation()
                     window.electronAPI.mini()
                 }}>
                     <IconMinus style={{fontSize:'20px'}}/>
@@ -899,11 +925,32 @@ function Main(){
             </>}
             footer={null}
         />
+        <Modal
+            title={'设置'}
+            // style={{textAlign:'center'}}
+            visible={settingShow}
+            maskClosable={false}
+            onCancel={()=>{
+                setSetShow(false)
+            }}
+            style={{
+                maxHeight:'600px',
+                minHeight:'600px',
+                width:'700px',
+            }}
+            children={<Setting
+                
+            />}
+            footer={null}
+        />
         <input id='selectWiz' directory="" nwdirectory="" type='file' accept='.exe' onChange={(e)=>{
             console.log(e.target.files[0].path)
             if(e.target.files[0].path.includes('Wizard101.exe')){
+                console.log('---选择成功')
                 localStorage.setItem('wizPath', e.target.files[0].path.split('Wizard101.exe')[0])
                 localStorage.setItem('gameDataPath', e.target.files[0].path.split('Wizard101.exe')[0]+'Data\\GameData\\')
+                window.wizPath = e.target.files[0].path.split('Wizard101.exe')[0]
+                window.path = e.target.files[0].path.split('Wizard101.exe')[0]+'Data\\GameData\\'
                 getSteam(()=>{
                     if(localStorage.getItem('type')){
                         checkUpdate(false) 
