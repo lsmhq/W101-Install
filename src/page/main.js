@@ -438,6 +438,7 @@ function Main(){
     function checkUpdate(show = true){
         console.log(obj[localStorage.getItem('type')])
         Notification.remove('change_bd') 
+        // Notification.clear()
         // console.log(window.tools)
         window.tools.checkUpdate(localStorage.getItem('type'), (num)=>{
             console.log('num----->',num)
@@ -543,8 +544,7 @@ function Main(){
     }
     function downLoad(type){
         setBtnLoad(true)
-        Notification.remove('notInstall_bd')
-        Notification.remove('update')
+        Notification.clear()
         window.tools.downLoad(type || localStorage.getItem('type') ,(mark)=>{
             Notification.warning({
                 id:'download',
