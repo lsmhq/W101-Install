@@ -1,22 +1,21 @@
 import { useEffect, useState} from 'react';
 import '../css/main.css'
-import { Spin, Carousel, Tabs, List, Button, Modal, Notification, Progress, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
+import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconThumbUp, IconDelete, IconSettings, IconClose, IconMinus, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
+import { IconClose, IconMinus } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
 import wechat from '../image/wechat.jpg'
-import Icon from './components/Icon';
 import QQ from '../image/QQ_share.jpg'
 import su from '../image/Subata_logo.png'
 import apiPath from './http/api'
+import RightNav from './components/right-nav';
+import BodyMain from './components/body-main';
 
 
 //'ws://localhost:8000'
 let wsPath = 'ws://101.43.216.253:8000'
 let update = false
 let timerr
-let carouselIndex = 0
-let { TabPane } = Tabs
 let style = {
     right:'50px',
     top:'20px'
@@ -673,281 +672,33 @@ function Main(){
             </div>
         </div>
         <div className='body'>
-            <div className='body-main'>
-                <div className='body-main-top'>
-                    <div className='left'>
-                        <div className='logo' onClick={()=>{
-                            window.electronAPI.openBroswer('https://www.wizard101.com')
-                        }}>
-                            <img src={logo} alt=''/>
-                        </div>
-                        <div className='carousel-main'>
-                            <Spin dot tip="拼命中" style={{color:'white'}} loading={loading}>
-                                <Carousel
-                                    // showArrow='hover'
-                                    showArrow='never'
-                                    indicatorClassName="indicatorClassName"
-                                    // indicatorPosition='outer'
-                                    arrowClassName='arrowClassName'
-                                    animation='card'
-                                    style={{ width: 350}}
-                                    autoPlay={true}
-                                    onChange={(index)=>{
-                                        carouselIndex = index
-                                        // console.log(index)
-                                    }}
-                                >
-                                    {imgs.map((img, index) => <div
-                                        className='carousel-img'
-                                        key={index}
-                                        style={{ width: '100%' }}
-                                        onClick={()=>{
-                                            if(img.href && carouselIndex === index)
-                                                window.electronAPI.openBroswer(img.href)
-                                        }}
-                                        >
-                                        <img
-                                            className='carousel-img'
-                                            style={{borderRadius:'10px'}}
-                                            key={index}
-                                            src={img.src}
-                                            alt=""
-                                        />
-                                        </div>
-                                    )}
-                                </Carousel>
-                            </Spin>
-                        </div>
-                        <div className='tips'>
-                            <Tabs defaultActiveTab='0'  animation={true}>
-                                {
-                                    Object.keys(nav).sort((a, b) => b.length - a.length).map((title, idx)=>{
-                                        return <TabPane key={idx} className='tabPane' title={title}>
-                                        <List
-                                            dataSource={nav[title]}
-                                            loading={loading1}
-                                            // noDataElement={<></>}
-                                            render={(item, index) => <List.Item key={item.href} onClick={()=>{
-                                                if(item.href)
-                                                    window.electronAPI.openBroswer(item.href)
-                                            }}>{item.title}</List.Item>}
-                                        />
-                                    </TabPane>
-                                    })
-                                }
-                            </Tabs>
-                        </div>
-                    </div>
-                    <div className='right'>
-                        <div className='btn-group'>
-                            <div className='subata-btn'>
-                                <Button color='#4cc6e7' onClick={()=>{
-                                    window.electronAPI.openBroswer('https://www.subata.top')
-                                }} type='primary' className='openGame'>
-                                    中文攻略(Subata)
-                                </Button>
-                            </div>
-                            <div className='op-btn'>
-                                <Button onClick={()=>{
-                                    
-                                    // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
-                                    console.log(localStorage.getItem('wizInstall'))
-                                    if(localStorage.getItem('wizInstall') === 'true'){
-                                        window.tools.startGame((err)=>{
-                                            Notification.error({
-                                                id:'notInstallWizard101',
-                                                style,
-                                                title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
-                                                content: err.path
-                                            })
-                                        })
-                                    }else{   
-                                        let fileSelect = document.getElementById('selectWiz')
-                                        fileSelect.click()
-                                    }
-                                }} status='success' loading={btnLoading} type='primary' className='openGame'>{play==='true'?'开始游戏':'选择Wizard.exe'}</Button>
-                            </div>
-                        </div>
 
-              
-                    </div>
-                </div>
-                <div className='body-main-bottom'>
-                    {percent > 0 && <Progress formatText={()=><span style={{color:'white'}}>{`${(current / 1024 / 1024).toFixed(2)}MB / ${(total / 1024 / 1024).toFixed(2)}MB`}</span>} percent={percent} width='100%' color={'#00b42a'} style={{display:'block'}}/>}
-                </div>
-            </div>
-
-            <div className='right-nav'             
-                onMouseDown={(e)=>{
-                    if(e.target.className === 'nav-bottom'){
-                        isDown = true 
-                        baseX = e.clientX
-                        baseY = e.clientY
-                        // console.log(baseX, baseY)
-                    }
-                }
-            }>
-                <Icon
-                    Child={<IconCompass className='icon-child'/>}
-                    onClick={()=>{
-                        window.electronAPI.openBroswer('https://www.wizard101.com/')
-                    }}
-                    tips="前往官网"
-                    content="官网"
-                />
-                <Icon
-                    Child={<IconThumbUp className="icon-child"/>}
-                    onClick={()=>{
-                        window.tools.like(()=>{
-                            Message.success({
-                                // showIcon:false,
-                                content:'你的支持就是我最大的动力！',
-                                style:{top:'20px'},
-                                duration:2000
-                            })
-                        })
-                    }}
-                    // color="#d2881c"
-                    tips="给灭火器点个赞"
-                    content="点赞"
-                />              
-                <Icon
-                    Child={<IconThunderbolt className="icon-child"/>}
-                    onClick={()=>{
-                        // setZf('qq')
-                        window.tools.connect(()=>{
-                            window.electronAPI.sound()
-                            Message.success({
-                                style:{top:'20px'},
-                                content:'修改host文件成功，可以尝试在不用加速器的情况下进行游戏！',
-                            })
-                        })
-                    }}
-                    // color="#fef9bf"
-                    tips="一键加速"
-                    content="加速"
-                />
-                <Icon
-                    Child={<IconNotification className="icon-child"/>}
-                    count={count}
-                    onClick={()=>{
-                        setDrawer(true)
-                    }}
-                    tips="通知中心"
-                    content="通知"
-                />
-                <Icon
-                    Child={<IconSettings className="icon-child"/>}
-                    onClick={()=>{
-                        if(btnLoading){
-                            Message.error({
-                                style:{top:'20px'},
-                                content:'正在安装中，请稍后再试！',
-                            }) 
-                            return
-                        }
-                        changeBd()
-                    }}
-                    tips="补丁切换"
-                    // color="#27c346"
-                    content="汉化"
-                />
-                
-                <Icon
-                    Child={<IconDelete className="icon-child"/>}
-                    onClick={()=>{
-                        if(btnLoading){
-                            Message.error({
-                                style:{top:'20px'},
-                                content:'正在安装中，请稍后再试！',
-                            }) 
-                            return
-                        }
-                        window.tools.checkUpdate(localStorage.getItem('type') || 'r', (num)=>{
-                            console.log('num ----->',num)
-                            if(num !== 3){
-                                Notification.warning({
-                                    title:'确定要狠心卸载汉化补丁吗?',
-                                    style,
-                                    id:'unInstall',
-                                    content:(
-                                        <span>
-                                            <Button type='primary' size='small' status='success' style={{marginRight:'10px'}} onClick={()=>{
-                                                window.tools.init(()=>{
-                                                    Notification.remove('unInstall')
-                                                    window.electronAPI.sound()
-                                                    Message.success({
-                                                        style:{top:'20px'},
-                                                        content:'卸载成功!',
-                                                        duration:2000
-                                                    })
-                                                })
-                                            }}>确定</Button>
-                                            <Button size='small' onClick={()=>{Notification.remove('unInstall')}}>取消</Button>
-                                        </span>
-                                    )
-                                })
-                            }else{
-                                install()
-                            }
-                        },(err)=>{
-                            console.log(err)
-                        },(err)=>{
-                            console.log(err)
-                            Notification.error({
-                                id:'notInstallWizard101',
-                                style,
-                                title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
-                                content: <span>
-                                    <Button onClick={()=>{  
-                                        let fileSelect = document.getElementById('selectWiz')
-                                        fileSelect.click()
-                                    }}>手动选择游戏路径</Button>
-                                </span>
-                            })
-                        })
-                    }}
-                    // textStyle={{fontSize:'12px'}}
-                    tips="卸载补丁"
-                    content="卸载"
-                />
-                <Icon
-                    Child={<IconBug className="icon-child"/>}
-                    onClick={()=>{
-                        setZf('qq')
-                    }}
-                    tips="联系我们"
-                    // color="#e4e517"
-                    content="建议"
-                />
-                <div className='nav-bottom'>
-                    <Icon
-                        Child={<IconWechat className="icon-child"/>}
-                        onClick={()=>{
-                            setZf('wx')
-                        }}
-                        color='#27c346'
-                        tips="微信打赏"
-                    />
-                    <Icon
-                        Child={<IconAlipayCircle className="icon-child"/>}
-                        onClick={()=>{
-                            setZf('zf')
-                        }}
-                        color='#3c7eff'
-                        tips="支付宝打赏"
-                    />
-                    
-                    <Icon
-                        Child={<IconHeartFill className="icon-child"/>}
-                        onClick={()=>{
-                            window.electronAPI.openBroswer('https://subata.top/index.php/about/')
-                        }}
-                        color="#d1080e"
-                        tips="支付宝打赏"
-                    />
-                </div>
-            </div>
+            <BodyMain
+                logo={logo}
+                loading={loading}
+                imgs = {imgs}
+                nav = {nav}
+                loading1 = {loading1}
+                btnLoading = {btnLoading}
+                percent={percent}
+                current={current}
+                total = {total}
+                play = {play}
+            />
+            <RightNav
+                onMouseDown={(init)=>{
+                    let { down, X, Y } = init
+                    isDown = down
+                    baseX = X
+                    baseY = Y
+                }}
+                setZf = {setZf}
+                changeBd={changeBd}
+                install = {install}
+                setDrawer = {setDrawer}
+                btnLoading = {btnLoading}
+                count = {count}
+            />
         </div>
         <Drawer 
             visible={drawer}

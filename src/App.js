@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './App.css';
 import Main from './page/main';
 function App() {
-  let [show, setShow] = useState(false)
+  // let [show, setShow] = useState(false)
   // getSteam() 
   useEffect(() => {
       document.onkeydown = function(){
