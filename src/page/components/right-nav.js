@@ -1,7 +1,7 @@
 
 import Icon from './Icon'
 import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconThumbUp, IconDelete, IconSettings, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
-import { Message, Button } from '@arco-design/web-react'
+import { Message, Button, Notification } from '@arco-design/web-react'
 let style = {
     right:'50px',
     top:'20px'
