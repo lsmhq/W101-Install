@@ -97,7 +97,7 @@ function RightNav(props){
                     }) 
                     return
                 }
-                window.tools.checkUpdate(localStorage.getItem('type') || 'r', (num)=>{
+                window.tools.checkUpdate(localStorage.getItem('type'), (num)=>{
                     console.log('num ----->',num)
                     if(num !== 3){
                         Notification.warning({
