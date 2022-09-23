@@ -70,7 +70,7 @@ function Main(){
     let [version, setVersion] = useState('') // 版本号
     let [nav, setNavs] = useState({})
     let [settingShow, setSetShow] = useState(false)
-    let [subataShow, setSubataShow] = useState(JSON.parse(localStorage.getItem('btnSetting1')))
+    let [subataShow, setSubataShow] = useState(JSON.parse(localStorage.getItem('btnSetting1')) || true)
     let [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
     useEffect(() => {
         // 初始化地址

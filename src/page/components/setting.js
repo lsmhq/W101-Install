@@ -5,7 +5,7 @@ let AnchorLink = Anchor.Link
 function Setting(props){
     let {setBg, setSubataShow} = props
     const [btnSetting, setbtnSetting] = useState(JSON.parse(localStorage.getItem('btnSetting')))
-    const [btnSetting1, setbtnSetting1] = useState(JSON.parse(localStorage.getItem('btnSetting1')))
+    const [btnSetting1, setbtnSetting1] = useState(JSON.parse(localStorage.getItem('btnSetting1')) || true)
     const [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
     const [imgs, setImgs] = useState([])
     return <div className="setting">
@@ -94,6 +94,7 @@ function Setting(props){
                     window.tools.init(()=>{
                         localStorage.clear()
                         // 重启
+                        window.electronAPI.restart()
                     })
                 }}>初始化所有</Button>
             </div>

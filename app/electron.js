@@ -1,8 +1,4 @@
-// 导入app、BrowserWindow模块
-// app 控制应用程序的事件生命周期。事件调用app.on('eventName', callback)，方法调用app.functionName(arg)
-// BrowserWindow 创建和控制浏览器窗口。new BrowserWindow([options]) 事件和方法调用同app
-// Electron参考文档 https://www.electronjs.org/docs
-const { app, BrowserWindow, nativeImage, ipcMain, screen, webFrame } = require('electron');
+const { app, BrowserWindow, nativeImage, ipcMain, screen } = require('electron');
 const { autoUpdater } = require('electron-updater') 
 
 let mainWindow, loading
@@ -14,7 +10,6 @@ const message = {
   downloadProgress: '正在下载...'
 }
 const path = require('path');
-const url = require('url')
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 function createWindow () {
   let scaleFactor = (screen.getAllDisplays()[0].scaleFactor >= 2) ? 1 : screen.getAllDisplays()[0].scaleFactor
@@ -43,11 +38,11 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  mainWindow.webContents.openDevTools() // 打开窗口调试
+  // mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/`);
-    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
@@ -57,7 +52,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:3000/#/');
+  // mainWindow.loadURL('http://localhost:3000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -105,6 +100,10 @@ function createWindow () {
   // 最小化
   ipcMain.on('mini', function() {
     mainWindow.minimize();
+  })
+  // 重启
+  ipcMain.on('restart', function(){
+    mainWindow.reload()
   })
   // 准备好显示
   ipcMain.on('ready', function(e, flag){

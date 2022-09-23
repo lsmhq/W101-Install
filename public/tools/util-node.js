@@ -76,16 +76,20 @@
     
     // 初始化
     function init(callback) {
-        let files = fs.readdirSync(path, {
-            withFileTypes: true
-        })
-        let unlinkArr = ['version_zh_cn_d', 'version_zh_cn_r', 'version_zh_cn_u', 'version_zh_cn_c', 'Locale_English-Root.wad', 'Locale_English-Root.wad.d', 'Locale_English-Root.wad.r', 'Locale_English-Root.wad.c']
-        // console.log('卸载')
-        files.forEach(file => {
-            if (unlinkArr.includes(file.name)) {
-                fs.unlinkSync(path + file.name)
-            }
-        })
+        try {
+            let files = fs.readdirSync(path, {
+                withFileTypes: true
+            })
+            let unlinkArr = ['version_zh_cn_d', 'version_zh_cn_r', 'version_zh_cn_u', 'version_zh_cn_c', 'Locale_English-Root.wad', 'Locale_English-Root.wad.d', 'Locale_English-Root.wad.r', 'Locale_English-Root.wad.c']
+            // console.log('卸载')
+            files.forEach(file => {
+                if (unlinkArr.includes(file.name)) {
+                    fs.unlinkSync(path + file.name)
+                }
+            })
+        } catch (error) {
+            console.log(error)
+        }
         callback()
     }
     
