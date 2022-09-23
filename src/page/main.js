@@ -70,6 +70,8 @@ function Main(){
     let [version, setVersion] = useState('') // 版本号
     let [nav, setNavs] = useState({})
     let [settingShow, setSetShow] = useState(false)
+    let [subataShow, setSubataShow] = useState(JSON.parse(localStorage.getItem('btnSetting1')))
+    let [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -658,7 +660,9 @@ function Main(){
         })
     }
     return <div className="main">
-        <div className='bottom-bg'></div>
+        <div className={`bottom-bg bottom-bg${imgNum}`}>
+            <img alt='' src=''/>
+        </div>
         <div className='nav' 
             onMouseDown={(e)=>{
                 e.stopPropagation()
@@ -716,6 +720,7 @@ function Main(){
                 current={current}
                 total = {total}
                 play = {play}
+                subataShow={subataShow}
             />
             <RightNav
                 onMouseDown={(init)=>{
@@ -945,7 +950,8 @@ function Main(){
                 width:'700px',
             }}
             children={<Setting
-                
+                setBg={setimgNum}
+                setSubataShow = {setSubataShow}
             />}
             footer={null}
         />

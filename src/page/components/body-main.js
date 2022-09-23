@@ -6,7 +6,7 @@ let style = {
     top:'20px'
 }
 function BodyMain(props){
-    let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play } = props
+    let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow } = props
     return <div className='body-main'>
     <div className='body-main-top'>
         <div className='left'>
@@ -74,13 +74,15 @@ function BodyMain(props){
         </div>
         <div className='right'>
             <div className='btn-group'>
-                <div className='subata-btn'>
+                {
+                    subataShow && <div className='subata-btn'>
                     <Button color='#4cc6e7' onClick={()=>{
                         window.electronAPI.openBroswer('https://www.subata.top')
                     }} type='primary' className='openGame'>
                         中文攻略(Subata)
                     </Button>
                 </div>
+                }
                 <div className='op-btn'>
                     <Button onClick={()=>{
                         

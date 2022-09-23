@@ -1,0 +1,45 @@
+.setting{
+    display: flex;
+    width: 600px;
+    height: 480px;
+    flex-direction: row;
+    overflow: hidden;
+}
+.setting-left{
+    width: 200px;
+    height: 480px;
+    background-color: rgb(60, 60, 60);
+}
+.setting-right{
+    flex: 1;
+    height: 480px;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding: 20px;
+}
+.setting-item{
+    height: 480px;
+    overflow: scroll;
+}
+.setting-bg{
+    /* height: 100%; */
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.arco-image-img{
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 5px !important;   
+}
+.arco-image{
+    filter: brightness(0.4);
+}
+.arco-image:hover{
+    filter: brightness(0.8);
+}
+.arco-image-active{
+    filter: brightness(1);
+}

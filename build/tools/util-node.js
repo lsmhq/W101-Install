@@ -325,14 +325,18 @@
                 let exe = wizPath + "\\startGame.bat"
                 // console.log(exe)
                 shell.openPath(exe)
-                window.electronAPI.mini()
+                if(JSON.parse(localStorage.getItem('btnSetting')) ){
+                    window.electronAPI.mini()
+                }
             }else if(!names.includes('startGame.bat') && names.includes('Wizard101.exe')){
                 getFile(`http://101.43.216.253:3001/bat/startGame.bat`, `${wizPath}\\startGame.bat`,()=>{
                     console.log('添加bat成功')
                     let exe = wizPath + "\\startGame.bat"
                     // console.log(exe)
                     shell.openPath(exe)
-                    window.electronAPI.mini()
+                    if(JSON.parse(localStorage.getItem('btnSetting')) ){
+                        window.electronAPI.mini()
+                    }
                 },()=>{})
             }else{
                 callback({path:'没有在游戏根目录下'})
