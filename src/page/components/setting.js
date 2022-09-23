@@ -42,7 +42,8 @@ function Setting(props){
                             }} className={(index + 2 === index)?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={100} height={100} src={img}/>
                         })
                     }
-                      {/* <Upload
+                    {/* <Upload
+                        
                         showUploadList={false}
                         onChange={(_, currentFile) => {
                             console.log(URL.createObjectURL(currentFile.originFile))
