@@ -1,4 +1,4 @@
-# Subata 自制游戏启动器说明介绍
+# Subata 自制游戏启动器说明介绍 - 仅供学习交流
 
 ## 框架 Electron + React + Nodejs
 
