@@ -1,4 +1,4 @@
-import { Anchor, Button, Switch, Form, Image, Upload } from '@arco-design/web-react'
+import { Anchor, Button, Switch, Form, Image } from '@arco-design/web-react'
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
 let AnchorLink = Anchor.Link
@@ -7,12 +7,14 @@ function Setting(props){
     const [btnSetting, setbtnSetting] = useState(JSON.parse(localStorage.getItem('btnSetting')))
     const [btnSetting1, setbtnSetting1] = useState(JSON.parse(localStorage.getItem('btnSetting1')) || true)
     const [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
+    // eslint-disable-next-line no-unused-vars
     const [imgs, setImgs] = useState([])
     const [path, setPath] = useState(window.wizPath)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         // alert('window.wizPath')
         setPath(window.wizPath)
-    }, [window.wizPath])
+    })
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} 
@@ -102,7 +104,11 @@ function Setting(props){
                 }}>定位游戏</Button>
                 <br/><br/>
                 <span>当前路径：</span>
-                <span>{path}</span>
+                <span>{path?path:<Button onClick={()=>{
+                        console.log(localStorage.getItem('wizInstall'))
+                        let fileSelect = document.getElementById('selectWiz')
+                        fileSelect.click()
+                    }} status='success' type='primary' className='openGame'>{'选择Wizard.exe'}</Button>}</span>
                 {/* <br/><br/>
                 <Button type='primary' size='large' onClick={()=>{
                     window.tools.checkFiles(path)
