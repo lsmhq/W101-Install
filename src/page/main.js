@@ -150,6 +150,16 @@ function Main(){
             setShow(true)
     },[img])
     useEffect(()=>{
+        if(document.getElementById('live2d-widget')){
+            document.getElementById('live2d-widget').style.transition = 'all .3s'
+            if(settingShow){
+                document.getElementById('live2d-widget').style.opacity = 1
+            }else{
+                document.getElementById('live2d-widget').style.opacity = 0
+            }
+        }
+    },[settingShow])
+    useEffect(()=>{
         setCount(0)
     },[drawer])
     useEffect(()=>{
@@ -290,7 +300,7 @@ function Main(){
         apiPath.getNav().then(res=>{
             // console.log(res)
             if(res.status === 200){
-                console.log(res.data.messages)
+                // console.log(res.data.messages)
                 setNavs(res.data.messages)
                 setLoading1(false)
             }

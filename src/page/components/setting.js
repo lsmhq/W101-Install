@@ -101,6 +101,7 @@ function Setting(props){
                 {/* <PageHeader title='初始化'/> */}
                 <Button type='primary' size='large' onClick={()=>{
                     window.tools.openFile(path)
+                    window.electronAPI.mini()
                 }}>定位游戏</Button>
                 <br/><br/>
                 <span>当前路径：</span>

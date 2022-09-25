@@ -38,7 +38,7 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  // mainWindow.webContents.openDevTools() // 打开窗口调试
+  mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/`);

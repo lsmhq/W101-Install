@@ -43,6 +43,7 @@
     "jest": "^27.4.3",
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
+    "live2d-widget-model-koharu": "^1.0.5",
     "mini-css-extract-plugin": "^2.4.5",
     "path": "^0.12.7",
     "postcss": "^8.4.4",

@@ -7487,6 +7487,11 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmmirror.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
+live2d-widget-model-koharu@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npmmirror.com/live2d-widget-model-koharu/-/live2d-widget-model-koharu-1.0.5.tgz#6525e2c495af40b074d91c31499d4a71711cfccc"
+  integrity sha512-tziYYbBvkLFbYmizb6Sij4rF1Vmne9ZJwwD8dljt3QPeWxYBjxuQspzLrFOjMtvCSeE5dncNG7qdnTUb5nD2DQ==
+
 load-json-file@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/load-json-file/-/load-json-file-2.0.0.tgz"
