@@ -1,5 +1,5 @@
 import { Anchor, Button, Switch, Form, Image, Upload } from '@arco-design/web-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import '../../css/setting.css'
 let AnchorLink = Anchor.Link
 function Setting(props){
@@ -8,6 +8,11 @@ function Setting(props){
     const [btnSetting1, setbtnSetting1] = useState(JSON.parse(localStorage.getItem('btnSetting1')) || true)
     const [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
     const [imgs, setImgs] = useState([])
+    const [path, setPath] = useState(window.wizPath)
+    useEffect(() => {
+        // alert('window.wizPath')
+        setPath(window.wizPath)
+    }, [window.wizPath])
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} 
@@ -15,6 +20,7 @@ function Setting(props){
             >
                 <AnchorLink href='#bg' title='自定义背景' />
                 <AnchorLink href='#setting' title='按钮设置' />
+                <AnchorLink href='#gameFile' title='游戏文件' />
                 <AnchorLink href='#clear' title='清除缓存' />
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
@@ -89,6 +95,19 @@ function Setting(props){
                     </Form.Item>
                 </Form>
             </div>
+            <div className='setting-item' id='gameFile'>
+                {/* <PageHeader title='初始化'/> */}
+                <Button type='primary' size='large' onClick={()=>{
+                    window.tools.openFile(path)
+                }}>定位游戏</Button>
+                <br/><br/>
+                <span>当前路径：</span>
+                <span>{path}</span>
+                {/* <br/><br/>
+                <Button type='primary' size='large' onClick={()=>{
+                    window.tools.checkFiles(path)
+                }}>检查游戏基本文件</Button> */}
+            </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
                 <Button status='danger' type='primary' size='large' onClick={()=>{
@@ -99,6 +118,7 @@ function Setting(props){
                     })
                 }}>初始化所有</Button>
             </div>
+
         </div>
     </div>
 }

@@ -356,7 +356,17 @@
     function openFile(path){
         console.log('打开', path)
         shell.openPath(path)
-        window.confirm('请关闭程序之后进行更新')
+        // window.confirm('请关闭程序之后进行更新')
+    }
+    // 检查基本文件
+    function checkFiles(path){
+        try {
+           let files = fs.readdirSync(path, {withFileTypes: true})
+           let names = files.map(file=>file.name)
+           
+        } catch (error) {
+            
+        }
     }
     // 检测Wizard和Steam
     function checkGameInstall(callback){

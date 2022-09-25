@@ -6,9 +6,7 @@
     overflow: hidden;
 }
 .setting-left{
-    width: 200px;
-    height: 480px;
-    background-color: rgb(60, 60, 60);
+    width: auto;
 }
 .setting-right{
     flex: 1;
