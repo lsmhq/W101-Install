@@ -186,7 +186,7 @@ function Setting(props){
             </div>
             <div className='setting-item' id='language'>
                 <Form>
-                    <Form.Item label={'中文语音'}>
+                    <Form.Item label={'语音'}>
                         <Switch checked={zhSound} onChange={(val)=>{
                             console.log(val)
                             // true 开始游戏最小化
