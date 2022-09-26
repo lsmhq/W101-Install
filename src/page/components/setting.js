@@ -40,13 +40,14 @@ let models = [
 ]
 function Setting(props){
     let {setBg, setSubataShow} = props
-    const [btnSetting, setbtnSetting] = useState(JSON.parse(localStorage.getItem('btnSetting')))
-    const [btnSetting1, setbtnSetting1] = useState(JSON.parse(localStorage.getItem('btnSetting1')) || true)
-    const [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
+    let [btnSetting, setbtnSetting] = useState(JSON.parse(localStorage.getItem('btnSetting')))
+    let [btnSetting1, setbtnSetting1] = useState(JSON.parse(localStorage.getItem('btnSetting1')) || true)
+    let [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
     // eslint-disable-next-line no-unused-vars
-    const [imgs, setImgs] = useState([])
-    const [path, setPath] = useState(window.wizPath)
-    const [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'xxban')
+    let [imgs, setImgs] = useState([])
+    let [path, setPath] = useState(window.wizPath)
+    let [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'xxban')
+    let [zhSound, setZhSound] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         // alert('window.wizPath')
@@ -70,6 +71,7 @@ function Setting(props){
                 <AnchorLink href='#setting' title='按钮设置' />
                 <AnchorLink href='#gameFile' title='游戏文件' />
                 <AnchorLink href='#live2d-set' title='Live2d设置' />
+                <AnchorLink href='#language' title="实验性功能"/>
                 <AnchorLink href='#clear' title='清除缓存' />
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
@@ -181,6 +183,30 @@ function Setting(props){
                     })
                 }
                 </Radio.Group>
+            </div>
+            <div className='setting-item' id='language'>
+                <Form>
+                    <Form.Item label={'中文语音'}>
+                        <Switch checked={zhSound} onChange={(val)=>{
+                            console.log(val)
+                            // true 开始游戏最小化
+                            // false 开始游戏不进行操作
+                            localStorage.setItem('zhSound', val)
+                            setZhSound(val)
+                            Message.warning({
+                                id:'live2d-change',
+                                style:{top:'20px', zIndex:99999},
+                                content:'实验性功能，后续上线',
+                            })
+                        }}
+                        />
+                        <span style={{paddingLeft:'10px'}}>
+                        {
+                            zhSound ?'中文':'英文'
+                        }
+                        </span>
+                    </Form.Item>
+                </Form>
             </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
