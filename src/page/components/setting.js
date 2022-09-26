@@ -1,7 +1,43 @@
-import { Anchor, Button, Switch, Form, Image } from '@arco-design/web-react'
+import { Anchor, Button, Switch, Form, Image, Radio, Message } from '@arco-design/web-react'
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
 let AnchorLink = Anchor.Link
+let models = [
+    {
+        name:'xxban',
+        label:'血小板'
+    },{
+        name:'22-0default',
+        label:'22'
+    },{
+        name:'33-0default',
+        label:'33'
+    },{
+        name:'haruto',
+        label:'小可爱'
+    },{
+        name:'koharu',
+        label:'萌娘'
+    },{
+        name:'hijiki',
+        label:'黑喵'
+    },{
+        name:'tororo',
+        label:'白喵'
+    },{
+        name:'wanko',
+        label:'狗子'
+    },{
+        name:'miku',
+        label:'初音'
+    },{
+        name:'unitychan',
+        label:'unitychan'
+    },{
+        name:'epsilon',
+        label:'epsilon'
+    }
+]
 function Setting(props){
     let {setBg, setSubataShow} = props
     const [btnSetting, setbtnSetting] = useState(JSON.parse(localStorage.getItem('btnSetting')))
@@ -10,11 +46,21 @@ function Setting(props){
     // eslint-disable-next-line no-unused-vars
     const [imgs, setImgs] = useState([])
     const [path, setPath] = useState(window.wizPath)
+    const [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'xxban')
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         // alert('window.wizPath')
         setPath(window.wizPath)
     })
+    useEffect(()=>{
+        window.L2Dwidget.init({ 
+            "model": {jsonPath:`./Resources/live2dModel/${liveName}/model.json`,"scale": 1 }, 
+            // "dialog":{enable: true}
+            display: {
+                position: 'left',//位置
+            },
+        });
+    },[])
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} 
@@ -23,6 +69,7 @@ function Setting(props){
                 <AnchorLink href='#bg' title='自定义背景' />
                 <AnchorLink href='#setting' title='按钮设置' />
                 <AnchorLink href='#gameFile' title='游戏文件' />
+                <AnchorLink href='#live2d-set' title='Live2d设置' />
                 <AnchorLink href='#clear' title='清除缓存' />
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
@@ -109,11 +156,31 @@ function Setting(props){
                         console.log(localStorage.getItem('wizInstall'))
                         let fileSelect = document.getElementById('selectWiz')
                         fileSelect.click()
-                    }} status='success' type='primary' className='openGame'>{'选择Wizard.exe'}</Button>}</span>
+                    }} status='success' type='primary'>{'选择Wizard.exe'}</Button>}</span>
                 {/* <br/><br/>
                 <Button type='primary' size='large' onClick={()=>{
                     window.tools.checkFiles(path)
                 }}>检查游戏基本文件</Button> */}
+            </div>
+            <div className='setting-item' id='live2d-set'>
+                <Radio.Group direction='vertical' defaultValue={localStorage.getItem('live2d')} onChange={(val)=>{
+                    // console.log(val)
+                    localStorage.setItem('live2d', val)
+                    setLive2d(val)
+                    Message.warning({
+                        id:'live2d-change',
+                        style:{top:'20px', zIndex:99999},
+                        content:'重启生效',
+                    })
+                }}>
+                {
+                    models.map((item, index)=>{
+                        return <Radio value={item.name} key={item.name}>
+                            {item.label}
+                        </Radio>
+                    })
+                }
+                </Radio.Group>
             </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
