@@ -27,15 +27,24 @@
         window.module = module; module = undefined;
       }
     </script>
-    <script src="./js/jq.min.js"></script>
+    <!-- <script src="./js/jq.min.js"></script> -->
+    <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-cb49dc29-e439-4e8c-81f2-5ea0c9772303/da1bd769-5cd4-4ca6-9523-118329609750.js"></script>
     <!-- <script src="./js/live2d.js"></script> -->
     <!-- <script src="./js/uselive2d.js"></script> -->
     <!-- <script src="./Resources/live2dCfg/waifu-tips.js"></script> -->
-    <script src="./js/l2dwidget.min.js"></script>
-    <script src="./js/l2dwidget.min.0.js"></script>
-    <script>
-
-    </script>
-  <!-- <script>if (window.module) module = window.module;</script> -->
+    <!-- <script src="./js/l2dwidget.min.js"></script> -->
+    <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-cb49dc29-e439-4e8c-81f2-5ea0c9772303/82fb589c-bb3b-4c70-8907-3498b5a4e8fe.js"></script>
+    <!-- <script src="./js/l2dwidget.min.0.js"></script> -->
+    <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-cb49dc29-e439-4e8c-81f2-5ea0c9772303/a30a6380-bb4e-45b8-90ec-333cc13e1785.js"></script>
+  <script>
+        window.L2Dwidget.init({ 
+            "model": {jsonPath:`./Resources/live2dModel/${localStorage.getItem('live2d')||'xxban'}/model.json`,"scale": 1 }, 
+            // "dialog":{enable: true}
+            display: {
+                position: 'left',//位置
+            },
+        });
+  </script>
+  <script>if (window.module) module = window.module;</script>
   </body>
 </html> 

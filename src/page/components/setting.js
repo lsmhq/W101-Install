@@ -53,13 +53,13 @@ function Setting(props){
         setPath(window.wizPath)
     })
     useEffect(()=>{
-        window.L2Dwidget.init({ 
-            "model": {jsonPath:`./Resources/live2dModel/${liveName}/model.json`,"scale": 1 }, 
-            // "dialog":{enable: true}
-            display: {
-                position: 'left',//位置
-            },
-        });
+        // window.L2Dwidget.init({ 
+        //     "model": {jsonPath:`./Resources/live2dModel/${liveName}/model.json`,"scale": 1 }, 
+        //     // "dialog":{enable: true}
+        //     display: {
+        //         position: 'left',//位置
+        //     },
+        // });
     },[])
     return <div className="setting">
         <div className='setting-left'>
@@ -163,7 +163,7 @@ function Setting(props){
                 }}>检查游戏基本文件</Button> */}
             </div>
             <div className='setting-item' id='live2d-set'>
-                <Radio.Group direction='vertical' defaultValue={localStorage.getItem('live2d')} onChange={(val)=>{
+                <Radio.Group direction='vertical' defaultValue={liveName} onChange={(val)=>{
                     // console.log(val)
                     localStorage.setItem('live2d', val)
                     setLive2d(val)
