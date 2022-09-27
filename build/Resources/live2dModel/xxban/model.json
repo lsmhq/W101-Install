@@ -16,6 +16,13 @@
         "body_x":[-0.3, -0.25],
         "body_y":[0.3, -0.9]
     },
+    "hit_areas": [{
+        "name": "head",
+        "id": "D_REF.HEAD"
+    }, {
+        "name": "body",
+        "id": "D_REF.BODY"
+    }],
     "motions":{
         "idle":[
             {"file":"motions/Idle.mtn"}
@@ -27,7 +34,7 @@
             {"file":"motions/Anone_Synced.mtn","sound":"./touchHead.mp3","text":"我有一头小毛驴"}
         ],
         "tap_body":[
-            {"file":"motions/Dance.mtn","sound":"./touchBody.mp3","text":["不要碰我"]}
+            {"file":"motions/Dance.mtn","sound":"./touchBody.mp3","text":["跳舞"]}
         ]
     }
 }

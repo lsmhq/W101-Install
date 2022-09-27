@@ -11,6 +11,7 @@ import apiPath from './http/api'
 import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
+import { alertText } from './Util/dialog';
 
 
 //'ws://localhost:8000'
@@ -39,6 +40,7 @@ let imgMap = {
 let isDown = false;  // 鼠标状态
 let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
+let useTime = 0, useTimer = null
 function Main(){
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
@@ -126,6 +128,7 @@ function Main(){
                         id:'subata-up',
                         content:'正在进行下载，稍后进行更新'
                     })
+                    alertText('检测到有最新版本')
                 }
             })
         }, 1000)
@@ -150,14 +153,7 @@ function Main(){
             setShow(true)
     },[img])
     useEffect(()=>{
-        // if(document.getElementById('live2d-widget')){
-        //     document.getElementById('live2d-widget').style.transition = 'all .3s'
-        //     if(settingShow){
-        //         document.getElementById('live2d-widget').style.opacity = 1
-        //     }else{
-        //         document.getElementById('live2d-widget').style.opacity = 0
-        //     }
-        // }
+
     },[settingShow])
     useEffect(()=>{
         setCount(0)
@@ -175,8 +171,29 @@ function Main(){
                     content:'请点击下方开始游戏进行体验!',
                     duration: 2000
                 })
+                alertText(`安装完成!共用时间${useTime}秒`)
+                setTimeout(() => {
+                    useTime = 0
+                }, 1000);   
             }
             // window.tools.changeType(localStorage.getItem('type'))
+        }
+        
+        if(percent <= 3 && percent >= 1){
+            alertText('开始！')
+            clearInterval(useTimer)
+            useTimer = setInterval(() => {
+                useTime+=1
+            }, 1000);
+        }
+        if(percent >= 25 && percent <= 30){
+            alertText('已经下载四分之一了！')
+        }
+        if(percent >= 50 && percent <= 55){
+            alertText('已经下载一半了！')
+        }
+        if(percent >= 90 && percent <= 95){
+            alertText('就快结束辣~')
         }
     },[percent])
     function getSteam(callback){

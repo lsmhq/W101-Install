@@ -19,10 +19,10 @@ let models = [
         label:'33'
     },{
         name:'haruto',
-        label:'小可爱'
+        label:'小可爱(男)'
     },{
         name:'koharu',
-        label:'萌娘'
+        label:'小可爱(女)'
     },{
         name:'hijiki',
         label:'黑喵'
@@ -31,17 +31,8 @@ let models = [
         label:'白喵'
     },{
         name:'wanko',
-        label:'狗子'
-    },{
-        name:'miku',
-        label:'初音'
-    },{
-        name:'unitychan',
-        label:'unitychan'
-    },{
-        name:'epsilon',
-        label:'epsilon'
-    }
+        label:'碗狗'
+    },
 ]
 function Setting(props){
     let {setBg, setSubataShow} = props
@@ -179,14 +170,15 @@ function Setting(props){
                     // if(document.querySelector('#live2d-widget')){
                     //     document.querySelector('#live2d-widget').remove();
                     // }
-                    setTimeout(() => {
-                        window.initLive2d()
-                    }, 100);
+                    // setTimeout(() => {
+                    //     window.initLive2d()
+                    // }, 100);
                     // Message.warning({
                     //     id:'live2d-change',
                     //     style:{top:'20px', zIndex:99999},
                     //     content:'重启生效',
                     // })
+                    alertText('重启才能看到其他人物呦~')
                 }}>
                 {
                     models.map((item, index)=>{

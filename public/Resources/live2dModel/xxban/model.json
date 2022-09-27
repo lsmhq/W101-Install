@@ -16,13 +16,16 @@
         "body_x":[-0.3, -0.25],
         "body_y":[0.3, -0.9]
     },
+    "hit_areas": [{
+        "name": "head",
+        "id": "D_REF.HEAD"
+    }, {
+        "name": "body",
+        "id": "D_REF.BODY"
+    }],
     "motions":{
         "idle":[
-            {
-                "file":"motions/Idle.mtn",
-                "fa":""
-            
-            }
+            {"file":"motions/Idle.mtn"}
         ],
         "sleepy":[
             {"file":"motions/Nemui.mtn"}
