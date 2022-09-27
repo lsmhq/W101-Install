@@ -63,8 +63,7 @@ function Setting(props){
     }, [imgNum])
     return <div className="setting">
         <div className='setting-left'>
-            <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}
-            >
+            <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}>
                 <AnchorLink href='#bg' title='自定义背景' />
                 <AnchorLink href='#setting' title='按钮设置' />
                 <AnchorLink href='#gameFile' title='游戏文件' />
