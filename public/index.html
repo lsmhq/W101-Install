@@ -14,9 +14,13 @@
     />
     <style>
       #live2d-widget{
-        position: absolute !important;
-        z-index: 99999;
+        position: fixed !important;
+        z-index: 999999999 !important;
         left: 620px !important;
+        cursor: move;
+        top: 350px !important;
+        /* bottom: auto !important; */
+        pointer-events: all !important;
       }
       .live2d-widget-dialog-container {
         width: 300px;
@@ -102,10 +106,10 @@
                   enable: true,
                   script: {
                     // 每空闲 10 秒钟，显示一条一言
-                    'every idle 30s': '$hitokoto$',
+                    'every idle 100s': '$hitokoto$',
                     'hover .icon-container': 'hover .icon-container',
-                    'tap body': 'tap body',
-                    'tap face': 'tap face',
+                    'tap body': '',
+                    'tap face': '',
                   }
                 }
               }
@@ -122,8 +126,6 @@
             }).init(config);
           }
           initLive2d()
-
-
           //获取屏幕缩放比例
           function getRatio(){
             var ratio=0;

@@ -16,6 +16,8 @@ import { alertText } from './Util/dialog';
 
 //'ws://localhost:8000'
 let wsPath = 'ws://101.43.216.253:8000'
+let box = document.getElementById('live2d-widget')
+let position = []
 let update = false
 let timerr
 let style = {
@@ -38,6 +40,7 @@ let imgMap = {
     zf:zfb
 }
 let isDown = false;  // 鼠标状态
+let isDown_live2d = false
 let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 let useTime = 0, useTimer = null
@@ -332,6 +335,10 @@ function Main(){
         window.onresize = null
     }
     function drag(){
+        box.addEventListener('mousedown', function(e){
+            isDown_live2d = true // 正在移动
+            position = [e.clientX, e.clientY]
+        })
         document.addEventListener('mousemove',function(ev){
             if(isDown){
               const x = ev.screenX - baseX
@@ -346,9 +353,22 @@ function Main(){
                 })
               }
             }
+
+            if(isDown_live2d){
+                const x = ev.clientX
+                const y = ev.clientY
+                const deltaX = x - position[0]
+                const deltaY = y - position[1]
+                const left = parseInt(box.style.left || 0)
+                const top = parseInt(box.style.top || 0)
+                box.style.left = left + deltaX + 'px'
+                box.style.top = top + deltaY + 'px'
+                position = [x, y]
+            }
         })
         document.addEventListener('mouseup',()=>{
             isDown = false
+            isDown_live2d = false
         })
     }
     function getCarousel(){
