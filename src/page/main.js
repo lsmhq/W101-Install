@@ -150,14 +150,14 @@ function Main(){
             setShow(true)
     },[img])
     useEffect(()=>{
-        if(document.getElementById('live2d-widget')){
-            document.getElementById('live2d-widget').style.transition = 'all .3s'
-            if(settingShow){
-                document.getElementById('live2d-widget').style.opacity = 1
-            }else{
-                document.getElementById('live2d-widget').style.opacity = 0
-            }
-        }
+        // if(document.getElementById('live2d-widget')){
+        //     document.getElementById('live2d-widget').style.transition = 'all .3s'
+        //     if(settingShow){
+        //         document.getElementById('live2d-widget').style.opacity = 1
+        //     }else{
+        //         document.getElementById('live2d-widget').style.opacity = 0
+        //     }
+        // }
     },[settingShow])
     useEffect(()=>{
         setCount(0)

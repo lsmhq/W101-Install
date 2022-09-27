@@ -18,7 +18,11 @@
     },
     "motions":{
         "idle":[
-            {"file":"motions/Idle.mtn"}
+            {
+                "file":"motions/Idle.mtn",
+                "fa":""
+            
+            }
         ],
         "sleepy":[
             {"file":"motions/Nemui.mtn"}
@@ -27,7 +31,7 @@
             {"file":"motions/Anone_Synced.mtn","sound":"./touchHead.mp3","text":"我有一头小毛驴"}
         ],
         "tap_body":[
-            {"file":"motions/Dance.mtn","sound":"./touchBody.mp3","text":["不要碰我"]}
+            {"file":"motions/Dance.mtn","sound":"./touchBody.mp3","text":["跳舞"]}
         ]
     }
 }

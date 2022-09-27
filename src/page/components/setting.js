@@ -1,8 +1,13 @@
 import { Anchor, Button, Switch, Form, Image, Radio, Message } from '@arco-design/web-react'
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
+import { alertText } from '../Util/dialog/index'
 let AnchorLink = Anchor.Link
 let models = [
+    {
+        name:'defalut',
+        label:'默认'
+    },
     {
         name:'xxban',
         label:'血小板'
@@ -46,7 +51,7 @@ function Setting(props){
     // eslint-disable-next-line no-unused-vars
     let [imgs, setImgs] = useState([])
     let [path, setPath] = useState(window.wizPath)
-    let [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'xxban')
+    let [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'defalut')
     let [zhSound, setZhSound] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -62,10 +67,12 @@ function Setting(props){
         //     },
         // });
     },[])
+    useEffect(()=>{
+        alertText(`你选择了第${imgNum+1}个背景图`)
+    }, [imgNum])
     return <div className="setting">
         <div className='setting-left'>
-            <Anchor affix={false} hash={false} 
-                scrollContainer={'#setting-right'}
+            <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}
             >
                 <AnchorLink href='#bg' title='自定义背景' />
                 <AnchorLink href='#setting' title='按钮设置' />
@@ -169,11 +176,17 @@ function Setting(props){
                     // console.log(val)
                     localStorage.setItem('live2d', val)
                     setLive2d(val)
-                    Message.warning({
-                        id:'live2d-change',
-                        style:{top:'20px', zIndex:99999},
-                        content:'重启生效',
-                    })
+                    // if(document.querySelector('#live2d-widget')){
+                    //     document.querySelector('#live2d-widget').remove();
+                    // }
+                    setTimeout(() => {
+                        window.initLive2d()
+                    }, 100);
+                    // Message.warning({
+                    //     id:'live2d-change',
+                    //     style:{top:'20px', zIndex:99999},
+                    //     content:'重启生效',
+                    // })
                 }}>
                 {
                     models.map((item, index)=>{
@@ -193,11 +206,9 @@ function Setting(props){
                             // false 开始游戏不进行操作
                             localStorage.setItem('zhSound', val)
                             setZhSound(val)
-                            Message.warning({
-                                id:'live2d-change',
-                                style:{top:'20px', zIndex:99999},
-                                content:'实验性功能，后续上线',
-                            })
+                            if(val){
+                                alertText('还没有正式上线哦~')
+                            }
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
@@ -214,7 +225,10 @@ function Setting(props){
                     window.tools.init(()=>{
                         localStorage.clear()
                         // 重启
-                        window.electronAPI.restart()
+                        alertText('即将重启...')
+                        setTimeout(() => {
+                            window.electronAPI.restart()
+                        }, 2000)
                     })
                 }}>初始化所有</Button>
             </div>

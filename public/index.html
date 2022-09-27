@@ -12,39 +12,137 @@
       name="description"
       content="Web site created using create-react-app"
     />
-    <link rel="stylesheet" href="./css//waifu.css">
+    <style>
+      #live2d-widget{
+        position: absolute !important;
+        z-index: 99999;
+        left: 650px !important;
+      }
+      .live2d-widget-dialog-container {
+        width: 300px;
+        height: 120px;
+        position: absolute;
+        bottom: 65%;
+        right: 0px;
+        transform-origin: right;
+        padding: 12px;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      .live2d-widget-dialog {
+        width: 100%;
+        height: 100%;
+        color: #917159;
+        font-size: 16px;
+        padding: 12px;
+        border: 2px solid rgb(236, 203, 180);
+        background: rgb(252, 248, 244);
+        box-sizing: border-box;
+        border-radius: 10px;
+        transform: rotate(-2deg);
+        opacity: 0;
+        transition: 200ms opacity;
+        box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+        animation: live2d-widget-dialog-tingle 4s ease-in-out 0s infinite alternate;
+      }
+      @keyframes live2d-widget-dialog-tingle {
+        0% { transform: translate(-1px, 1.5px) rotate(-2deg); }
+        100% { transform: translate(1px, -1.5px) rotate(2deg); }
+      }
+    </style>
     <title>启动器</title>
   </head>
   <body>
     <div id="root"></div>
     <script src="./message/msg.js"></script>
     <script src="./tools/util-node.js"></script>
-    <!-- <script src="./js/l2dwidget.min.js"></script>
-    <script src="./js/l2dwidget.min.0.js"></script> -->
-    <!-- <script src="./js/jq.min.js"></script> -->
+    <!-- min.js -->
+    <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/63e08dcf-4f62-4901-b2de-2054c1fd186c.js"></script>
+    <!-- 0.js -->
+    <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/d04f6509-10a3-443a-be62-0c8519e231f7.js"></script>
+    
     <script>
-      if (typeof module === 'object') {
-        window.module = module; module = undefined;
-      }
+          let timer = null
+          function initLive2d(){
+            let modelPath = (localStorage.getItem('live2d') === 'defalut' || localStorage.getItem('live2d') === null) ?false:`./Resources/live2dModel/${localStorage.getItem('live2d')||'defalut'}/model.json`
+            let config = {}
+            let scale = (getRatio() / 100)>=2 ? 1 : (getRatio() / 100)
+            console.log(modelPath)
+            if(modelPath){
+              config = { 
+                // pluginModelPath:`./Resources/live2dModel/${localStorage.getItem('live2d')||'xxban'}/`,
+                model: {jsonPath: modelPath,"scale": 1 - ( scale - 1 ) }, 
+                // "dialog":{enable: true}
+                display: {
+                    position: 'left',//位置
+                },
+                dialog: {
+                  // 开启对话框
+                  enable: true,
+                  script: {
+                    // 每空闲 10 秒钟，显示一条一言
+                    'every idle 30s': '$hitokoto$',
+                    'hover.icon-container': 'hover .icon-container',
+                    'tap body': 'tap body',
+                    'tap face': 'tap face',
+                  }
+                }
+              }
+            }else{
+              config = { 
+                // pluginModelPath:`./Resources/live2dModel/${localStorage.getItem('live2d')||'xxban'}/`,
+                model: {"scale": 1 - ( scale - 1 ) }, 
+                // "dialog":{enable: true}
+                display: {
+                    position: 'left',//位置
+                },
+                dialog: {
+                  // 开启对话框
+                  enable: true,
+                  script: {
+                    // 每空闲 10 秒钟，显示一条一言
+                    'every idle 30s': '$hitokoto$',
+                    'hover .icon-container': 'hover .icon-container',
+                    'tap body': 'tap body',
+                    'tap face': 'tap face',
+                  }
+                }
+              }
+            }
+            console.log(config)
+            window.L2Dwidget.on('*',(name, e)=>{
+              console.log(name)
+              console.log(e)
+              // if(window.L2Dwidget.alertText){
+              //   if(e.target.innerText){
+              //     window.L2Dwidget.alertText(e.target.innerText)
+              //   }
+              // }
+            }).init(config);
+          }
+          initLive2d()
+
+
+          //获取屏幕缩放比例
+          function getRatio(){
+            var ratio=0;
+            var screen=window.screen;
+            var ua=navigator.userAgent.toLowerCase();
+        
+            if(window.devicePixelRatio !== undefined){
+                ratio=window.devicePixelRatio;    
+            }else if(~ua.indexOf('msie')){
+                if(screen.deviceXDPI && screen.logicalXDPI){
+                    ratio=screen.deviceXDPI/screen.logicalXDPI;        
+                }
+            }else if(window.outerWidth !== undefined && window.innerWidth !== undefined){
+                ratio=window.outerWidth/window.innerWidth;
+            }
+            if(ratio){
+                ratio=Math.round(ratio*100);    
+            }
+            return ratio;
+        }
     </script>
-    <!-- <script src="./js/jq.min.js"></script> -->
-    <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-cb49dc29-e439-4e8c-81f2-5ea0c9772303/da1bd769-5cd4-4ca6-9523-118329609750.js"></script>
-    <!-- <script src="./js/live2d.js"></script> -->
-    <!-- <script src="./js/uselive2d.js"></script> -->
-    <!-- <script src="./Resources/live2dCfg/waifu-tips.js"></script> -->
-    <!-- <script src="./js/l2dwidget.min.js"></script> -->
-    <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-cb49dc29-e439-4e8c-81f2-5ea0c9772303/82fb589c-bb3b-4c70-8907-3498b5a4e8fe.js"></script>
-    <!-- <script src="./js/l2dwidget.min.0.js"></script> -->
-    <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-cb49dc29-e439-4e8c-81f2-5ea0c9772303/a30a6380-bb4e-45b8-90ec-333cc13e1785.js"></script>
-  <script>
-        window.L2Dwidget.init({ 
-            "model": {jsonPath:`./Resources/live2dModel/${localStorage.getItem('live2d')||'xxban'}/model.json`,"scale": 1 }, 
-            // "dialog":{enable: true}
-            display: {
-                position: 'left',//位置
-            },
-        });
-  </script>
-  <script>if (window.module) module = window.module;</script>
   </body>
 </html> 

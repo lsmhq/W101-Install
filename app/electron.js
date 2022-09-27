@@ -1,6 +1,5 @@
 const { app, BrowserWindow, nativeImage, ipcMain, screen } = require('electron');
-const { autoUpdater } = require('electron-updater') 
-
+const { autoUpdater } = require('electron-updater'); 
 let mainWindow, loading
 const message = {
   error: '检查更新出错',
@@ -10,9 +9,11 @@ const message = {
   downloadProgress: '正在下载...'
 }
 const path = require('path');
+const { EventEmitter } = require('stream');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 function createWindow () {
-  let scaleFactor = (screen.getAllDisplays()[0].scaleFactor >= 2) ? 1 : screen.getAllDisplays()[0].scaleFactor
+  // let scaleFactor = (screen.getAllDisplays()[0].scaleFactor >= 2) ? 1 : screen.getAllDisplays()[0].scaleFactor
+  let scaleFactor = 1
   // localStorage.setItem('scale', scaleFactor)
   mainWindow = new BrowserWindow({
     width: parseInt(1250/scaleFactor), // 窗口宽度
@@ -42,7 +43,7 @@ function createWindow () {
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
@@ -52,7 +53,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:3000/#/');
+  mainWindow.loadURL('http://localhost:3000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
