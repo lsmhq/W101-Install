@@ -11,7 +11,7 @@ import apiPath from './http/api'
 import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
-import { alertText } from './Util/dialog';
+import { alertText } from './util/dialog';
 
 
 //'ws://localhost:8000'
@@ -358,11 +358,13 @@ function Main(){
                 const x = ev.clientX
                 const y = ev.clientY
                 const deltaX = x - position[0]
-                const deltaY = y - position[1]
+                // const deltaY = y - position[1]
                 const left = parseInt(box.style.left || 0)
-                const top = parseInt(box.style.top || 0)
+                // const top = parseInt(box.style.top || 0)
+                if(left + deltaX > 1000) return
+                if(left + deltaX < 50) return
                 box.style.left = left + deltaX + 'px'
-                box.style.top = top + deltaY + 'px'
+                // box.style.top = top + deltaY + 'px'
                 position = [x, y]
             }
         })

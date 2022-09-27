@@ -1,11 +1,11 @@
-import { Anchor, Button, Switch, Form, Image, Radio, Message } from '@arco-design/web-react'
+import { Anchor, Button, Switch, Form, Image, Radio } from '@arco-design/web-react'
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
-import { alertText } from '../Util/dialog/index'
+import { alertText } from '../util/dialog/index'
 let AnchorLink = Anchor.Link
 let models = [
     {
-        name:'defalut',
+        name:'shizuku',
         label:'默认'
     },
     {
@@ -177,7 +177,7 @@ function Setting(props){
                     //     style:{top:'20px', zIndex:99999},
                     //     content:'重启生效',
                     // })
-                    alertText('重启才能看到其他人物呦~')
+                    alertText('重启才能看到呦~')
                 }}>
                 {
                     models.map((item, index)=>{

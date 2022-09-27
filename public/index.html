@@ -15,12 +15,10 @@
     <style>
       #live2d-widget{
         position: fixed !important;
-        z-index: 999999999 !important;
-        left: 620px !important;
-        cursor: move;
-        top: 350px !important;
+        cursor: pointer;
         /* bottom: auto !important; */
         pointer-events: all !important;
+        top: 330px !important;
       }
       .live2d-widget-dialog-container {
         width: 300px;
@@ -68,38 +66,19 @@
     <script>
           let timer = null
           function initLive2d(){
-            let modelPath = (localStorage.getItem('live2d') === 'defalut' || localStorage.getItem('live2d') === null) ?false:`./Resources/live2dModel/${localStorage.getItem('live2d')||'defalut'}/model.json`
+            let modelPath = `./Resources/live2dModel/${localStorage.getItem('live2d')||'shizuku'}/model.json`
             let config = {}
             // let scale = (getRatio() / 100)>=2 ? 1 : (getRatio() / 100)
             let scale = 1
             console.log(modelPath)
-            if(modelPath){
+            if(modelPath !== 'defalut'){
               config = { 
                 // pluginModelPath:`./Resources/live2dModel/${localStorage.getItem('live2d')||'xxban'}/`,
                 model: {jsonPath: modelPath,"scale": 1 - ( scale - 1 ) }, 
                 // "dialog":{enable: true}
                 display: {
                     position: 'left',//位置
-                },
-                dialog: {
-                  // 开启对话框
-                  enable: true,
-                  script: {
-                    // 每空闲 10 秒钟，显示一条一言
-                    'every idle 100s': '$hitokoto$',
-                    'hover.icon-container': 'hover .icon-container',
-                    'tap body': 'tap body',
-                    'tap face': 'tap face',
-                  }
-                }
-              }
-            }else{
-              config = { 
-                // pluginModelPath:`./Resources/live2dModel/${localStorage.getItem('live2d')||'xxban'}/`,
-                model: {"scale": 1 - ( scale - 1 ) }, 
-                // "dialog":{enable: true}
-                display: {
-                    position: 'left',//位置
+                    left: '50px'
                 },
                 dialog: {
                   // 开启对话框
@@ -108,8 +87,29 @@
                     // 每空闲 10 秒钟，显示一条一言
                     'every idle 100s': '$hitokoto$',
                     'hover .icon-container': 'hover .icon-container',
-                    'tap body': '',
-                    'tap face': '',
+                    'tap face': '有什么疑问吗?',
+                    'tap body': '可以拖拽我'
+                  }
+                }
+              }
+            }else{
+              config = { 
+                // pluginModelPath:`./Resources/live2dModel/${localStorage.getItem('live2d')||'xxban'}/`,
+                model: {jsonPath:modelPath,"scale": 1 - ( scale - 1 ) }, 
+                // "dialog":{enable: true}
+                display: {
+                    position: 'left',//位置
+                    left: '50px'
+                },
+                dialog: {
+                  // 开启对话框
+                  enable: true,
+                  script: {
+                    // 每空闲 10 秒钟，显示一条一言
+                    'every idle 100s': '$hitokoto$',
+                    'hover .icon-container': 'hover .icon-container',
+                    'tap face': '有什么疑问吗?',
+                    'tap body': '可以拖拽我'
                   }
                 }
               }
