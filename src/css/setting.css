@@ -1,22 +1,26 @@
 .setting{
     display: flex;
-    width: 600px;
-    height: 480px;
+    width: 100%;
+    height: 90%;
+    /* height: 100%; */
     flex-direction: row;
     overflow: hidden;
+    padding: 20px;
+    box-sizing: border-box;
 }
 .setting-left{
-    width: auto;
+    width: 100px;
+    overflow: hidden;
 }
 .setting-right{
     flex: 1;
-    height: 480px;
+    height:100%;
     overflow-y: scroll;
     box-sizing: border-box;
-    padding: 20px;
+    /* padding: 20px; */
 }
 .setting-item{
-    height: 480px;
+    height: 110%;
     overflow: scroll;
 }
 .setting-bg{
