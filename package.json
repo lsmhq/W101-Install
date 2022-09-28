@@ -1,11 +1,11 @@
 {
-  "name": "electron-app",
+  "name": "waifu",
   "version": "0.0.1",
   "author": {
     "name": "lsmhq",
     "email": "784433957@qq.com"
   },
-  "description": "Wizard 启动器",
+  "description": "waifu",
   "private": true,
   "homepage": "./",
   "main": "./app/electron.js",
