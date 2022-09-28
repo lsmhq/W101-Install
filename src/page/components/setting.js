@@ -70,7 +70,7 @@ function Setting(props){
                 <AnchorLink href='#bg' title='自定义背景' />
                 <AnchorLink href='#setting' title='按钮设置' />
                 <AnchorLink href='#gameFile' title='游戏文件' />
-                <AnchorLink href='#live2d-set' title='Live2d' />
+                {/* <AnchorLink href='#live2d-set' title='Live2d' /> */}
                 <AnchorLink href='#language' title="实验性功能"/>
                 <AnchorLink href='#clear' title='清除缓存' />
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
@@ -164,7 +164,7 @@ function Setting(props){
                     window.tools.checkFiles(path)
                 }}>检查游戏基本文件</Button> */}
             </div>
-            <div className='setting-item' id='live2d-set'>
+            {/* <div className='setting-item' id='live2d-set'>
                 <Form>
                     <Form.Item label={'开关'}>
                         <Switch checked={live2dOpen} onChange={(val)=>{
@@ -214,7 +214,7 @@ function Setting(props){
                     </Radio.Group>
                     </Form.Item>
                 </Form>
-            </div>
+            </div> */}
             <div className='setting-item' id='language'>
                 <Form>
                     <Form.Item label={'语音'}>
@@ -244,9 +244,9 @@ function Setting(props){
                         localStorage.clear()
                         // 重启
                         alertTextLive2d('即将重启...')
-                        setTimeout(() => {
+                        // setTimeout(() => {
                             window.electronAPI.restart()
-                        }, 2000)
+                        // }, 2000)
                     })
                 }}>初始化所有</Button>
             </div>
