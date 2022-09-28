@@ -37,11 +37,11 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  mainWindow.webContents.openDevTools() // 打开窗口调试
+  // mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    // mainWindow.loadURL('https://lsmhq.gitee.io/live2d-html/index.html')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')

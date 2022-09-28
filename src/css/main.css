@@ -3,8 +3,11 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: #505050;
+    background-color: #5959599a;
     /* border: 3px solid rgb(45, 45, 45); */
+}
+span{
+    color: white;
 }
 .nav{
     width: 100%;
@@ -106,7 +109,7 @@
     bottom: -20px;
     left: 0;
     /* filter: blur(1.5) brightness(0.1) !important; */
-    -webkit-filter: brightness(0.3) !important; /* Chrome, Safari, Opera */
+    -webkit-filter: brightness(0.2) !important; /* Chrome, Safari, Opera */
     /* filter: blur(1.5) brightness(0.1) !important; */
     /* background: url(../image/bottom_bg.jpg); */
     /* background-image:url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/151d0d95-b330-4ca8-9de7-d0336aed9872.webp), url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/7dcebe46-805b-44b7-a96f-728dc9a2dbc5.jpg); */
@@ -117,10 +120,12 @@
     
 }
 .bottom-bg0{
-    background-image: url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/dedf83f6-5313-4b83-bc49-2570d321e89c.webp), url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/c3e29bb5-d5a0-4799-a544-264e310356aa.jpg);
+    background-color: #4a4a4a9c;
+    /* background-image: url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/dedf83f6-5313-4b83-bc49-2570d321e89c.webp), url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/c3e29bb5-d5a0-4799-a544-264e310356aa.jpg); */
 }
 .bottom-bg1{
-    background-image:url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/151d0d95-b330-4ca8-9de7-d0336aed9872.webp), url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/7dcebe46-805b-44b7-a96f-728dc9a2dbc5.jpg);
+    background-color: #5959599a;
+    /* background-image:url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/151d0d95-b330-4ca8-9de7-d0336aed9872.webp), url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/7dcebe46-805b-44b7-a96f-728dc9a2dbc5.jpg); */
 }
 /* class="arco-carousel-indicator-wrapper arco-carousel-indicator-wrapper-bottom" */
 .arco-carousel-indicator-wrapper{

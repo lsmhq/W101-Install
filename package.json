@@ -1,6 +1,6 @@
 {
   "name": "electron-app",
-  "version": "1.2.2",
+  "version": "0.0.1",
   "author": {
     "name": "lsmhq",
     "email": "784433957@qq.com"
@@ -91,21 +91,21 @@
     "dist-mac": "electron-builder --mac"
   },
   "build": {
-    "productName": "Subata",
-    "appId": "Subata",
+    "productName": "Live2d",
+    "appId": "Waifu",
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "app/images/logo.ico",
+      "installerIcon": "app/logo/favicon.ico",
       "uninstallerIcon": "app/images/uninstall.ico",
       "uninstallDisplayName": "${productName}${version}"
     },
     "publish": {
       "provider": "generic",
-      "url": "http://101.43.216.253:3001/file/subataUpdate"
+      "url": "http://101.43.216.253:3001/file/subataUpdate-live2d/"
     },
     "win": {
-      "icon": "app/images/logo.ico"
+      "icon": "app/logo/favicon.ico"
     },
     "directories": {
       "output": "app/release"
