@@ -162,31 +162,43 @@ function Setting(props){
                 }}>检查游戏基本文件</Button> */}
             </div>
             <div className='setting-item' id='live2d-set'>
-                <Radio.Group direction='vertical' defaultValue={liveName} onChange={(val)=>{
-                    // console.log(val)
-                    localStorage.setItem('live2d', val)
-                    setLive2d(val)
-                    // if(document.querySelector('#live2d-widget')){
-                    //     document.querySelector('#live2d-widget').remove();
-                    // }
-                    // setTimeout(() => {
-                    //     window.initLive2d()
-                    // }, 100);
-                    // Message.warning({
-                    //     id:'live2d-change',
-                    //     style:{top:'20px', zIndex:99999},
-                    //     content:'重启生效',
-                    // })
-                    alertText('重启才能看到呦~')
-                }}>
-                {
-                    models.map((item, index)=>{
-                        return <Radio value={item.name} key={item.name}>
-                            {item.label}
-                        </Radio>
-                    })
-                }
-                </Radio.Group>
+                <Form>
+                    <Form.Item label={'开启Live2d'}>
+                        <Switch onChange={(val)=>{
+                            console.log(val)
+                            if(val){
+                                window.live2d.openLive2D({
+                                    modelName: localStorage.getItem('live2d') || 'shizuku'
+                                })
+                            }else{
+                                window.live2d.closeLive2D()
+                            }
+                        }}
+                        />
+                        <span style={{paddingLeft:'10px'}}>
+                        {
+                            zhSound ?'开启':'关闭'
+                        }
+                        </span>
+                    </Form.Item>
+                    <Form.Item>
+                        <Radio.Group direction='vertical' defaultValue={liveName} onChange={(val)=>{
+                        // console.log(val)
+                        localStorage.setItem('live2d', val)
+                        setLive2d(val)
+                        alertText('重启才能看到呦~')
+                    }}>
+                    {
+                        models.map((item, index)=>{
+                            return <Radio value={item.name} key={item.name}>
+                                {item.label}
+                            </Radio>
+                        })
+                    }
+                    </Radio.Group>
+                    </Form.Item>
+                </Form>
+                
             </div>
             <div className='setting-item' id='language'>
                 <Form>
