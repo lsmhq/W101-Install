@@ -235,7 +235,7 @@ function openLive2D(params){
     })
     // newWin.loadFile('child.html')
     
-    newWin.loadURL(`https://static-b9bde1f1-47c6-4ebc-aaab-3c74c2fc6147.bspapp.com/?type=${params.modelName}`)
+    newWin.loadURL(`https://lsmhq.gitee.io/live2d-html/live2d.html?type=${params.modelName}`)
     // newWin.webContents.openDevTools()
     newWin.on('close',()=>{
         mainWindow && mainWindow.webContents.send('live2d-closed')
