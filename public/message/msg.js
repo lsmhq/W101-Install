@@ -40,6 +40,28 @@
         },
         ready:()=>{
             ipcRenderer.send('ready', true)
+        },
+        openLive2d:(type)=>{
+            ipcRenderer.send('live2d', type)
+        },
+        closeLive2d:()=>{
+            ipcRenderer.send('close-live2d')
+        },
+        moveLive2d:(e)=>{
+            ipcRenderer.send('move-live2d', {posX:e.x,posY:e.y})
+        },
+        closedLive2d:(op)=>{
+            ipcRenderer.on('live2d-closed',()=>{
+                op && op()
+            })
+        },
+        alertTextLive2d:(text)=>{
+            ipcRenderer.send('live2d-text', text)
+        },
+        saveTextLive2d:(save)=>{
+            ipcRenderer.on('live2d-alert-text', (e, text)=>{
+                save && save(text)
+            })
         }
     }
 })()

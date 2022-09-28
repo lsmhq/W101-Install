@@ -1,7 +1,8 @@
 import { Anchor, Button, Switch, Form, Image, Radio } from '@arco-design/web-react'
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
-import { alertText } from '../util/dialog/index'
+// import { alertText } from '../util/dialog/index'
+let { alertTextLive2d } = window.electronAPI
 let AnchorLink = Anchor.Link
 let models = [
     {
@@ -44,6 +45,7 @@ function Setting(props){
     let [path, setPath] = useState(window.wizPath)
     let [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'defalut')
     let [zhSound, setZhSound] = useState(false)
+    let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         // alert('window.wizPath')
@@ -59,7 +61,8 @@ function Setting(props){
         // });
     },[])
     useEffect(()=>{
-        alertText(`你选择了第${imgNum+1}个背景图`)
+        alertTextLive2d(`你选择了第${imgNum+1}个背景图`)
+
     }, [imgNum])
     return <div className="setting">
         <div className='setting-left'>
@@ -67,7 +70,7 @@ function Setting(props){
                 <AnchorLink href='#bg' title='自定义背景' />
                 <AnchorLink href='#setting' title='按钮设置' />
                 <AnchorLink href='#gameFile' title='游戏文件' />
-                <AnchorLink href='#live2d-set' title='Live2d设置' />
+                <AnchorLink href='#live2d-set' title='Live2d' />
                 <AnchorLink href='#language' title="实验性功能"/>
                 <AnchorLink href='#clear' title='清除缓存' />
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
@@ -163,30 +166,43 @@ function Setting(props){
             </div>
             <div className='setting-item' id='live2d-set'>
                 <Form>
-                    <Form.Item label={'开启Live2d'}>
-                        <Switch onChange={(val)=>{
+                    <Form.Item label={'开关'}>
+                        <Switch checked={live2dOpen} onChange={(val)=>{
                             console.log(val)
+                            setlive2dOpen(val)
                             if(val){
-                                window.live2d.openLive2D({
+                                window.electronAPI.openLive2d({
                                     modelName: localStorage.getItem('live2d') || 'shizuku'
                                 })
                             }else{
-                                window.live2d.closeLive2D()
+                                window.electronAPI.closeLive2d()
                             }
+                            window.electronAPI.closedLive2d(()=>{
+                                setlive2dOpen(false)
+                            })
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            zhSound ?'开启':'关闭'
+                            live2dOpen ?'开启':'关闭'
                         }
                         </span>
                     </Form.Item>
-                    <Form.Item>
+                    <Form.Item label={'模型切换'}>
                         <Radio.Group direction='vertical' defaultValue={liveName} onChange={(val)=>{
                         // console.log(val)
                         localStorage.setItem('live2d', val)
                         setLive2d(val)
-                        alertText('重启才能看到呦~')
+                        if(live2dOpen){
+                            window.electronAPI.closeLive2d()
+                            window.electronAPI.openLive2d({
+                                modelName: localStorage.getItem('live2d') || 'shizuku'
+                            })
+                            setTimeout(() => {
+                                setlive2dOpen(true)
+                            }, 500);
+                        }
+                        // alertTextLive2d('重启才能看到呦~')
                     }}>
                     {
                         models.map((item, index)=>{
@@ -198,7 +214,6 @@ function Setting(props){
                     </Radio.Group>
                     </Form.Item>
                 </Form>
-                
             </div>
             <div className='setting-item' id='language'>
                 <Form>
@@ -210,7 +225,7 @@ function Setting(props){
                             localStorage.setItem('zhSound', val)
                             setZhSound(val)
                             if(val){
-                                alertText('还没有正式上线哦~')
+                                alertTextLive2d('还没有正式上线哦~')
                             }
                         }}
                         />
@@ -228,7 +243,7 @@ function Setting(props){
                     window.tools.init(()=>{
                         localStorage.clear()
                         // 重启
-                        alertText('即将重启...')
+                        alertTextLive2d('即将重启...')
                         setTimeout(() => {
                             window.electronAPI.restart()
                         }, 2000)

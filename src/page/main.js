@@ -11,8 +11,8 @@ import apiPath from './http/api'
 import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
-import { alertText } from './util/dialog';
-
+// import { alertText } from './util/dialog';
+let {alertTextLive2d} = window.electronAPI
 
 //'ws://localhost:8000'
 let wsPath = 'ws://101.43.216.253:8000'
@@ -131,7 +131,7 @@ function Main(){
                         id:'subata-up',
                         content:'正在进行下载，稍后进行更新'
                     })
-                    alertText('检测到有最新版本')
+                    alertTextLive2d('检测到有最新版本')
                 }
             })
         }, 1000)
@@ -174,7 +174,7 @@ function Main(){
                     content:'请点击下方开始游戏进行体验!',
                     duration: 2000
                 })
-                alertText(`安装完成!共用时间${useTime}秒`)
+                alertTextLive2d(`安装完成!共用时间${useTime}秒`)
                 setTimeout(() => {
                     useTime = 0
                 }, 1000);   
@@ -183,20 +183,20 @@ function Main(){
         }
         
         if(percent <= 3 && percent >= 1){
-            alertText('开始！')
+            alertTextLive2d('开始！')
             clearInterval(useTimer)
             useTimer = setInterval(() => {
                 useTime+=1
             }, 1000);
         }
         if(percent >= 25 && percent <= 30){
-            alertText('已经下载四分之一了！')
+            alertTextLive2d('已经下载四分之一了！')
         }
         if(percent >= 50 && percent <= 55){
-            alertText('已经下载一半了！')
+            alertTextLive2d('已经下载一半了！')
         }
         if(percent >= 90 && percent <= 95){
-            alertText('就快结束辣~')
+            alertTextLive2d('就快结束辣~')
         }
     },[percent])
     function getSteam(callback){
@@ -335,10 +335,10 @@ function Main(){
         window.onresize = null
     }
     function drag(){
-        box.addEventListener('mousedown', function(e){
-            isDown_live2d = true // 正在移动
-            position = [e.clientX, e.clientY]
-        })
+        // box.addEventListener('mousedown', function(e){
+        //     isDown_live2d = true // 正在移动
+        //     position = [e.clientX, e.clientY]
+        // })
         document.addEventListener('mousemove',function(ev){
             if(isDown){
               const x = ev.screenX - baseX
@@ -354,19 +354,19 @@ function Main(){
               }
             }
 
-            if(isDown_live2d){
-                const x = ev.clientX
-                const y = ev.clientY
-                const deltaX = x - position[0]
-                // const deltaY = y - position[1]
-                const left = parseInt(box.style.left || 0)
-                // const top = parseInt(box.style.top || 0)
-                if(left + deltaX > 1000) return
-                if(left + deltaX < 50) return
-                box.style.left = left + deltaX + 'px'
-                // box.style.top = top + deltaY + 'px'
-                position = [x, y]
-            }
+            // if(isDown_live2d){
+            //     const x = ev.clientX
+            //     const y = ev.clientY
+            //     const deltaX = x - position[0]
+            //     // const deltaY = y - position[1]
+            //     const left = parseInt(box.style.left || 0)
+            //     // const top = parseInt(box.style.top || 0)
+            //     if(left + deltaX > 1000) return
+            //     if(left + deltaX < 50) return
+            //     box.style.left = left + deltaX + 'px'
+            //     // box.style.top = top + deltaY + 'px'
+            //     position = [x, y]
+            // }
         })
         document.addEventListener('mouseup',()=>{
             isDown = false

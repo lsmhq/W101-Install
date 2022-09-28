@@ -1,8 +1,9 @@
 {
   "name": "electron-app",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "author": {
-    "name": "lsmhq"
+    "name": "lsmhq",
+    "email": "784433957@qq.com"
   },
   "description": "Wizard 启动器",
   "private": true,
