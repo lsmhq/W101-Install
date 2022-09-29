@@ -3,7 +3,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: #5959599a;
+    background-color: #3030309c;
     /* border: 3px solid rgb(45, 45, 45); */
 }
 span{
@@ -120,11 +120,11 @@ span{
     
 }
 .bottom-bg0{
-    background-color: #4a4a4a9c;
+    background-color: #3030309c;
     /* background-image: url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/dedf83f6-5313-4b83-bc49-2570d321e89c.webp), url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/c3e29bb5-d5a0-4799-a544-264e310356aa.jpg); */
 }
 .bottom-bg1{
-    background-color: #5959599a;
+    background-color: #3030309c;
     /* background-image:url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/151d0d95-b330-4ca8-9de7-d0336aed9872.webp), url(https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/7dcebe46-805b-44b7-a96f-728dc9a2dbc5.jpg); */
 }
 /* class="arco-carousel-indicator-wrapper arco-carousel-indicator-wrapper-bottom" */

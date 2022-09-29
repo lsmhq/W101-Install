@@ -34,6 +34,7 @@ function createWindow () {
       scrollBounce:true,
       nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
       preload: path.join(__dirname, 'preload.js'),
+      webgl: true
     }
   });
   // let size = mainWindow.getSize()
@@ -41,7 +42,7 @@ function createWindow () {
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    mainWindow.loadURL('https://lsmhq.gitee.io/live2d-html/index.html')
+    // mainWindow.loadURL('https://lsmhq.gitee.io/live2d-html/index.html')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
@@ -51,7 +52,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:3000/#/');
+  mainWindow.loadURL('http://localhost:3000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -160,7 +161,7 @@ app.on('ready', () => {
   sendUpdateMessage({ cmd: 'app-ready', message: message.error })
   autoUpdater.checkForUpdates()
 })
-
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
 autoUpdater.on('update-downloaded', () => {
   sendUpdateMessage({ cmd: 'update-downloaded', message: message.error })
   autoUpdater.quitAndInstall()
@@ -227,12 +228,14 @@ function openLive2D(params){
           contextIsolation: false,
           scrollBounce:true,
           nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
+          webgl:true
         }
     })
-    // newWin.loadFile('child.html')
+    // newWin.loadFile('/app/live2d/live2d.html')
     
-    newWin.loadURL(`https://lsmhq.gitee.io/live2d-html/live2d.html?type=${params.modelName}`)
-    // newWin.webContents.openDevTools()
+    // newWin.loadURL(`https://lsmhq.gitee.io/live2d-html/live2d.html?type=${params.modelName}`)
+    newWin.loadURL(`http://localhost:5500/app/live2d/live2d.html?type=${params.modelName}`)
+    newWin.webContents.openDevTools()
     newWin.on('close',()=>{
         mainWindow && mainWindow.webContents.send('live2d-closed')
         newWin=null

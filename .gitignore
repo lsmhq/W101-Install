@@ -9,6 +9,7 @@
 /coverage
 /app/release
 /app/debug
+/app/live2d
 # production
 # /build
 
