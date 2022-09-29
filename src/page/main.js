@@ -12,7 +12,7 @@ import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
 // import { alertText } from './util/dialog';
-let {alertTextLive2d} = window.electronAPI
+// let {alertTextLive2d} = window.electronAPI
 
 //'ws://localhost:8000'
 let wsPath = 'ws://101.43.216.253:8000'
@@ -131,7 +131,7 @@ function Main(){
                         id:'subata-up',
                         content:'正在进行下载，稍后进行更新'
                     })
-                    alertTextLive2d('检测到有最新版本')
+                    // alertTextLive2d('检测到有最新版本')
                 }
             })
         }, 1000)
@@ -141,6 +141,10 @@ function Main(){
         })
 
         window.electronAPI.ready()
+        window.electronAPI.menuChangeType((type)=>{
+            localStorage.setItem('type', type)
+            checkUpdate()
+        })
         return () => {
             // 注销
             destroy()
@@ -174,7 +178,7 @@ function Main(){
                     content:'请点击下方开始游戏进行体验!',
                     duration: 2000
                 })
-                alertTextLive2d(`安装完成!共用时间${useTime}秒`)
+                // alertTextLive2d(`安装完成!共用时间${useTime}秒`)
                 setTimeout(() => {
                     useTime = 0
                 }, 1000);   
@@ -183,21 +187,22 @@ function Main(){
         }
         
         if(percent <= 3 && percent >= 1){
-            alertTextLive2d('开始！')
+            // alertTextLive2d('开始！')
             clearInterval(useTimer)
             useTimer = setInterval(() => {
                 useTime+=1
             }, 1000);
         }
         if(percent >= 25 && percent <= 30){
-            alertTextLive2d('已经下载四分之一了！')
+            // alertTextLive2d('已经下载四分之一了！')
         }
         if(percent >= 50 && percent <= 55){
-            alertTextLive2d('已经下载一半了！')
+            // alertTextLive2d('已经下载一半了！')
         }
         if(percent >= 90 && percent <= 95){
-            alertTextLive2d('就快结束辣~')
+            // alertTextLive2d('就快结束辣~')
         }
+        window.electronAPI.setProgressBar(percent/100)
     },[percent])
     function getSteam(callback){
         // console.log('getSteam')
@@ -513,6 +518,7 @@ function Main(){
                             style:{top:'20px'},
                             content:`切换${obj[localStorage.getItem('type')]}成功!`
                         })
+                        window.electronAPI.changeType(localStorage.getItem('type'))
                         setType(localStorage.getItem('type'))
                     })
                     break
@@ -521,6 +527,7 @@ function Main(){
                     console.log('未安装')
                     if(show)
                         install(localStorage.getItem('type'))
+                    window.electronAPI.winShow()
                     break
                 default:
                     break;
@@ -540,6 +547,7 @@ function Main(){
                     }}>手动选择游戏路径</Button>
                 </span>
             })
+            window.electronAPI.winShow()
         })
     }
     function upDate(){
@@ -750,7 +758,11 @@ function Main(){
                 </div>
                 <div className='control-btn btn-danger' onClick={(e)=>{
                     e.stopPropagation()
-                    window.electronAPI.close()
+                    if(localStorage.getItem('btnSetting2') === 'true'){
+                        window.electronAPI.winHide()
+                    }else{
+                        window.electronAPI.close()
+                    }
                 }}>
                     <IconClose style={{fontSize:'20px'}}/>
                 </div>

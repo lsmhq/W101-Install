@@ -2,50 +2,51 @@ import { Anchor, Button, Switch, Form, Image, Radio } from '@arco-design/web-rea
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
 // import { alertText } from '../util/dialog/index'
-let { alertTextLive2d } = window.electronAPI
+// let { alertTextLive2d } = window.electronAPI
 let AnchorLink = Anchor.Link
-let models = [
-    {
-        name:'shizuku',
-        label:'默认'
-    },
-    {
-        name:'xxban',
-        label:'血小板'
-    },{
-        name:'22-0default',
-        label:'22'
-    },{
-        name:'33-0default',
-        label:'33'
-    },{
-        name:'haruto',
-        label:'小可爱(男)'
-    },{
-        name:'koharu',
-        label:'小可爱(女)'
-    },{
-        name:'hijiki',
-        label:'黑喵'
-    },{
-        name:'tororo',
-        label:'白喵'
-    },{
-        name:'wanko',
-        label:'碗狗'
-    },
-]
+// let models = [
+//     {
+//         name:'shizuku',
+//         label:'默认'
+//     },
+//     {
+//         name:'xxban',
+//         label:'血小板'
+//     },{
+//         name:'22-0default',
+//         label:'22'
+//     },{
+//         name:'33-0default',
+//         label:'33'
+//     },{
+//         name:'haruto',
+//         label:'小可爱(男)'
+//     },{
+//         name:'koharu',
+//         label:'小可爱(女)'
+//     },{
+//         name:'hijiki',
+//         label:'黑喵'
+//     },{
+//         name:'tororo',
+//         label:'白喵'
+//     },{
+//         name:'wanko',
+//         label:'碗狗'
+//     },
+// ]
 function Setting(props){
     let {setBg, setSubataShow} = props
-    let [btnSetting, setbtnSetting] = useState(JSON.parse(localStorage.getItem('btnSetting')))
-    let [btnSetting1, setbtnSetting1] = useState(JSON.parse(localStorage.getItem('btnSetting1')) || true)
+    let [btnSetting, setbtnSetting] = useState(localStorage.getItem('btnSetting')|| true)
+    let [btnSetting1, setbtnSetting1] = useState(localStorage.getItem('btnSetting1') || true)
+    let [btnSetting2, setbtnSetting2] = useState(localStorage.getItem('btnSetting2') || true)
     let [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
     // eslint-disable-next-line no-unused-vars
     let [imgs, setImgs] = useState([])
     let [path, setPath] = useState(window.wizPath)
-    let [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'defalut')
+    // let [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'defalut')
     let [zhSound, setZhSound] = useState(false)
-    let [live2dOpen, setlive2dOpen] = useState(false)
+    // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         // alert('window.wizPath')
@@ -59,9 +60,18 @@ function Setting(props){
         //         position: 'left',//位置
         //     },
         // });
+        if(localStorage.getItem('btnSetting2') === null){
+            localStorage.setItem('btnSetting2', true)
+        }
+        if(localStorage.getItem('btnSetting1') === null){
+            localStorage.setItem('btnSetting1', true)
+        }
+        if(localStorage.getItem('btnSetting') === null){
+            localStorage.setItem('btnSetting', true)
+        }
     },[])
     useEffect(()=>{
-        alertTextLive2d(`你选择了第${imgNum+1}个背景图`)
+        // alertTextLive2d(`你选择了第${imgNum+1}个背景图`)
 
     }, [imgNum])
     return <div className="setting">
@@ -114,7 +124,7 @@ function Setting(props){
                 {/* <PageHeader title='按钮设置'/> */}
                 <Form>
                     <Form.Item label={'开始游戏'}>
-                        <Switch checked={btnSetting} onChange={(val)=>{
+                        <Switch checked={JSON.parse(btnSetting)} onChange={(val)=>{
                             console.log(val)
                             setbtnSetting(val)
                             // true 开始游戏最小化
@@ -129,7 +139,7 @@ function Setting(props){
                         </span>
                     </Form.Item>
                     <Form.Item label="Subata">
-                        <Switch checked={btnSetting1} onChange={(val)=>{
+                        <Switch checked={JSON.parse(btnSetting1)} onChange={(val)=>{
                             // console.log(val)
                             setbtnSetting1(val)
                             setSubataShow(val)
@@ -141,6 +151,21 @@ function Setting(props){
                         <span style={{paddingLeft:'10px'}}>
                         {
                             btnSetting1 ?'显示':'隐藏'
+                        }
+                        </span>
+                    </Form.Item>
+                    <Form.Item label="关闭按钮">
+                        <Switch checked={JSON.parse(btnSetting2)} onChange={(val)=>{
+                            // console.log(val)
+                            setbtnSetting2(val)
+                            // true 开始游戏最小化
+                            // false 开始游戏不进行操作
+                            localStorage.setItem('btnSetting2', val)
+                        }}
+                        />
+                        <span style={{paddingLeft:'10px'}}>
+                        {
+                            btnSetting2 ?'后台运行':'退出程序'
                         }
                         </span>
                     </Form.Item>
@@ -225,7 +250,7 @@ function Setting(props){
                             localStorage.setItem('zhSound', val)
                             setZhSound(val)
                             if(val){
-                                alertTextLive2d('还没有正式上线哦~')
+                                // alertTextLive2d('还没有正式上线哦~')
                             }
                         }}
                         />
@@ -243,7 +268,7 @@ function Setting(props){
                     window.tools.init(()=>{
                         localStorage.clear()
                         // 重启
-                        alertTextLive2d('即将重启...')
+                        // alertTextLive2d('即将重启...')
                         // setTimeout(() => {
                             window.electronAPI.restart()
                         // }, 2000)
