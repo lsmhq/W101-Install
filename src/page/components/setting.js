@@ -15,10 +15,20 @@ let models = [
     },{
         name:'22-0default',
         label:'22'
-    },{
+    },
+    // {
+    //     name:'22_high',
+    //     label:'22（high）'
+    // },
+    {
         name:'33-0default',
         label:'33'
-    },{
+    },
+    // {
+    //     name:'33_high',
+    //     label:'33（high）'
+    // },
+    {
         name:'haruto',
         label:'小可爱(男)'
     },{
