@@ -1,6 +1,9 @@
 const { app, BrowserWindow, nativeImage, ipcMain, screen } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
 let mainWindow, loading
+let mainWidth = 400, mainHeight = 500
+let newWidth = 300, newHeight = 350
+let mainColse = false
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -15,8 +18,8 @@ function createWindow () {
   scaleFactor = 1
   // localStorage.setItem('scale', scaleFactor)
   mainWindow = new BrowserWindow({
-    width: parseInt(400/scaleFactor), // 窗口宽度
-    height: parseInt(500/scaleFactor), // 窗口高度
+    width: parseInt(mainWidth), // 窗口宽度
+    height: parseInt(mainHeight), // 窗口高度
     // useContentSize:true,
     title: "Live2d", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
@@ -33,8 +36,6 @@ function createWindow () {
       contextIsolation: false,
       scrollBounce:true,
       nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
-      preload: path.join(__dirname, 'preload.js'),
-      webgl: true
     }
   });
   // let size = mainWindow.getSize()
@@ -63,23 +64,23 @@ function createWindow () {
     mainWindow.webContents.send('install-version', app.getVersion())
   });
   mainWindow.on('will-resize',()=>{
-    mainWindow.setMinimumSize(parseInt(400/scaleFactor) , parseInt(500/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(400/scaleFactor), parseInt(500/scaleFactor))
-    mainWindow.setSize(parseInt(400/scaleFactor), parseInt(500/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(mainWidth) , parseInt(mainHeight))
+    mainWindow.setMaximumSize(parseInt(mainWidth), parseInt(mainHeight))
+    mainWindow.setSize(parseInt(mainWidth), parseInt(mainHeight))
   })
 
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
   mainWindow.on('closed', () => {
+    mainColse = true
     newWin && newWin.close()
     mainWindow = null;
     newWin = null
-
   });
   mainWindow.on('resize',()=>{
     // return false
-    mainWindow.setMinimumSize(parseInt(400/scaleFactor), parseInt(500/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(400/scaleFactor), parseInt(500/scaleFactor))
-    mainWindow.setSize(parseInt(400/scaleFactor), parseInt(500/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(mainWidth), parseInt(mainHeight))
+    mainWindow.setMaximumSize(parseInt(mainWidth), parseInt(mainHeight))
+    mainWindow.setSize(parseInt(mainWidth), parseInt(mainHeight))
   })
   // 自定义
   ipcMain.on("openGame",(e,data)=>{
@@ -95,6 +96,12 @@ function createWindow () {
     // console.log(size)
     mainWindow.setPosition(parseInt(pos.posX), parseInt(pos.posY), true)
     // console.log(mainWindow.getSize())
+  })
+  // 穿透窗口
+  ipcMain.on('set-ignore-mouse-events', (event, ...args) => {
+    // win.setIgnoreMouseEvents(...args)
+    console.log('set-ignore-mouse-events', args)
+    newWin.setIgnoreMouseEvents(...args)
   })
   //接收关闭命令
   ipcMain.on('close', function() {
@@ -214,12 +221,14 @@ if (!gotTheLock) {
 let newWin
 function openLive2D(params){
     newWin = new BrowserWindow({
-        width: 250,
-        height: 300,
+        width: newWidth,
+        height: newHeight,
+        // fullscreen:true,
         frame: false,
         resizable: false,
         transparent: true, 
         focusable:true,
+        modal:true,
         alwaysOnTop: true,
         webPreferences:{
           nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
@@ -228,8 +237,9 @@ function openLive2D(params){
           contextIsolation: false,
           scrollBounce:true,
           nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
-          webgl:true
-        }
+          preload: path.join(__dirname, 'preload.js')
+        },
+      
     })
     // newWin.loadFile('/app/live2d/live2d.html')
     
@@ -237,19 +247,22 @@ function openLive2D(params){
     newWin.loadURL(`http://localhost:5500/app/live2d/live2d.html?type=${params.modelName}`)
     newWin.webContents.openDevTools()
     newWin.on('close',()=>{
+      if( !mainColse ){
         mainWindow && mainWindow.webContents.send('live2d-closed')
         newWin=null
-
+      }else{
+        mainColse = false
+      }
     })
     newWin.on('will-resize',()=>{
-        newWin.setMinimumSize(parseInt(250) , parseInt(300))
-        newWin.setMaximumSize(parseInt(250), parseInt(300))
-        newWin.setSize(parseInt(250), parseInt(300))
+        newWin.setMinimumSize(parseInt(newWidth) , parseInt(newHeight))
+        newWin.setMaximumSize(parseInt(newWidth), parseInt(newHeight))
+        newWin.setSize(parseInt(newWidth), parseInt(newHeight))
     })
     newWin.on('resize',()=>{
-        newWin.setMinimumSize(parseInt(250) , parseInt(300))
-        newWin.setMaximumSize(parseInt(250), parseInt(300))
-        newWin.setSize(parseInt(250), parseInt(300))
+        newWin.setMinimumSize(parseInt(newWidth) , parseInt(newHeight))
+        newWin.setMaximumSize(parseInt(newWidth), parseInt(newHeight))
+        newWin.setSize(parseInt(newWidth), parseInt(newHeight))
     })
 }
 function closeLive2D(){
