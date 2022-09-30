@@ -2,7 +2,7 @@ import { Anchor, Button, Switch, Form, Image, Radio } from '@arco-design/web-rea
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
 // import { alertText } from '../util/dialog/index'
-let { alertTextLive2d } = window.electronAPI
+// let { alertTextLive2d } = window.electronAPI
 let AnchorLink = Anchor.Link
 let models = [
     {
@@ -71,7 +71,7 @@ function Setting(props){
         // });
     },[])
     useEffect(()=>{
-        alertTextLive2d(`你选择了第${imgNum+1}个背景图`)
+        // alertTextLive2d(`你选择了第${imgNum+1}个背景图`)
 
     }, [imgNum])
     return <div className="setting">
@@ -139,7 +139,7 @@ function Setting(props){
                     window.tools.init(()=>{
                         localStorage.clear()
                         // 重启
-                        alertTextLive2d('即将重启...')
+                        // alertTextLive2d('即将重启...')
                         setTimeout(() => {
                             window.electronAPI.restart()
                         }, 2000)

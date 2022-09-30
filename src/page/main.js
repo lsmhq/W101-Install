@@ -3,7 +3,7 @@ import '../css/main.css'
 import { IconClose, IconMinus } from '@arco-design/web-react/icon';
 import Setting from './components/setting';
 // import { alertText } from './util/dialog';
-let {alertTextLive2d} = window.electronAPI
+// let {alertTextLive2d} = window.electronAPI
 
 let isDown = false;  // 鼠标状态
 let baseX = 0,baseY = 0; //监听坐标
@@ -28,7 +28,7 @@ function Main(){
                     setPercent(parseInt(data.progressObj.percent))
                     // setTotal(data.progressObj.total)
                     // setCurrent(data.progressObj.transferred)
-                    alertTextLive2d('检测到有最新版本, 即将下载')
+                    // alertTextLive2d('检测到有最新版本, 即将下载')
                 }
             })
         }, 1000)
@@ -50,25 +50,25 @@ function Main(){
         if(percent === 100){
             // setBtnLoad(false)
             setPercent(0)
-            alertTextLive2d(`下载完成, 共用${useTime}秒`)
+            // alertTextLive2d(`下载完成, 共用${useTime}秒`)
             // window.tools.changeType(localStorage.getItem('type'))
         }
         
         if(percent <= 3 && percent >= 1){
-            alertTextLive2d('开始更新！')
+            // alertTextLive2d('开始更新！')
             clearInterval(useTimer)
             useTimer = setInterval(() => {
                 useTime += 1
             }, 1000);
         }
         if(percent >= 25 && percent <= 30){
-            alertTextLive2d('已经下载四分之一啦！')
+            // alertTextLive2d('已经下载四分之一啦！')
         }else if(percent >= 50 && percent <= 55){
-            alertTextLive2d('已经下载一半啦！')
+            // alertTextLive2d('已经下载一半啦！')
         }else if(percent >= 90 && percent <= 95){
-            alertTextLive2d('就快结束啦~')
+            // alertTextLive2d('就快结束啦~')
         }else{
-            alertTextLive2d(`已经下载 < ${percent}% >啦！`)
+            // alertTextLive2d(`已经下载 < ${percent}% >啦！`)
         }
     },[percent])
 
