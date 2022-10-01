@@ -8,6 +8,9 @@ let models = [
     {
         name:'shizuku',
         label:'默认'
+    },{
+        name:'ganyu',
+        label:'甘雨'
     },
     {
         name:'xxban',
