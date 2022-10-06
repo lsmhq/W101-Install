@@ -45,7 +45,7 @@ function RightNav(props){
             tips="给灭火器点个赞"
             content="点赞"
         />               */}
-        <Icon
+        {/* <Icon
             Child={<IconThunderbolt className="icon-child"/>}
             onClick={()=>{
                 // setZf('qq')
@@ -60,7 +60,7 @@ function RightNav(props){
             // color="#fef9bf"
             tips="一键加速"
             content="加速"
-        />
+        /> */}
         <Icon
             Child={<IconNotification className="icon-child"/>}
             count={count}
