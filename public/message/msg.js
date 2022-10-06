@@ -39,29 +39,24 @@
             })
         },
         ready:()=>{
-            ipcRenderer.send('ready', true)
+            ipcRenderer.send('ready', {flag: true, type:localStorage.getItem('type')})
         },
-        openLive2d:(type)=>{
-            ipcRenderer.send('live2d', type)
+        setProgressBar:(progress)=>{
+            ipcRenderer.send('downLoad', progress)
         },
-        closeLive2d:()=>{
-            ipcRenderer.send('close-live2d')
+        changeType:(type)=>{
+            ipcRenderer.send('changeBd', type)
         },
-        moveLive2d:(e)=>{
-            ipcRenderer.send('move-live2d', {posX:e.x,posY:e.y})
-        },
-        closedLive2d:(op)=>{
-            ipcRenderer.on('live2d-closed',()=>{
-                op && op()
+        menuChangeType:(getType)=>{
+            ipcRenderer.on('changeBd', (e, type)=>{
+                getType && getType(type)
             })
         },
-        alertTextLive2d:(text)=>{
-            ipcRenderer.send('live2d-text', text)
+        winShow:()=>{
+            ipcRenderer.send('show')
         },
-        saveTextLive2d:(save)=>{
-            ipcRenderer.on('live2d-alert-text', (e, text)=>{
-                save && save(text)
-            })
+        winHide:()=>{
+            ipcRenderer.send('hide')
         }
     }
 })()

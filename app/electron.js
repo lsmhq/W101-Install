@@ -1,6 +1,6 @@
-const { app, BrowserWindow, nativeImage, ipcMain, screen } = require('electron');
+const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, ipcRenderer, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
-let mainWindow, loading
+let mainWindow, loading, tray
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -8,6 +8,7 @@ const message = {
   updateNotAva: '已经是最新版本',
   downloadProgress: '正在下载...'
 }
+process.setMaxListeners(0)
 const path = require('path');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 function createWindow () {
@@ -71,6 +72,12 @@ function createWindow () {
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
   mainWindow.on('closed', () => {
     mainWindow = null;
+    // newWin && newWin.close()
+    mainWindow = null;
+    tray && tray.destroy()
+    tray = null
+    // newWin = null
+
   });
   mainWindow.on('resize',()=>{
     // return false
@@ -105,12 +112,99 @@ function createWindow () {
   ipcMain.on('restart', function(){
     mainWindow.reload()
   })
+  // 进度条
+  ipcMain.on('downLoad', (e, progress)=>{
+    mainWindow.setProgressBar(progress)
+  })
+  // 进度条
+  ipcMain.on('show', (e)=>{
+    mainWindow.show()
+  })
+  ipcMain.on('hide', (e)=>{
+    mainWindow.hide()
+  })
   // 准备好显示
   ipcMain.on('ready', function(e, flag){
-    if(flag){
+    if(flag.flag){
       mainWindow.focus();
       mainWindow.show();
     }
+    // let img = nativeImage.createFromPath()
+    let trayIcon = path.join(__dirname, 'images');//app是选取的目录
+  
+      // appTray = new Tray();//app.ico是app目录下的ico文件
+    tray = new Tray(path.join(trayIcon, 'logo.ico'))
+    
+    // console.log(trayIcon)
+    let config = [
+      {label:'补丁切换', submenu:[
+        {label:'稳定版', click:()=>{  
+          mainWindow.webContents.send('changeBd', 'r')
+        }, checked: flag.type === 'r', type:'radio'},
+        {label:"聊天纯享" ,click:()=>{
+          mainWindow.webContents.send('changeBd', 'c')
+        }, checked: flag.type === 'c', type:'radio'},
+        {label:'测试版' ,click:()=>{
+          mainWindow.webContents.send('changeBd', 'd')
+        }, checked: flag.type === 'd', type:'radio'}
+      ]},
+      {label: "更多", submenu:[
+        {
+          label:'卸载Subata',
+          click:()=>{
+            let appPath = app.getPath('exe')
+            appPath = appPath.split('\\')
+            appPath.pop()
+            console.log(appPath.join('\\'))
+            let dirPath = `${appPath.join('\\')}\\Uninstall Subata.exe`
+            shell.openPath(dirPath)
+          }
+        }
+      ] },
+      {label: "退出", click:()=>{
+        mainWindow && mainWindow.close()
+      }}
+    ]
+    const menu = new Menu.buildFromTemplate(config)
+    tray.setContextMenu(menu)
+    tray.setToolTip('Subata')
+    tray.on('double-click',()=>{
+      mainWindow && mainWindow.show()
+      // mainWindow && mainWindow.focus()
+    })
+      // 改变补丁
+      ipcMain.on('changeBd', (e, type)=>{
+        config = [
+          {label:'补丁切换', submenu:[
+            {label:'稳定版', click:()=>{
+              mainWindow.webContents.send('changeBd', 'r')
+            }, checked: type === 'r', type:'radio'},
+            {label:"聊天纯享" ,click:()=>{
+              mainWindow.webContents.send('changeBd', 'c')
+            }, checked: type === 'c', type:'radio'},
+            {label:'测试版' ,click:()=>{
+              mainWindow.webContents.send('changeBd', 'd')
+            }, checked: type === 'd', type:'radio'}
+          ]},
+          {label: "更多", submenu:[
+            {
+              label:'卸载Subata',
+              click:()=>{
+                let appPath = app.getPath('exe')
+                appPath = appPath.split('\\')
+                appPath.pop()
+                console.log(appPath.join('\\'))
+                let dirPath = `${appPath.join('\\')}\\Uninstall Subata.exe`
+                shell.openPath(dirPath)
+              }
+            }
+          ] },
+          {label: "退出", click:()=>{
+            mainWindow && mainWindow.close()
+          }}
+        ]
+        tray.setContextMenu(new Menu.buildFromTemplate(config))
+      })
   })
 }
 
@@ -136,7 +230,9 @@ const showLoading = (cb) => {
 
 
 
-// app.whenReady().then(createWindow);
+// app.whenReady().then(()=>{
+
+// });
 app.commandLine.appendSwitch("--disable-http-cache")
 app.on('ready', () => {
   // console.log('app-ready')
@@ -170,6 +266,7 @@ autoUpdater.on('update-not-available', function (info) {
 autoUpdater.on('download-progress', function (progressObj) {
   console.log('触发下载。。。')
   console.log(progressObj)
+  mainWindow.setProgressBar((progressObj.transferred/progressObj.total).toFixed(2))
   sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })
 })
 
@@ -178,6 +275,8 @@ function sendUpdateMessage(data) {
 }
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    mainWindow && mainWindow.show()
+    mainWindow && mainWindow.focus()
     app.quit()
   }
 });
