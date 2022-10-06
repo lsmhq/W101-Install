@@ -29,7 +29,7 @@ function RightNav(props){
             tips="前往官网"
             content="官网"
         />
-        <Icon
+        {/* <Icon
             Child={<IconThumbUp className="icon-child"/>}
             onClick={()=>{
                 window.tools.like(()=>{
@@ -44,7 +44,7 @@ function RightNav(props){
             // color="#d2881c"
             tips="给灭火器点个赞"
             content="点赞"
-        />              
+        />               */}
         <Icon
             Child={<IconThunderbolt className="icon-child"/>}
             onClick={()=>{

@@ -38,11 +38,11 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  // mainWindow.webContents.openDevTools() // 打开窗口调试
+  mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
@@ -52,7 +52,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:3000/#/');
+  mainWindow.loadURL('http://localhost:3000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -70,10 +70,7 @@ function createWindow () {
 
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
   mainWindow.on('closed', () => {
-    newWin && newWin.close()
     mainWindow = null;
-    newWin = null
-
   });
   mainWindow.on('resize',()=>{
     // return false
@@ -114,22 +111,6 @@ function createWindow () {
       mainWindow.focus();
       mainWindow.show();
     }
-  })
-  // 打开live2d
-  ipcMain.on('live2d', function (e, params){
-    openLive2D(params)
-  })
-  // 关闭
-  ipcMain.on('close-live2d', function(e){
-    closeLive2D()
-  })
-  // 移动
-  ipcMain.on('move-live2d', function (e, pos){
-    moveLive2D(pos)
-  })
-  // 发送text
-  ipcMain.on('live2d-text', (e, text)=>{
-    newWin && newWin.webContents.send('live2d-alert-text', text)
   })
 }
 
@@ -210,52 +191,4 @@ app.on('window-all-closed', () => {
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
   app.quit()
-}
-
-
-let newWin
-function openLive2D(params){
-    newWin = new BrowserWindow({
-        width: 250,
-        height: 300,
-        frame: false,
-        resizable: false,
-        transparent: true, 
-        focusable:true,
-        alwaysOnTop: true,
-        webPreferences:{
-          nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
-          // webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
-          webSecurity: false, // 禁用同源策略
-          contextIsolation: false,
-          v8CacheOptions:'none',
-          scrollBounce:true,
-          nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
-        }
-    })
-    // newWin.loadFile('child.html')
-    
-    newWin.loadURL(`https://lsmhq.gitee.io/live2d-html/live2d.html?type=${params.modelName}`)
-    // newWin.webContents.openDevTools()
-    newWin.on('close',()=>{
-        mainWindow && mainWindow.webContents.send('live2d-closed')
-        newWin=null
-
-    })
-    newWin.on('will-resize',()=>{
-        newWin.setMinimumSize(parseInt(250) , parseInt(300))
-        newWin.setMaximumSize(parseInt(250), parseInt(300))
-        newWin.setSize(parseInt(250), parseInt(300))
-    })
-    newWin.on('resize',()=>{
-        newWin.setMinimumSize(parseInt(250) , parseInt(300))
-        newWin.setMaximumSize(parseInt(250), parseInt(300))
-        newWin.setSize(parseInt(250), parseInt(300))
-    })
-}
-function closeLive2D(){
-    newWin.close()
-}
-function moveLive2D(pos){
-    newWin.setPosition(parseInt(pos.posX), parseInt(pos.posY), true)
 }
