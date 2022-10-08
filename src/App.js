@@ -26,10 +26,10 @@ function App() {
         setLogin(op)
       }}/>
       <Modal
-        title={'登录/注册'}
+        // title={'登录/注册'}
         style={{
-          width: '500px',
-          height:'500px'
+          width: '400px',
+          height:'300px'
         }}
         children={<Login/>}
         visible={login}

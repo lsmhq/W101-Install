@@ -202,20 +202,11 @@
     border-radius: 5px;
     background-color: rgba(45, 45, 45, 0.805);
 }
-.arco-tabs-header-title{
-    color: white !important;
-}
 .arco-tabs-header-title-active{
-    color: #ffca0a !important;
+    color: #1a1a1a !important;
 }
 .arco-tabs-header-ink{
-    background-color: #ffca0a !important;
-}
-.arco-tabs-header-wrapper{
-    background-color: rgba(54, 54, 54, 0.831) !important;
-}
-.arco-tabs-content{
-    overflow-y: scroll;
+    background-color: #e10000 !important;
 }
 .arco-list-item{
     border: 0px !important;

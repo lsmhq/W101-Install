@@ -69,6 +69,9 @@ let apiPath = {
     checkPhone: params => http.get('/cellphone/existence/check', params), // 检查电话是否注册
     regist: params => http.get('/register/cellphone',params), // 注册
     checkNickName: params => http.get('/nickname/check', params), // 检测昵称是否重复
+    getKey: params=> http.get('/login/qr/key', params), // 获取二维码Key
+    createQr: params=>http.get('/login/qr/create', params), // 创建二维码
+    checkQr: params=>http.get('/login/qr/check', params), // 二维码状态
     // 个人中心
     getUserInfo:params => http.get('/user/detail', params), // 获取用户信息
     getLikeList: params => http.get('/likelist', params), // 获取喜欢音乐列表
