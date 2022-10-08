@@ -134,7 +134,7 @@ function Setting(props){
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            btnSetting ?'启动游戏自动最小化':'启动游戏后不进行操作'
+                            JSON.parse(btnSetting) ?'启动游戏自动最小化':'启动游戏后不进行操作'
                         }
                         </span>
                     </Form.Item>
@@ -150,7 +150,7 @@ function Setting(props){
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            btnSetting1 ?'显示':'隐藏'
+                            JSON.parse(btnSetting1) ?'显示':'隐藏'
                         }
                         </span>
                     </Form.Item>
@@ -165,7 +165,7 @@ function Setting(props){
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            btnSetting2 ?'后台运行':'退出程序'
+                            JSON.parse(btnSetting2) ?'后台运行':'退出程序'
                         }
                         </span>
                     </Form.Item>
