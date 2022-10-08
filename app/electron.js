@@ -257,7 +257,7 @@ function openLive2D(params){
       }
     })
     newWin.on('will-resize',()=>{
-        newWin.setMinimumSize(parseInt(newWidth) , parseInt(newHeight))
+        newWin.setMinimumSize(parseInt(newWidth), parseInt(newHeight))
         newWin.setMaximumSize(parseInt(newWidth), parseInt(newHeight))
         newWin.setSize(parseInt(newWidth), parseInt(newHeight))
     })
