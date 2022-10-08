@@ -1,4 +1,4 @@
-import { Anchor, Button, Switch, Form, Image, Radio } from '@arco-design/web-react'
+import { Anchor, Button, Switch, Form, Image } from '@arco-design/web-react'
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
 // import { alertText } from '../util/dialog/index'

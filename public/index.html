@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/Subata_logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="theme-color" content="#000000" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -12,142 +12,11 @@
       name="description"
       content="Web site created using create-react-app"
     />
-    <style>
-      #live2d-widget{
-        position: fixed !important;
-        cursor: pointer;
-        /* bottom: auto !important; */
-        pointer-events: all !important;
-        top: 330px !important;
-      }
-      .live2d-widget-dialog-container {
-        width: 300px;
-        height: 120px;
-        position: absolute;
-        bottom: 65%;
-        right: 0px;
-        transform-origin: right;
-        padding: 12px;
-        box-sizing: border-box;
-        -webkit-font-smoothing: antialiased;
-      }
-      .live2d-widget-dialog {
-        width: 100%;
-        height: 100%;
-        color: #917159;
-        font-size: 16px;
-        padding: 12px;
-        border: 2px solid rgb(236, 203, 180);
-        background: rgb(252, 248, 244);
-        box-sizing: border-box;
-        border-radius: 10px;
-        transform: rotate(-2deg);
-        opacity: 0;
-        transition: 200ms opacity;
-        box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
-        animation: live2d-widget-dialog-tingle 4s ease-in-out 0s infinite alternate;
-      }
-      @keyframes live2d-widget-dialog-tingle {
-        0% { transform: translate(-1px, 1.5px) rotate(-2deg); }
-        100% { transform: translate(1px, -1.5px) rotate(2deg); }
-      }
-    </style>
     <title>启动器</title>
   </head>
   <body>
     <div id="root"></div>
     <script src="./message/msg.js"></script>
     <script src="./tools/util-node.js"></script>
-    <script src="./tools/newWindow.js"></script>
-    <!-- min.js -->
-    <!-- <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/63e08dcf-4f62-4901-b2de-2054c1fd186c.js"></script> -->
-    <!-- 0.js -->
-    <!-- <script src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/d04f6509-10a3-443a-be62-0c8519e231f7.js"></script> -->
-    
-    
-    <!-- <script>
-          let timer = null
-          function initLive2d(){
-            let modelPath = `./Resources/live2dModel/${localStorage.getItem('live2d')||'shizuku'}/model.json`
-            let config = {}
-            // let scale = (getRatio() / 100)>=2 ? 1 : (getRatio() / 100)
-            let scale = 1
-            console.log(modelPath)
-            if(modelPath !== 'defalut'){
-              config = { 
-                // pluginModelPath:`./Resources/live2dModel/${localStorage.getItem('live2d')||'xxban'}/`,
-                model: {jsonPath: modelPath,"scale": 1 - ( scale - 1 ) }, 
-                // "dialog":{enable: true}
-                display: {
-                    position: 'left',//位置
-                    left: '50px'
-                },
-                dialog: {
-                  // 开启对话框
-                  enable: true,
-                  script: {
-                    // 每空闲 10 秒钟，显示一条一言
-                    'every idle 100s': '$hitokoto$',
-                    'hover .icon-container': 'hover .icon-container',
-                    'tap face': '有什么疑问吗?',
-                    'tap body': '可以拖拽我'
-                  }
-                }
-              }
-            }else{
-              config = { 
-                // pluginModelPath:`./Resources/live2dModel/${localStorage.getItem('live2d')||'xxban'}/`,
-                model: {jsonPath:modelPath,"scale": 1 - ( scale - 1 ) }, 
-                // "dialog":{enable: true}
-                display: {
-                    position: 'left',//位置
-                    left: '50px'
-                },
-                dialog: {
-                  // 开启对话框
-                  enable: true,
-                  script: {
-                    // 每空闲 10 秒钟，显示一条一言
-                    'every idle 100s': '$hitokoto$',
-                    'hover .icon-container': 'hover .icon-container',
-                    'tap face': '有什么疑问吗?',
-                    'tap body': '可以拖拽我'
-                  }
-                }
-              }
-            }
-            console.log(config)
-            window.L2Dwidget.on('*',(name, e)=>{
-              console.log(name)
-              console.log(e)
-              // if(window.L2Dwidget.alertText){
-              //   if(e.target.innerText){
-              //     window.L2Dwidget.alertText(e.target.innerText)
-              //   }
-              // }
-            }).init(config);
-          }
-          initLive2d()
-          //获取屏幕缩放比例
-          function getRatio(){
-            var ratio=0;
-            var screen=window.screen;
-            var ua=navigator.userAgent.toLowerCase();
-        
-            if(window.devicePixelRatio !== undefined){
-                ratio=window.devicePixelRatio;    
-            }else if(~ua.indexOf('msie')){
-                if(screen.deviceXDPI && screen.logicalXDPI){
-                    ratio=screen.deviceXDPI/screen.logicalXDPI;        
-                }
-            }else if(window.outerWidth !== undefined && window.innerWidth !== undefined){
-                ratio=window.outerWidth/window.innerWidth;
-            }
-            if(ratio){
-                ratio=Math.round(ratio*100);    
-            }
-            return ratio;
-        }
-    </script> -->
   </body>
 </html> 

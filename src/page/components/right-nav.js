@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 import Icon from './Icon'
 import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconThumbUp, IconDelete, IconSettings, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';

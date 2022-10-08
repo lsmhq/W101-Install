@@ -1,5 +1,5 @@
 (function(){
-    const { ipcRenderer, shell, screen } = require('electron')
+    const { ipcRenderer, shell } = require('electron')
     
     function openB(url){
         shell.openExternal(url);
