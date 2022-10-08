@@ -1,14 +1,8 @@
-import { Badge } from "@arco-design/web-react"
-
 function Icon(props){
-    let {tips, onClick, Child, count} = props
+    let {tips, onClick, Child } = props
     return <div className='icon-container' onClick={onClick} key={tips}>
         <div className='icon' style={{color: props.color}}>
-            {/* <Tooltip position='left' content={tips}> */}
-                <Badge count={count} dot offset={[2, -2]}>
-                    {Child}
-                </Badge>
-            {/* </Tooltip> */}
+            {Child}
         </div>
         <div style={props.textStyle} className="icon-content">{props.content}</div>
     </div>

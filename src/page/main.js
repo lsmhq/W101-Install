@@ -2,11 +2,12 @@ import { useEffect, useState} from 'react';
 import '../css/main.css'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconClose, IconMinus, IconTool } from '@arco-design/web-react/icon';
+import { IconClose, IconMinus, IconSettings } from '@arco-design/web-react/icon';
 import su from '../image/Subata_logo.png'
 import apiPath from './http/api'
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
+import LeftNav from './components/left-nav'
 // import { alertText } from './util/dialog';
 // let {alertTextLive2d} = window.electronAPI
 
@@ -44,8 +45,6 @@ function Main(){
         getCarousel()
         // 拖拽
         drag()
-        // 黑主题
-        dark()
         // 窗口自适应
         resize()
         // 获取安装目录
@@ -68,6 +67,7 @@ function Main(){
                 }
             })
         }, 1000)
+        // dark()
         // 获取version
         window.electronAPI.getVersion((version)=>{
             setVersion(version)
@@ -172,10 +172,7 @@ function Main(){
             }}
         >
             <div className='nav-logo'><img alt='' src={su}/></div>
-            <div className='nav-title'>Subata{`@${version}`}<Button onMouseDown={(e)=>{e.stopPropagation()}} type='text' onClick={(e)=>{
-                e.stopPropagation()
-                window.electronAPI.openBroswer('https://subata.top/index.php/2022/09/16/startgame/')
-            }} status='success'>简介</Button></div>
+            <div className='nav-title'>网易云音乐{`V${version}`}</div>
             {/* <div className='nav-title'> {obj[type]}</div> */}
             <div className='nav-control'
                 onMouseDown={(e)=>{
@@ -190,7 +187,7 @@ function Main(){
                     setSetShow(true)
                 }}>
                     
-                    <IconTool style={{fontSize:'20px'}}/>
+                    <IconSettings style={{fontSize:'20px'}}/>
                 </div>
                 <div className='control-btn' onClick={(e)=>{
                     e.stopPropagation()
@@ -211,7 +208,7 @@ function Main(){
             </div>
         </div>
         <div className='body'>
-
+            <LeftNav/>
             <BodyMain
                 logo={logo}
                 loading={loading}
@@ -223,6 +220,7 @@ function Main(){
                 total = {total}
                 subataShow={subataShow}
             />
+            
         </div>
 
         <Modal
@@ -234,9 +232,10 @@ function Main(){
                 setSetShow(false)
             }}
             style={{
-                maxHeight:'600px',
-                minHeight:'600px',
+                maxHeight:'550px',
+                minHeight:'550px',
                 width:'700px',
+                backgroundColor: 'rgb(237, 237, 237)'
             }}
             children={<Setting
                 setBg={setimgNum}

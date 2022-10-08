@@ -1,6 +1,8 @@
 const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
 let mainWindow, loading, tray
+let width = 650
+let height = 1000
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -16,8 +18,8 @@ function createWindow () {
   scaleFactor = 1
   // localStorage.setItem('scale', scaleFactor)
   mainWindow = new BrowserWindow({
-    width: parseInt(1000/scaleFactor), // 窗口宽度
-    height: parseInt(700/scaleFactor), // 窗口高度
+    width: parseInt(height/scaleFactor), // 窗口宽度
+    height: parseInt(width/scaleFactor), // 窗口高度
     // useContentSize:true,
     title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
@@ -64,9 +66,9 @@ function createWindow () {
     mainWindow.webContents.send('install-version', app.getVersion())
   });
   mainWindow.on('will-resize',()=>{
-    mainWindow.setMinimumSize(parseInt(1000/scaleFactor) , parseInt(700/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(1000/scaleFactor), parseInt(700/scaleFactor))
-    mainWindow.setSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(height/scaleFactor) , parseInt(width/scaleFactor))
+    mainWindow.setMaximumSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
+    mainWindow.setSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
   })
 
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
@@ -81,9 +83,9 @@ function createWindow () {
   });
   mainWindow.on('resize',()=>{
     // return false
-    mainWindow.setMinimumSize(parseInt(1000/scaleFactor), parseInt(700/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(1000/scaleFactor), parseInt(700/scaleFactor))
-    mainWindow.setSize(parseInt(1000/scaleFactor), parseInt(700/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
+    mainWindow.setMaximumSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
+    mainWindow.setSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
   })
   // 自定义
   ipcMain.on("openGame",(e,data)=>{
@@ -165,20 +167,9 @@ function createWindow () {
       // 改变补丁
       ipcMain.on('changeBd', (e, type)=>{
         config = [
-          {label:'补丁切换', submenu:[
-            {label:'稳定版', click:()=>{
-              mainWindow.webContents.send('changeBd', 'r')
-            }, checked: type === 'r', type:'radio'},
-            {label:"聊天纯享" ,click:()=>{
-              mainWindow.webContents.send('changeBd', 'c')
-            }, checked: type === 'c', type:'radio'},
-            {label:'测试版' ,click:()=>{
-              mainWindow.webContents.send('changeBd', 'd')
-            }, checked: type === 'd', type:'radio'}
-          ]},
           {label: "更多", submenu:[
             {
-              label:'卸载Subata',
+              label:'卸载',
               click:()=>{
                 let appPath = app.getPath('exe')
                 appPath = appPath.split('\\')
