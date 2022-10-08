@@ -8,6 +8,7 @@ import apiPath from './http/api'
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
 import LeftNav from './components/left-nav'
+import { HashRouter } from 'react-router-dom'
 // import { alertText } from './util/dialog';
 // let {alertTextLive2d} = window.electronAPI
 
@@ -27,7 +28,6 @@ let prveX = 0, prveY = 0 // 上次XY
 let useTimer = null
 function Main(){
     let [loading, setLoading] = useState(true) // 轮播加载
-    let [loading1, setLoading1] = useState(true) // List加载
     let [imgs, setImgs] = useState([]) // 轮播图片
     let [percent, setPercent] = useState(0) // 进度百分比
     // let [news, setNews] = useState([]) // 新闻
@@ -81,46 +81,10 @@ function Main(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    useEffect(()=>{
-        if(percent === 100){
-            setBtnLoad(false)
-            setPercent(0)
-            window.electronAPI.sound()
-            if(!update){
-                Notification.success({
-                    id:'download',
-                    style,
-                    title:'安装完成!',
-                    content:'请点击下方开始游戏进行体验!',
-                    duration: 2000
-                }) 
-            }
-            // window.tools.changeType(localStorage.getItem('type'))
-        }
-        
-        if(percent <= 3 && percent >= 1){
-            // alertTextLive2d('开始！')
-            clearInterval(useTimer)
-        }
-        if(percent >= 25 && percent <= 30){
-            // alertTextLive2d('已经下载四分之一了！')
-        }
-        if(percent >= 50 && percent <= 55){
-            // alertTextLive2d('已经下载一半了！')
-        }
-        if(percent >= 90 && percent <= 95){
-            // alertTextLive2d('就快结束辣~')
-        }
-        window.electronAPI.setProgressBar(percent/100)
-    },[percent])
-
     function resize(){
         window.onresize = ()=>{
             // setHeight(window.screen.height - 40 + 'px')
         }
-    }
-    function dark(){
-        document.body.setAttribute('arco-theme', 'dark');
     }
     function destroy(){
         document.onmousedown = null
@@ -159,9 +123,6 @@ function Main(){
         })
     }
     return <div className="main">
-        <div className={`bottom-bg bottom-bg${imgNum}`}>
-            <img alt='' src=''/>
-        </div>
         <div className='nav' 
             onMouseDown={(e)=>{
                 e.stopPropagation()
@@ -208,21 +169,14 @@ function Main(){
             </div>
         </div>
         <div className='body'>
-            <LeftNav/>
-            <BodyMain
-                logo={logo}
-                loading={loading}
-                imgs = {imgs}
-                loading1 = {loading1}
-                btnLoading = {btnLoading}
-                percent={percent}
-                current={current}
-                total = {total}
-                subataShow={subataShow}
-            />
-            
+            <HashRouter>
+                <LeftNav/>
+                <BodyMain/>
+            </HashRouter>
         </div>
+        <div className='footer'>
 
+        </div>
         <Modal
             title={'设置'}
             // style={{textAlign:'center'}}

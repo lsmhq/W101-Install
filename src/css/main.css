@@ -88,18 +88,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-}
-.body-main-top{
-    display: flex;
-    width: 100%;
-    flex: 1;
-}
-.body-main-bottom{
-    width: 100%;
-    height: 20px;
-    /* background-color: #1c1c1c; */
-    box-sizing: border-box;
-    padding: 0 10px;
+    background-color: #ffffffda;
 }
 .bottom-bg{
     position: absolute;
@@ -328,6 +317,9 @@
     /* background-color: #464646; */
     color: rgb(198, 0, 0);
 }
+.icon-active{
+    color: rgb(198, 0, 0);
+}
 .icon{
     width: 40px;
     height: 100%;
@@ -358,4 +350,10 @@
     height: 600px;
     width: 400px;
     object-fit: cover;
+}
+.footer{
+    height: 80px;
+    width: 100%;
+    background-color: rgb(224, 224, 224);
+    border-top: 1px solid rgb(203, 203, 203);
 }
