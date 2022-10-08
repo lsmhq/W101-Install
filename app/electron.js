@@ -1,4 +1,4 @@
-const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, ipcRenderer, shell } = require('electron');
+const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
 let mainWindow, loading, tray
 const message = {
@@ -16,7 +16,7 @@ function createWindow () {
   scaleFactor = 1
   // localStorage.setItem('scale', scaleFactor)
   mainWindow = new BrowserWindow({
-    width: parseInt(1250/scaleFactor), // 窗口宽度
+    width: parseInt(1000/scaleFactor), // 窗口宽度
     height: parseInt(700/scaleFactor), // 窗口高度
     // useContentSize:true,
     title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
@@ -39,11 +39,11 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  // mainWindow.webContents.openDevTools() // 打开窗口调试
+  mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
@@ -53,7 +53,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:3000/#/');
+  mainWindow.loadURL('http://localhost:3000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -64,8 +64,8 @@ function createWindow () {
     mainWindow.webContents.send('install-version', app.getVersion())
   });
   mainWindow.on('will-resize',()=>{
-    mainWindow.setMinimumSize(parseInt(1250/scaleFactor) , parseInt(700/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(1000/scaleFactor) , parseInt(700/scaleFactor))
+    mainWindow.setMaximumSize(parseInt(1000/scaleFactor), parseInt(700/scaleFactor))
     mainWindow.setSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
   })
 
@@ -81,9 +81,9 @@ function createWindow () {
   });
   mainWindow.on('resize',()=>{
     // return false
-    mainWindow.setMinimumSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
-    mainWindow.setSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(1000/scaleFactor), parseInt(700/scaleFactor))
+    mainWindow.setMaximumSize(parseInt(1000/scaleFactor), parseInt(700/scaleFactor))
+    mainWindow.setSize(parseInt(1000/scaleFactor), parseInt(700/scaleFactor))
   })
   // 自定义
   ipcMain.on("openGame",(e,data)=>{
@@ -125,6 +125,7 @@ function createWindow () {
   })
   // 准备好显示
   ipcMain.on('ready', function(e, flag){
+    console.log(flag)
     if(flag.flag){
       mainWindow.focus();
       mainWindow.show();
@@ -137,17 +138,6 @@ function createWindow () {
     
     // console.log(trayIcon)
     let config = [
-      {label:'补丁切换', submenu:[
-        {label:'稳定版', click:()=>{  
-          mainWindow.webContents.send('changeBd', 'r')
-        }, checked: flag.type === 'r', type:'radio'},
-        {label:"聊天纯享" ,click:()=>{
-          mainWindow.webContents.send('changeBd', 'c')
-        }, checked: flag.type === 'c', type:'radio'},
-        {label:'测试版' ,click:()=>{
-          mainWindow.webContents.send('changeBd', 'd')
-        }, checked: flag.type === 'd', type:'radio'}
-      ]},
       {label: "更多", submenu:[
         {
           label:'卸载Subata',
