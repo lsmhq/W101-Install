@@ -1,8 +1,10 @@
-import { useEffect } from 'react';
+import { Modal } from '@arco-design/web-react';
+import { useEffect, useState } from 'react';
 import './App.css';
+import Login from './page/components/Login';
 import Main from './page/main';
 function App() {
-  // let [show, setShow] = useState(false)
+  let [login, setLogin] = useState(false)
   // getSteam() 
   useEffect(() => {
       document.onkeydown = function(){
@@ -17,18 +19,26 @@ function App() {
           return false;
         }
     }
-    console.log('加载')
-    let scale = (getRatio() / 100)>=2 ? 1 : (getRatio() / 100)
-    // window.tools.openFile()
-    // document.body.style.zoom = 1 - ( scale - 1 )
-      // }
-    if(localStorage.getItem('userid') === null){
-      localStorage.setItem('userid',Math.random())
-    }  
   }, [])
   return (
     <div className="App">
-      <Main/>
+      <Main login = {(op)=>{
+        setLogin(op)
+      }}/>
+      <Modal
+        title={'登录/注册'}
+        style={{
+          width: '500px',
+          height:'500px'
+        }}
+        children={<Login/>}
+        visible={login}
+        onCancel={()=>{
+          setLogin(false)
+        }}
+        footer = {null}
+      />
+
     </div>
   );
 }

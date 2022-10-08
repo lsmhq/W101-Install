@@ -2,7 +2,7 @@ import { useEffect, useState} from 'react';
 import '../css/main.css'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconClose, IconMinus, IconSettings } from '@arco-design/web-react/icon';
+import { IconClose, IconMinus, IconSettings, IconUser } from '@arco-design/web-react/icon';
 import su from '../image/Subata_logo.png'
 import apiPath from './http/api'
 import BodyMain from './components/body-main';
@@ -25,21 +25,17 @@ Notification.config({
 let isDown = false;  // 鼠标状态
 let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
-let useTimer = null
-function Main(){
+function Main(props){
+    let {login} = props
     let [loading, setLoading] = useState(true) // 轮播加载
     let [imgs, setImgs] = useState([]) // 轮播图片
     let [percent, setPercent] = useState(0) // 进度百分比
     // let [news, setNews] = useState([]) // 新闻
     // let [activity, setActivity] = useState([])  // 活动
     // let [msgHeight, setHeight] = useState('95%') // 弃用高度
-    let [btnLoading, setBtnLoad] = useState(false) // 按钮加载
     let [current, setCurrent] = useState(0)  // 当前进度
     let [total, setTotal] = useState(0) // 总进度
-    let [version, setVersion] = useState('') // 版本号
     let [settingShow, setSetShow] = useState(false)
-    let [subataShow, setSubataShow] = useState(JSON.parse(localStorage.getItem('btnSetting1')) || true)
-    let [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
     useEffect(() => {  
         // 获取轮播
         getCarousel()
@@ -68,10 +64,6 @@ function Main(){
             })
         }, 1000)
         // dark()
-        // 获取version
-        window.electronAPI.getVersion((version)=>{
-            setVersion(version)
-        })
 
         window.electronAPI.ready()
         return () => {
@@ -132,8 +124,8 @@ function Main(){
                 // console.log(baseX, baseY)
             }}
         >
-            <div className='nav-logo'><img alt='' src={su}/></div>
-            <div className='nav-title'>网易云音乐{`V${version}`}</div>
+            {/* <div className='nav-logo'><img alt='' src={su}/></div> */}
+            <div className='nav-title'>网易云音乐</div>
             {/* <div className='nav-title'> {obj[type]}</div> */}
             <div className='nav-control'
                 onMouseDown={(e)=>{
@@ -142,6 +134,14 @@ function Main(){
                     // console.log(baseX, baseY)
                 }}
             >
+                <div className='control-btn' onClick={(e)=>{
+                    e.stopPropagation()
+                    // 个人
+                    login(true)
+                }}>
+                    
+                    <IconUser style={{fontSize:'20px'}}/>
+                </div>
                 <div className='control-btn' onClick={(e)=>{
                     e.stopPropagation()
                     // 设置
@@ -191,10 +191,7 @@ function Main(){
                 width:'700px',
                 backgroundColor: 'rgb(237, 237, 237)'
             }}
-            children={<Setting
-                setBg={setimgNum}
-                setSubataShow = {setSubataShow}
-            />}
+            children={<Setting/>}
             footer={null}
         />
     </div>    

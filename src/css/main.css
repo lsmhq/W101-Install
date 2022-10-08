@@ -34,7 +34,7 @@
 }
 .nav-title{
     /* position: absolute; */
-    left: 50px;
+    margin-left: 10px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -71,8 +71,8 @@
     /* background-color: #d30000; */
 }
 .control-btn:hover{
-    background-color: #cacaca;
-    color: black;
+    background-color: #ae0000;
+    color: rgb(255, 255, 255);
 }
 .btn-danger:hover{
     background-color: #ff1100;
@@ -302,7 +302,7 @@
 } */
 .icon-container{
     width: 100%;
-    height: 50px;
+    height: 45px;
     overflow: hidden;
     cursor: pointer;
     -webkit-user-drag: none;
@@ -314,8 +314,8 @@
     justify-content: start;
 }
 .icon-container:hover{
-    /* background-color: #464646; */
-    color: rgb(198, 0, 0);
+    background-color: #cecece;
+    /* color: rgb(198, 0, 0); */
 }
 .icon-active{
     color: rgb(198, 0, 0);

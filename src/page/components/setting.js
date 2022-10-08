@@ -78,45 +78,12 @@ function Setting(props){
         <div className='setting-left'>
             <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}>
                 <AnchorLink href='#setting' title='按钮设置' />
-                <AnchorLink href='#clear' title='清除缓存' />
-                {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
         </div>
         <div className='setting-right' id='setting-right'>
             <div className='setting-item' id='setting'>
                 {/* <PageHeader title='按钮设置'/> */}
                 <Form>
-                    <Form.Item label={'开始游戏'}>
-                        <Switch checked={JSON.parse(btnSetting)} onChange={(val)=>{
-                            console.log(val)
-                            setbtnSetting(val)
-                            // true 开始游戏最小化
-                            // false 开始游戏不进行操作
-                            localStorage.setItem('btnSetting', val)
-                        }}
-                        />
-                        <span style={{paddingLeft:'10px'}}>
-                        {
-                            JSON.parse(btnSetting) ?'启动游戏自动最小化':'启动游戏后不进行操作'
-                        }
-                        </span>
-                    </Form.Item>
-                    <Form.Item label="Subata">
-                        <Switch checked={JSON.parse(btnSetting1)} onChange={(val)=>{
-                            // console.log(val)
-                            setbtnSetting1(val)
-                            setSubataShow(val)
-                            // true 开始游戏最小化
-                            // false 开始游戏不进行操作
-                            localStorage.setItem('btnSetting1', val)
-                        }}
-                        />
-                        <span style={{paddingLeft:'10px'}}>
-                        {
-                            JSON.parse(btnSetting1) ?'显示':'隐藏'
-                        }
-                        </span>
-                    </Form.Item>
                     <Form.Item label="关闭按钮">
                         <Switch checked={JSON.parse(btnSetting2)} onChange={(val)=>{
                             // console.log(val)
@@ -134,20 +101,6 @@ function Setting(props){
                     </Form.Item>
                 </Form>
             </div>
-            <div className='setting-item' id='clear'>
-                {/* <PageHeader title='初始化'/> */}
-                <Button status='danger' type='primary' size='large' onClick={()=>{
-                    window.tools.init(()=>{
-                        localStorage.clear()
-                        // 重启
-                        // alertTextLive2d('即将重启...')
-                        // setTimeout(() => {
-                            window.electronAPI.restart()
-                        // }, 2000)
-                    })
-                }}>初始化所有</Button>
-            </div>
-
         </div>
     </div>
 }
