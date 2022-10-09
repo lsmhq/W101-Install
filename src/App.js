@@ -36,7 +36,7 @@ function App() {
     <div className="App">
       <Main login = {(op)=>{
         api.checkLogin({}).then(res=>{
-          console.log(res.data)
+          // console.log(res.data)
           if(res.data.data.code === 200 && res.data.data.profile){
             sessionStorage.setItem('account', JSON.stringify(res.data.data.account))
             sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { api } from "../util/http"
 import { List, Grid } from '@arco-design/web-react'
 import './css/love.css'
+import MusicBox from "../components/Music/music";
 const Row = Grid.Row;
 const Col = Grid.Col;
 function Love(){
@@ -28,11 +29,6 @@ function Love(){
             })
         }
     },[ids])
-    function getMusic(id){
-        api.getSongsUrl({id}).then(res=>{
-            console.log(res.data)
-        })
-    }
     return <div className="love">
         <Row>
 
@@ -42,9 +38,7 @@ function Love(){
                 loading={loading}
                 noDataElement={<></>}
                 dataSource={songs}
-                render={(item, index) => <List.Item onClick={()=>{
-                    getMusic(item.id)
-                }} key={index}>{item.name}</List.Item>}
+                render={(item, index) => <List.Item key={index}><MusicBox {...item}/></List.Item>}
             />
         </Row>
     </div>

@@ -5,7 +5,7 @@ const Col = Grid.Col;
 function UserInfo(props){
     let { close } = props
     const [userInfo, setuserInfo] = useState(JSON.parse(sessionStorage.getItem('userInfo')))
-    console.log(userInfo)
+    // console.log(userInfo)
     return <div>
         <Row>
             <Col style={{textAlign:'center'}} span={24}>

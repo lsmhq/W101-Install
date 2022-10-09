@@ -5,3 +5,6 @@
     box-sizing: border-box;
     padding: 10px 20px;
 }
+.arco-spin{
+    width: 100% !important;
+}
