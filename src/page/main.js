@@ -99,6 +99,11 @@ function Main(props){
                 console.log('play')
                 audio.current.play()
             })
+            audio.current.addEventListener('ended', ()=>{
+                console.log('end')
+                var index = Math.floor((Math.random()*likeList.length));
+                setCurrentSong(likeList[index])
+            })
         }
     }, [audio])
     function resize(){

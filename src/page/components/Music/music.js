@@ -14,21 +14,15 @@ function MusicBox(props){
             onClick(id)
         }}>
         <Col style={{color:'rgb(207, 0, 0)'}} span={1}>
-            {isLike ? <IconHeartFill onClick={()=>{
+            {isLike ? <IconHeartFill onClick={(e)=>{
+                e.stopPropagation()
                 api.likeMusic({id,like: false}).then(res=>{
                     onChange && onChange()
-                    Message.success({
-                        content:'删除成功',
-                        style:{top:'10px'},
-                    })
                 })
-            }}/>:<IconHeart onClick={()=>{
+            }}/>:<IconHeart onClick={(e)=>{
+                e.stopPropagation()
                 api.likeMusic({id}).then(res=>{
                     onChange && onChange()
-                    Message.success({
-                        content:'添加成功',
-                        style:{top:'10px'}
-                    })
                 })
             }}/>}
 

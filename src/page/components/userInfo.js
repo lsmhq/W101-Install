@@ -34,6 +34,7 @@ function UserInfo(props){
             <Col style={{textAlign:'center'}} span={24}>
                 <Button style={{width:'100%'}}  onClick={()=>{
                     localStorage.removeItem('cookie')
+                    sessionStorage.clear()
                     api.logout({}).then(res=>{
                         console.log(res)
                         if(res.data.code === 200){

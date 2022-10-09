@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { api } from "../util/http"
-import { List, Grid } from '@arco-design/web-react'
+import { List, Grid, Button } from '@arco-design/web-react'
 import './css/love.css'
 import MusicBox from "../components/Music/music";
 import { useContext } from 'react';
@@ -46,7 +46,7 @@ function Love(){
                 loading={loading}
                 noDataElement={<></>}
                 dataSource={songs}
-                render={(item, index) => <List.Item style={{color:globalObj.current.currentSong === item.id?'red':''}} key={index}><MusicBox 
+                render={(item, index) => <List.Item id={`song${item.id}`} style={{color:globalObj.current.currentSong === item.id?'red':''}} key={index}><MusicBox 
                     isLike={globalObj.likeList.likeList.includes(item.id)} 
                     onClick={(id)=>{
                         globalObj.current.setCurrentSong(id)
@@ -65,6 +65,7 @@ function Love(){
                     {...item}/>
                 </List.Item>}
             />}
+            {!user && <span>请先去登录</span>}
         </Row>
     </div>
 }
