@@ -22,17 +22,25 @@ function Login(props){
         }
     }, [closed])
     useEffect(()=>{
-        console.log(status)
         if(status.code === 803){
             localStorage.setItem('cookie', status.cookie)
+            clearInterval(timer_login)
             Message.success({
                 id:'login',
                 content:'登录成功',
                 style:{
                     top:'20px'
                 },
-                duration:1500,
+                duration:1000,
                 onClose:close
+            })
+        }
+        if(status.code === 800){
+            api.checkLogin({}).then(res=>{
+                // console.log(res.data)
+                if(res.data.data.code !== 200){
+                    createQr()
+                }
             })
         }
     }, [status])

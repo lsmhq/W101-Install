@@ -30,7 +30,9 @@ function UserInfo(){
         </Row> */}
         <Row style={{marginTop:'10px'}}>
             <Col style={{textAlign:'center'}} span={24}>
-                <Button style={{width:'100%'}} type='text'status='danger'>退出登录</Button>
+                <Button style={{width:'100%'}}  onClick={()=>{
+                    localStorage.removeItem('cookie')
+                }} type='text'status='danger'>退出登录</Button>
             </Col>
         </Row>
     </div>
