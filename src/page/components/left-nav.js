@@ -33,18 +33,6 @@ function LeftNav(props){
             content="首页"
         />
         <Icon
-            Child={<IconHeart className={`icon-child`}/>}
-            className={`${active===4?'icon-active':''}`}
-            onClick={()=>{
-                setActive(4)
-                navigate("/love", { replace: true });
-                
-            }}
-            // textStyle={{fontSize:'12px'}}
-            tips="我喜欢"
-            content="我喜欢"
-        />
-        <Icon
             Child={<IconFire className={`icon-child`}/>}
             className={`${active===3?'icon-active':''}`}
             onClick={()=>{
@@ -77,7 +65,18 @@ function LeftNav(props){
             content="发现"
         />
         <div className='nav-bottom'>
-
+            <Icon
+                Child={<IconHeart className={`icon-child`}/>}
+                className={`${active===4?'icon-active':''}`}
+                onClick={()=>{
+                    setActive(4)
+                    navigate("/love", { replace: true });
+                    
+                }}
+                // textStyle={{fontSize:'12px'}}
+                tips="我喜欢"
+                content="我喜欢"
+            />
         </div>
     </div>
 }

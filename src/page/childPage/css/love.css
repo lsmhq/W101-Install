@@ -1,0 +1,7 @@
+.love{
+    /* max-height: 560px; */
+    width: 100%;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding: 10px 20px;
+}

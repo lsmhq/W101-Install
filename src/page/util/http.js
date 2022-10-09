@@ -1,8 +1,9 @@
 import { Message } from '@arco-design/web-react'
 import axios from 'axios'
 // let basePath = 'http://192.168.0.105:3000'
-// let basePath = 'http://192.168.53.64:3000'
-let basePath = ''
+let basePath = 'http://101.43.216.253:3000'
+
+// let basePath = ''
 // let servicePath = ''
 let instance = axios.create({
     headers: {
@@ -31,9 +32,21 @@ instance.interceptors.response.use(
           case 200:
             // Toast.show('成功')
             break
+          case 801:
+
+            break
+          case 802:
+
+            break
+          case  803:
+
+            break
+          case  800:
+
+            break
           default:
             // Toast.show(response.data.message)
-            Message.error(response.data.message || response.data.msg || '请求错误')
+            // Message.error(response.data.message || response.data.msg || '请求错误')
             break
         }
       }
@@ -61,7 +74,7 @@ let http = {
     }
 }
 
-let apiPath = {
+let api = {
     // 登录
     loginByphone: params => http.get('/login/cellphone', params, true), // 手机号登录
     sendCode: params => http.get('/captcha/sent', params, true), // 发送验证码
@@ -69,9 +82,10 @@ let apiPath = {
     checkPhone: params => http.get('/cellphone/existence/check', params), // 检查电话是否注册
     regist: params => http.get('/register/cellphone',params), // 注册
     checkNickName: params => http.get('/nickname/check', params), // 检测昵称是否重复
-    getKey: params=> http.get('/login/qr/key', params), // 获取二维码Key
+    geQrtKey: params=> http.get('/login/qr/key', params), // 获取二维码Key
     createQr: params=>http.get('/login/qr/create', params), // 创建二维码
     checkQr: params=>http.get('/login/qr/check', params), // 二维码状态
+    checkLogin: params=>http.get('/login/status', params), // 登录状态
     // 个人中心
     getUserInfo:params => http.get('/user/detail', params), // 获取用户信息
     getLikeList: params => http.get('/likelist', params), // 获取喜欢音乐列表
@@ -92,5 +106,5 @@ let apiPath = {
     getComments: params => http.get('/comment/music', params), // 获取评论
   }
 export {
-    http, apiPath
+    http, api
 }

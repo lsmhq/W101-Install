@@ -147,7 +147,6 @@ function Main(props){
                     // 设置
                     setSetShow(true)
                 }}>
-                    
                     <IconSettings style={{fontSize:'20px'}}/>
                 </div>
                 <div className='control-btn' onClick={(e)=>{
