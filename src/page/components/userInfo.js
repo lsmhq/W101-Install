@@ -18,6 +18,11 @@ function UserInfo(){
                 {userInfo.nickname}
             </Col>
         </Row>
+        <Row>
+            <Col style={{textAlign:'center'}} span={24}>
+                {userInfo.signature}
+            </Col>
+        </Row>
         {/* <Row>
             <Count title="粉丝" count={0}/>
             <Count title="粉丝" count={0}/>

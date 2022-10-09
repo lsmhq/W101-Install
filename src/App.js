@@ -6,6 +6,7 @@ import Main from './page/main';
 import { api } from './page/util/http';
 import UserInfo from './page/components/userInfo'
 let login_timer
+
 function App() {
   let [login, setLogin] = useState(false)
   let [userInfo, setUserInfo] = useState(false)
@@ -68,7 +69,7 @@ function App() {
       />
       <Drawer
         mask={false}
-        style={{top:'50px', width:'200px', right:'10px',height:'150px', maxHeight:'300px', borderRadius:"5px", boxShadow:'0px 6px 10px rgb(199, 199, 199)'}}
+        style={{top:'50px', width:'200px', right:'10px',height:'180px', maxHeight:'300px', borderRadius:"5px", boxShadow:'0px 6px 10px rgb(199, 199, 199)'}}
         placement={'top'}
         onCancel={()=>{
           setUserInfo(false)

@@ -3,8 +3,6 @@ import '../css/main.css'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import { IconClose, IconMinus, IconSettings, IconUser } from '@arco-design/web-react/icon';
-import su from '../image/Subata_logo.png'
-import apiPath from './http/api'
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
 import LeftNav from './components/left-nav'
@@ -27,8 +25,6 @@ let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 function Main(props){
     let {login} = props
-    let [loading, setLoading] = useState(true) // 轮播加载
-    let [imgs, setImgs] = useState([]) // 轮播图片
     let [percent, setPercent] = useState(0) // 进度百分比
     // let [news, setNews] = useState([]) // 新闻
     // let [activity, setActivity] = useState([])  // 活动
@@ -37,8 +33,6 @@ function Main(props){
     let [total, setTotal] = useState(0) // 总进度
     let [settingShow, setSetShow] = useState(false)
     useEffect(() => {  
-        // 获取轮播
-        getCarousel()
         // 拖拽
         drag()
         // 窗口自适应
@@ -105,13 +99,6 @@ function Main(props){
         })
         document.addEventListener('mouseup',()=>{
             isDown = false
-        })
-    }
-    function getCarousel(){
-        apiPath.getCurl().then(res=>{
-            // console.log(res.data.lunbo)
-            setImgs([...res.data.lunbo])
-            setLoading(false)
         })
     }
     return <div className="main">
