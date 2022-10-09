@@ -1,19 +1,41 @@
 
-import { Grid } from '@arco-design/web-react'
+import { Grid, Message } from '@arco-design/web-react'
 import {  IconHeart, IconHeartFill } from '@arco-design/web-react/icon';
 import { api } from '../../util/http';
 const Row = Grid.Row;
 const Col = Grid.Col;
+Message.config({
+    style:{top:'20px'}
+})
 function MusicBox(props){
     // 歌名、id、歌手、发布日期、时长
-    let {name, id, ar, dt} = props
+    let {name, id, ar, dt, onChange} = props
     return <Row onClick={(e)=>{
             e.stopPropagation()
             console.log('歌曲id-->', id)
             getMusic(id)
         }}>
-        <Col style={{color:'red'}} span={1}>
-            <IconHeartFill/>
+        <Col style={{color:'rgb(207, 0, 0)'}} span={1}>
+            <IconHeartFill onClick={()=>{
+                api.likeMusic({id,like: false}).then(res=>{
+                    Message.success({
+                        content:'删除成功',
+                        onClose:()=>{
+                            onChange && onChange()
+                        }
+                    })
+                })
+            }}/>
+            <IconHeart onClick={()=>{
+                api.likeMusic({id}).then(res=>{
+                    Message.success({
+                        content:'添加成功',
+                        onClose:()=>{
+                            onChange && onChange()
+                        }
+                    })
+                })
+            }}/>
         </Col>
         <Col style={{ textOverflow:'ellipsis', overflow:'hidden' }} span={9}>
             {name}
