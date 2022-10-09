@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { Avatar, Grid, Button } from '@arco-design/web-react'
+import { Avatar, Grid, Button, Message } from '@arco-design/web-react'
+import { api } from "../util/http";
 const Row = Grid.Row;
 const Col = Grid.Col;
 function UserInfo(props){
@@ -33,7 +34,17 @@ function UserInfo(props){
             <Col style={{textAlign:'center'}} span={24}>
                 <Button style={{width:'100%'}}  onClick={()=>{
                     localStorage.removeItem('cookie')
-                    close()
+                    api.logout({}).then(res=>{
+                        console.log(res)
+                        if(res.data.code === 200){
+                            Message.success({
+                                style:{top:'20px'},
+                                content:'退出成功',
+                                duration:1000,
+                                onClose:close
+                            })
+                        }
+                    })
                 }} type='text'status='danger'>退出登录</Button>
             </Col>
         </Row>

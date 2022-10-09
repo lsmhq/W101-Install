@@ -1,4 +1,4 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState, createContext, useRef} from 'react';
 import '../css/main.css'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
@@ -7,10 +7,10 @@ import BodyMain from './components/body-main';
 import Setting from './components/setting';
 import LeftNav from './components/left-nav'
 import { HashRouter } from 'react-router-dom'
+import globalData from './context/context';
+import { api } from './util/http';
 // import { alertText } from './util/dialog';
 // let {alertTextLive2d} = window.electronAPI
-
-let update = false
 
 let style = {
     right:'50px',
@@ -32,6 +32,24 @@ function Main(props){
     let [current, setCurrent] = useState(0)  // 当前进度
     let [total, setTotal] = useState(0) // 总进度
     let [settingShow, setSetShow] = useState(false)
+    let [currentSong, setCurrentSong] = useState(0) // 当前播放
+    let [likeList, setLikeList] = useState([]) // 喜欢列表
+    let [songUrl, setSongUrl] = useState('')
+    let audio = useRef(null)
+    let value = {
+        current:{
+            currentSong, setCurrentSong
+        },
+        likeList:{
+            likeList, setLikeList
+        },
+        progress:{
+            current, 
+            setCurrent, 
+            total, 
+            setTotal
+        }
+    }
     useEffect(() => {  
         // 拖拽
         drag()
@@ -43,7 +61,6 @@ function Main(props){
             window.electronAPI.getUpdater((data)=>{
                 // console.log('message---->',data)
                 if(data.cmd==='downloadProgress'){
-                    update = true
                     setPercent(parseInt(data.progressObj.percent))
                     setTotal(data.progressObj.total)
                     setCurrent(data.progressObj.transferred)
@@ -66,7 +83,24 @@ function Main(props){
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
+    useEffect(() => {
+        api.getSongsUrl({id:currentSong}).then(res=>{
+            console.log(res.data)
+            if(res.data.code === 200){
+                setSongUrl(res.data.data[0].url)
+                setTotal(res.data.data[0].time)
+                
+            }
+        })
+    }, [currentSong])
+    useEffect(()=>{
+        if(audio.current){
+            audio.current.addEventListener('play', ()=>{
+                console.log('play')
+                audio.current.play()
+            })
+        }
+    }, [audio])
     function resize(){
         window.onresize = ()=>{
             // setHeight(window.screen.height - 40 + 'px')
@@ -154,15 +188,17 @@ function Main(props){
                 </div>
             </div>
         </div>
-        <div className='body'>
-            <HashRouter>
-                <LeftNav/>
-                <BodyMain/>
-            </HashRouter>
-        </div>
-        <div className='footer'>
-
-        </div>
+        <globalData.Provider value={value}>
+            <div className='body'>
+                <HashRouter>
+                    <LeftNav/>
+                    <BodyMain/>
+                </HashRouter>
+            </div>
+            <div className='footer'>
+                <audio ref={audio} autoPlay src={songUrl} controls/>
+            </div>
+        </globalData.Provider>
         <Modal
             title={'设置'}
             // style={{textAlign:'center'}}

@@ -48,16 +48,21 @@ function App() {
         })
       }}/>
       <Modal
-        // title={'登录/注册'}
+        title={'登录'}
         autoFocus={false}
         style={{
-          width: '400px',
+          width: '260px',
           height:'300px'
         }}
         children={<Login closed={login} close={()=>{
           setLogin(false);
           api.checkLogin({}).then(res=>{
-            console.log(res.data)
+            if(res.data.data.code === 200 && res.data.data.profile){
+              sessionStorage.setItem('account', JSON.stringify(res.data.data.account))
+              sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))
+              // 已登录状态
+              setUserInfo(true)
+            }
           })
         }} login_timer = {login_timer}/>}
         visible={login}

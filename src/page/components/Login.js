@@ -67,7 +67,7 @@ function Login(props){
         })
     }
     return <div className="login">
-        <Tabs>
+        {/* <Tabs> */}
             {/* <TabPane title="验证码登录" key={1}>
                 <Form>
                     <Form.Item style={{justifyContent:'center'}} label='' field='phone' rules={[{require:true}]}>
@@ -92,19 +92,21 @@ function Login(props){
                     </Form.Item>
                 </Form>
             </TabPane> */}
-            <TabPane style={{display:'flex', flexDirection:'column', alignContent:'space-around', justifyContent:'center'}} title="二维码登录" key={0}>
+            {/* <TabPane style={{display:'flex', flexDirection:'column', alignContent:'space-around', justifyContent:'center'}} title="二维码登录" key={0}> */}
                 <div onClick={()=>{
                     if(status.code === 800){
                         createQr()
                     }
-                }} style={{width:'100%', textAlign:'center'}}>
-                    <img style={{width:'180px'}} src={img} alt=''/>
+                }} style={{width:'100%', textAlign:'center', display:'flex', justifyContent:'center'}}>
+                    <div style={{border:'2px solid red', width:'150px', borderRadius:'2px'}}>
+                        <img style={{width:'150px'}} src={img} alt=''/>
+                    </div>
                 </div>
                 <div style={{width:'100%', textAlign:'center'}}>
                     <span>{status.message}</span>
                 </div>
-            </TabPane>
-        </Tabs>
+            {/* </TabPane> */}
+        {/* </Tabs> */}
     </div>
 }
 export default Login

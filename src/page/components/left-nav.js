@@ -6,22 +6,10 @@ import { useNavigate  } from 'react-router-dom'
 import { useState } from 'react';
 
 function LeftNav(props){
-    let { onMouseDown } = props
+    let { } = props
     const navigate = useNavigate();
     let [active, setActive] = useState(0)
-    return <div className='right-nav'             
-        onMouseDown={(e)=>{
-            if(e.target.className === 'nav-bottom'){
-                onMouseDown({
-                    down: true,
-                    X: e.clientX,
-                    Y: e.clientY
-                })
-                // console.log(baseX, baseY)
-            }
-
-        }
-    }>
+    return <div className='right-nav'>
         <Icon
             Child={<IconCompass className='icon-child'/>}
             className={`${active===0?'icon-active':''}`}

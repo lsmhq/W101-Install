@@ -4,44 +4,40 @@ import {  IconHeart, IconHeartFill } from '@arco-design/web-react/icon';
 import { api } from '../../util/http';
 const Row = Grid.Row;
 const Col = Grid.Col;
-Message.config({
-    style:{top:'20px'}
-})
 function MusicBox(props){
     // 歌名、id、歌手、发布日期、时长
-    let {name, id, ar, dt, onChange} = props
+    let {name, id, ar, dt, onChange, onClick, isLike } = props
     return <Row onClick={(e)=>{
             e.stopPropagation()
             console.log('歌曲id-->', id)
-            getMusic(id)
+            // getMusic(id)
+            onClick(id)
         }}>
         <Col style={{color:'rgb(207, 0, 0)'}} span={1}>
-            <IconHeartFill onClick={()=>{
+            {isLike ? <IconHeartFill onClick={()=>{
                 api.likeMusic({id,like: false}).then(res=>{
+                    onChange && onChange()
                     Message.success({
                         content:'删除成功',
-                        onClose:()=>{
-                            onChange && onChange()
-                        }
+                        style:{top:'10px'},
                     })
                 })
-            }}/>
-            <IconHeart onClick={()=>{
+            }}/>:<IconHeart onClick={()=>{
                 api.likeMusic({id}).then(res=>{
+                    onChange && onChange()
                     Message.success({
                         content:'添加成功',
-                        onClose:()=>{
-                            onChange && onChange()
-                        }
+                        style:{top:'10px'}
                     })
                 })
-            }}/>
+            }}/>}
+
         </Col>
         <Col style={{ textOverflow:'ellipsis', overflow:'hidden' }} span={9}>
             {name}
         </Col>
         <Col style={{ textOverflow:'ellipsis', overflow:'hidden' }} span={11}>
-            {ar.map(a=><span onClick={(e)=>{
+            {ar.map((a, idx)=><span key={idx} onClick={(e)=>{
                 console.log('歌手id-->', a.id)
                 e.stopPropagation()
             }}>{a.name}</span>)}
@@ -53,12 +49,6 @@ function MusicBox(props){
 }
 
 export default MusicBox
-
-function getMusic(id){
-    api.getSongsUrl({id}).then(res=>{
-        console.log(res.data)
-    })
-}
 
 function formatSeconds(value) {
     var theTime = parseInt(value);// 秒
