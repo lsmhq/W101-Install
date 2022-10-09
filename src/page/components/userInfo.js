@@ -2,7 +2,8 @@ import { useState } from "react"
 import { Avatar, Grid, Button } from '@arco-design/web-react'
 const Row = Grid.Row;
 const Col = Grid.Col;
-function UserInfo(){
+function UserInfo(props){
+    let { close } = props
     const [userInfo, setuserInfo] = useState(JSON.parse(sessionStorage.getItem('userInfo')))
     console.log(userInfo)
     return <div>
@@ -32,6 +33,7 @@ function UserInfo(){
             <Col style={{textAlign:'center'}} span={24}>
                 <Button style={{width:'100%'}}  onClick={()=>{
                     localStorage.removeItem('cookie')
+                    close()
                 }} type='text'status='danger'>退出登录</Button>
             </Col>
         </Row>

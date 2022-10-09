@@ -38,7 +38,7 @@ function Login(props){
         if(status.code === 800){
             api.checkLogin({}).then(res=>{
                 // console.log(res.data)
-                if(res.data.data.code !== 200){
+                if(res.data.data.code === 200 && res.data.data.profile){
                     createQr()
                 }
             })

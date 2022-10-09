@@ -26,7 +26,7 @@ function App() {
     }
     api.checkLogin({}).then(res=>{
       console.log(res.data)
-      if(res.data.data.code === 200){
+      if(res.data.data.code === 200 && res.data.data.profile){
         sessionStorage.setItem('account', JSON.stringify(res.data.data.account))
         sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))
       }
@@ -37,7 +37,7 @@ function App() {
       <Main login = {(op)=>{
         api.checkLogin({}).then(res=>{
           console.log(res.data)
-          if(res.data.data.code === 200){
+          if(res.data.data.code === 200 && res.data.data.profile){
             sessionStorage.setItem('account', JSON.stringify(res.data.data.account))
             sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))
             // 已登录状态
@@ -78,7 +78,9 @@ function App() {
         visible={userInfo}
         footer={null}
         title={null}
-        children={<UserInfo/>}
+        children={<UserInfo close={()=>{
+          setUserInfo(false)
+        }}/>}
       />
     </div>
   );
