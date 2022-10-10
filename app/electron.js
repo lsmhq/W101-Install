@@ -61,8 +61,6 @@ function createWindow () {
   mainWindow.once('ready-to-show', () => {
     loading.hide();
     loading.close();
-    mainWindow.show()
-    mainWindow.focus()
     mainWindow.webContents.send('scale', scaleFactor)
     mainWindow.webContents.send('install-path', app.getPath('exe'))
     mainWindow.webContents.send('install-version', app.getVersion())
