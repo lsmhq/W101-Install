@@ -32,7 +32,7 @@ function Main(props){
     let [current, setCurrent] = useState(0)  // 当前进度
     let [total, setTotal] = useState(0) // 总进度
     let [settingShow, setSetShow] = useState(false)
-    let [currentSong, setCurrentSong] = useState(0) // 当前播放
+    let [currentSong, setCurrentSong] = useState() // 当前播放
     let [likeList, setLikeList] = useState([]) // 喜欢列表
     let [songUrl, setSongUrl] = useState('')
     let audio = useRef(null)
@@ -84,14 +84,16 @@ function Main(props){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     useEffect(() => {
-        api.getSongsUrl({id:currentSong}).then(res=>{
-            console.log(res.data)
-            if(res.data.code === 200){
-                setSongUrl(res.data.data[0].url)
-                setTotal(res.data.data[0].time)
-                
-            }
-        })
+        if(currentSong){
+            api.getSongsUrl({id:currentSong}).then(res=>{
+                console.log(res.data)
+                if(res.data.code === 200){
+                    setSongUrl(res.data.data[0].url)
+                    setTotal(res.data.data[0].time)
+                    
+                }
+            })
+        }
     }, [currentSong])
     useEffect(()=>{
         if(audio.current){

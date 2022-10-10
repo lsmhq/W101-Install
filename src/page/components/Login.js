@@ -1,13 +1,18 @@
-import { Tabs, Form, Input, Button, Message } from "@arco-design/web-react";
+import { Tabs, Form, Input, Button, Message, Grid } from "@arco-design/web-react";
 import { useEffect, useState } from "react";
 import { api } from "../util/http";
 const TabPane = Tabs.TabPane;
 let timer_login = null
+let { Row, Col } = Grid
 // let phone, code
 function Login(props){
     let { closed, close } = props
     let [img, setImg] = useState('')
     let [status, setStatus] = useState('')
+    let [disabled, setDisable] = useState(false)
+    let [deadLine, setDeadLine] = useState(0)
+    let [phone, setPhone] = useState()
+    const [form] = Form.useForm();
     useEffect(()=>{
         // createQr()
         return ()=>{
@@ -17,9 +22,6 @@ function Login(props){
     useEffect(()=>{
         if(closed === false)
             clearInterval(timer_login)
-        if(closed){
-            createQr()
-        }
     }, [closed])
     useEffect(()=>{
         if(status.code === 803){
@@ -67,46 +69,138 @@ function Login(props){
         })
     }
     return <div className="login">
-        {/* <Tabs> */}
-            {/* <TabPane title="验证码登录" key={1}>
-                <Form>
-                    <Form.Item style={{justifyContent:'center'}} label='' field='phone' rules={[{require:true}]}>
-                        <Input placeholder="请输入手机号" onChange={(e)=>{
-                            phone = e
-                        }} />
-                    </Form.Item>
-                    <Form.Item style={{justifyContent:'center'}} label='' field='code' rules={[{require:true}]}>
-                        <Input placeholder="请输入验证码" onChange={(e)=>{
-                            code = e
-                        }} />
+        <Tabs onChange={(val)=>{
+            if(val*1 === 0){
+                if(closed){
+                    createQr()
+                }
+            }
+            if(val*1 === 1){
+                clearInterval(timer_login)
+            }
+        }}>
+            <TabPane title="验证码登录" key={1}>
+                <Form 
+                    form = {form} 
+                    autoComplete='off'
+                    validateMessages={{
+                        required: (_, { label }) => `必须填写 ${label}`,
+                        string: {
+                          length: `字符数必须是 #{length}`,
+                        } 
+                    }}
+                >
+                    {/* <Form.Item style={{justifyContent:'center', marginBottom:'0px'}} > */}
+                     <Row>
+                        <Col span={24}>
+                            <Form.Item 
+                                style={{justifyContent:'center'}} 
+                                label='' 
+                                field='phone'
+                                rules={[
+                                    {
+                                    required: true,
+                                    type: 'string',
+                                    minLength: 11
+                                    },
+
+                                ]}
+                            >
+                                <Input value={phone} placeholder="手机号" onChange={(e)=>{
+                                    // phone = e
+                                    setPhone(e.replace(/[^\d]/g,''))
+                                }} />
+                            </Form.Item>
+                        </Col>
+                     </Row>
+
+                    {/* </Form.Item> */}
+                    <Form.Item style={{justifyContent:'center', margin:0}} >
+                        <Row>
+                            <Col span={18}>
+                                <Form.Item
+                                    style={{justifyContent:'center'}} 
+                                    label='' 
+                                    field='captcha' 
+                                    rules={[
+                                        {
+                                            required: true,
+                                            type: 'string',
+                                        }
+                                    ]}
+                                >
+                                    <Input placeholder="验证码"/>
+                                </Form.Item>
+                            </Col>
+                            <Col span={6}>
+                                <Button type='text' status='danger' disabled={disabled} onClick={()=>{
+                                    form.validate(['phone']).then(res=>{
+                                        api.sendCode({phone: form.getFieldValue('phone')}).then(res=>{
+                                            console.log(res.data)
+                                        })
+                                    }).catch((e)=>{
+                                        console.log(e)
+                                        Message.error({
+                                            style:{top:'10px'},
+                                            content:'先填写手机号'
+                                        })
+                                    })
+                                }}>发送验证{disabled?`(${deadLine})s`:''}</Button>
+                            </Col>
+                        </Row>
                     </Form.Item>
                     <Form.Item style={{justifyContent:'center'}}>
                         <Button style={{width:'100%'}} type='primary'status='danger' onClick={()=>{
-                            let params = {
-                                phone, code
-                            }
-                            console.log(params)
-                        }} htmlType='submit'>
+                            form.validate().then(res=>{
+                                api.checkCode({phone: form.getFieldValue('phone'), captcha: form.getFieldValue('captcha')}).then(res=>{
+                                    console.log(res.data)
+                                    if(res.data.data){
+                                        api.loginByphone({phone: form.getFieldValue('phone'), captcha: form.getFieldValue('captcha')}).then(res=>{
+                                            console.log(res.data)
+                                            if(res.data.code === 200){
+                                                // 登录
+                                                
+                                            }else{
+                                                Message.error({
+                                                    style:{top:'10px'},
+                                                    content:res.data.message
+                                                })
+                                            }
+                                        }).catch(()=>{
+                                            Message.error({
+                                                style:{top:'10px'},
+                                                content:'登录失败'
+                                            })
+                                        })
+                                    }else{
+                                        Message.error({
+                                            style:{top:'10px'},
+                                            content:'验证码错误'
+                                        })
+                                    }
+                                })
+                            }).catch((e)=>{
+                                console.log(e)
+                            })
+                        }}>
                             登录
                         </Button>
                     </Form.Item>
                 </Form>
-            </TabPane> */}
-            {/* <TabPane style={{display:'flex', flexDirection:'column', alignContent:'space-around', justifyContent:'center'}} title="二维码登录" key={0}> */}
+            </TabPane>
+            <TabPane style={{display:'flex', flexDirection:'column', alignContent:'space-around', justifyContent:'center'}} title="二维码（偶尔）" key={0}>
                 <div onClick={()=>{
                     if(status.code === 800){
                         createQr()
                     }
                 }} style={{width:'100%', textAlign:'center', display:'flex', justifyContent:'center'}}>
-                    <div style={{border:'2px solid red', width:'150px', borderRadius:'2px'}}>
-                        <img style={{width:'150px'}} src={img} alt=''/>
-                    </div>
+                    <img style={{width:'150px'}} src={img} alt=''/>
                 </div>
                 <div style={{width:'100%', textAlign:'center'}}>
                     <span>{status.message}</span>
                 </div>
-            {/* </TabPane> */}
-        {/* </Tabs> */}
+            </TabPane>
+        </Tabs>
     </div>
 }
 export default Login

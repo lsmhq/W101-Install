@@ -48,11 +48,12 @@ function App() {
         })
       }}/>
       <Modal
-        title={'登录'}
+        // title={'登录'}
         autoFocus={false}
+        unmountOnExit
         style={{
-          width: '260px',
-          height:'300px'
+          width: '300px',
+          height:'260px'
         }}
         children={<Login closed={login} close={()=>{
           setLogin(false);
