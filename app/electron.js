@@ -22,7 +22,7 @@ function createWindow () {
     height: parseInt(width/scaleFactor), // 窗口高度
     // useContentSize:true,
     title: "网易云音乐", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
-    icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
+    icon: nativeImage.createFromPath('./images/favicon.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: false,
     resizable: false,
     transparent: true, 
@@ -136,7 +136,7 @@ function createWindow () {
     let trayIcon = path.join(__dirname, 'images');//app是选取的目录
   
       // appTray = new Tray();//app.ico是app目录下的ico文件
-    tray = new Tray(path.join(trayIcon, 'logo.ico'))
+    tray = new Tray(path.join(trayIcon, 'favicon.ico'))
     
     // console.log(trayIcon)
     let config = [
@@ -175,7 +175,7 @@ function createWindow () {
                 appPath = appPath.split('\\')
                 appPath.pop()
                 console.log(appPath.join('\\'))
-                let dirPath = `${appPath.join('\\')}\\Uninstall Subata.exe`
+                let dirPath = `${appPath.join('\\')}\\Uninstall.exe`
                 shell.openPath(dirPath)
               }
             }
