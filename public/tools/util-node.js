@@ -369,16 +369,17 @@
         // window.confirm('请关闭程序之后进行更新')
     }
     // 获取游戏版本
-    function getGameVersion(path, callback) {
+    function getGameVersion( callback ) {
         try {
-            let files = fs.readdirSync(path, {
+            let logPath = `${window.wizPath}/Bin`
+            let files = fs.readdirSync(logPath, {
                 withFileTypes: true
             })
             let names = files.map(file => file.name)
             names.forEach(file => {
-                if (file === 'version') {
-                    let content = fs.readFileSync(`${path}/${file}`).toString('utf-8')
-                    console.log(content)
+                if (file === 'WizardClient.log') {
+                    let content = fs.readFileSync(`${logPath}/${file}`).toString('utf-8')
+                    console.log(content.split('\n'))
                 }
             })
         } catch (error) {
