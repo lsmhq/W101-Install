@@ -5,9 +5,10 @@ import './css/love.css'
 import MusicBox from "../components/Music/music";
 import { useContext } from 'react';
 import globalData from '../context/context';
-
 const Row = Grid.Row;
 const Col = Grid.Col;
+let count = 0
+let timer = null
 function Love(){
     const [ids, setIds] = useState([])
     const [songs, setSongs] = useState([])
@@ -49,7 +50,20 @@ function Love(){
                 render={(item, index) => <List.Item id={`song${item.id}`} style={{color:globalObj.current.currentSong === item.id?'red':''}} key={index}><MusicBox 
                     isLike={globalObj.likeList.likeList.includes(item.id)} 
                     onClick={(id)=>{
-                        globalObj.current.setCurrentSong(id)
+                        if (!timer) {
+                            timer = setTimeout(() => {
+                              count = 0;
+                              timer = null;
+                            }, 1000);
+                          }
+                          count++;
+                          if (count === 2) {
+                            // console.log('ble')
+                            globalObj.current.setCurrentSong(id)
+                            count = 0;
+                            clearTimeout(timer);
+                            timer = null;
+                          }
                     }} 
                     onChange={()=>{
                         let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
