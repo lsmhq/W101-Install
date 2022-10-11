@@ -21,7 +21,7 @@ function createWindow () {
     width: parseInt(height/scaleFactor), // 窗口宽度
     height: parseInt(width/scaleFactor), // 窗口高度
     // useContentSize:true,
-    title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
+    title: "网易云音乐", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: false,
     resizable: false,
@@ -142,7 +142,7 @@ function createWindow () {
     let config = [
       {label: "更多", submenu:[
         {
-          label:'卸载Subata',
+          label:'卸载',
           click:()=>{
             let appPath = app.getPath('exe')
             appPath = appPath.split('\\')
@@ -159,7 +159,7 @@ function createWindow () {
     ]
     const menu = new Menu.buildFromTemplate(config)
     tray.setContextMenu(menu)
-    tray.setToolTip('Subata')
+    tray.setToolTip('网易云音乐')
     tray.on('double-click',()=>{
       mainWindow && mainWindow.show()
       // mainWindow && mainWindow.focus()

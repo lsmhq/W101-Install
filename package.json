@@ -1,5 +1,5 @@
 {
-  "name": "Subata",
+  "name": "wy-music",
   "version": "1.2.3",
   "author": {
     "name": "lsmhq",
@@ -91,8 +91,8 @@
     "dist-mac": "electron-builder --mac"
   },
   "build": {
-    "productName": "Subata",
-    "appId": "Subata",
+    "productName": "WyMusic",
+    "appId": "WyMusic",
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
@@ -102,7 +102,7 @@
     },
     "publish": {
       "provider": "generic",
-      "url": "http://101.43.216.253:3001/file/subataUpdate"
+      "url": "http://101.43.216.253:3001/file/subataMusic"
     },
     "win": {
       "icon": "app/images/logo.ico"
