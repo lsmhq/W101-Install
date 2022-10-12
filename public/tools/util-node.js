@@ -239,10 +239,17 @@
             let total = 0
             let req = request(uri)
             let out = fs.createWriteStream(filePath)
-            req.pipe(out)
+            
             req.on('response', (res) => {
                 console.log(res.headers['content-length'])
                 total = res.headers['content-length']
+                if(!total){
+                    req.pipe(out)
+                }else{
+                    out.close()
+                    req.end()
+                    callback('error')
+                }
             })
             req.on('data', (data) => {
                 // console.log(data.byteLength)
@@ -379,7 +386,7 @@
             names.forEach(file => {
                 if (file === 'WizardClient.log') {
                     let content = fs.readFileSync(`${logPath}/${file}`).toString('utf-8')
-                    console.log(content.split('\n'))
+                    callback(content.split('\n'))
                 }
             })
         } catch (error) {
