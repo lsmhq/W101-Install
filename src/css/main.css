@@ -11,7 +11,7 @@
     height: 40px;
     display: flex;
     z-index: 100;
-    background-color: #d41010;
+    background-color: #de3028;
     position: relative;
     z-index: 1000000;
     /* background-color: rgb(40, 40, 40); */
@@ -19,12 +19,13 @@
 .nav-logo{
     /* position: absolute; */
     margin-left: 10px;
+    margin-top: 2px;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    padding: 5px;
+    width: 30px;
+    /* padding: 5px; */
     box-sizing: border-box;
 }
 .nav-logo img{
@@ -34,7 +35,7 @@
 }
 .nav-title{
     /* position: absolute; */
-    margin-left: 10px;
+    margin-left: 0px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -135,10 +136,11 @@
     position: relative;
 }
 .right-nav{
-    width: 150px;
+    width: 200px;
     min-width: 50px;
     height: 100%;
     background-color: rgb(237, 237, 237);
+    box-shadow: 6px 0px 6px rgb(219, 219, 219);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -348,10 +350,12 @@
     height: 80px;
     width: 100%;
     background-color: #f1f3f4;
-    border-top: 1px solid rgb(203, 203, 203);
+    /* border-top: 1px solid rgb(203, 203, 203); */
     display: flex;
+    z-index: 999999;
     align-items: center;
     justify-content: center;
+    box-shadow: 6px 2px 4px rgb(162, 162, 162) ;
 }
 .footer audio{
     width: 100%;

@@ -1,7 +1,7 @@
 import { useEffect, useState, createContext, useRef} from 'react';
 import '../css/main.css'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
-import logo from '../image/WizardLogoRA.png'
+import logo from '../image/favicon.ico'
 import { IconClose, IconMinus, IconSettings, IconUser } from '@arco-design/web-react/icon';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
@@ -9,6 +9,9 @@ import LeftNav from './components/left-nav'
 import { HashRouter } from 'react-router-dom'
 import globalData from './context/context';
 import { api } from './util/http';
+import SearchBar from './components/SearchBar/SearchBar';
+import Audio from './components/Audio/Audio';
+
 // import { alertText } from './util/dialog';
 // let {alertTextLive2d} = window.electronAPI
 
@@ -35,7 +38,9 @@ function Main(props){
     let [currentSong, setCurrentSong] = useState() // 当前播放
     let [likeList, setLikeList] = useState([]) // 喜欢列表
     let [songUrl, setSongUrl] = useState('')
-    let audio = useRef(null)
+    let [song, setSong] = useState({})
+    let [lyric, setLyric] = useState('')
+    let [lyric_fy, setLyric_fy] = useState('')
     let value = {
         current:{
             currentSong, setCurrentSong
@@ -48,6 +53,9 @@ function Main(props){
             setCurrent, 
             total, 
             setTotal
+        },
+        song:{
+            song, setSong
         }
     }
     useEffect(() => {  
@@ -85,29 +93,43 @@ function Main(props){
     }, [])
     useEffect(() => {
         if(currentSong){
-            api.getSongsUrl({id:currentSong}).then(res=>{
-                console.log(res.data)
-                if(res.data.code === 200){
-                    setSongUrl(res.data.data[0].url)
-                    setTotal(res.data.data[0].time)
-                    
+            api.checkMusic({
+                id: currentSong
+            }).then(res=>{
+                if(res.data.success === true && res.data.message === 'ok'){
+                    api.getSongs({ids:currentSong}).then(res=>{
+                        // console.log(res.data)
+                        if(res.data.code === 200){
+                            setSong(res.data.songs[0])
+                            api.getSongsUrl({id:currentSong}).then(res=>{
+                                // console.log(res.data)
+                                if(res.data.code === 200){
+                                    setSongUrl(res.data.data[0].url)
+                                    setTotal(res.data.data[0].time)
+                                }
+                            })
+                            api.getLyric({id:currentSong}).then(res=>{
+                                // console.log(res.data)
+                                if(res.data.code === 200){
+                                    setLyric(res.data.lrc.lyric)
+                                    setLyric_fy(res.data.romalrc.lyric)
+                                }
+                            })
+                        }
+                    })
+                }else{
+                    Message.error({
+                        style:{top:'10px'},
+                        content:'暂无版权'
+                    })
                 }
             })
         }
     }, [currentSong])
     useEffect(()=>{
-        if(audio.current){
-            audio.current.addEventListener('play', ()=>{
-                console.log('play')
-                audio.current.play()
-            })
-            audio.current.addEventListener('ended', ()=>{
-                console.log('end')
-                var index = Math.floor((Math.random()*likeList.length));
-                setCurrentSong(likeList[index])
-            })
-        }
-    }, [audio])
+        console.log(song)
+    },[song])
+
     function resize(){
         window.onresize = ()=>{
             // setHeight(window.screen.height - 40 + 'px')
@@ -152,9 +174,11 @@ function Main(props){
                 // console.log(baseX, baseY)
             }}
         >
-            {/* <div className='nav-logo'><img alt='' src={su}/></div> */}
+            <div className='nav-logo'><img alt='' src={logo}/></div>
             <div className='nav-title'>网易云音乐</div>
+            <SearchBar/>
             {/* <div className='nav-title'> {obj[type]}</div> */}
+
             <div className='nav-control'
                 onMouseDown={(e)=>{
                     e.stopPropagation()
@@ -203,7 +227,14 @@ function Main(props){
                 </HashRouter>
             </div>
             <div className='footer'>
-                <audio ref={audio} autoPlay src={songUrl} controls/>
+                <Audio 
+                    src={songUrl} 
+                    song={song}
+                    lyric={{
+                        lyric_old: lyric,
+                        lyric_fy
+                    }}
+                />
             </div>
         </globalData.Provider>
         <Modal

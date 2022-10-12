@@ -9,6 +9,7 @@ const Row = Grid.Row;
 const Col = Grid.Col;
 let count = 0
 let timer = null
+let songId = 0
 function Love(){
     const [ids, setIds] = useState([])
     const [songs, setSongs] = useState([])
@@ -26,6 +27,9 @@ function Love(){
                 }
             })
         }
+        document.addEventListener('setItemEvent', (e)=>{
+            console.log('Item', e.key)
+        })
     }, [])
     useEffect(()=>{
         if(ids.length>0){
@@ -50,20 +54,42 @@ function Love(){
                 render={(item, index) => <List.Item id={`song${item.id}`} style={{color:globalObj.current.currentSong === item.id?'red':''}} key={index}><MusicBox 
                     isLike={globalObj.likeList.likeList.includes(item.id)} 
                     onClick={(id)=>{
-                        if (!timer) {
-                            timer = setTimeout(() => {
+                        if(id !== songId){
+                            songId = id
+                            timer = null
+                            count = 0
+                            if (!timer) {
+                                timer = setTimeout(() => {
+                                  count = 0;
+                                  timer = null;
+                                }, 1000);
+                              }
+                              count++;
+                              if (count === 2) {
+                                // console.log('ble')
+                                globalObj.current.setCurrentSong(id)
+                                globalObj.song.setSong(item)
+                                count = 0;
+                                clearTimeout(timer);
+                                timer = null;
+                              }
+                        }else{
+                            if (!timer) {
+                                timer = setTimeout(() => {
+                                  count = 0;
+                                  timer = null;
+                                }, 1000);
+                            }
+                            count++;
+                            if (count === 2) {
+                              // console.log('ble')
+                              globalObj.current.setCurrentSong(id)
+                              globalObj.song.setSong(item)
                               count = 0;
+                              clearTimeout(timer);
                               timer = null;
-                            }, 1000);
-                          }
-                          count++;
-                          if (count === 2) {
-                            // console.log('ble')
-                            globalObj.current.setCurrentSong(id)
-                            count = 0;
-                            clearTimeout(timer);
-                            timer = null;
-                          }
+                            }
+                        }
                     }} 
                     onChange={()=>{
                         let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))

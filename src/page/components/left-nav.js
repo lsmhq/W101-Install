@@ -3,12 +3,21 @@
 import Icon from './Icon'
 import { IconMusic, IconCompass, IconHeart, IconSearch, IconFire } from '@arco-design/web-react/icon';
 import { useNavigate  } from 'react-router-dom'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function LeftNav(props){
     let { } = props
     const navigate = useNavigate();
     let [active, setActive] = useState(0)
+    useEffect(() => {
+        console.log('LeftNav')
+        window.addEventListener('hashchange', (e)=>{
+            console.log(e)
+        })
+        return () => {
+            
+        };
+    }, [])
     return <div className='right-nav'>
         <Icon
             Child={<IconCompass className='icon-child'/>}

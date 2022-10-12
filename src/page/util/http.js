@@ -32,6 +32,9 @@ instance.interceptors.response.use(
           case 200:
             // Toast.show('成功')
             break
+          case 400:
+            Message.error(response.data.message || response.data.msg || '请求错误')
+            break
           case 801:
 
             break

@@ -38,6 +38,8 @@ function UserInfo(props){
                     api.logout({}).then(res=>{
                         console.log(res)
                         if(res.data.code === 200){
+                            // navigate('/', {replace: true})
+                            window.location.hash = '/'
                             Message.success({
                                 style:{top:'20px'},
                                 content:'退出成功',

@@ -1,0 +1,144 @@
+.audio{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.audio-controls{
+    width: 166px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 6px 6px 6px rgb(219, 219, 219);
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+.audio-icon{
+    font-size: 20px;
+}
+.audio-controls-item{
+
+}
+.audio-controls-item img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+.audio-progress{
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    padding: 0 10px;
+    box-sizing: border-box;
+    flex-direction: column;
+}
+.audio-title{
+    height: 40px;
+    line-height: 40px;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+.audio-time{
+    height: 40px;
+    line-height: 40px;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+.audio-rotate-360{
+	animation: audio-rotate-360 4s linear infinite;
+	-webkit-animation: audio-rotate-360 4s linear infinite;
+}
+.audio-total{
+    width: 100%;
+    height: 3px;
+    border-radius: 10px;
+    background-color: rgb(207, 207, 207);
+    cursor: pointer;
+    transition: all 0.1s ease-in;
+    position: relative;
+}
+.audio-current{
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background-color: rgb(181, 0, 0);
+}
+.audio-getCurrent{
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background-color: rgb(255, 113, 113);
+}
+.audio-flag{
+    position: absolute;
+    left: 0;
+    top: -6px;
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    background-color: rgb(177, 0, 0);
+    box-shadow: 2px 2px 2px rgb(219, 219, 219);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* transition: all 0.2s ease; */
+}
+.audio-flag-dot{
+    width: 4px;
+    height: 4px;
+    border-radius: 4px;
+    background-color: rgb(255, 255, 255);
+    /* background-color: ; */
+}
+.audio-more{
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+.audio-more-img{
+    width: 200px;
+    height: 200px;
+}
+.audio-song-words{
+    font-size: 20px;
+    text-align: center;
+    line-height: 50px;
+}
+.song-words{
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+.song-words-active{
+    font-size: 30px;
+    color: rgb(180, 0, 0);
+}
+.empty{
+    width: 100%;
+    height: 400px;
+}
+@keyframes audio-rotate-360 {
+    0%{
+      transform:rotate(0deg);
+    }
+    100%{
+      transform:rotate(360deg);
+    }
+}
+@-webkit-keyframes audio-rotate-360 {
+  0%{
+    transform:rotate(0deg);
+  }
+  100%{
+    transform:rotate(360deg);
+  }
+}
