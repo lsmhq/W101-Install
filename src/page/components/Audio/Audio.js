@@ -61,7 +61,8 @@ function Audio(props){
             })
             audio.current.addEventListener('ended', ()=>{
                 // console.log('end')
-                var index = Math.floor((Math.random()*globalObj.likeList.likeList.length));
+                clearInterval(timer)
+                let index = Math.floor((Math.random() * globalObj.likeList.likeList.length));
                 globalObj.current.setCurrentSong(globalObj.likeList.likeList[index])
                 document.getElementById(`song${globalObj.likeList.likeList[index]}`).scrollIntoView(
                     {
@@ -95,7 +96,7 @@ function Audio(props){
                 <img className={`audio-rotate-360`} style={{
                     animationPlayState:`${paused?'paused':'running'}`
                 }} src={song?.al?.picUrl} alt="" onClick={()=>{
-                    setDrawer(true)
+                    setDrawer(!drawer)
                 }}/>
             </div>
             <div className='audio-controls-item'>
@@ -122,7 +123,17 @@ function Audio(props){
                 <Icon
                     Child={<IconSkipNext className='audio-icon'/>}
                     onClick={()=>{
-                        
+                        let index = Math.floor((Math.random() * globalObj.likeList.likeList.length));
+                        globalObj.current.setCurrentSong(globalObj.likeList.likeList[index])
+                        document.getElementById(`song${globalObj.likeList.likeList[index]}`).scrollIntoView(
+                            {
+                                behavior: "smooth", 
+                                block: "center", 
+                                inline: "nearest"
+                            }
+                        )
+                        // globalObj.song.setSong(globalObj.likeList.likeList[index])
+                        setPaused(audio.current.paused)
                     }}
                     // textStyle={{fontSize:'12px'}}
                     content=""
