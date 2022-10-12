@@ -176,7 +176,7 @@ function Main(props){
         >
             <div className='nav-logo'><img alt='' src={logo}/></div>
             <div className='nav-title'>网易云音乐</div>
-            <SearchBar/>
+            
             {/* <div className='nav-title'> {obj[type]}</div> */}
 
             <div className='nav-control'
@@ -186,6 +186,7 @@ function Main(props){
                     // console.log(baseX, baseY)
                 }}
             >
+                <SearchBar/>
                 <div className='control-btn' onClick={(e)=>{
                     e.stopPropagation()
                     // 个人
@@ -246,9 +247,9 @@ function Main(props){
                 setSetShow(false)
             }}
             style={{
-                maxHeight:'550px',
-                minHeight:'550px',
-                width:'700px',
+                maxHeight:'450px',
+                minHeight:'450px',
+                width:'450px',
                 backgroundColor: 'rgb(237, 237, 237)'
             }}
             children={<Setting/>}

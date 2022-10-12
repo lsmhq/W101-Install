@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    box-shadow: 6px 6px 6px rgb(219, 219, 219);
+    /* box-shadow: 6px 6px 6px rgb(219, 219, 219); */
     padding: 0 5px;
     box-sizing: border-box;
 }

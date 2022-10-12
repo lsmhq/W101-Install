@@ -77,6 +77,13 @@ function Audio(props){
         }
     }, [audio])
     useEffect(()=>{
+        if(drawer){
+            document.getElementById(`word-${lyricTime[index]}`)?.scrollIntoView({
+                behavior:'smooth', block:'center'
+            })
+        }
+    },[drawer])
+    useEffect(()=>{
         if(index !== oldIndex){
             if(`[${formatSecondsV2(current)}]` >= lyricTime[index]){
                 let newWord = new Array(wordActive.length).fill(false)
