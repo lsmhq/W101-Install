@@ -1,6 +1,6 @@
 {
   "name": "wy-music",
-  "version": "1.2.3",
+  "version": "1.0.0",
   "author": {
     "name": "lsmhq",
     "email": "784433957@qq.com"
@@ -96,7 +96,7 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "app/images/logo.ico",
+      "installerIcon": "app/images/favicon.ico",
       "uninstallerIcon": "app/images/uninstall.ico",
       "uninstallDisplayName": "${productName}${version}"
     },
