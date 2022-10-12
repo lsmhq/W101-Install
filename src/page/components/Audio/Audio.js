@@ -196,7 +196,8 @@ function Audio(props){
                 setDrawer(false)
             }}
             footer={null}
-            children={<div className='audio-more'>
+            children={<div className='audio-more' >
+                <div className='audio-more-bg' style={{backgroundImage:`url(${song?.al?.picUrl})`, borderRadius:'10px'}}></div>
                 <Row>
                     <Col className='audio-song-words' span={24}>
                         <div className='empty'></div>
