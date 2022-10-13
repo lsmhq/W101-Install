@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from '../childPage/home'
 import Love from '../childPage/Love'
@@ -9,17 +9,9 @@ import globalData from '../context/context'
 import { api } from '../util/http'
 function BodyMain(props){
     let globalObj = useContext(globalData)
+    let [ids, setIds] = useState([])
     useEffect(()=>{
-        let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-        if(userInfo){
-            api.getLikeList({uid:userInfo.userId}).then(res=>{
-                console.log(res.data)
-                if(res.data.code === 200){
-                    globalObj.likeList.setLikeList([...res.data.ids])
-                    globalObj.currentList.setCurrentList([...res.data.ids])
-                }
-            })
-        }
+
     }, [])
     return <div className='body-main'>
         <Routes>
@@ -27,7 +19,7 @@ function BodyMain(props){
             <Route path='/music' element={<Music/>}/>
             <Route path='/' element={<Recommend/>}/>
             <Route path='/search' element={<Search/>}/>
-            <Route path='/love' element={<Love likeList = {globalObj.likeList.likeList}/>}/>
+            <Route path='/love' element={<Love  likeList = {ids}/>}/>
         </Routes>
     </div>
 }

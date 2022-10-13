@@ -28,8 +28,8 @@ function App() {
     api.checkLogin({}).then(res=>{
       console.log(res.data)
       if(res.data.data.code === 200 && res.data.data.profile){
-        sessionStorage.setItem('account', JSON.stringify(res.data.data.account))
-        sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))
+        localStorage.setItem('account', JSON.stringify(res.data.data.account))
+        localStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))
       }
     })
   }, [])
@@ -38,9 +38,10 @@ function App() {
       <Main login = {(op)=>{
         api.checkLogin({}).then(res=>{
           // console.log(res.data)
+          
           if(res.data.data.code === 200 && res.data.data.profile){
-            sessionStorage.setItem('account', JSON.stringify(res.data.data.account))
-            sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))
+            localStorage.setItem('account', JSON.stringify(res.data.data.account))
+            localStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))
             // 已登录状态
             setUserInfo(true)
           }else{
@@ -60,8 +61,8 @@ function App() {
           setLogin(false);
           api.checkLogin({}).then(res=>{
             if(res.data.data.code === 200 && res.data.data.profile){
-              sessionStorage.setItem('account', JSON.stringify(res.data.data.account))
-              sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))
+              localStorage.setItem('account', JSON.stringify(res.data.data.account))
+              localStorage.setItem('userInfo', JSON.stringify(res.data.data.profile))
               // 已登录状态
               setUserInfo(true)
             }

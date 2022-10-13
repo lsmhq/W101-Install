@@ -86,7 +86,7 @@ function MusicBox(props){
                 e.stopPropagation()
                 api.likeMusic({id,like: false}).then(res=>{
                     // onChange && onChange()
-                    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+                    let userInfo = JSON.parse(localStorage.getItem('userInfo'))
                     if(userInfo){
                         api.getLikeList({uid:userInfo.userId}).then(res=>{
                             // console.log(res.data)
@@ -99,7 +99,7 @@ function MusicBox(props){
             }}/>:<IconHeart onClick={(e)=>{
                 e.stopPropagation()
                 api.likeMusic({id}).then(res=>{
-                    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+                    let userInfo = JSON.parse(localStorage.getItem('userInfo'))
                     if(userInfo){
                         api.getLikeList({uid:userInfo.userId}).then(res=>{
                             // console.log(res.data)

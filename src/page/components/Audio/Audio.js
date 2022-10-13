@@ -205,18 +205,18 @@ function Audio(props){
              <div className='audio-setting-item'>
                 {wordType === 0 && <span onClick={()=>{
                     setWordType(1)
-                    setFyShow(true)
-                    setRomShow(false)
+                    setRomShow(true)
+                    setFyShow(false)
                 }}>译</span>}
                 {wordType === 1 && <span onClick={()=>{
                     setWordType(2)
+                    setFyShow(true)
                     setRomShow(true)
-                    setFyShow(false)
                 }}>音</span>}
                 {wordType === 2 && <span onClick={()=>{
                     setWordType(0)
                     setFyShow(true)
-                    setRomShow(true)
+                    setRomShow(false)
                 }}>译+音</span>}
              </div>
              <div className='audio-setting-item'>

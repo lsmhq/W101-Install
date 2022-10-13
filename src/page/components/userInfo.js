@@ -7,7 +7,7 @@ const Col = Grid.Col;
 function UserInfo(props){
     let { close } = props
     let globalObj = useContext(globalData)
-    const [userInfo, setuserInfo] = useState(JSON.parse(sessionStorage.getItem('userInfo')))
+    const [userInfo, setuserInfo] = useState(JSON.parse(localStorage.getItem('userInfo')))
     // console.log(userInfo)
     return <div>
         <Row>
@@ -36,8 +36,8 @@ function UserInfo(props){
             <Col style={{textAlign:'center'}} span={24}>
                 <Button style={{width:'100%'}}  onClick={()=>{
                     localStorage.removeItem('cookie')
-                    sessionStorage.removeItem('userInfo')
-                    sessionStorage.removeItem('account')
+                    localStorage.removeItem('userInfo')
+                    localStorage.removeItem('account')
                     api.logout({}).then(res=>{
                         console.log(res)
                         if(res.data.code === 200){

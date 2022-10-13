@@ -45,7 +45,7 @@ function Main(props){
     let [lyric_fy, setLyric_fy] = useState('')
     let [lyric_rm, setLyric_rm] = useState('')
     let [keyword, setKeyWord] = useState('')
-    let [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userInfo')))
+    let [user, setUser] = useState(JSON.parse(localStorage.getItem('userInfo')))
     let value = {
         current:{
             currentSong, setCurrentSong
@@ -103,6 +103,7 @@ function Main(props){
         if(localStorage.getItem('songId')){
             setCurrentSong(localStorage.getItem('songId'))
         }
+        
         return () => {
             // 注销
             destroy()

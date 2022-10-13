@@ -8,26 +8,29 @@ import globalData from '../context/context';
 const Row = Grid.Row;
 const Col = Grid.Col;
 function Love(props){
-    let { likeList } = props
     const [ids, setIds] = useState([])
     const [songs, setSongs] = useState([])
     const [loading, setLoading] = useState(true)
     let globalObj = useContext(globalData)
     useEffect(()=>{
-        setIds([...likeList]) 
-    },[likeList])
-    useEffect(()=>{
-        if(ids.length>0){
-            api.getSongs({ids:ids.join(',')}).then(res=>{
+        let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+        if(userInfo){
+            api.getLikeList({uid:userInfo.userId}).then(res=>{
                 console.log(res.data)
                 if(res.data.code === 200){
-                    setSongs([...res.data.songs])
-                    globalObj.currentList.setCurrentList([...ids])
-                    setLoading(false)
+                    globalObj.likeList.setLikeList([...res.data.ids])
+                    globalObj.currentList.setCurrentList([...res.data.ids])
+                    api.getSongs({ids: res.data.ids.join(',')}).then(res=>{
+                        if(res.data.code === 200){
+                            setSongs([...res.data.songs])
+                            setLoading(false)
+                        }
+                    })
                 }
             })
         }
-    },[ids])
+        globalObj.user.setUser(localStorage.getItem('userInfo'))
+    },[])
     return <div className="love">
         <Row>
             <Button status='danger' type='text' onClick={()=>{
