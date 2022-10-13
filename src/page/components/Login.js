@@ -80,7 +80,7 @@ function Login(props){
             }
         }}>
             <TabPane title="验证码登录" key={1}>
-                <Form 
+                {/* <Form 
                     form = {form} 
                     autoComplete='off'
                     validateMessages={{
@@ -90,7 +90,6 @@ function Login(props){
                         } 
                     }}
                 >
-                    {/* <Form.Item style={{justifyContent:'center', marginBottom:'0px'}} > */}
                      <Row>
                         <Col span={24}>
                             <Form.Item 
@@ -114,7 +113,6 @@ function Login(props){
                         </Col>
                      </Row>
 
-                    {/* </Form.Item> */}
                     <Form.Item style={{justifyContent:'center', margin:0}} >
                         <Row>
                             <Col span={18}>
@@ -186,7 +184,7 @@ function Login(props){
                             登录
                         </Button>
                     </Form.Item>
-                </Form>
+                </Form> */}
             </TabPane>
             <TabPane style={{display:'flex', flexDirection:'column', alignContent:'space-around', justifyContent:'center'}} title="二维码（偶尔）" key={0}>
                 <div onClick={()=>{
