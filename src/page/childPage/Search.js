@@ -108,6 +108,7 @@ function Search(){
                     }}
                     render={(item, idx)=><List.Item key={idx}>
                         <MusicBox
+                            index={idx}
                             {...item}
                         />
                     </List.Item> 

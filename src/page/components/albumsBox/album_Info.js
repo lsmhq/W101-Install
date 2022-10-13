@@ -37,7 +37,7 @@ function AlbumInfo(props){
             dataSource={info}
             noDataElement={<></>}
             render={(item, idx) => {
-                return <List.Item key={idx}><MusicBox grid={[3, 10, 4, 4]} {...item}/></List.Item> 
+                return <List.Item key={idx}><MusicBox index={idx} grid={[3, 10, 4, 4]} {...item}/></List.Item> 
             }}
         />
     </div>

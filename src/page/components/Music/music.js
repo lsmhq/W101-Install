@@ -13,7 +13,7 @@ let songId = 0
 function MusicBox(props){
     let globalObj = useContext(globalData)
     // 歌名、id、歌手、发布日期、时长
-    let {name, id, ar, dt, grid = []} = props
+    let {name, id, ar, dt, grid = [], index} = props
     return <Row id={`song${id}`} style={{color:globalObj.current.currentSong*1 === id ? 'red' : ''}}  onClick={(e)=>{
             e.stopPropagation()
             console.log('歌曲id-->', id)
@@ -36,6 +36,7 @@ function MusicBox(props){
                           }).then(res=>{
                               if(res.data.success === true && res.data.message === 'ok'){
                                     globalObj.current.setCurrentSong(id)
+                                    globalObj.songIndex.setSongIndex(index)
                                     localStorage.setItem('songId', id)
                                     globalObj.song.setSong({...props})
                               }else{
@@ -65,6 +66,7 @@ function MusicBox(props){
                       }).then(res=>{
                           if(res.data.success === true && res.data.message === 'ok'){
                               globalObj.current.setCurrentSong(id)
+                              globalObj.songIndex.setSongIndex(index)
                               localStorage.setItem('songId', id)
                               globalObj.song.setSong({...props})
                           }else{

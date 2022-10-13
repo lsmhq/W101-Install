@@ -26,13 +26,13 @@ Notification.config({
 let isDown = false;  // 鼠标状态
 let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
-let currentSongIndex = 0
+var value
 function Main(props){
     let {login} = props
     let [percent, setPercent] = useState(0) // 进度百分比
     // let [news, setNews] = useState([]) // 新闻
     // let [activity, setActivity] = useState([])  // 活动
-    // let [msgHeight, setHeight] = useState('95%') // 弃用高度
+    // let [msgHeight, setHeght] = useState('95%') // 弃用高度
     let [current, setCurrent] = useState(0)  // 当前进度
     let [total, setTotal] = useState(0) // 总进度
     let [settingShow, setSetShow] = useState(false)
@@ -45,34 +45,42 @@ function Main(props){
     let [lyric_fy, setLyric_fy] = useState('')
     let [lyric_rm, setLyric_rm] = useState('')
     let [keyword, setKeyWord] = useState('')
+    let [songIndex, setSongIndex] = useState(0)
     let [user, setUser] = useState(JSON.parse(localStorage.getItem('userInfo')))
-    let value = {
+    value = {
         current:{
             currentSong, setCurrentSong
         },
-        currentSongIndex,
+        songIndex:{
+            songIndex, setSongIndex, getSongIndex:()=>{
+                return songIndex
+            }
+        },
         currentList:{
-            currentList, setCurrentList
+            currentList, setCurrentList, getCurrentList:()=>{
+                return currentList
+            }
         },
         likeList:{
-            likeList, setLikeList
-        },
-        progress:{
-            current, 
-            setCurrent, 
-            total, 
-            setTotal
+            likeList, setLikeList, getLikeList:()=>{
+                return likeList
+            }
         },
         song:{
-            song, setSong
+            song, setSong, getSong:()=>{
+                return song
+            }
         },
         keyword:{
-            keyword, setKeyWord
+            keyword, setKeyWord, getKeyword:()=>keyword
         },
         user:{
-            user, setUser
+            user, setUser, getUser:()=>user
         }
     }
+    useEffect(()=>{
+        console.log('songIndex', songIndex)
+    },[songIndex])
     useEffect(() => {  
         // 拖拽
         drag()
@@ -103,7 +111,7 @@ function Main(props){
         if(localStorage.getItem('songId')){
             setCurrentSong(localStorage.getItem('songId'))
         }
-        
+        getLike()
         return () => {
             // 注销
             destroy()
@@ -143,6 +151,18 @@ function Main(props){
     function resize(){
         window.onresize = ()=>{
             // setHeight(window.screen.height - 40 + 'px')
+        }
+    }
+    function getLike(){
+        let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+        if(userInfo){
+            api.getLikeList({uid:userInfo.userId}).then(res=>{
+                console.log(res.data)
+                if(res.data.code === 200){
+                    setLikeList([...res.data.ids])
+                    setCurrentList([...res.data.ids])
+                }
+            })
         }
     }
     function destroy(){
@@ -240,9 +260,11 @@ function Main(props){
             </div>
             <div className='footer'>
                 <Audio 
-                    src={songUrl} 
-                    song={song}
-                    lyric={{
+                    src = {songUrl} 
+                    currentList = {currentList}
+                    songIndex = {songIndex}
+                    song = {song}
+                    lyric = {{
                         lyric_old: lyric,
                         lyric_fy,
                         lyric_rm

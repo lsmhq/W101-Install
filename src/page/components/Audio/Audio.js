@@ -9,7 +9,7 @@ import { formatSeconds, formatSecondsV2 } from '../../util/util';
 let { Row, Col } = Grid
 let timer = null, index, oldIndex
 function Audio(props){
-    let { src, song, lyric } = props
+    let { src, song, lyric, songIndex } = props
     let [paused, setPaused] = useState()
     let [current, setCurrent] = useState(0)  // 当前进度
     let [total, setTotal] = useState(0) // 总进度
@@ -23,8 +23,8 @@ function Audio(props){
     let [bgShow, setBgShow] = useState(false) // 背景
     let [showFy, setFyShow] = useState(JSON.parse(localStorage.getItem('showFy')) || false) // 翻译显示
     let [showRom, setRomShow] = useState(JSON.parse(localStorage.getItem('showRom')) || false) // 发音显示
-    let [playType, setPlayType] = useState(0) // 0 单曲循环  1 随机  2 顺序  3 心动
-    let [wordType, setWordType] = useState(0) // 0 单曲循环  1 随机  2 顺序  3 心动
+    let [playType, setPlayType] = useState(localStorage.getItem('playType') * 1) // 0 单曲循环  1 随机  2 顺序  3 心动
+    let [wordType, setWordType] = useState(localStorage.getItem('wordType') * 1) // 0 单曲循环  1 随机  2 顺序  3 心动
     // let [sounds, setSounds] = useState() // 音量
     useEffect(()=>{
         // console.log(lyric)
@@ -56,6 +56,9 @@ function Audio(props){
         }
     },[lyric])
     useEffect(()=>{
+        localStorage.setItem('playType', playType)
+    },[playType])
+    useEffect(()=>{
         if(audio.current){
             setPaused(audio.current.paused)
             audio.current.addEventListener('play', ()=>{
@@ -75,7 +78,7 @@ function Audio(props){
             })
             
             audio.current.addEventListener('ended', ()=>{
-                // console.log('end')
+                console.log('end')
                 changeSong()
             })
         }
@@ -102,31 +105,87 @@ function Audio(props){
         }
         // console.log(current)
     },[current])
+    useEffect(()=>{
+        localStorage.setItem('wordType', wordType)
+        localStorage.setItem('showFy', showFy)
+        localStorage.setItem('showRom', showRom)
+    },[wordType, showFy, showRom])
     function changeSong(){
-        let index = Math.floor((Math.random() * globalObj.currentList.currentList.length));
-        // 判断是否有版权
-        api.checkMusic({
-          id: globalObj.currentList.currentList[index]
-        }).then(res=>{
-            if(res.data.success === true && res.data.message === 'ok'){
-                globalObj.current.setCurrentSong(globalObj.currentList.currentList[index])
-                document.getElementById(`song${globalObj.currentList.currentList[index]}`)?.scrollIntoView(
-                    {
-                        behavior: "smooth", 
-                        block: "center", 
-                        inline: "nearest"
+        // 0 单曲循环  1 随机  2 顺序  3 心动
+        console.log(playType)
+        if(playType === 0){
+            audio.current.currentTime = 0
+            audio.current.play()
+        }
+        if(playType === 1){
+            
+            if(globalObj.currentList.getCurrentList().length>0){
+                songIndex = Math.floor((Math.random() * globalObj.currentList.getCurrentList().length));
+                // console.log(globalObj.currentList)
+                // 判断是否有版权
+                api.checkMusic({
+                  id: globalObj.currentList.getCurrentList()[songIndex]
+                }).then(res=>{
+                    if(res.data.success === true && res.data.message === 'ok'){
+                        globalObj.current.setCurrentSong(globalObj.currentList.getCurrentList()[songIndex])
+                        document.getElementById(`song${globalObj.currentList.getCurrentList()[songIndex]}`)?.scrollIntoView(
+                            {
+                                behavior: "smooth", 
+                                block: "center", 
+                                inline: "nearest"
+                            }
+                        )
+                        // globalObj.song.setSong(globalObj.likeList.likeList[index])
+                        setPaused(audio.current.paused)
+                        setBgShow(false)
+                    }else{
+                        Message.error({
+                            style: {top:'10px'},
+                            content: '暂无版权, 自动播放下一首',
+                            duration: 1000,
+                            onClose: changeSong
+                        })
                     }
-                )
-                // globalObj.song.setSong(globalObj.likeList.likeList[index])
-                setPaused(audio.current.paused)
-                setBgShow(false)
-            }else{
-                Message.error({
-                    style:{top:'10px'},
-                    content:'暂无版权'
                 })
             }
-        })
+        }
+        if(playType === 2){
+            console.log(globalObj.songIndex.getSongIndex())
+            console.log(globalObj.currentList.getCurrentList())
+            if(!songIndex) songIndex = 0
+            if(songIndex === globalObj.currentList.getCurrentList().length - 1) songIndex = 0
+            if(songIndex!==undefined && globalObj.currentList.getCurrentList().length){
+                songIndex++
+                globalObj.songIndex.setSongIndex(songIndex)
+                api.checkMusic({
+                    id: globalObj.currentList.getCurrentList()[songIndex]
+                  }).then(res=>{
+                      if(res.data.success === true && res.data.message === 'ok'){
+                          globalObj.current.setCurrentSong(globalObj.currentList.getCurrentList()[songIndex])
+                          document.getElementById(`song${globalObj.currentList.getCurrentList()[songIndex]}`)?.scrollIntoView(
+                              {
+                                  behavior: "smooth", 
+                                  block: "center", 
+                                  inline: "nearest"
+                              }
+                          )
+                          // globalObj.song.setSong(globalObj.likeList.likeList[index])
+                          setPaused(audio.current.paused)
+                          setBgShow(false)
+                      }else{
+                          Message.error({
+                              style: {top:'10px'},
+                              content: '暂无版权, 自动播放下一首',
+                              duration: 1000,
+                              onClose: changeSong
+                          })
+                      }
+                })
+            }
+        }
+        if(playType === 3){
+            // 心动模式
+        }
     }
     return <div className='audio'>
         <div className='audio-controls'>
@@ -232,7 +291,6 @@ function Audio(props){
                     {playType === 3 && <i onClick={()=>{
                         setPlayType(0)
                     }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-huaban animated fast fadeIn'></i>}
-                    
              </div>
         </div>
         <audio ref={audio} autoPlay src={src}/>

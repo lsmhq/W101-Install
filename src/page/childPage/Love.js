@@ -46,7 +46,7 @@ function Love(props){
                 loading={loading}
                 noDataElement={<></>}
                 dataSource={songs}
-                render={(item, index) => <List.Item key={index}><MusicBox {...item}/>
+                render={(item, index) => <List.Item key={index}><MusicBox index={index} {...item}/>
                 </List.Item>}
             />}
             {!globalObj.user.user && <span>请先去登录</span>}
