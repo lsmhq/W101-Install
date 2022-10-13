@@ -1,0 +1,35 @@
+.albums{
+    width: 261px;
+    height: 100px;
+    padding: 5px 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+.albums img{
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+.albums-content{
+    flex: 1;
+    height: 100%;
+    box-sizing: border-box;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.albums-content div{
+    text-overflow: ellipsis;
+    width: 171px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.albumInfo{
+    max-height: 150px;
+    overflow: scroll;
+}
+.alb-footer{
+
+}

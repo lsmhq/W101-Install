@@ -1,10 +1,12 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Avatar, Grid, Button, Message } from '@arco-design/web-react'
 import { api } from "../util/http";
+import globalData from "../context/context";
 const Row = Grid.Row;
 const Col = Grid.Col;
 function UserInfo(props){
     let { close } = props
+    let globalObj = useContext(globalData)
     const [userInfo, setuserInfo] = useState(JSON.parse(sessionStorage.getItem('userInfo')))
     // console.log(userInfo)
     return <div>
@@ -34,7 +36,8 @@ function UserInfo(props){
             <Col style={{textAlign:'center'}} span={24}>
                 <Button style={{width:'100%'}}  onClick={()=>{
                     localStorage.removeItem('cookie')
-                    sessionStorage.clear()
+                    sessionStorage.removeItem('userInfo')
+                    sessionStorage.removeItem('account')
                     api.logout({}).then(res=>{
                         console.log(res)
                         if(res.data.code === 200){
@@ -44,7 +47,10 @@ function UserInfo(props){
                                 style:{top:'20px'},
                                 content:'退出成功',
                                 duration:1000,
-                                onClose:close
+                                onClose:()=>{
+                                    close()
+                                    globalObj.user.setUser(null)
+                                }
                             })
                         }
                     })

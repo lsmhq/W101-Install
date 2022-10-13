@@ -19,7 +19,7 @@ function LeftNav(props){
         };
     }, [])
     return <div className='right-nav'>
-        <Icon
+        {/* <Icon
             Child={<IconCompass className='icon-child'/>}
             className={`${active===0?'icon-active':''}`}
             onClick={()=>{
@@ -28,7 +28,7 @@ function LeftNav(props){
             }}
             tips="首页"
             content="首页"
-        />
+        /> */}
         <Icon
             Child={<IconFire className={`icon-child`}/>}
             className={`${active===3?'icon-active':''}`}
@@ -40,7 +40,7 @@ function LeftNav(props){
             // color="#27c346"
             content="推荐"
         />
-        <Icon
+        {/* <Icon
             Child={<IconMusic className={`icon-child`}/>}
             className={`${active===1?'icon-active':''}`}
             onClick={()=>{
@@ -49,8 +49,8 @@ function LeftNav(props){
             }}
             tips="歌单"
             content="歌单"
-        />
-        <Icon
+        /> */}
+        {/* <Icon
             Child={<IconSearch className={`icon-child`}/>}
             className={`${active===2?'icon-active':''}`}
             onClick={()=>{
@@ -60,7 +60,7 @@ function LeftNav(props){
             // textStyle={{fontSize:'12px'}}
             tips="发现"
             content="发现"
-        />
+        /> */}
         <div className='nav-bottom'>
             <Icon
                 Child={<IconHeart className={`icon-child`}/>}

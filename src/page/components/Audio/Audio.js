@@ -23,6 +23,8 @@ function Audio(props){
     let [bgShow, setBgShow] = useState(false) // 背景
     let [showFy, setFyShow] = useState(JSON.parse(localStorage.getItem('showFy')) || false) // 翻译显示
     let [showRom, setRomShow] = useState(JSON.parse(localStorage.getItem('showRom')) || false) // 发音显示
+    let [playType, setPlayType] = useState(0) // 0 单曲循环  1 随机  2 顺序  3 心动
+    let [wordType, setWordType] = useState(0) // 0 单曲循环  1 随机  2 顺序  3 心动
     // let [sounds, setSounds] = useState() // 音量
     useEffect(()=>{
         // console.log(lyric)
@@ -101,14 +103,14 @@ function Audio(props){
         // console.log(current)
     },[current])
     function changeSong(){
-        let index = Math.floor((Math.random() * globalObj.likeList.likeList.length));
+        let index = Math.floor((Math.random() * globalObj.currentList.currentList.length));
         // 判断是否有版权
         api.checkMusic({
-          id: globalObj.likeList.likeList[index]
+          id: globalObj.currentList.currentList[index]
         }).then(res=>{
             if(res.data.success === true && res.data.message === 'ok'){
-                globalObj.current.setCurrentSong(globalObj.likeList.likeList[index])
-                document.getElementById(`song${globalObj.likeList.likeList[index]}`)?.scrollIntoView(
+                globalObj.current.setCurrentSong(globalObj.currentList.currentList[index])
+                document.getElementById(`song${globalObj.currentList.currentList[index]}`)?.scrollIntoView(
                     {
                         behavior: "smooth", 
                         block: "center", 
@@ -201,20 +203,36 @@ function Audio(props){
         </div>
         <div className='audio-setting'>
              <div className='audio-setting-item'>
-                  译:
-                  <Switch title='翻译' size='small' checked={showFy} onChange={(val)=>{
-                      setFyShow(val)
-                      localStorage.setItem('showFy', val)
-                    }}
-                  />
+                {wordType === 0 && <span onClick={()=>{
+                    setWordType(1)
+                    setFyShow(true)
+                    setRomShow(false)
+                }}>译</span>}
+                {wordType === 1 && <span onClick={()=>{
+                    setWordType(2)
+                    setRomShow(true)
+                    setFyShow(false)
+                }}>音</span>}
+                {wordType === 2 && <span onClick={()=>{
+                    setWordType(0)
+                    setFyShow(true)
+                    setRomShow(true)
+                }}>译+音</span>}
              </div>
              <div className='audio-setting-item'>
-                  音:
-                  <Switch title='翻译' size='small' checked={showRom} onChange={(val)=>{
-                      setRomShow(val)
-                      localStorage.setItem('showRom', val)
-                    }}
-                  />
+                    {playType === 0 && <i onClick={()=>{
+                        setPlayType(1)
+                    }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-danqu animated fast fadeIn'></i>}
+                    {playType === 1 && <i onClick={()=>{
+                        setPlayType(2)
+                    }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-suiji animated fast fadeIn'></i>}
+                    {playType === 2 && <i onClick={()=>{
+                        setPlayType(3)
+                    }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-24gl-repeat2 animated fast fadeIn'></i>}
+                    {playType === 3 && <i onClick={()=>{
+                        setPlayType(0)
+                    }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-huaban animated fast fadeIn'></i>}
+                    
              </div>
         </div>
         <audio ref={audio} autoPlay src={src}/>

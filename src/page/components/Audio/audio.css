@@ -150,6 +150,7 @@
 }
 .audio-setting-item{
     width: 100%;
+    text-align: center;
 }
 @keyframes scan {
     0% {

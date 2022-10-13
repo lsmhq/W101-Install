@@ -26,6 +26,7 @@ Notification.config({
 let isDown = false;  // 鼠标状态
 let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
+let currentSongIndex = 0
 function Main(props){
     let {login} = props
     let [percent, setPercent] = useState(0) // 进度百分比
@@ -37,14 +38,21 @@ function Main(props){
     let [settingShow, setSetShow] = useState(false)
     let [currentSong, setCurrentSong] = useState() // 当前播放
     let [likeList, setLikeList] = useState([]) // 喜欢列表
+    let [currentList, setCurrentList] = useState([]) // 喜欢列表
     let [songUrl, setSongUrl] = useState('')
     let [song, setSong] = useState({})
     let [lyric, setLyric] = useState('')
     let [lyric_fy, setLyric_fy] = useState('')
     let [lyric_rm, setLyric_rm] = useState('')
+    let [keyword, setKeyWord] = useState('')
+    let [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userInfo')))
     let value = {
         current:{
             currentSong, setCurrentSong
+        },
+        currentSongIndex,
+        currentList:{
+            currentList, setCurrentList
         },
         likeList:{
             likeList, setLikeList
@@ -57,6 +65,12 @@ function Main(props){
         },
         song:{
             song, setSong
+        },
+        keyword:{
+            keyword, setKeyWord
+        },
+        user:{
+            user, setUser
         }
     }
     useEffect(() => {  
@@ -86,6 +100,9 @@ function Main(props){
         // dark()
 
         window.electronAPI.ready()
+        if(localStorage.getItem('songId')){
+            setCurrentSong(localStorage.getItem('songId'))
+        }
         return () => {
             // 注销
             destroy()
@@ -94,28 +111,28 @@ function Main(props){
     }, [])
     useEffect(() => {
         if(currentSong){
-
-                    api.getSongs({ids:currentSong}).then(res=>{
+            api.getSongs({ids:currentSong}).then(res=>{
+                // console.log(res.data)
+                localStorage.setItem('songId', currentSong)
+                if(res.data.code === 200){
+                    setSong(res.data.songs[0])
+                    api.getSongsUrl({id:currentSong}).then(res=>{
                         // console.log(res.data)
                         if(res.data.code === 200){
-                            setSong(res.data.songs[0])
-                            api.getSongsUrl({id:currentSong}).then(res=>{
-                                // console.log(res.data)
-                                if(res.data.code === 200){
-                                    setSongUrl(res.data.data[0].url)
-                                    setTotal(res.data.data[0].time)
-                                }
-                            })
-                            api.getLyric({id:currentSong}).then(res=>{
-                                // console.log(res.data)
-                                if(res.data.code === 200){
-                                    setLyric(res.data.lrc.lyric)
-                                    setLyric_fy(res.data.tlyric.lyric)
-                                    setLyric_rm(res.data.romalrc.lyric)
-                                }
-                            })
+                            setSongUrl(res.data.data[0].url)
+                            setTotal(res.data.data[0].time)
                         }
                     })
+                    api.getLyric({id:currentSong}).then(res=>{
+                        // console.log(res.data)
+                        if(res.data.code === 200){
+                            setLyric(res.data.lrc.lyric)
+                            setLyric_fy(res.data.tlyric.lyric)
+                            setLyric_rm(res.data.romalrc.lyric)
+                        }
+                    })
+                }
+            })
         }
     }, [currentSong])
     useEffect(()=>{
@@ -157,6 +174,7 @@ function Main(props){
         })
     }
     return <div className="main">
+        <globalData.Provider value={value}>
         <div className='nav' 
             onMouseDown={(e)=>{
                 e.stopPropagation()
@@ -212,7 +230,7 @@ function Main(props){
                 </div>
             </div>
         </div>
-        <globalData.Provider value={value}>
+        
             <div className='body'>
                 <HashRouter>
                     <LeftNav/>

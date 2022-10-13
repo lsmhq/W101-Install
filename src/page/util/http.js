@@ -107,6 +107,10 @@ let api = {
     suggest: params => http.get('/search/suggest?type=mobile', params), // 搜索建议
     heartbeatSongs: params => http.get('/playmode/intelligence/list', params), //心动模式
     getComments: params => http.get('/comment/music', params), // 获取评论
+    getAlbum: params => http.get('/album', params), // 获取专辑
+    getPlayList: params=>http.get('/playlist/detail', params), // 获取歌单
+    getPlayListAll: params=>http.get('/playlist/track/all', params), // 获取歌单
+
   }
 export {
     http, api
