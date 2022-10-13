@@ -26,6 +26,7 @@ function createWindow () {
     frame: false,
     resizable: false,
     transparent: true, 
+
     // backgroundColor:'#282b30',
     focusable:true,
     show:false,
