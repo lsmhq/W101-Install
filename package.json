@@ -5,7 +5,7 @@
     "name": "lsmhq",
     "email": "784433957@qq.com"
   },
-  "description": "Wizard 启动器",
+  "description": "网易云音乐",
   "private": true,
   "homepage": "./",
   "main": "./app/electron.js",
@@ -91,8 +91,8 @@
     "dist-mac": "electron-builder --mac"
   },
   "build": {
-    "productName": "WyMusic",
-    "appId": "WyMusic",
+    "productName": "网易云音乐",
+    "appId": "wy-music",
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
@@ -105,7 +105,7 @@
       "url": "http://101.43.216.253:3001/file/subataMusic"
     },
     "win": {
-      "icon": "app/images/logo.ico"
+      "icon": "app/images/app-favicon.ico"
     },
     "directories": {
       "output": "app/release"

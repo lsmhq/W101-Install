@@ -1,4 +1,4 @@
-import { Button, Drawer, Grid, Message, Slider, Tabs, Tooltip } from '@arco-design/web-react'
+import { Button, Drawer, Grid, Message, Slider, Switch, Tabs, Tooltip } from '@arco-design/web-react'
 import {  IconPlayArrow, IconPause, IconSkipNext, IconSound, IconMute } from '@arco-design/web-react/icon';
 import { api } from '../../util/http';
 import './audio.css'
@@ -21,9 +21,9 @@ function Audio(props){
     let [wordActive, setWordActive] = useState([]) // 激活index
     let globalObj = useContext(globalData) // 上下文
     let [bgShow, setBgShow] = useState(false) // 背景
-    let [showFy, setFyShow] = useState(false) // 翻译显示
-    let [showRom, setRomShow] = useState(false) // 发音显示
-    let [sounds, setSounds] = useState() // 音量
+    let [showFy, setFyShow] = useState(JSON.parse(localStorage.getItem('showFy')) || false) // 翻译显示
+    let [showRom, setRomShow] = useState(JSON.parse(localStorage.getItem('showRom')) || false) // 发音显示
+    // let [sounds, setSounds] = useState() // 音量
     useEffect(()=>{
         // console.log(lyric)
         if(lyric.lyric_old){
@@ -201,7 +201,20 @@ function Audio(props){
         </div>
         <div className='audio-setting'>
              <div className='audio-setting-item'>
-                
+                  译:
+                  <Switch title='翻译' size='small' checked={showFy} onChange={(val)=>{
+                      setFyShow(val)
+                      localStorage.setItem('showFy', val)
+                    }}
+                  />
+             </div>
+             <div className='audio-setting-item'>
+                  音:
+                  <Switch title='翻译' size='small' checked={showRom} onChange={(val)=>{
+                      setRomShow(val)
+                      localStorage.setItem('showRom', val)
+                    }}
+                  />
              </div>
         </div>
         <audio ref={audio} autoPlay src={src}/>
@@ -249,8 +262,8 @@ function Audio(props){
                                     <Tooltip position='right' content={lyricTime[idx]?.split('[')[1].split(']')[0]}>
                                         {ly.old}
                                     </Tooltip>
-                                    {showFy && ly.rm &&<><br/>{ly.rm}</> }
-                                    {showRom && ly.fy &&<><br/>{ly.fy}</> }
+                                    {showRom && ly.rm &&<><br/>{ly.rm}</> }
+                                    {showFy && ly.fy &&<><br/>{ly.fy}</> }
                                 </div>
                             })
                         }
