@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { api } from "../util/http"
-import { List, Grid, Button } from '@arco-design/web-react'
+import { List, Grid, Button, Message } from '@arco-design/web-react'
 import './css/love.css'
 import MusicBox from "../components/Music/music";
 import { useContext } from 'react';
@@ -83,11 +83,24 @@ function Love(){
                             count++;
                             if (count === 2) {
                               // console.log('ble')
-                              globalObj.current.setCurrentSong(id)
-                              globalObj.song.setSong(item)
+                              // 判断是否有版权
+                              api.checkMusic({
+                                id
+                              }).then(res=>{
+                                  if(res.data.success === true && res.data.message === 'ok'){
+                                      globalObj.current.setCurrentSong(id)
+                                      globalObj.song.setSong(item)
+                                  }else{
+                                      Message.error({
+                                          style:{top:'10px'},
+                                          content:'暂无版权'
+                                      })
+                                  }
+                              })
                               count = 0;
                               clearTimeout(timer);
                               timer = null;
+                              
                             }
                         }
                     }} 
@@ -95,7 +108,7 @@ function Love(){
                         let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
                         if(userInfo){
                             api.getLikeList({uid:userInfo.userId}).then(res=>{
-                                console.log(res.data)
+                                // console.log(res.data)
                                 if(res.data.code === 200){
                                     globalObj.likeList.setLikeList([...res.data.ids])
                                 }

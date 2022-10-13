@@ -134,10 +134,10 @@ function createWindow () {
     }
     // let img = nativeImage.createFromPath()
     let trayIcon = path.join(__dirname, 'images');//app是选取的目录
-  
+  if(!tray){
       // appTray = new Tray();//app.ico是app目录下的ico文件
-    tray = new Tray(path.join(trayIcon, 'favicon.ico'))
-    
+      tray = new Tray(path.join(trayIcon, 'favicon.ico'))
+  }
     // console.log(trayIcon)
     let config = [
       {label: "更多", submenu:[
@@ -148,7 +148,7 @@ function createWindow () {
             appPath = appPath.split('\\')
             appPath.pop()
             console.log(appPath.join('\\'))
-            let dirPath = `${appPath.join('\\')}\\Uninstall Subata.exe`
+            let dirPath = `${appPath.join('\\')}\\Uninstall Wymusic.exe`
             shell.openPath(dirPath)
           }
         }
@@ -164,28 +164,28 @@ function createWindow () {
       mainWindow && mainWindow.show()
       // mainWindow && mainWindow.focus()
     })
-      // 改变补丁
-      ipcMain.on('changeBd', (e, type)=>{
-        config = [
-          {label: "更多", submenu:[
-            {
-              label:'卸载',
-              click:()=>{
-                let appPath = app.getPath('exe')
-                appPath = appPath.split('\\')
-                appPath.pop()
-                console.log(appPath.join('\\'))
-                let dirPath = `${appPath.join('\\')}\\Uninstall.exe`
-                shell.openPath(dirPath)
-              }
+    // 改变补丁
+    ipcMain.on('changeBd', (e, type)=>{
+      config = [
+        {label: "更多", submenu:[
+          {
+            label:'卸载',
+            click:()=>{
+              let appPath = app.getPath('exe')
+              appPath = appPath.split('\\')
+              appPath.pop()
+              console.log(appPath.join('\\'))
+              let dirPath = `${appPath.join('\\')}\\Uninstall.exe`
+              shell.openPath(dirPath)
             }
-          ] },
-          {label: "退出", click:()=>{
-            mainWindow && mainWindow.close()
-          }}
-        ]
-        tray.setContextMenu(new Menu.buildFromTemplate(config))
-      })
+          }
+        ] },
+        {label: "退出", click:()=>{
+          mainWindow && mainWindow.close()
+        }}
+      ]
+      tray.setContextMenu(new Menu.buildFromTemplate(config))
+    })
   })
 }
 

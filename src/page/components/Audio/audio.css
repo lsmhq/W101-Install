@@ -45,8 +45,8 @@
     box-sizing: border-box;
 }
 .audio-time{
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     padding: 0 5px;
     box-sizing: border-box;
 }
@@ -117,9 +117,10 @@
     top: 0;
     left: 0;
     transition: all 0.1s ease-in;
-    filter: blur(5px) brightness(0.4);
+    filter: blur(5px) brightness(0.3);
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
 }
 .audio-more-img{
     width: 200px;
@@ -140,7 +141,17 @@
     color: rgb(255, 106, 106);
     text-shadow: 0 0 4px rgb(0, 0, 0),0 0 4px rgb(40, 40, 40)0 4px rgb(0, 0, 0),0 0 4px rgb(0, 0, 0)
 }
-
+.audio-setting{
+    width: 100px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.audio-setting-item{
+    height: 20px;
+    width: 20px;
+}
 @keyframes scan {
     0% {
         background-size:0 100%;

@@ -41,6 +41,7 @@ function Main(props){
     let [song, setSong] = useState({})
     let [lyric, setLyric] = useState('')
     let [lyric_fy, setLyric_fy] = useState('')
+    let [lyric_rm, setLyric_rm] = useState('')
     let value = {
         current:{
             currentSong, setCurrentSong
@@ -93,10 +94,7 @@ function Main(props){
     }, [])
     useEffect(() => {
         if(currentSong){
-            api.checkMusic({
-                id: currentSong
-            }).then(res=>{
-                if(res.data.success === true && res.data.message === 'ok'){
+
                     api.getSongs({ids:currentSong}).then(res=>{
                         // console.log(res.data)
                         if(res.data.code === 200){
@@ -112,18 +110,12 @@ function Main(props){
                                 // console.log(res.data)
                                 if(res.data.code === 200){
                                     setLyric(res.data.lrc.lyric)
-                                    setLyric_fy(res.data.romalrc.lyric)
+                                    setLyric_fy(res.data.tlyric.lyric)
+                                    setLyric_rm(res.data.romalrc.lyric)
                                 }
                             })
                         }
                     })
-                }else{
-                    Message.error({
-                        style:{top:'10px'},
-                        content:'暂无版权'
-                    })
-                }
-            })
         }
     }, [currentSong])
     useEffect(()=>{
@@ -233,7 +225,8 @@ function Main(props){
                     song={song}
                     lyric={{
                         lyric_old: lyric,
-                        lyric_fy
+                        lyric_fy,
+                        lyric_rm
                     }}
                 />
             </div>

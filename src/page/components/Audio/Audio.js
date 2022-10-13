@@ -1,5 +1,5 @@
-import { Button, Drawer, Grid, Tabs, Tooltip } from '@arco-design/web-react'
-import {  IconPlayArrow, IconPause, IconSkipNext } from '@arco-design/web-react/icon';
+import { Button, Drawer, Grid, Message, Slider, Tabs, Tooltip } from '@arco-design/web-react'
+import {  IconPlayArrow, IconPause, IconSkipNext, IconSound, IconMute } from '@arco-design/web-react/icon';
 import { api } from '../../util/http';
 import './audio.css'
 import Icon from '../Icon'
@@ -15,25 +15,37 @@ function Audio(props){
     let [total, setTotal] = useState(0) // 总进度
     let [buffered, setBuffered] = useState(0) // 缓存进度
     let [drawer, setDrawer] = useState(false) // 歌曲详情
-    let audio = useRef(null)
-    let [lyric_audio, setLyric] = useState([])
-    let [lyricTime, setTime] = useState([])
-    let [wordActive, setWordActive] = useState([])
-    let globalObj = useContext(globalData)
+    let audio = useRef(null)  // audio
+    let [lyric_audio, setLyric] = useState([]) // 歌词
+    let [lyricTime, setTime] = useState([]) // 歌词时间
+    let [wordActive, setWordActive] = useState([]) // 激活index
+    let globalObj = useContext(globalData) // 上下文
+    let [bgShow, setBgShow] = useState(false) // 背景
+    let [showFy, setFyShow] = useState(false) // 翻译显示
+    let [showRom, setRomShow] = useState(false) // 发音显示
+    let [sounds, setSounds] = useState() // 音量
     useEffect(()=>{
-        console.log(lyric)
+        // console.log(lyric)
         if(lyric.lyric_old){
-            let { lyric_old, lyric_fy } = lyric
+            let { lyric_old, lyric_fy, lyric_rm } = lyric
             let lyricArr = []
             let time = []
             let _lyric = lyric_old.replaceAll('\n', '<br/>').split('<br/>')
             let _lyric_fy = lyric_fy.replaceAll('\n', '<br/>').split('<br/>')
+            let _lyric_rm = lyric_rm.replaceAll('\n', '<br/>').split('<br/>')
             _lyric.forEach((ly, idx)=>{
-
-                lyricArr.push({
+                let obj = {
                     old:ly.split(']')[1],
-                    fy:_lyric_fy[idx]?.split(']')[1]
-                })
+                }
+                let fy = _lyric_fy.find(lyy=>lyy?.split(']')[0] === ly.split(']')[0])
+                if(fy){
+                    obj.fy = fy?.split(']')[1]
+                }
+                let rom = _lyric_rm.find(lyy=>lyy?.split(']')[0] === ly.split(']')[0])
+                if(fy){
+                    obj.rm = rom?.split(']')[1]
+                }
+                lyricArr.push(obj)
                 time.push(ly.match(/\[(.+?)\]/g) && ly.match(/\[(.+?)\]/g).length > 0 && ly.match(/\[(.+?)\]/g)[0])
             })
             setLyric([...lyricArr])
@@ -48,31 +60,21 @@ function Audio(props){
                 audio.current.play()
                 setPaused(audio.current.paused)
                 setTotal(audio.current.duration)
-                clearInterval(timer)
-                timer = setInterval(()=>{
-                    let timeRages = audio.current.buffered;
-                    // 获取以缓存的时间
-                    let timeBuffered = timeRages.end(timeRages.length - 1);
-                    setBuffered(timeBuffered)
-                }, 500)
+                setBgShow(true)
             })
             audio.current.addEventListener('timeupdate',()=>{
                 setCurrent(audio.current.currentTime)
             })
+            audio.current.addEventListener('progress',(e)=>{
+                let timeRages = audio.current.buffered;
+                // 获取以缓存的时间
+                let timeBuffered = timeRages.end(timeRages.length - 1);
+                setBuffered(timeBuffered)
+            })
+            
             audio.current.addEventListener('ended', ()=>{
                 // console.log('end')
-                clearInterval(timer)
-                let index = Math.floor((Math.random() * globalObj.likeList.likeList.length));
-                globalObj.current.setCurrentSong(globalObj.likeList.likeList[index])
-                document.getElementById(`song${globalObj.likeList.likeList[index]}`).scrollIntoView(
-                    {
-                        behavior: "smooth", 
-                        block: "center", 
-                        inline: "nearest"
-                    }
-                )
-                // globalObj.song.setSong(globalObj.likeList.likeList[index])
-                setPaused(audio.current.paused)
+                changeSong()
             })
         }
     }, [audio])
@@ -81,6 +83,7 @@ function Audio(props){
             document.getElementById(`word-${lyricTime[index]}`)?.scrollIntoView({
                 behavior:'smooth', block:'center'
             })
+            setBgShow(true)
         }
     },[drawer])
     useEffect(()=>{
@@ -97,6 +100,32 @@ function Audio(props){
         }
         // console.log(current)
     },[current])
+    function changeSong(){
+        let index = Math.floor((Math.random() * globalObj.likeList.likeList.length));
+        // 判断是否有版权
+        api.checkMusic({
+          id: globalObj.likeList.likeList[index]
+        }).then(res=>{
+            if(res.data.success === true && res.data.message === 'ok'){
+                globalObj.current.setCurrentSong(globalObj.likeList.likeList[index])
+                document.getElementById(`song${globalObj.likeList.likeList[index]}`)?.scrollIntoView(
+                    {
+                        behavior: "smooth", 
+                        block: "center", 
+                        inline: "nearest"
+                    }
+                )
+                // globalObj.song.setSong(globalObj.likeList.likeList[index])
+                setPaused(audio.current.paused)
+                setBgShow(false)
+            }else{
+                Message.error({
+                    style:{top:'10px'},
+                    content:'暂无版权'
+                })
+            }
+        })
+    }
     return <div className='audio'>
         <div className='audio-controls'>
             <div className='audio-controls-item'>
@@ -130,17 +159,7 @@ function Audio(props){
                 <Icon
                     Child={<IconSkipNext className='audio-icon'/>}
                     onClick={()=>{
-                        let index = Math.floor((Math.random() * globalObj.likeList.likeList.length));
-                        globalObj.current.setCurrentSong(globalObj.likeList.likeList[index])
-                        document.getElementById(`song${globalObj.likeList.likeList[index]}`).scrollIntoView(
-                            {
-                                behavior: "smooth", 
-                                block: "center", 
-                                inline: "nearest"
-                            }
-                        )
-                        // globalObj.song.setSong(globalObj.likeList.likeList[index])
-                        setPaused(audio.current.paused)
+                        changeSong()
                     }}
                     // textStyle={{fontSize:'12px'}}
                     content=""
@@ -152,33 +171,38 @@ function Audio(props){
                  {song.name}-{song.ar?.map(ar=>ar.name).join(',')}
             </div>
             <div className='audio-total' onMouseDown={(e)=>{
-                console.log(e)
+                // console.log(e)
                 e.stopPropagation()
             }}>
                 <div style={{
                     width: `${(buffered / total) * 100}%`
                 }} className='audio-getCurrent' onMouseDown={(e)=>{
-                    console.log(e)
+                    // console.log(e)
                     e.stopPropagation()
                 }}></div>
                 <div style={{
                     width: `${(current / total) * 100}%`
                 }} className='audio-current' onMouseDown={(e)=>{
-                    console.log(e)
+                    // console.log(e)
                     e.stopPropagation()
                 }}></div>
                 <div style={{
                     left: current<=0?`${(current / total) * 100}%`:`${(current / total) * 100 - 1}%`
                 }} className='audio-flag' onMouseDown={(e)=>{
-                    console.log(e)
+                    // console.log(e)
                     e.stopPropagation()
                 }}>
                     <span className='audio-flag-dot'></span>
                 </div>
-                <div className='audio-time'>
-                 {formatSeconds(current)}/{formatSeconds(total)}
-                </div>
             </div>
+            <div className='audio-time'>
+                 {formatSeconds(current)}/{formatSeconds(total)}
+            </div>
+        </div>
+        <div className='audio-setting'>
+             <div className='audio-setting-item'>
+                
+             </div>
         </div>
         <audio ref={audio} autoPlay src={src}/>
         <Drawer
@@ -197,7 +221,7 @@ function Audio(props){
             }}
             footer={null}
             children={<div className='audio-more' >
-                <div className='audio-more-bg' style={{backgroundImage:`url(${song?.al?.picUrl})`, borderRadius:'10px'}}></div>
+                {bgShow && <div className='audio-more-bg animated faster fadeIn' style={{backgroundImage:`url(${song?.al?.picUrl})`, borderRadius:'10px'}}></div>}
                 <Row>
                     <Col className='audio-song-words' span={24}>
                         <div className='empty'></div>
@@ -224,9 +248,9 @@ function Audio(props){
                                 }} id={`word-${lyricTime[idx]}`} className={`song-words ${ wordActive[idx]?'song-words-active':''}`} key={idx}>
                                     <Tooltip position='right' content={lyricTime[idx]?.split('[')[1].split(']')[0]}>
                                         {ly.old}
-                                        {/* <br/> */}
-                                        {/* {ly.fy} */}
                                     </Tooltip>
+                                    {showFy && ly.rm &&<><br/>{ly.rm}</> }
+                                    {showRom && ly.fy &&<><br/>{ly.fy}</> }
                                 </div>
                             })
                         }
