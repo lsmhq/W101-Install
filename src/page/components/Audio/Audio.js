@@ -299,6 +299,7 @@ function Audio(props){
                                     // console.log(formatSeconds(cur))
                                     setCurrent(Number(cur))
                                     audio.current.currentTime = Number(cur)
+                                    audio.current.play()
                                 }} id={`word-${lyricTime[idx]}`} className={`song-words ${ activeIndex === idx?'song-words-active':''}`} key={idx}>
                                     <Tooltip position='right' content={lyricTime[idx]?.split('[')[1].split(']')[0]}>
                                         {ly.old}
