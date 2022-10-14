@@ -48,40 +48,6 @@ function Main(props){
     let [songIndex, setSongIndex] = useState(0)
     let [user, setUser] = useState(JSON.parse(localStorage.getItem('userInfo')))
     let [songListId, setSongListId] = useState(0)
-    value = {
-        current:{
-            currentSong, setCurrentSong, getCurrentSong:() => currentSong
-        },
-        songIndex:{
-            songIndex, setSongIndex, getSongIndex:()=>{
-                return songIndex
-            }
-        },
-        songListId: {
-            songListId, setSongListId, getSongListId:() => songListId
-        },
-        currentList:{
-            currentList, setCurrentList, getCurrentList:()=>{
-                return currentList
-            }
-        },
-        likeList:{
-            likeList, setLikeList, getLikeList:()=>{
-                return likeList
-            }
-        },
-        song:{
-            song, setSong, getSong:()=>{
-                return song
-            }
-        },
-        keyword:{
-            keyword, setKeyWord, getKeyword:()=>keyword
-        },
-        user:{
-            user, setUser, getUser:()=>user
-        }
-    }
     useEffect(()=>{
         console.log('songIndex', songIndex)
     },[songIndex])
@@ -208,7 +174,40 @@ function Main(props){
         })
     }
     return <div className="main">
-        <globalData.Provider value={value}>
+        <globalData.Provider value={{
+        current:{
+            currentSong, setCurrentSong, getCurrentSong:() => currentSong
+        },
+        songIndex:{
+            songIndex, setSongIndex, getSongIndex:()=>{
+                return songIndex
+            }
+        },
+        songListId: {
+            songListId, setSongListId, getSongListId:() => songListId
+        },
+        currentList:{
+            currentList, setCurrentList, getCurrentList:()=>{
+                return currentList
+            }
+        },
+        likeList:{
+            likeList, setLikeList, getLikeList:()=>{
+                return likeList
+            }
+        },
+        song:{
+            song, setSong, getSong:()=>{
+                return song
+            }
+        },
+        keyword:{
+            keyword, setKeyWord, getKeyword:()=>keyword
+        },
+        user:{
+            user, setUser, getUser:()=>user
+        }
+    }}>
         <div className='nav' 
             onMouseDown={(e)=>{
                 e.stopPropagation()
@@ -274,8 +273,6 @@ function Main(props){
             <div className='footer'>
                 <Audio 
                     src = {songUrl} 
-                    currentList = {currentList}
-                    songIndex = {songIndex}
                     song = {song}
                     lyric = {{
                         lyric_old: lyric,
