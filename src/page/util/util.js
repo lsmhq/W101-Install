@@ -103,7 +103,7 @@ function formatSecondsV2(value) {
   let hour = res[0]
   let min = res[1]
   let sec = res[2]
-  let secc = (''+value).split('.')[1]
+  let secc = (''+value).split('.')[1]?.slice(0, 3)
   result = `${hour==='00' ? '': hour + ':'}${min}:${sec}.${secc}`
   return result;
 }

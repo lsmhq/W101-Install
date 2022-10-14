@@ -12,6 +12,7 @@ function Albums(props){
         title={<><span>{name}</span><Button status='danger' type='text' onClick={()=>{
             let ids = songs.map(song=>song.id)
             globalObj.currentList.setCurrentList(ids)
+            globalObj.songListId.setSongListId(id)
             Message.success({
                 style:{top:'10px'},
                 content:'设置成功'

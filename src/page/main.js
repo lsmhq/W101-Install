@@ -47,14 +47,18 @@ function Main(props){
     let [keyword, setKeyWord] = useState('')
     let [songIndex, setSongIndex] = useState(0)
     let [user, setUser] = useState(JSON.parse(localStorage.getItem('userInfo')))
+    let [songListId, setSongListId] = useState(0)
     value = {
         current:{
-            currentSong, setCurrentSong
+            currentSong, setCurrentSong, getCurrentSong:() => currentSong
         },
         songIndex:{
             songIndex, setSongIndex, getSongIndex:()=>{
                 return songIndex
             }
+        },
+        songListId: {
+            songListId, setSongListId, getSongListId:() => songListId
         },
         currentList:{
             currentList, setCurrentList, getCurrentList:()=>{
@@ -161,6 +165,7 @@ function Main(props){
                 if(res.data.code === 200){
                     setLikeList([...res.data.ids])
                     setCurrentList([...res.data.ids])
+                    setSongListId(res.data.checkPoint)
                 }
             })
         }

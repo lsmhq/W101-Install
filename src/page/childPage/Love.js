@@ -11,6 +11,7 @@ function Love(props){
     const [ids, setIds] = useState([])
     const [songs, setSongs] = useState([])
     const [loading, setLoading] = useState(true)
+    const [loveId, setLoveId] = useState()
     let globalObj = useContext(globalData)
     useEffect(()=>{
         let userInfo = JSON.parse(localStorage.getItem('userInfo'))
@@ -23,6 +24,7 @@ function Love(props){
                     api.getSongs({ids: res.data.ids.join(',')}).then(res=>{
                         if(res.data.code === 200){
                             setSongs([...res.data.songs])
+                            setLoveId(res.data.checkPoint)
                             setLoading(false)
                         }
                     })
@@ -35,6 +37,7 @@ function Love(props){
         <Row>
             <Button status='danger' type='text' onClick={()=>{
                 globalObj.currentList.setCurrentList(ids)
+                globalObj.songListId.setSongListId(loveId)
                 Message.success({
                     style:{top:'10px'},
                     content:'设置成功'
