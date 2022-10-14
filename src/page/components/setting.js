@@ -65,6 +65,11 @@ function Setting(props){
         }
         if(localStorage.getItem('btnSetting1') === null){
             localStorage.setItem('btnSetting1', true)
+            window.electronAPI.openWord()
+        }else{
+            if(JSON.parse(localStorage.getItem('btnSetting1'))){
+                window.electronAPI.openWord()
+            }
         }
         if(localStorage.getItem('btnSetting') === null){
             localStorage.setItem('btnSetting', true)
@@ -96,6 +101,26 @@ function Setting(props){
                         <span style={{paddingLeft:'10px'}}>
                         {
                             JSON.parse(btnSetting2) ?'后台运行':'退出程序'
+                        }
+                        </span>
+                    </Form.Item>
+                    <Form.Item label="桌面歌词">
+                        <Switch checked={JSON.parse(btnSetting1)} onChange={(val)=>{
+                            // console.log(val)
+                            setbtnSetting1(val)
+                            // true 开始游戏最小化
+                            // false 开始游戏不进行操作
+                            localStorage.setItem('btnSetting1', val)
+                            if(val){
+                                window.electronAPI.openWord()
+                            }else{
+                                window.electronAPI.closeWord()
+                            }
+                        }}
+                        />
+                        <span style={{paddingLeft:'10px'}}>
+                        {
+                            JSON.parse(btnSetting1) ?'显示':'隐藏'
                         }
                         </span>
                     </Form.Item>

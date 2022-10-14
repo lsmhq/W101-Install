@@ -116,6 +116,14 @@ function Main(props){
             setCurrentSong(localStorage.getItem('songId'))
         }
         getLike()
+        if(localStorage.getItem('btnSetting1') === null){
+            localStorage.setItem('btnSetting1', true)
+            window.electronAPI.openWord()
+        }else{
+            if(JSON.parse(localStorage.getItem('btnSetting1'))){
+                window.electronAPI.openWord()
+            }
+        }
         return () => {
             // 注销
             destroy()

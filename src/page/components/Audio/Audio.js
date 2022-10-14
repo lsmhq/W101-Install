@@ -74,6 +74,10 @@ function Audio(props){
                 document.getElementById(`word-${lyricTime[activeIndex]}`)?.scrollIntoView({
                     behavior:'smooth', block:'center'
                 })
+                window.electronAPI.sendWord({
+                    word:lyric_audio[activeIndex].old,
+                    next:lyric_audio[activeIndex+1].old,
+                })
                 oldIndex = activeIndex
             }
         }

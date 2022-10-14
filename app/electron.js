@@ -1,8 +1,10 @@
 const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
-let mainWindow, loading, tray
-let width = 650
-let height = 1000
+let mainWindow, loading, tray, windowSongWord = null
+let width = 1000
+let height = 650
+let widthB = 1000
+let heightB = 150
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -18,15 +20,15 @@ function createWindow () {
   scaleFactor = 1
   // localStorage.setItem('scale', scaleFactor)
   mainWindow = new BrowserWindow({
-    width: parseInt(height/scaleFactor), // 窗口宽度
-    height: parseInt(width/scaleFactor), // 窗口高度
+    width: parseInt(width/scaleFactor), // 窗口宽度
+    height: parseInt(height/scaleFactor), // 窗口高度
     // useContentSize:true,
     title: "网易云音乐", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/favicon.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: false,
     resizable: false,
     transparent: true, 
-
+    zoomToPageWidth: true,
     // backgroundColor:'#282b30',
     focusable:true,
     show:false,
@@ -67,16 +69,17 @@ function createWindow () {
     mainWindow.webContents.send('install-version', app.getVersion())
   });
   mainWindow.on('will-resize',()=>{
-    mainWindow.setMinimumSize(parseInt(height/scaleFactor) , parseInt(width/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
-    mainWindow.setSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(width/scaleFactor) , parseInt(height/scaleFactor))
+    mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
+    mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
   })
 
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
   mainWindow.on('closed', () => {
     mainWindow = null;
     // newWin && newWin.close()
-    mainWindow = null;
+    windowSongWord && windowSongWord.close()
+    windowSongWord = null;
     tray && tray.destroy()
     tray = null
     // newWin = null
@@ -84,9 +87,9 @@ function createWindow () {
   });
   mainWindow.on('resize',()=>{
     // return false
-    mainWindow.setMinimumSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
-    mainWindow.setSize(parseInt(height/scaleFactor), parseInt(width/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(width/scaleFactor) , parseInt(height/scaleFactor))
+    mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
+    mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
   })
   // 自定义
   ipcMain.on("openGame",(e,data)=>{
@@ -101,6 +104,11 @@ function createWindow () {
   ipcMain.on('move-application',(event,pos) => {
     // console.log(size)
     mainWindow.setPosition(parseInt(pos.posX), parseInt(pos.posY), true)
+    // console.log(mainWindow.getSize())
+  })
+  ipcMain.on('move-applicationB',(event,pos) => {
+    // console.log(size)
+    windowSongWord.setPosition(parseInt(pos.posX), parseInt(pos.posY), true)
     // console.log(mainWindow.getSize())
   })
   //接收关闭命令
@@ -132,6 +140,9 @@ function createWindow () {
     if(flag.flag){
       mainWindow.focus();
       mainWindow.show();
+      if(windowSongWord === null){
+        createWindowB && createWindowB()
+      }
     }
     // let img = nativeImage.createFromPath()
     let trayIcon = path.join(__dirname, 'images');//app是选取的目录
@@ -188,9 +199,67 @@ function createWindow () {
       tray.setContextMenu(new Menu.buildFromTemplate(config))
     })
   })
+  // 桌面歌词
+  ipcMain.on('openWord', function() {
+    windowSongWord && windowSongWord.show()
+  })
+  ipcMain.on('closeWord', function() {
+    windowSongWord && windowSongWord.hide()
+  })
+  ipcMain.on('sendWord', function(e, word) {
+    console.log(word)
+    windowSongWord.webContents.send('onWord', word)
+  })
 }
 
-
+function createWindowB(){
+  let scaleFactor = (screen.getAllDisplays()[0].scaleFactor >= 2) ? 1 : screen.getAllDisplays()[0].scaleFactor
+  scaleFactor = 1
+  windowSongWord = new BrowserWindow({
+    width: parseInt(widthB/scaleFactor), // 窗口宽度
+    height: parseInt(heightB/scaleFactor), // 窗口高度
+    // useContentSize:true,
+    title: "桌面歌词", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
+    icon: nativeImage.createFromPath('./images/favicon.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
+    frame: false,
+    resizable: true,
+    transparent: true, 
+    alwaysOnTop: true,
+    zoomToPageWidth: true,
+    // backgroundColor:'#282b30',
+    focusable:true,
+    type: 'toolbar',
+    show: false,
+    webPreferences: { // 网页功能设置
+      nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
+      // webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
+      webSecurity: false, // 禁用同源策略
+      contextIsolation: false,
+      v8CacheOptions:'none',
+      scrollBounce:true,
+      nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
+      preload: path.join(__dirname, 'preload.js'),
+    }
+  });
+  // let size = mainWindow.getSize()
+  windowSongWord.webContents.openDevTools() // 打开窗口调试
+  // windowSongWord.loadFile(__dirname+'/../public/word.html')
+  windowSongWord.loadURL('http://127.0.0.1:5500/public/word.html')
+  windowSongWord.on('will-resize',()=>{
+    windowSongWord.setMinimumSize(parseInt(widthB/scaleFactor) , parseInt(heightB/scaleFactor))
+    windowSongWord.setMaximumSize(parseInt(widthB/scaleFactor), parseInt(heightB/scaleFactor))
+    windowSongWord.setSize(parseInt(widthB/scaleFactor), parseInt(heightB/scaleFactor))
+  })
+  windowSongWord.on('resize',()=>{
+    // return false
+    windowSongWord.setMinimumSize(parseInt(widthB/scaleFactor) , parseInt(heightB/scaleFactor))
+    windowSongWord.setMaximumSize(parseInt(widthB/scaleFactor), parseInt(heightB/scaleFactor))
+    windowSongWord.setSize(parseInt(widthB/scaleFactor), parseInt(heightB/scaleFactor))
+  })
+  windowSongWord.on('hide',()=>{
+    mainWindow && mainWindow.webContents.send('wordHide')
+  })
+}
 const showLoading = (cb) => {
   loading = new BrowserWindow({
       show: false,
@@ -268,6 +337,9 @@ app.on('window-all-closed', () => {
 //     createWindow()
 //   }
 // });
+
+
+
 
 const gotTheLock = app.requestSingleInstanceLock()
 

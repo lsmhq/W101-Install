@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>桌面歌词</title>
+    <style>
+        body{
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            transition: all ease-in 0.2s;
+            user-select: none;
+            /* font-weight: 600; */
+
+        }
+        #song-word{
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            /* justify-content: center; */
+            color: rgb(255, 238, 238);
+            align-items: center;
+            font-size: 40px;
+            background-color: rgba(46, 46, 46, 0.744);
+            box-sizing: border-box;
+            padding: 0px 30px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #current{
+            text-align: left;
+            /* display: flex; */
+            height: 50%;
+            width: 100%;
+            line-height: 75px;
+        }
+        #next{
+            text-align: right;
+            height: 50%;
+            line-height: 75px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="song-word">
+        <div id="current"></div>
+        <div id="next"></div>
+    </div>
+    <script>
+        const { ipcRenderer, shell } = require('electron')
+        let songWord = document.getElementById('song-word')
+        let lastWord = ''
+        ipcRenderer.on('onWord', (e, word)=>{
+            document.getElementById('current').innerText = word.word
+            document.getElementById('next').innerText = word.next
+        })
+        window.onload = ()=>{
+            let isDown = false;  // 鼠标状态
+            let baseX = 0,baseY = 0; //监听坐标
+            let prveX = 0, prveY = 0 // 上次XY
+            let timer = null
+            songWord.addEventListener('mousedown',(ev)=>{
+                isDown = true
+                baseX = ev.clientX
+                baseY = ev.clientY
+            })
+            document.addEventListener('mouseup',()=>{
+                isDown = false
+            })
+            document.addEventListener('mousemove',(ev)=>{
+                if(isDown){
+                    const x = ev.screenX - baseX
+                    const y = ev.screenY - baseY
+                    //   console.log(x, y)
+                    if(prveX !== x || prveY !== y){
+                        // console.log(x, y)
+                        prveX = x
+                        prveY = y
+                        ipcRenderer.send('move-applicationB',{
+                            posX:x, posY:y
+                        })
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>
