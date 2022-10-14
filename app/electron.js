@@ -44,11 +44,11 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  mainWindow.webContents.openDevTools() // 打开窗口调试
+  // mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    // mainWindow.loadURL('https://static-a8b7147a-cb6a-46ff-b3b2-e4faca26eba3.bspapp.com/')
+    mainWindow.loadURL('https://static-a8b7147a-cb6a-46ff-b3b2-e4faca26eba3.bspapp.com/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
@@ -58,7 +58,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:3000/#/');
+  // mainWindow.loadURL('http://localhost:3000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -160,7 +160,7 @@ function createWindow () {
             appPath = appPath.split('\\')
             appPath.pop()
             console.log(appPath.join('\\'))
-            let dirPath = `${appPath.join('\\')}\\Uninstall Wymusic.exe`
+            let dirPath = `${appPath.join('\\')}\\Uninstall 网易云音乐.exe`
             shell.openPath(dirPath)
           }
         }
@@ -187,7 +187,7 @@ function createWindow () {
               appPath = appPath.split('\\')
               appPath.pop()
               console.log(appPath.join('\\'))
-              let dirPath = `${appPath.join('\\')}\\Uninstall.exe`
+              let dirPath = `${appPath.join('\\')}\\Uninstall 网易云音乐.exe`
               shell.openPath(dirPath)
             }
           }
