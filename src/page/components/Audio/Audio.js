@@ -50,6 +50,7 @@ function Audio(props){
                 }
                 lyricArr.push(obj)
                 time.push(ly.match(/\[(.+?)\]/g) && ly.match(/\[(.+?)\]/g).length > 0 && ly.match(/\[(.+?)\]/g)[0])
+                time = time.filter(t=>t)
             })
             setLyric([...lyricArr])
             setTime([...time])
@@ -59,9 +60,13 @@ function Audio(props){
     useEffect(()=>{
         clearInterval(word_timer)
         word_timer = setInterval(() => {
-            let cur = `[${formatSecondsV2(audio.current?.currentTime)}]`
             // console.log(lyricTime)
-            let firstIndex = lyricTime.findIndex(time => time >= cur)
+            
+            let cur = `[${formatSecondsV2(audio.current.currentTime)}]`
+            // console.log(lyricTime[lyricTime.length-1], cur, cur >= lyricTime[lyricTime.length-1])
+            let firstIndex = lyricTime.findIndex(time => {
+                return time >= cur
+            })
             if(cur >= lyricTime[lyricTime.length-1]){
                 index = lyricTime.length - 1
                 setActive(index)
@@ -87,7 +92,7 @@ function Audio(props){
                 oldIndex = activeIndex
             }
         }
-    },[lyricTime, activeIndex])
+    },[lyricTime, activeIndex, audio.current])
 
     useEffect(()=>{
         localStorage.setItem('playType', playType)
