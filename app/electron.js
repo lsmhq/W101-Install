@@ -3,8 +3,8 @@ const { autoUpdater } = require('electron-updater');
 let mainWindow, loading, tray, windowSongWord = null
 let width = 1000
 let height = 650
-let widthB = 1000
-let heightB = 150
+let widthB = 800
+let heightB = 130
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',

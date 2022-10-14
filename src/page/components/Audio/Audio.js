@@ -62,9 +62,14 @@ function Audio(props){
             let cur = `[${formatSecondsV2(audio.current?.currentTime)}]`
             // console.log(lyricTime)
             let firstIndex = lyricTime.findIndex(time => time >= cur)
-            if(firstIndex !== -1){
-                index = firstIndex - 1
+            if(cur >= lyricTime[lyricTime.length-1]){
+                index = lyricTime.length-1
                 setActive(index)
+            }else{
+                if(firstIndex !== -1){
+                    index = firstIndex - 1
+                    setActive(index)
+                }
             }
         }, 50);
         if(activeIndex !== oldIndex){
@@ -75,8 +80,9 @@ function Audio(props){
                     behavior:'smooth', block:'center'
                 })
                 window.electronAPI.sendWord({
-                    word:lyric_audio[activeIndex].old,
-                    next:lyric_audio[activeIndex+1].old,
+                    word:{val:lyric_audio[activeIndex].old, time:lyricTime[activeIndex]},
+                    next:{val:lyric_audio[activeIndex+1].old, time:lyricTime[activeIndex+1]},
+                    last:{val:lyric_audio[activeIndex-1 < 0 ? 0 : activeIndex-1].old, time:lyricTime[activeIndex-1 < 0 ? 0 : activeIndex-1]}
                 })
                 oldIndex = activeIndex
             }

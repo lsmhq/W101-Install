@@ -13,7 +13,6 @@
             transition: all ease-in 0.2s;
             user-select: none;
             /* font-weight: 600; */
-
         }
         #song-word{
             width: 100%;
@@ -24,7 +23,7 @@
             /* justify-content: center; */
             color: rgb(255, 238, 238);
             align-items: center;
-            font-size: 40px;
+            font-size: 20px;
             background-color: rgba(46, 46, 46, 0.744);
             box-sizing: border-box;
             padding: 0px 30px;
@@ -32,22 +31,31 @@
             overflow: hidden;
         }
         #current{
-            text-align: left;
+            text-align: center;
             /* display: flex; */
-            height: 50%;
+            height: 32%;
             width: 100%;
-            line-height: 75px;
+            color: rgb(255, 235, 83);
+            font-size: 25px;
+            line-height: 43px;
         }
         #next{
-            text-align: right;
-            height: 50%;
-            line-height: 75px;
+            text-align: center;
+            height: 32%;
+            line-height: 43px;
+            width: 100%;
+        }
+        #last{
+            text-align: center;
+            height: 32%;
+            line-height: 43px;
             width: 100%;
         }
     </style>
 </head>
 <body>
     <div id="song-word">
+        <div id="last"></div>
         <div id="current"></div>
         <div id="next"></div>
     </div>
@@ -56,8 +64,9 @@
         let songWord = document.getElementById('song-word')
         let lastWord = ''
         ipcRenderer.on('onWord', (e, word)=>{
-            document.getElementById('current').innerText = word.word
-            document.getElementById('next').innerText = word.next
+            document.getElementById('last').innerText = word.last.val
+            document.getElementById('current').innerText = word.word.val
+            document.getElementById('next').innerText = word.next.val
         })
         window.onload = ()=>{
             let isDown = false;  // 鼠标状态
