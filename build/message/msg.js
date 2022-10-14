@@ -52,11 +52,30 @@
                 getType && getType(type)
             })
         },
+        wordOnHide: (op)=>{
+            ipcRenderer.on('wordHide', (e, type)=>{
+                op && op(type)
+            })
+        },
+        onWord:(op)=>{
+            ipcRenderer.on('onWord', (e, type)=>{
+                op && op(type)
+            })
+        },
         winShow:()=>{
             ipcRenderer.send('show')
         },
         winHide:()=>{
             ipcRenderer.send('hide')
+        },
+        openWord:()=>{
+            ipcRenderer.send('openWord')
+        },
+        closeWord:()=>{
+            ipcRenderer.send('closeWord')
+        },
+        sendWord:(word)=>{
+            ipcRenderer.send('sendWord', word)
         }
     }
 })()
