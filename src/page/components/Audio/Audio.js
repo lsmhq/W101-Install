@@ -113,14 +113,14 @@ function Audio(props){
         }
     }, [audio])
     useEffect(()=>{
-        audio.current.addEventListener('ended', ()=>{
+        audio.current.onended = () => {
             console.log('end')
             changeSong({ playType, audio, globalObj, setPaused, setBgShow },()=>{
                 changeSong({ playType, audio, globalObj, setPaused, setBgShow },()=>{
                     changeSong({ playType, audio, globalObj, setPaused, setBgShow })
                 })
             })
-        })
+        }
     },[globalObj, playType, audio])
     useEffect(()=>{
         if(playType === 3){
@@ -323,10 +323,11 @@ function changeSong(obj, callBack){
         audio.current.play()
     }
     if(playType === 1 || playType === 3){
+        // console.log()
         if(globalObj.currentList.getCurrentList().length > 0){
             
             let songIndex = Math.floor((Math.random() * globalObj.currentList.getCurrentList().length));
-            // console.log(globalObj.currentList.getCurrentList()[songIndex], songIndex)
+            console.log(globalObj.currentList.getCurrentList()[songIndex], songIndex)
             // 判断是否有版权
             api.checkMusic({
               id: globalObj.currentList.getCurrentList()[songIndex]
@@ -347,7 +348,7 @@ function changeSong(obj, callBack){
                 }else{
                     Message.error({
                         style: {top:'10px'},
-                        content: '暂无版权',
+                        content: '暂无版权, 即将下一首',
                         duration: 1000,
                         onClose: callBack
                     })
