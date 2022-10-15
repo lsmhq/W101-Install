@@ -39,21 +39,27 @@
             color: rgb(244, 28, 0);
             font-size: 40px;
             font-weight: bolder;
-            line-height: 43px;
+            line-height: 49px;
         }
         #next{
             text-align: center;
+            /* display: flex; */
             height: 32%;
-            line-height: 43px;
-            display: none;
             width: 100%;
+            color: rgb(244, 28, 0);
+            font-size: 40px;
+            font-weight: bolder;
+            line-height: 49px;
         }
         #last{
             text-align: center;
-            display: none;
+            /* display: flex; */
             height: 32%;
-            line-height: 43px;
             width: 100%;
+            color: rgb(244, 28, 0);
+            font-size: 40px;
+            font-weight: bolder;
+            line-height: 49px;
         }
         #move{
             display: none;
@@ -79,9 +85,19 @@
         let songWord = document.getElementById('song-word')
         let lastWord = ''
         ipcRenderer.on('onWord', (e, word)=>{
-            document.getElementById('last').innerText = word.last.val || ' '
-            document.getElementById('current').innerText = word.word.val || ' '
-            document.getElementById('next').innerText = word.next.val || ' '
+            document.getElementById('last').innerText = word.last.val.old || ' '
+            switch (word.wordType) {
+                case 0:
+                document.getElementById('current').innerText = word.word.val.fy || ' '
+                document.getElementById('next').innerText = ' '
+                    break;
+                case 1:
+                document.getElementById('current').innerText = word.word.val.rm || ' '
+                document.getElementById('next').innerText = ' '
+                case 2:
+                document.getElementById('current').innerText = word.word.val.fy || ' '
+                document.getElementById('next').innerText = word.next.val.rm || ' '
+            }
         })
         window.onload = ()=>{
             let isDown = false;  // 鼠标状态

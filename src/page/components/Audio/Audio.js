@@ -87,14 +87,15 @@ function Audio(props){
                     behavior:'smooth', block:'center'
                 })
                 window.electronAPI.sendWord({
-                    word:{val:lyric_audio[activeIndex].old, time:lyricTime[activeIndex]},
-                    next:{val:lyric_audio[activeIndex+1].old, time:lyricTime[activeIndex+1]},
-                    last:{val:lyric_audio[activeIndex-1 < 0 ? 0 : activeIndex-1].old, time:lyricTime[activeIndex-1 < 0 ? 0 : activeIndex-1]}
+                    word:{val:lyric_audio[activeIndex], time:lyricTime[activeIndex]},
+                    next:{val:lyric_audio[activeIndex+1], time:lyricTime[activeIndex+1]},
+                    last:{val:lyric_audio[activeIndex-1 < 0 ? 0 : activeIndex-1], time:lyricTime[activeIndex-1 < 0 ? 0 : activeIndex-1]},
+                    wordType
                 })
                 oldIndex = activeIndex
             }
         }
-    },[activeIndex])
+    },[activeIndex, lyricTime, lyric_audio, wordType])
     useEffect(()=>{
         localStorage.setItem('playType', playType)
     },[playType])
