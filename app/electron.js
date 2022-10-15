@@ -3,7 +3,7 @@ const { autoUpdater } = require('electron-updater');
 let mainWindow, loading, tray, windowSongWord = null
 let width = 1000
 let height = 650
-let widthB = 800
+let widthB = 1920
 let heightB = 130
 const message = {
   error: '检查更新出错',
@@ -40,7 +40,7 @@ function createWindow () {
       v8CacheOptions:'none',
       scrollBounce:true,
       nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
-      preload: path.join(__dirname, 'preload.js'),
+      // preload: path.join(__dirname, 'preload.js'),
     }
   });
   // let size = mainWindow.getSize()
@@ -210,6 +210,11 @@ function createWindow () {
     console.log(word)
     windowSongWord.webContents.send('onWord', word)
   })
+  ipcMain.on('set-ignore-mouse-events', (event, ...args) => {
+    // win.setIgnoreMouseEvents(...args)
+    // console.log('set-ignore-mouse-events', args)
+    windowSongWord.setIgnoreMouseEvents(...args)
+  })
 }
 
 function createWindowB(){
@@ -241,6 +246,7 @@ function createWindowB(){
       preload: path.join(__dirname, 'preload.js'),
     }
   });
+
   // let size = mainWindow.getSize()
   // windowSongWord.webContents.openDevTools() // 打开窗口调试
   // windowSongWord.loadFile(__dirname+'/../public/word.html')
@@ -259,6 +265,11 @@ function createWindowB(){
   })
   windowSongWord.on('hide',()=>{
     mainWindow && mainWindow.webContents.send('wordHide')
+  })
+  windowSongWord.on('show',()=>{
+
+    windowSongWord && windowSongWord.setPosition(0, 0)
+    windowSongWord && windowSongWord.setIgnoreMouseEvents(true)
   })
 }
 const showLoading = (cb) => {

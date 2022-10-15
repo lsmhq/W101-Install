@@ -38,18 +38,19 @@ function Main(props){
     let [settingShow, setSetShow] = useState(false)
     let [currentSong, setCurrentSong] = useState() // 当前播放
     let [likeList, setLikeList] = useState([]) // 喜欢列表
-    let [currentList, setCurrentList] = useState([]) // 喜欢列表
+    let [currentList, setCurrentList] = useState(JSON.parse(localStorage.getItem('currentList'))||[]) // 喜欢列表
     let [songUrl, setSongUrl] = useState('')
     let [song, setSong] = useState({})
     let [lyric, setLyric] = useState('')
     let [lyric_fy, setLyric_fy] = useState('')
     let [lyric_rm, setLyric_rm] = useState('')
     let [keyword, setKeyWord] = useState('')
-    let [songIndex, setSongIndex] = useState(0)
+    let [songIndex, setSongIndex] = useState(JSON.parse(localStorage.getItem('songIndex')) || 0)
     let [user, setUser] = useState(JSON.parse(localStorage.getItem('userInfo')))
     let [songListId, setSongListId] = useState(0)
     useEffect(()=>{
         console.log('songIndex', songIndex)
+        localStorage.setItem('songIndex', songIndex)
     },[songIndex])
     useEffect(() => {  
         // 拖拽
@@ -125,7 +126,9 @@ function Main(props){
     useEffect(()=>{
         console.log(song)
     },[song])
-
+    useEffect(()=>{
+        localStorage.setItem('currentList', JSON.stringify(currentList))
+    },[currentList])
     function resize(){
         window.onresize = ()=>{
             // setHeight(window.screen.height - 40 + 'px')
@@ -138,7 +141,9 @@ function Main(props){
                 console.log(res.data)
                 if(res.data.code === 200){
                     setLikeList([...res.data.ids])
-                    setCurrentList([...res.data.ids])
+                    if(localStorage.getItem('currentList') === null){
+                        setCurrentList([...res.data.ids])
+                    }
                     setSongListId(res.data.checkPoint)
                 }
             })

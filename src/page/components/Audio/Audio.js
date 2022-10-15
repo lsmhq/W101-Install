@@ -77,6 +77,8 @@ function Audio(props){
                 }
             }
         }, 50);
+    },[lyricTime, audio.current])
+    useEffect(()=>{
         if(activeIndex !== oldIndex){
             // console.log(`[${formatSecondsV2(current)}]` >= lyricTime[index])
             // console.log(`[${formatSecondsV2(current)}]`, lyricTime[index])
@@ -92,8 +94,7 @@ function Audio(props){
                 oldIndex = activeIndex
             }
         }
-    },[lyricTime, activeIndex, audio.current])
-
+    },[activeIndex])
     useEffect(()=>{
         localStorage.setItem('playType', playType)
     },[playType])
@@ -252,11 +253,11 @@ function Audio(props){
                         setPlayType(1)
                     }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-danqu animated fast fadeIn'></i>}
                     {playType === 1 && <i onClick={()=>{
-                        setPlayType(3)
+                        setPlayType(2)
                     }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-suiji animated fast fadeIn'></i>}
-                    {/* {playType === 2 && <i onClick={()=>{
+                    {playType === 2 && <i onClick={()=>{
                         setPlayType(3)
-                    }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-24gl-repeat2 animated fast fadeIn'></i>} */}
+                    }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-24gl-repeat2 animated fast fadeIn'></i>}
                     {playType === 3 && <i onClick={()=>{
                         setPlayType(0)
                     }} style={{fontSize:'20px', cursor:'pointer'}} className='iconfont icon-huaban animated fast fadeIn'></i>}
@@ -270,7 +271,7 @@ function Audio(props){
                 width:'100%',
                 height:'82%',
                 bottom:'12%',
-                background:'rgb(240, 240, 240)'
+                background:'rgba(40, 40, 40, 0.987)'
             }}
             mask={false}
             placement="bottom"
@@ -304,8 +305,8 @@ function Audio(props){
                                     <Tooltip position='right' content={lyricTime[idx]?.split('[')[1].split(']')[0]}>
                                         {ly.old}
                                     </Tooltip>
-                                    {showRom && ly.rm &&<><br/>{ly.rm}</> }
-                                    {showFy && ly.fy &&<><br/>{ly.fy}</> }
+                                    {showRom && ly.rm &&<><br/>{ly.rm || ' '}</> }
+                                    {showFy && ly.fy &&<><br/>{ly.fy || ' '}</> }
                                 </div>
                             })
                         }
@@ -328,7 +329,7 @@ function changeSong(obj, callBack){
         audio.current.currentTime = 0
         audio.current.play()
     }
-    if(playType === 1 || playType === 3){
+    if(playType === 1){
         // console.log()
         if(globalObj.currentList.getCurrentList().length > 0){
             
@@ -362,40 +363,42 @@ function changeSong(obj, callBack){
             })
         }
     }
-    // if(playType === 2 || playType === 3){
-    //     console.log(globalObj.songIndex.getSongIndex())
-    //     if(!globalObj.songIndex.getSongIndex()) globalObj.songIndex.setSongIndex(0)
-    //     if(globalObj.songIndex.getSongIndex() === globalObj.currentList.getCurrentList().length - 1) globalObj.songIndex.setSongIndex(0)
-    //     if(globalObj.songIndex.getSongIndex() !== undefined && globalObj.currentList.getCurrentList().length){
-    //         api.checkMusic({
-    //             id: globalObj.currentList.getCurrentList()[globalObj.songIndex.getSongIndex()]
-    //           }).then(res=>{
-    //               if(res.data.success === true && res.data.message === 'ok'){
-    //                   globalObj.current.setCurrentSong(globalObj.currentList.getCurrentList()[globalObj.songIndex.getSongIndex()])
-    //                   document.getElementById(`song${globalObj.currentList.getCurrentList()[globalObj.songIndex.getSongIndex()]}`)?.scrollIntoView(
-    //                       {
-    //                           behavior: "smooth", 
-    //                           block: "center", 
-    //                           inline: "nearest"
-    //                       }
-    //                   )
-    //                   // globalObj.song.setSong(globalObj.likeList.likeList[index])
-    //                   setPaused(audio.current.paused)
-    //                   setBgShow(false)
-    //                 //   songIndex++
-    //                   globalObj.songIndex.setSongIndex(globalObj.songIndex.getSongIndex() + 1)
-    //               }else{
-    //                 //   songIndex++
-    //                   globalObj.songIndex.setSongIndex(globalObj.songIndex.getSongIndex() + 1)
-    //                   Message.error({
-    //                       style: {top:'10px'},
-    //                       content: '暂无版权',
-    //                       duration: 1000,
-    //                       onClose: callBack
-    //                   })
-    //               }
-    //         })
-    //     }
-    // }
+    if(playType === 2 || playType === 3){
+        console.log(globalObj.songIndex.getSongIndex())
+        if(!globalObj.songIndex.getSongIndex()) globalObj.songIndex.setSongIndex(0)
+        if(globalObj.songIndex.getSongIndex() === globalObj.currentList.getCurrentList().length - 1) globalObj.songIndex.setSongIndex(0)
+        if(globalObj.songIndex.getSongIndex() !== undefined && globalObj.currentList.getCurrentList().length){
+            let idx = globalObj.songIndex.getSongIndex()+1===globalObj.currentList.getCurrentList().length?0:globalObj.songIndex.getSongIndex()+1
+            api.checkMusic({
+                id: globalObj.currentList.getCurrentList()[idx]
+              }).then(res=>{
+                  if(res.data.success === true && res.data.message === 'ok'){
+                      globalObj.current.setCurrentSong(globalObj.currentList.getCurrentList()[idx])
+                      document.getElementById(`song${globalObj.currentList.getCurrentList()[idx]}`)?.scrollIntoView(
+                          {
+                              behavior: "smooth", 
+                              block: "center", 
+                              inline: "nearest"
+                          }
+                      )
+                      // globalObj.song.setSong(globalObj.likeList.likeList[index])
+                      setPaused(audio.current.paused)
+                      setBgShow(false)
+                    //   songIndex++
+                      globalObj.songIndex.setSongIndex(idx)
+                  }else{
+                    //   songIndex++
+                    let idx = globalObj.songIndex.getSongIndex()+1===globalObj.currentList.getCurrentList().length?0:globalObj.songIndex.getSongIndex()+1
+                      globalObj.songIndex.setSongIndex(idx)
+                      Message.error({
+                          style: {top:'10px'},
+                          content: '暂无版权',
+                          duration: 1000,
+                          onClose: callBack
+                      })
+                  }
+            })
+        }
+    }
 }
 export default Audio

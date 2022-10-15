@@ -21,52 +21,67 @@
             display: flex;
             flex-direction: column;
             /* justify-content: center; */
-            color: rgb(255, 238, 238);
+            color: rgb(248, 252, 255);
             align-items: center;
-            font-size: 20px;
-            background-color: rgba(46, 46, 46, 0.744);
+            font-size: 30px;
+            /* background-color: rgba(46, 46, 46, 0.744); */
             box-sizing: border-box;
             padding: 0px 30px;
             border-radius: 10px;
             overflow: hidden;
+            text-shadow: 2px 0px 6px rgb(20, 20, 20);
         }
         #current{
             text-align: center;
             /* display: flex; */
             height: 32%;
             width: 100%;
-            color: rgb(255, 235, 83);
-            font-size: 25px;
+            color: rgb(244, 28, 0);
+            font-size: 40px;
+            font-weight: bolder;
             line-height: 43px;
         }
         #next{
             text-align: center;
             height: 32%;
             line-height: 43px;
+            display: none;
             width: 100%;
         }
         #last{
             text-align: center;
+            display: none;
             height: 32%;
             line-height: 43px;
             width: 100%;
         }
+        #move{
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(35, 35, 35, 0.478);
+        }
     </style>
 </head>
 <body>
+    <div id="move"></div>
     <div id="song-word">
         <div id="last"></div>
         <div id="current"></div>
         <div id="next"></div>
     </div>
+
     <script>
         const { ipcRenderer, shell } = require('electron')
         let songWord = document.getElementById('song-word')
         let lastWord = ''
         ipcRenderer.on('onWord', (e, word)=>{
-            document.getElementById('last').innerText = word.last.val
-            document.getElementById('current').innerText = word.word.val
-            document.getElementById('next').innerText = word.next.val
+            document.getElementById('last').innerText = word.last.val || ' '
+            document.getElementById('current').innerText = word.word.val || ' '
+            document.getElementById('next').innerText = word.next.val || ' '
         })
         window.onload = ()=>{
             let isDown = false;  // 鼠标状态
@@ -96,6 +111,12 @@
                     }
                 }
             })
+            // songWord.addEventListener('mouseenter',()=>{
+            //     document.getElementById('move').style.display = 'block'
+            // })
+            // songWord.addEventListener('mouseleave',()=>{
+            //     document.getElementById('move').style.display = 'none'
+            // })
         }
     </script>
 </body>

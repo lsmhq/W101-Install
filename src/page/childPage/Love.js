@@ -20,7 +20,8 @@ function Love(props){
                 console.log(res.data)
                 if(res.data.code === 200){
                     globalObj.likeList.setLikeList([...res.data.ids])
-                    globalObj.currentList.setCurrentList([...res.data.ids])
+                    setIds([...res.data.ids])
+                    // globalObj.currentList.setCurrentList([...res.data.ids])
                     api.getSongs({ids: res.data.ids.join(',')}).then(res=>{
                         if(res.data.code === 200){
                             setSongs([...res.data.songs])
