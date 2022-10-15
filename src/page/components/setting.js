@@ -255,7 +255,7 @@ function Setting(props){
                             loading={loadFile}
                             onClick={()=>{
                                 setLoadFile(true)
-                                // console.log(window.fileList_update.split('\n'))
+                                console.log(window.fileList_update.split('\n'))
                                 window.tools.getGameVersion((versionArr)=>{
                                     
                                     if(versionArr === undefined){
@@ -280,10 +280,10 @@ function Setting(props){
                                         })
                                     })
                                     setLength(fileStatus.length)
-                                    console.log(fileStatus)
+                                    // console.log(fileStatus)
                                     clearInterval(downLoadTimer)
                                     downLoadTimer = setInterval(()=>{
-                                        console.log(indexDownload, fileStatus.length)
+                                        // console.log(indexDownload, fileStatus.length)
                                         if(indexDownload === (fileStatus.length - 1)){
                                             // console.log(fileStatus.find(item=>item.status !== 1))
                                             clearInterval(downLoadTimer)
@@ -325,7 +325,7 @@ function Setting(props){
                                     // window.tools.getFile()
                                 })
                             }}
-                        > {fileLength > 0 ? `正在下载中`:'更新游戏文件 ( 测试 )'}  </Button>
+                        > {fileLength > 0 ? `正在下载中( 测试谨慎操作 )`:'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
                         <br/>
                         {fileLength > 0 && `已下载：${currentFile}个 \n总数：${fileLength}（个）`}<br/>
                         {fileLength > 0 && `当前文件进度：${((current/total)*100).toFixed(2)}%`}<br/>

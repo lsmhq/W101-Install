@@ -132,9 +132,12 @@ function createWindow () {
     // let img = nativeImage.createFromPath()
     let trayIcon = path.join(__dirname, 'images');//app是选取的目录
   
-      // appTray = new Tray();//app.ico是app目录下的ico文件
-    tray = new Tray(path.join(trayIcon, 'logo.ico'))
-    
+    // appTray = new Tray();//app.ico是app目录下的ico文件
+    if(tray){
+
+    }else{
+      tray = new Tray(path.join(trayIcon, 'logo.ico'))
+    }
     // console.log(trayIcon)
     let config = [
       {label:'补丁切换', submenu:[
