@@ -95,10 +95,7 @@ function Audio(props){
                 oldIndex = activeIndex
             }
         }
-    },[activeIndex, lyricTime, lyric_audio, wordType])
-    useEffect(()=>{
-        localStorage.setItem('playType', playType)
-    },[playType])
+    },[activeIndex])
     useEffect(()=>{
         if(audio.current){
             setPaused(audio.current.paused)
