@@ -85,7 +85,7 @@
         let songWord = document.getElementById('song-word')
         let lastWord = ''
         ipcRenderer.on('onWord', (e, word)=>{
-            document.getElementById('last').innerText = word.last.val.old || ' '
+            document.getElementById('last').innerText = word.word.val.old || ' '
             switch (word.wordType) {
                 case 0:
                 document.getElementById('current').innerText = word.word.val.fy || ' '
@@ -96,7 +96,7 @@
                 document.getElementById('next').innerText = ' '
                 case 2:
                 document.getElementById('current').innerText = word.word.val.fy || ' '
-                document.getElementById('next').innerText = word.next.val.rm || ' '
+                document.getElementById('next').innerText = word.word.val.rm || ' '
             }
         })
         window.onload = ()=>{
