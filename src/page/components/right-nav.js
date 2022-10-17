@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import Icon from './Icon'
-import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconThumbUp, IconDelete, IconSettings, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
+import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconUserGroup, IconDelete, IconSettings, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import { Message, Button, Notification } from '@arco-design/web-react'
 let style = {
     right:'50px',
@@ -145,6 +145,15 @@ function RightNav(props){
             // textStyle={{fontSize:'12px'}}
             tips="卸载补丁"
             content="卸载"
+        />
+        <Icon
+            Child={<IconUserGroup className="icon-child"/>}
+            onClick={()=>{
+                
+            }}
+            tips="管理账号"
+            // color="#e4e517"
+            content="账号"
         />
         <Icon
             Child={<IconBug className="icon-child"/>}

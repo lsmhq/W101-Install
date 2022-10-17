@@ -1,6 +1,6 @@
 const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, ipcRenderer, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
-let mainWindow, loading, tray
+let mainWindow, loading, tray, width = 1250, height = 700
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -16,8 +16,8 @@ function createWindow () {
   scaleFactor = 1
   // localStorage.setItem('scale', scaleFactor)
   mainWindow = new BrowserWindow({
-    width: parseInt(1250/scaleFactor), // 窗口宽度
-    height: parseInt(700/scaleFactor), // 窗口高度
+    width: parseInt(width/scaleFactor), // 窗口宽度
+    height: parseInt(height/scaleFactor), // 窗口高度
     // useContentSize:true,
     title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
@@ -53,7 +53,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:3000/#/');
+  mainWindow.loadURL('http://localhost:5000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -64,9 +64,9 @@ function createWindow () {
     mainWindow.webContents.send('install-version', app.getVersion())
   });
   mainWindow.on('will-resize',()=>{
-    mainWindow.setMinimumSize(parseInt(1250/scaleFactor) , parseInt(700/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
-    mainWindow.setSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(width/scaleFactor) , parseInt(height/scaleFactor))
+    mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
+    mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
   })
 
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
@@ -81,9 +81,9 @@ function createWindow () {
   });
   mainWindow.on('resize',()=>{
     // return false
-    mainWindow.setMinimumSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
-    mainWindow.setSize(parseInt(1250/scaleFactor), parseInt(700/scaleFactor))
+    mainWindow.setMinimumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
+    mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
+    mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
   })
   // 自定义
   ipcMain.on("openGame",(e,data)=>{
