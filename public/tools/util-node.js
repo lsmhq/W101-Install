@@ -357,7 +357,9 @@
                     if (JSON.parse(localStorage.getItem('btnSetting'))) {
                         window.electronAPI.mini()
                     }
-                }, () => {})
+                }, () => {
+
+                })
             } else {
                 callback({
                     path: '没有在游戏根目录下'
@@ -405,7 +407,7 @@
         let errors = []
         // let gameDataPath = localStorage.getItem('gameDataPath')
         try {
-            // let files = fs.readdirSync(steamPath)
+            let files = fs.readdirSync(steamPath)
             // callback(0)
             steamInstall = true
         } catch (error) {
@@ -417,7 +419,7 @@
             }
         }
         try {
-            // let files = fs.readdirSync(window.wizPath)
+            let files = fs.readdirSync(window.wizPath)
             // callback(0)
             wizInstall = true
         } catch (error) {
@@ -430,7 +432,43 @@
         }
         callback(steamInstall, wizInstall, errors)
     }
-
+    // 登录
+    function login(account, password, callback){
+        console.log(window.wizPath)
+        console.log(localStorage.getItem('steamPath'))
+        try {
+            let files = fs.readdirSync(`${window.wizPath}Bin\\`, {
+                withFileTypes: true
+            })
+            let names = files.map(file => file.name)
+            console.log(names)
+            if (names.includes('launch.exe') && names.includes('WizardGraphicalClient.exe')) {
+                let exe = `${window.wizPath}Bin\\launch.exe ${account} ${password}`
+                console.log(exe)
+                shell.openPath(exe)
+                if (JSON.parse(localStorage.getItem('btnSetting'))) {
+                    window.electronAPI.mini()
+                }
+            } else if (!names.includes('launch.exe') && names.includes('WizardGraphicalClient.exe')) {
+                getFile(`http://101.43.216.253:3001/bat/launch.exe`, `${window.wizPath}Bin\\launch.exe`, () => {
+                    console.log('添加launch.exe成功')
+                    let exe = `${window.wizPath}Bin\\launch.exe ${account} ${password}`
+                    console.log(exe)
+                    shell.openPath(exe)
+                }, (total, currentTotal) => {
+                    callback(`正在下载启动文件${(currentTotal/total).toFixed(2)}%`)
+                })
+            } else {
+                callback({
+                    path: '没有在游戏根目录下'
+                })
+            }
+        } catch (error) {
+            if (error) {
+                callback(error)
+            }
+        }
+    }
     window.tools = {
         initDns,
         connect,
@@ -445,6 +483,7 @@
         checkUpdateExe,
         getFile,
         openFile,
-        getGameVersion
+        getGameVersion,
+        login
     }
 })()

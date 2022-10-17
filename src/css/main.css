@@ -359,3 +359,8 @@
     width: 400px;
     object-fit: cover;
 }
+.login-right{
+    width: 250px;
+    height: 150px;
+    background-color: #2c2c2c;
+}

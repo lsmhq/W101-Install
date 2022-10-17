@@ -1,5 +1,5 @@
-import { Spin, Carousel, Tabs, List, Button, Progress, Notification } from '@arco-design/web-react'
-import { useEffect } from 'react'
+import { Spin, Carousel, Tabs, List, Button, Progress, Notification, AutoComplete, Form, Input } from '@arco-design/web-react'
+import { useEffect, useState } from 'react'
 let carouselIndex = 0
 let { TabPane } = Tabs
 let style = {
@@ -8,6 +8,8 @@ let style = {
 }
 function BodyMain(props){
     let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow } = props
+    const [data, setData] = useState(JSON.parse(localStorage.getItem('accounts'))||[]);
+    let [password, setPassword] = useState('')
     return <div className='body-main'>
     <div className='body-main-top'>
         <div className='left'>
@@ -54,7 +56,7 @@ function BodyMain(props){
                 </Spin>
             </div>
             <div className='tips'>
-                <Tabs defaultActiveTab='0'  animation={true}>
+                <Tabs defaultActiveTab='0'  animation={true} scrollPosition='center'>
                     {
                         Object.keys(nav).sort((a, b) => b.length - a.length).map((title, idx)=>{
                             return <TabPane key={idx} className='tabPane' title={title}>
@@ -74,6 +76,24 @@ function BodyMain(props){
             </div>
         </div>
         <div className='right'>
+            <div className='login-right'>
+                <Form>
+                    <Form.Item label=''>
+                        <AutoComplete 
+                            placeholder='账号' 
+                            data={data}
+                            onSearch={(val)=>{
+                                console.log(val)  
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label=''>
+                        <Input.Password placeholder='密码' value={password}/>
+                    </Form.Item>
+                </Form>
+
+
+            </div>
             <div className='btn-group'>
                 {
                     subataShow && <div className='subata-btn'>
