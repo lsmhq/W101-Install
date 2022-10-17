@@ -1,9 +1,10 @@
-import { Anchor, Button, Switch, Form, Image } from '@arco-design/web-react'
+import { Anchor, Button, Switch, Form, Image, Message } from '@arco-design/web-react'
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
 // import { alertText } from '../util/dialog/index'
 // let { alertTextLive2d } = window.electronAPI
 let AnchorLink = Anchor.Link
+let downLoadTimer
 // let models = [
 //     {
 //         name:'shizuku',
@@ -46,6 +47,11 @@ function Setting(props){
     let [path, setPath] = useState(window.wizPath)
     // let [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'defalut')
     let [zhSound, setZhSound] = useState(false)
+    let [loadFile, setLoadFile] = useState(false)
+    let [fileLength, setLength] = useState(0)
+    let [currentFile, setCurrentFile] = useState(0)
+    let [total, setTotal] = useState(0)
+    let [current, setCurrent] = useState(0)
     // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -81,7 +87,7 @@ function Setting(props){
                 <AnchorLink href='#setting' title='按钮设置' />
                 <AnchorLink href='#gameFile' title='游戏文件' />
                 {/* <AnchorLink href='#live2d-set' title='Live2d' /> */}
-                <AnchorLink href='#language' title="实验性功能"/>
+                <AnchorLink href='#language' title="实验性功能（谨慎使用!）"/>
                 <AnchorLink href='#clear' title='清除缓存' />
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
@@ -242,6 +248,89 @@ function Setting(props){
             </div> */}
             <div className='setting-item' id='language'>
                 <Form>
+                    <Form.Item label={'更新'}>
+                        <Button
+                            type='primary'
+                            status='success'
+                            loading={loadFile}
+                            onClick={()=>{
+                                setLoadFile(true)
+                                console.log(window.fileList_update.split('\n'))
+                                window.tools.getGameVersion((versionArr)=>{
+                                    
+                                    if(versionArr === undefined){
+                                        Message.error('出现错误，联系灭火器')
+                                        return
+                                    }
+                                    // window.tools.getFile()
+                                    let serverUrl
+                                    versionArr.forEach((line)=>{
+                                        if(line.includes('UrlPrefix')){
+                                            console.log(line.split('=')[1])
+                                            serverUrl = line.split('=')[1]
+                                        }
+                                    })
+                                    let fileStatus = [], indexDownload = 0
+                                    window.fileList_update.split('\n').forEach(path=>{
+                                        // -1 未开始下载
+                                        fileStatus.push({
+                                            targetUrl: serverUrl.trim() + path,
+                                            outPut: window.wizPath + path,
+                                            status: -1
+                                        })
+                                    })
+                                    setLength(fileStatus.length)
+                                    // console.log(fileStatus)
+                                    clearInterval(downLoadTimer)
+                                    downLoadTimer = setInterval(()=>{
+                                        // console.log(indexDownload, fileStatus.length)
+                                        if(indexDownload === (fileStatus.length - 1)){
+                                            // console.log(fileStatus.find(item=>item.status !== 1))
+                                            clearInterval(downLoadTimer)
+                                        }
+                                        // console.log(fileStatus)
+                                        if(fileStatus[indexDownload].status === -1){
+                                            let {targetUrl, outPut} = fileStatus[indexDownload]
+                                            fileStatus[indexDownload].status = 0
+                                            window.tools.getFile(targetUrl, outPut, (sign)=>{}, (total, currentTotal)=>{
+                                                if(total){
+                                                    setTotal(total)
+                                                    setCurrent(currentTotal)
+                                                    // console.log(total, currentTotal)
+                                                    if(total * 1 === currentTotal * 1){
+                                                        fileStatus[indexDownload].status = 1
+                                                        if(!fileStatus.find(item=>item.status !== 1)){
+                                                            setLoadFile(false)
+                                                            setLength(0)
+                                                            setCurrentFile(0)
+                                                        }
+                                                    }
+                                                }
+                                                if(!total){
+                                                    fileStatus[indexDownload].status = 1
+                                                    if(!fileStatus.find(item=>item.status !== 1)){
+                                                        setLoadFile(false)
+                                                        setLength(0)
+                                                        setCurrentFile(0)
+                                                    }
+                                                }
+                                            })
+                                        }
+                                        if(fileStatus[indexDownload].status === 1){
+                                            indexDownload++
+                                            setCurrentFile(indexDownload + 1)
+                                        }
+                                    }, 500)
+
+                                    // window.tools.getFile()
+                                })
+                            }}
+                        > {fileLength > 0 ? `正在下载中( 测试谨慎操作 )`:'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
+                        <br/>
+                        {fileLength > 0 && `已下载：${currentFile}个 \n总数：${fileLength}（个）`}<br/>
+                        {fileLength > 0 && `当前文件进度：${((current/total)*100).toFixed(2)}%`}<br/>
+                        {fileLength > 0 && `下载过程中终止可能会导致游戏无法启动，下载过程中可以关掉设置窗口`}
+                    </Form.Item>
                     <Form.Item label={'语音'}>
                         <Switch checked={zhSound} onChange={(val)=>{
                             console.log(val)
@@ -257,7 +346,7 @@ function Setting(props){
                         <span style={{paddingLeft:'10px'}}>
                         {
                             zhSound ?'中文':'英文'
-                        }
+                        }(不可用)
                         </span>
                     </Form.Item>
                 </Form>

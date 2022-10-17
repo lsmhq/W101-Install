@@ -238,21 +238,29 @@
             let currentTotal = 0
             let total = 0
             let req = request(uri)
-            let out = fs.createWriteStream(filePath)
-            req.pipe(out)
+            
             req.on('response', (res) => {
                 console.log(res.headers['content-length'])
                 total = res.headers['content-length']
+                let out = fs.createWriteStream(filePath)
+                if(!total){
+                    req.pipe(out)
+                    out.on('finish', () => {
+                        out.close()
+                        callback()
+                    })
+                }else{
+                    out.close()
+                    req.end()
+                    callback('error')
+                }
             })
             req.on('data', (data) => {
                 // console.log(data.byteLength)
                 currentTotal += data.byteLength
                 onData(total, currentTotal)
             })
-            out.on('finish', () => {
-                out.close()
-                callback()
-            })
+
         }
     }
 
@@ -369,19 +377,22 @@
         // window.confirm('请关闭程序之后进行更新')
     }
     // 获取游戏版本
-    function getGameVersion(path, callback) {
+    function getGameVersion( callback ) {
         try {
-            let files = fs.readdirSync(path, {
+            let logPath = `${window.wizPath}/Bin`
+            let files = fs.readdirSync(logPath, {
                 withFileTypes: true
             })
             let names = files.map(file => file.name)
+            console.log(names)
             names.forEach(file => {
-                if (file === 'version') {
-                    let content = fs.readFileSync(`${path}/${file}`).toString('utf-8')
-                    console.log(content)
+                if (file === 'WizardClient.log') {
+                    let content = fs.readFileSync(`${logPath}/${file}`).toString('utf-8')
+                    callback(content.split('\n'))
                 }
             })
         } catch (error) {
+            console.log(error)
             callback(error)
         }
     }

@@ -1,4 +1,5 @@
 import { Spin, Carousel, Tabs, List, Button, Progress, Notification } from '@arco-design/web-react'
+import { useEffect } from 'react'
 let carouselIndex = 0
 let { TabPane } = Tabs
 let style = {
