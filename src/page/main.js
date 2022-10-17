@@ -145,6 +145,12 @@ function Main(){
             localStorage.setItem('type', type)
             checkUpdate()
         })
+        if(JSON.parse(localStorage.getItem('accounts')) === null){
+            localStorage.setItem('accounts',JSON.stringify([]))
+        }
+        if(JSON.parse(localStorage.getItem('accountsMap')) === null){
+            localStorage.setItem('accountsMap',JSON.stringify({}))
+        }
         return () => {
             // 注销
             destroy()

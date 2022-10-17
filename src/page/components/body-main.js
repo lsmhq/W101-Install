@@ -1,4 +1,4 @@
-import { Spin, Carousel, Tabs, List, Button, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal  } from '@arco-design/web-react'
+import { Spin, Carousel, Tabs, List, Button, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message  } from '@arco-design/web-react'
 import { useEffect, useState } from 'react'
 let carouselIndex = 0
 let { TabPane } = Tabs
@@ -9,10 +9,22 @@ let style = {
 function BodyMain(props){
     let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow } = props
     const [data, setData] = useState(JSON.parse(localStorage.getItem('accounts'))||[]);
+    const [dataMap, setDataMap] = useState(JSON.parse(localStorage.getItem('accountsMap'))||{});
     const [showLogin, setShowLogin] = useState(false)
     let [password, setPassword] = useState('')
     let [account, setAccount] = useState('')
     let [save, setSave] = useState(false)
+    useEffect(()=>{
+        if(data.length > 0){
+            localStorage.setItem('accounts', JSON.stringify(data))
+        }
+    }, [data])
+    useEffect(()=>{
+        if(account && password){
+            dataMap[account] = password
+            localStorage.setItem('accountsMap', JSON.stringify({...dataMap}))
+        }
+    }, [dataMap])
     return <div className='body-main'>
     <div className='body-main-top'>
         <div className='left'>
@@ -84,8 +96,8 @@ function BodyMain(props){
                     subataShow && <div className='subata-right-btn'>
                         <Button color='#4cc6e7' onClick={()=>{
                             window.electronAPI.openBroswer('https://www.subata.top')
-                        }} type='primary' className='right-openGame' size='large'>
-                            中文攻略
+                        }} type='primary' className='right-openGame subata-right-op' size='large'>
+                            中文攻略(subata)
                         </Button>
                     </div>
                 }
@@ -118,9 +130,10 @@ function BodyMain(props){
                        placeholder='账号' 
                        value={account}
                        data={data}
-                       onSearch={(val)=>{
-                           console.log(val)  
-                           setAccount(val)
+                       onChange={(val)=>{
+                        console.log(val)  
+                        setAccount(val)
+                        setPassword(dataMap[val]?dataMap[val]:'')
                        }}
                    />
                </Form.Item>
@@ -141,14 +154,67 @@ function BodyMain(props){
                <Button onClick={()=>{
                    // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
                    console.log(localStorage.getItem('wizInstall'))
+                   if(!account){
+                    Message.error({
+                        style:{top:'10px'},
+                        content:'请输入账号'
+                    })
+                    return
+                   }
+                   if(!password){
+                    Message.error({
+                        style:{top:'10px'},
+                        content:'请输入密码'
+                    })
+                    return
+                   }
                    if(localStorage.getItem('wizInstall') === 'true'){
-                       window.tools.startGame((err)=>{
-                           Notification.error({
-                               id:'notInstallWizard101',
-                               style,
-                               title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
-                               content: err.path
-                           })
+                       if(save){
+                            if(!data.includes(account)){
+                                data.push(account)
+                                setData([...data])
+                            }
+                            dataMap[account] = password
+                            setDataMap({...dataMap})
+                            
+                       }
+                       window.tools.login(account, password, (flag, err)=>{
+                        console.log('flag',flag)
+                        if(flag){
+                            Notification.error({
+                                id:'notInstallWizard101',
+                                style,
+                                title:'出现错误',
+                                content: err
+                            })
+                        }else if(flag === false){
+                            // console.log(err.indexOf('100'))
+                            if(err.indexOf('100') > 0){
+                                Notification.success({
+                                    id:'notInstallWizard101',
+                                    style,
+                                    title:'准备完成',
+                                    content: err,
+                                    duration: 2000
+                                })
+                                setShowLogin(false)
+                            }
+                            Notification.info({
+                                id:'notInstallWizard101',
+                                style,
+                                title:'第一次启动需要一些准备工作',
+                                content: err
+                            })
+                        }else if(flag === undefined){
+                            Notification.success({
+                                id:'notInstallWizard101',
+                                style,
+                                title:'进入游戏中',
+                                content: err,
+                                duration: 2000
+                            })
+                            setShowLogin(false)
+                        }
                        })
                    }else{   
                        let fileSelect = document.getElementById('selectWiz')

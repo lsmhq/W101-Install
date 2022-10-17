@@ -238,12 +238,13 @@
             let currentTotal = 0
             let total = 0
             let req = request(uri)
-            
+            let out = fs.createWriteStream(filePath)
             req.on('response', (res) => {
                 console.log(res.headers['content-length'])
                 total = res.headers['content-length']
-                let out = fs.createWriteStream(filePath)
-                if(!total){
+                
+                console.log(total)
+                if(total){
                     req.pipe(out)
                     out.on('finish', () => {
                         out.close()
@@ -357,7 +358,9 @@
                     if (JSON.parse(localStorage.getItem('btnSetting'))) {
                         window.electronAPI.mini()
                     }
-                }, () => {})
+                }, () => {
+
+                })
             } else {
                 callback({
                     path: '没有在游戏根目录下'
@@ -405,7 +408,7 @@
         let errors = []
         // let gameDataPath = localStorage.getItem('gameDataPath')
         try {
-            // let files = fs.readdirSync(steamPath)
+            let files = fs.readdirSync(steamPath)
             // callback(0)
             steamInstall = true
         } catch (error) {
@@ -417,7 +420,7 @@
             }
         }
         try {
-            // let files = fs.readdirSync(window.wizPath)
+            let files = fs.readdirSync(window.wizPath)
             // callback(0)
             wizInstall = true
         } catch (error) {
@@ -430,7 +433,52 @@
         }
         callback(steamInstall, wizInstall, errors)
     }
-
+    // 登录
+    function login(account, password, callback){
+        console.log(window.wizPath)
+        console.log(localStorage.getItem('steamPath'))
+        try {
+            let files = fs.readdirSync(`${window.wizPath}\\Bin\\`, {
+                withFileTypes: true
+            })
+            let names = files.map(file => file.name)
+            console.log(names)
+            if (names.includes('launch.exe') && names.includes('WizardGraphicalClient.exe')) {
+                let exe = `${window.wizPath}\\Bin\\launch.exe ${account} ${password}`
+                console.log(exe)
+                // shell.openPath(exe)
+                child_process.exec(exe, (err, stdout, stderr)=>{
+                    if(err){
+                        console.log(err)
+                    }
+                    console.log(stderr, stdout)
+                    callback()
+                })
+            } else if (!names.includes('launch.exe') && names.includes('WizardGraphicalClient.exe')) {
+                getFile(`http://101.43.216.253:3001/bat/launch.exe`, `${window.wizPath}\\Bin\\launch.exe`, (error) => {
+                    console.log('添加launch.exe成功', error)
+                    let exe = `${window.wizPath}\\Bin\\launch.exe ${account} ${password}`
+                    console.log(exe)
+                    // shell.openPath(exe)
+                    child_process.exec(exe,(err, stdout, stderr)=>{
+                        console.log(stderr, stdout)
+                    })
+                }, (total, currentTotal) => {
+                    callback(false, `正在下载启动文件${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
+                })
+            } else {
+                callback(true, {
+                    err: '没有在游戏根目录下'
+                })
+            }
+        } catch (error) {
+            if (error) {
+                callback(true, {
+                    err: JSON.stringify( error )
+                })
+            }
+        }
+    }
     window.tools = {
         initDns,
         connect,
@@ -445,6 +493,7 @@
         checkUpdateExe,
         getFile,
         openFile,
-        getGameVersion
+        getGameVersion,
+        login
     }
 })()

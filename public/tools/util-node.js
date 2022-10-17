@@ -238,12 +238,13 @@
             let currentTotal = 0
             let total = 0
             let req = request(uri)
-            
+            let out = fs.createWriteStream(filePath)
             req.on('response', (res) => {
                 console.log(res.headers['content-length'])
                 total = res.headers['content-length']
-                let out = fs.createWriteStream(filePath)
-                if(!total){
+                
+                console.log(total)
+                if(total){
                     req.pipe(out)
                     out.on('finish', () => {
                         out.close()
@@ -437,35 +438,44 @@
         console.log(window.wizPath)
         console.log(localStorage.getItem('steamPath'))
         try {
-            let files = fs.readdirSync(`${window.wizPath}Bin\\`, {
+            let files = fs.readdirSync(`${window.wizPath}\\Bin\\`, {
                 withFileTypes: true
             })
             let names = files.map(file => file.name)
             console.log(names)
             if (names.includes('launch.exe') && names.includes('WizardGraphicalClient.exe')) {
-                let exe = `${window.wizPath}Bin\\launch.exe ${account} ${password}`
+                let exe = `${window.wizPath}\\Bin\\launch.exe ${account} ${password}`
                 console.log(exe)
-                shell.openPath(exe)
-                if (JSON.parse(localStorage.getItem('btnSetting'))) {
-                    window.electronAPI.mini()
-                }
+                // shell.openPath(exe)
+                child_process.exec(exe, (err, stdout, stderr)=>{
+                    if(err){
+                        console.log(err)
+                    }
+                    console.log(stderr, stdout)
+                    callback()
+                })
             } else if (!names.includes('launch.exe') && names.includes('WizardGraphicalClient.exe')) {
-                getFile(`http://101.43.216.253:3001/bat/launch.exe`, `${window.wizPath}Bin\\launch.exe`, () => {
-                    console.log('添加launch.exe成功')
-                    let exe = `${window.wizPath}Bin\\launch.exe ${account} ${password}`
+                getFile(`http://101.43.216.253:3001/bat/launch.exe`, `${window.wizPath}\\Bin\\launch.exe`, (error) => {
+                    console.log('添加launch.exe成功', error)
+                    let exe = `${window.wizPath}\\Bin\\launch.exe ${account} ${password}`
                     console.log(exe)
-                    shell.openPath(exe)
+                    // shell.openPath(exe)
+                    child_process.exec(exe,(err, stdout, stderr)=>{
+                        console.log(stderr, stdout)
+                    })
                 }, (total, currentTotal) => {
-                    callback(`正在下载启动文件${(currentTotal/total).toFixed(2)}%`)
+                    callback(false, `正在下载启动文件${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
                 })
             } else {
-                callback({
-                    path: '没有在游戏根目录下'
+                callback(true, {
+                    err: '没有在游戏根目录下'
                 })
             }
         } catch (error) {
             if (error) {
-                callback(error)
+                callback(true, {
+                    err: JSON.stringify( error )
+                })
             }
         }
     }
