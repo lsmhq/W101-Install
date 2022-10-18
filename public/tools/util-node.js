@@ -453,18 +453,10 @@
             if(!names_root.includes('startWizard.bat')){
                 getFile(`http://101.43.216.253:3001/bat/startWizard.bat`, `${window.wizPath}\\startWizard.bat`, () => {
                     console.log('添加bat成功')
-                    let exe = window.wizPath + "\\startWizard.bat"
-                    // console.log(exe)
-                    shell.openPath(exe)
-                    if (JSON.parse(localStorage.getItem('btnSetting'))) {
-                        window.electronAPI.mini()
-                    }
-                }, () => {
-
-                })
+                }, () => {})
             }
             if (names.includes('launch.exe')) {
-                let exe = `${window.wizPath}\\startWizard.bat ${account} ${password}`
+                let exe = `"${window.wizPath}\\startWizard.bat" ${account} ${password}`
                 console.log(exe)
                 // shell.openPath(exe)
                 child_process.exec(exe,(err, stdout, stderr)=>{
@@ -478,7 +470,7 @@
                 console.log('下载开始')
                 getFile(`http://101.43.216.253:3001/bat/launch.exe`, `${window.wizPath}\\Bin\\launch.exe`, (error) => {
                     console.log('添加launch.exe成功', error)
-                    let exe = `${window.wizPath}\\startWizard.bat ${account} ${password}`
+                    let exe = `"${window.wizPath}\\startWizard.bat" ${account} ${password}`
                     console.log(exe)
                     // shell.openPath(exe)
                     child_process.exec(exe,(err, stdout, stderr)=>{
