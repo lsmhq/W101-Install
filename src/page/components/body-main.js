@@ -103,9 +103,13 @@ function BodyMain(props){
                 }
                 <div className='subata-right-btn'>
                         <Button status='success' onClick={()=>{
-                            setShowLogin(true)
+                            if(play === 'true'){
+                                setShowLogin(true)
+                            }else{
+                                document.getElementById('selectWiz').click()
+                            }
                         }} type='primary' className='right-openGame' size='large'>
-                            开始游戏
+                            {play === 'true'?'开始游戏':'选择Wizard.exe'}
                         </Button>
                 </div>
             </div>
@@ -150,79 +154,79 @@ function BodyMain(props){
                </Form.Item>
            </Form>}
            <div className='btn-group'>
-           <div className='op-btn'>
-               <Button onClick={()=>{
-                   // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
-                   console.log(localStorage.getItem('wizInstall'))
-                   if(!account){
-                    Message.error({
-                        style:{top:'10px'},
-                        content:'请输入账号'
-                    })
-                    return
-                   }
-                   if(!password){
-                    Message.error({
-                        style:{top:'10px'},
-                        content:'请输入密码'
-                    })
-                    return
-                   }
-                   if(localStorage.getItem('wizInstall') === 'true'){
-                       if(save){
-                            if(!data.includes(account)){
-                                data.push(account)
-                                setData([...data])
-                            }
-                            dataMap[account] = password
-                            setDataMap({...dataMap})
-                            
-                       }
-                       window.tools.login(account, password, (flag, err)=>{
-                        console.log('flag',flag)
-                        if(flag){
-                            Notification.error({
-                                id:'notInstallWizard101',
-                                style,
-                                title:'出现错误',
-                                content: err
+                <div className='op-btn'>
+                    <Button onClick={()=>{
+                        // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
+                        console.log(localStorage.getItem('wizInstall'))
+                        if(!account){
+                            Message.error({
+                                style:{top:'10px'},
+                                content:'请输入账号'
                             })
-                        }else if(flag === false){
-                            // console.log(err.indexOf('100'))
-                            if(err.indexOf('100') > 0){
-                                Notification.success({
-                                    id:'notInstallWizard101',
-                                    style,
-                                    title:'准备完成',
-                                    content: err,
-                                    duration: 2000
-                                })
-                                setShowLogin(false)
-                            }
-                            Notification.info({
-                                id:'notInstallWizard101',
-                                style,
-                                title:'第一次启动需要一些准备工作',
-                                content: err
-                            })
-                        }else if(flag === undefined){
-                            Notification.success({
-                                id:'notInstallWizard101',
-                                style,
-                                title:'进入游戏中',
-                                content: err,
-                                duration: 2000
-                            })
-                            setShowLogin(false)
+                            return
                         }
-                       })
-                   }else{   
-                       let fileSelect = document.getElementById('selectWiz')
-                       fileSelect.click()
-                   }
-               }} status='success' loading={btnLoading} size='large' type='primary' className='openGame'>登录</Button>
-           </div>
-       </div>
+                        if(!password){
+                            Message.error({
+                                style:{top:'10px'},
+                                content:'请输入密码'
+                            })
+                            return
+                        }
+                        if(localStorage.getItem('wizInstall') === 'true'){
+                            if(save){
+                                    if(!data.includes(account)){
+                                        data.push(account)
+                                        setData([...data])
+                                    }
+                                    dataMap[account] = password
+                                    setDataMap({...dataMap})
+                                    
+                            }
+                            window.tools.login(account, password, (flag, err)=>{
+                                console.log('flag',flag)
+                                if(flag){
+                                    Notification.error({
+                                        id:'notInstallWizard101',
+                                        style,
+                                        title:'出现错误',
+                                        content: err
+                                    })
+                                }else if(flag === false){
+                                    // console.log(err.indexOf('100'))
+                                    if(err.indexOf('100') > 0){
+                                        Notification.success({
+                                            id:'notInstallWizard101',
+                                            style,
+                                            title:'准备完成',
+                                            content: err ,
+                                            duration: 2000
+                                        })
+                                        setShowLogin(false)
+                                    }
+                                    Notification.info({
+                                        id:'notInstallWizard101',
+                                        style,
+                                        title:'第一次启动需要一些准备工作',
+                                        content: err
+                                    })
+                                }else if(flag === undefined){
+                                    Notification.success({
+                                        id:'notInstallWizard101',
+                                        style,
+                                        title:'进入游戏中',
+                                        content: err,
+                                        duration: 2000
+                                    })
+                                    setShowLogin(false)
+                                }
+                            })
+                        }else{   
+                            let fileSelect = document.getElementById('selectWiz')
+                            fileSelect.click()
+                        }
+                    }} status='success' loading={btnLoading} size='large' type='primary' className='openGame'>登录</Button>
+                </div>
+            </div>
        </div>}
     />
 </div>

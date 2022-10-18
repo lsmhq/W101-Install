@@ -229,7 +229,7 @@ function Main(){
           console.log(window.path)
           console.log('============')
           window.tools.checkGameInstall((steam, wizard, err)=>{
-            console.log(steam, wizard, err)
+            // console.log(steam, wizard, err)
             if(steam){
               // Message.warning('检测到未安装Steam')
               localStorage.setItem('steamInstall', true)
@@ -246,9 +246,11 @@ function Main(){
           callback()  
       }, (error)=>{
           console.log('没安装Steam')
-          console.log(error)
+        //   console.log(error)
           window.tools.checkGameInstall((steam, wizard, err)=>{
-            console.log(steam, wizard, err)
+            console.log('Steam:' + steam)
+            console.log('Wizard:' + wizard)
+            console.log('Error:' + err)
             if(steam){
               // Message.warning('检测到未安装Steam')
               localStorage.setItem('steamInstall', true)
