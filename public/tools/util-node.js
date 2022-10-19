@@ -243,7 +243,7 @@
                 console.log(res.headers['content-length'])
                 total = res.headers['content-length']
                 
-                console.log(total)
+                console.log('当前目标文件大小:',total)
                 if(total){
                     req.pipe(out)
                     out.on('finish', () => {
@@ -456,7 +456,7 @@
                 }, () => {})
             }
             if (names.includes('launch.exe')) {
-                let exe = `"${window.wizPath}\\startWizard.bat" ${account} ${password}`
+                let exe = `"${window.wizPath}\\startWizard.bat" ${account} ${password} ${window.wizPath}`
                 console.log(exe)
                 // shell.openPath(exe)
                 child_process.exec(exe,(err, stdout, stderr)=>{
@@ -470,10 +470,10 @@
                 console.log('下载开始')
                 getFile(`http://101.43.216.253:3001/bat/launch.exe`, `${window.wizPath}\\Bin\\launch.exe`, (error) => {
                     console.log('添加launch.exe成功', error)
-                    let exe = `"${window.wizPath}\\startWizard.bat" ${account} ${password}`
+                    let exe = `"${window.wizPath}\\startWizard.bat" ${account} ${password} ${window.wizPath}`
                     console.log(exe)
                     // shell.openPath(exe)
-                    child_process.exec(exe,(err, stdout, stderr)=>{
+                    child_process.execSync(exe,(err, stdout, stderr)=>{
                         console.log(stderr.toString('utf-8'))
                         console.log(stdout.toString('utf-8'))
                         callback()

@@ -122,6 +122,8 @@ function BodyMain(props){
     <Modal 
         visible={showLogin}
         title='登录'
+        focusLock={true}
+        autoFocus={false}
         footer={null}
         hideCancel={true}
         onCancel={()=>{
@@ -192,7 +194,7 @@ function BodyMain(props){
                                         content: err
                                     })
                                 }else if(flag === false){
-                                    // console.log(err.indexOf('100'))
+                                    console.log(err.indexOf('100'))
                                     if(err.indexOf('100') > 0){
                                         Notification.success({
                                             id:'notInstallWizard101',

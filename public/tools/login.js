@@ -58,7 +58,7 @@ function input(hwnd,str){
  
  
 async function login(){
-	var hwnd = user32.FindWindowW(null,strBuf("loginapp"));
+	var hwnd = user32.FindWindowW(null,strBuf("网易云音乐"));
 	var indices = {accoutlabel:0,passwordlabel:1,account:2,password:3,submit:4,cancel:5};
 	var controls = getControls(hwnd,indices);
 	console.log(controls);
