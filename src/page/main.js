@@ -769,6 +769,7 @@ function Main(){
                 </div>
                 <div className='control-btn btn-danger' onClick={(e)=>{
                     e.stopPropagation()
+                    console.log(JSON.parse(localStorage.getItem('btnSetting2')))
                     if(JSON.parse(localStorage.getItem('btnSetting2'))){
                         window.electronAPI.winHide()
                     }else{
