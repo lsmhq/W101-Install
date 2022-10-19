@@ -7,6 +7,7 @@ let style = {
     right:'50px',
     top:'20px'
 }
+let timerKill = null
 function BodyMain(props){
     let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow } = props
     const [data, setData] = useState(JSON.parse(localStorage.getItem('accounts'))||[]);
@@ -220,6 +221,7 @@ function BodyMain(props){
                                     setDataMap({...dataMap})
                                     
                             }
+                            clearInterval(timerKill)
                             window.tools.login(account, password, (flag, err)=>{
                                 console.log('flag',flag)
                                 if(flag === true){
@@ -256,7 +258,7 @@ function BodyMain(props){
                                         content: err,
                                         duration: 2000,
                                         onClose:()=>{
-                                            setTimeout(() => {
+                                            timerKill = setTimeout(() => {
                                                 window.tools.killExe('launchWizard101.exe')
                                             }, 30000);
                                             // window.tools.killExe('launchWizard101.exe')
@@ -271,7 +273,7 @@ function BodyMain(props){
                                         content: err,
                                         duration: 2000,
                                         onClose:()=>{
-                                            setTimeout(() => {
+                                            timerKill = setTimeout(() => {
                                                 window.tools.killExe('launchWizard101.exe')
                                             }, 30000);
                                             // window.tools.killExe('launchWizard101.exe')
