@@ -243,7 +243,7 @@
                 console.log(res.headers['content-length'])
                 total = res.headers['content-length']
                 
-                console.log(total)
+                console.log('当前目标文件大小:',total)
                 if(total){
                     req.pipe(out)
                     out.on('finish', () => {
@@ -322,7 +322,7 @@
         //查
         child_process.exec(`REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam /v InstallPath`, function (error, stdout, stderr) {
             if (error != null) {
-                console.log('exec error:' + error);
+                console.log('Steam 注册表查询失败:', String(error));
                 r(error)
                 return
             }
@@ -441,41 +441,52 @@
             let files = fs.readdirSync(`${window.wizPath}\\Bin\\`, {
                 withFileTypes: true
             })
+            // let files_root = fs.readdirSync(`${window.wizPath}`, {
+            //     withFileTypes: true
+            // })
             let names = files.map(file => file.name)
-            console.log(names)
-            if (names.includes('launch.exe') && names.includes('WizardGraphicalClient.exe')) {
-                let exe = `${window.wizPath}\\Bin\\launch.exe ${account} ${password}`
+            // let names_root = files_root.map(file => file.name)
+            if(!names.includes('WizardGraphicalClient.exe')){
+                callback(true, '出现错误：WizardGraphicalClient.exe不存在')
+                return
+            }
+            // if(!names_root.includes('startWizard.bat')){
+            //     getFile(`http://101.43.216.253:3001/bat/startWizard.bat`, `${window.wizPath}\\startWizard.bat`, () => {
+            //         console.log('添加bat成功')
+            //     }, () => {})
+            // }
+            if (names.includes('launch.exe')) {
+                let exe = `"${window.wizPath}\\Bin\\launch.exe" ${account} ${password} ${window.wizPath}\\Bin`
                 console.log(exe)
                 // shell.openPath(exe)
-                child_process.exec(exe, (err, stdout, stderr)=>{
-                    if(err){
-                        console.log(err)
-                    }
-                    console.log(stderr, stdout)
+                child_process.exec(exe,(err, stdout, stderr)=>{
+                    console.log(stderr.toString('utf-8'))
+                    console.log(stdout.toString('utf-8'))
                     callback()
                 })
-            } else if (!names.includes('launch.exe') && names.includes('WizardGraphicalClient.exe')) {
-                getFile(`http://101.43.216.253:3001/bat/launch.exe`, `${window.wizPath}\\Bin\\launch.exe`, (error) => {
+                
+            } else if (!names.includes('launch.exe')) {
+                // startWizard.bat
+                console.log('下载开始')
+                getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/83202b9e-7b0e-448b-8b6c-c5ec416a7df7.exe`, `${window.wizPath}\\Bin\\launch.exe`, (error) => {
                     console.log('添加launch.exe成功', error)
-                    let exe = `${window.wizPath}\\Bin\\launch.exe ${account} ${password}`
+                    let exe = `"${window.wizPath}\\Bin\\launch.exe" ${account} ${password} ${window.wizPath}\\Bin`
                     console.log(exe)
                     // shell.openPath(exe)
-                    child_process.exec(exe,(err, stdout, stderr)=>{
-                        console.log(stderr, stdout)
-                    })
+                    // child_process.execSync(exe,(err, stdout, stderr)=>{
+                    //     console.log(stderr.toString('utf-8'))
+                    //     console.log(stdout.toString('utf-8'))
+                    //     callback()
+                    // })
                 }, (total, currentTotal) => {
                     callback(false, `正在下载启动文件${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
                 })
             } else {
-                callback(true, {
-                    err: '没有在游戏根目录下'
-                })
+                callback(true, '出现错误：游戏文件缺失')
             }
         } catch (error) {
             if (error) {
-                callback(true, {
-                    err: JSON.stringify( error )
-                })
+                callback(true, JSON.stringify( error ))
             }
         }
     }
