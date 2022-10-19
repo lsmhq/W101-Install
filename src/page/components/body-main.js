@@ -256,7 +256,10 @@ function BodyMain(props){
                                         content: err,
                                         duration: 2000,
                                         onClose:()=>{
-                                            window.tools.killExe('launchWizard101.exe')
+                                            setTimeout(() => {
+                                                window.tools.killExe('launchWizard101.exe')
+                                            }, 30000);
+                                            // window.tools.killExe('launchWizard101.exe')
                                         }
                                     })
                                     setShowLogin(false)
@@ -268,7 +271,10 @@ function BodyMain(props){
                                         content: err,
                                         duration: 2000,
                                         onClose:()=>{
-                                            window.tools.killExe('launchWizard101.exe')
+                                            setTimeout(() => {
+                                                window.tools.killExe('launchWizard101.exe')
+                                            }, 30000);
+                                            // window.tools.killExe('launchWizard101.exe')
                                         }
                                     })
                                     setShowLogin(false)
