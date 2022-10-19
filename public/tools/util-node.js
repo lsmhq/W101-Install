@@ -441,22 +441,22 @@
             let files = fs.readdirSync(`${window.wizPath}\\Bin\\`, {
                 withFileTypes: true
             })
-            let files_root = fs.readdirSync(`${window.wizPath}`, {
-                withFileTypes: true
-            })
+            // let files_root = fs.readdirSync(`${window.wizPath}`, {
+            //     withFileTypes: true
+            // })
             let names = files.map(file => file.name)
-            let names_root = files_root.map(file => file.name)
+            // let names_root = files_root.map(file => file.name)
             if(!names.includes('WizardGraphicalClient.exe')){
                 callback(true, '出现错误：WizardGraphicalClient.exe不存在')
                 return
             }
-            if(!names_root.includes('startWizard.bat')){
-                getFile(`http://101.43.216.253:3001/bat/startWizard.bat`, `${window.wizPath}\\startWizard.bat`, () => {
-                    console.log('添加bat成功')
-                }, () => {})
-            }
+            // if(!names_root.includes('startWizard.bat')){
+            //     getFile(`http://101.43.216.253:3001/bat/startWizard.bat`, `${window.wizPath}\\startWizard.bat`, () => {
+            //         console.log('添加bat成功')
+            //     }, () => {})
+            // }
             if (names.includes('launch.exe')) {
-                let exe = `"${window.wizPath}\\startWizard.bat" ${account} ${password} ${window.wizPath}`
+                let exe = `"${window.wizPath}\\Bin\\launch.exe" ${account} ${password} ${window.wizPath}\\Bin`
                 console.log(exe)
                 // shell.openPath(exe)
                 child_process.exec(exe,(err, stdout, stderr)=>{
@@ -468,16 +468,16 @@
             } else if (!names.includes('launch.exe')) {
                 // startWizard.bat
                 console.log('下载开始')
-                getFile(`http://101.43.216.253:3001/bat/launch.exe`, `${window.wizPath}\\Bin\\launch.exe`, (error) => {
+                getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/83202b9e-7b0e-448b-8b6c-c5ec416a7df7.exe`, `${window.wizPath}\\Bin\\launch.exe`, (error) => {
                     console.log('添加launch.exe成功', error)
-                    let exe = `"${window.wizPath}\\startWizard.bat" ${account} ${password} ${window.wizPath}`
+                    let exe = `"${window.wizPath}\\Bin\\launch.exe" ${account} ${password} ${window.wizPath}\\Bin`
                     console.log(exe)
                     // shell.openPath(exe)
-                    child_process.execSync(exe,(err, stdout, stderr)=>{
-                        console.log(stderr.toString('utf-8'))
-                        console.log(stdout.toString('utf-8'))
-                        callback()
-                    })
+                    // child_process.execSync(exe,(err, stdout, stderr)=>{
+                    //     console.log(stderr.toString('utf-8'))
+                    //     console.log(stdout.toString('utf-8'))
+                    //     callback()
+                    // })
                 }, (total, currentTotal) => {
                     callback(false, `正在下载启动文件${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
                 })

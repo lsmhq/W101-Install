@@ -1,7 +1,8 @@
-import { Spin, Carousel, Tabs, List, Button, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message  } from '@arco-design/web-react'
+import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message, Popconfirm  } from '@arco-design/web-react'
 import { useEffect, useState } from 'react'
 let carouselIndex = 0
 let { TabPane } = Tabs
+let { Row, Col } = Grid
 let style = {
     right:'50px',
     top:'20px'
@@ -14,6 +15,7 @@ function BodyMain(props){
     let [password, setPassword] = useState('')
     let [account, setAccount] = useState('')
     let [save, setSave] = useState(false)
+    let [delable, setDelable] = useState(false)
     useEffect(()=>{
         if(data.length > 0){
             localStorage.setItem('accounts', JSON.stringify(data))
@@ -133,13 +135,28 @@ function BodyMain(props){
         {play==='true' && <Form>
                <Form.Item  style={{display:'flex',justifyContent:'center'}} label=''>
                    <AutoComplete 
+                       strict = {true}
                        placeholder='账号' 
                        value={account}
                        data={data}
+                        dropdownRender={(menu, idx)=>{
+                            return <Row justify='center' align='center' key={idx} className='autoItem'>
+                                <Col span={24} className="autoItem-col" >{menu}</Col>
+                            </Row>
+                        }}
                        onChange={(val)=>{
-                        console.log(val)  
-                        setAccount(val)
-                        setPassword(dataMap[val]?dataMap[val]:'')
+                            // console.log(val)  
+                            setAccount(val)
+                            setPassword(dataMap[val]?dataMap[val]:'')
+                            
+                            let accounts = JSON.parse(localStorage.getItem('accounts'))
+                            let index = accounts.findIndex(val=>val===account)
+                            console.log(index)
+                            if(index >= 0){
+                                setDelable(false)
+                            }else{
+                                setDelable(true)
+                            }
                        }}
                    />
                </Form.Item>
@@ -156,6 +173,25 @@ function BodyMain(props){
                </Form.Item>
            </Form>}
            <div className='btn-group'>
+            <div className='op-btn del-btn'>
+                   <Button disabled={delable} size='large' status='danger' type='primary' className='openGame' onClick={()=>{
+                        let accounts = JSON.parse(localStorage.getItem('accounts'))
+                        // console.log(accounts)
+                        let index = accounts.findIndex(val=>val===account)
+                        if(index > -1){
+                            console.log(index)
+                            accounts.splice(index, 1)
+                            localStorage.setItem('accounts', JSON.stringify(accounts))
+                            let accountsObj = JSON.parse(localStorage.getItem('accountsMap'))
+                            delete accountsObj[account]
+                            localStorage.setItem('accountsMap', JSON.stringify(accountsObj))
+                            setData([...accounts])
+                            setDataMap({...accountsObj})
+                            setAccount('')
+                            setPassword('')
+                        }
+                   }}>删除账号{account && `[${account}]`}</Button>
+            </div>
                 <div className='op-btn'>
                     <Button onClick={()=>{
                         // ws.send(JSON.stringify({msg:'1111', title:'123123'}))

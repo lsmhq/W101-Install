@@ -8,7 +8,7 @@ let style = {
     top:'20px'
 }
 function RightNav(props){
-    let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count } = props
+    let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count, setAccountShow } = props
     return <div className='right-nav'             
         onMouseDown={(e)=>{
             if(e.target.className === 'nav-bottom'){
@@ -146,15 +146,15 @@ function RightNav(props){
             tips="卸载补丁"
             content="卸载"
         />
-        <Icon
+        {/* <Icon
             Child={<IconUserGroup className="icon-child"/>}
             onClick={()=>{
-                
+                setAccountShow(true)
             }}
             tips="管理账号"
             // color="#e4e517"
             content="账号"
-        />
+        /> */}
         <Icon
             Child={<IconBug className="icon-child"/>}
             onClick={()=>{

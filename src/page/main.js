@@ -1,6 +1,6 @@
 import { useEffect, useState} from 'react';
 import '../css/main.css'
-import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
+import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip, Form, Grid  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import { IconClose, IconMinus, IconTool } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
@@ -13,7 +13,7 @@ import BodyMain from './components/body-main';
 import Setting from './components/setting';
 // import { alertText } from './util/dialog';
 // let {alertTextLive2d} = window.electronAPI
-
+let { Row, Col } = Grid
 //'ws://localhost:8000'
 let wsPath = 'ws://101.43.216.253:8000'
 let box = document.getElementById('live2d-widget')
@@ -769,7 +769,7 @@ function Main(){
                 </div>
                 <div className='control-btn btn-danger' onClick={(e)=>{
                     e.stopPropagation()
-                    if(localStorage.getItem('btnSetting2') === 'true'){
+                    if(JSON.parse(localStorage.getItem('btnSetting2'))){
                         window.electronAPI.winHide()
                     }else{
                         window.electronAPI.close()
