@@ -20,12 +20,17 @@ function Love(props){
                 console.log(res.data)
                 if(res.data.code === 200){
                     globalObj.likeList.setLikeList([...res.data.ids])
-                    setIds([...res.data.ids])
+                    // setIds([...res.data.ids])
                     // globalObj.currentList.setCurrentList([...res.data.ids])
                     api.getSongs({ids: res.data.ids.join(',')}).then(res=>{
                         if(res.data.code === 200){
-                            setSongs([...res.data.songs])
+                            let songArr = res.data.songs.sort(function compareFunction(item1, item2) {
+                                return item1.name.localeCompare(item2.name, 'zh');
+                              })
+                            let ids = songArr.map(song=>song.id)
+                            setSongs([...songArr])
                             setLoveId(res.data.checkPoint)
+                            setIds([...ids])
                             setLoading(false)
                         }
                     })
