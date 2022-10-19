@@ -222,7 +222,7 @@ function BodyMain(props){
                             }
                             window.tools.login(account, password, (flag, err)=>{
                                 console.log('flag',flag)
-                                if(flag){
+                                if(flag === true){
                                     Notification.error({
                                         id:'notInstallWizard101',
                                         style,
@@ -247,16 +247,31 @@ function BodyMain(props){
                                         title:'第一次启动需要一些准备工作',
                                         content: err
                                     })
+                                    // window.tools.killExe('launchWizard101.exe')
                                 }else if(flag === undefined){
                                     Notification.success({
                                         id:'notInstallWizard101',
                                         style,
                                         title:'进入游戏中',
                                         content: err,
-                                        duration: 2000
+                                        duration: 2000,
+                                        onClose:()=>{
+                                            window.tools.killExe('launchWizard101.exe')
+                                        }
                                     })
                                     setShowLogin(false)
-                                    window.tools.killExe('launchWizard101.exe')
+                                }else if(flag === 1){
+                                    Notification.success({
+                                        id:'notInstallWizard101',
+                                        style,
+                                        title:'进入游戏中',
+                                        content: err,
+                                        duration: 2000,
+                                        onClose:()=>{
+                                            window.tools.killExe('launchWizard101.exe')
+                                        }
+                                    })
+                                    setShowLogin(false)
                                 }
                             })
                         }else{   

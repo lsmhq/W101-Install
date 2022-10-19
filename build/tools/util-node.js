@@ -462,9 +462,8 @@
                 child_process.exec(exe,(err, stdout, stderr)=>{
                     console.log(stderr.toString('utf-8'))
                     console.log(stdout.toString('utf-8'))
-                    callback()
                 })
-                
+                callback()
             } else if (!names.includes('launchWizard101.exe')) {
                 // startWizard.bat
                 console.log('下载开始')
@@ -474,14 +473,14 @@
                     console.log(exe)
                     // shell.openPath(exe)
 
-                    callback(true, '下载完成, 准备启动')
+                    callback(1, '第一次启动, 稍等...')
                     setTimeout(()=>{
-                        child_process.execSync(exe,(err, stdout, stderr)=>{
+                        child_process.exec(exe,(err, stdout, stderr)=>{
                             console.log(stderr.toString('utf-8'))
                             console.log(stdout.toString('utf-8'))
-                            callback()
                         })
-                    }, 2000)
+                        callback()
+                    }, 500)
                 }, (total, currentTotal) => {
                     callback(false, `正在下载启动文件${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
                 })
@@ -505,11 +504,12 @@
             if (err) {
                 return console.error(err)
             }
-            console.log(stdout)
-            stdout.split('\n').filter((line) => {
+            // console.log(stdout)
+            stdout.split('\n').forEach((line) => {
                 let processMessage = line.trim().split(/\s+/)
                 let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
                 if (processName === name) {
+                    console.log('Kill Process---->', processMessage[1], processMessage)
                     process.kill(processMessage[1])
                 }
             })
