@@ -455,8 +455,8 @@
             //         console.log('添加bat成功')
             //     }, () => {})
             // }
-            if (names.includes('launch.exe')) {
-                let exe = `"${window.wizPath}\\Bin\\launch.exe" ${account} ${password} ${window.wizPath}\\Bin`
+            if (names.includes('launchWizard101.exe')) {
+                let exe = `"${window.wizPath}\\Bin\\launchWizard101.exe" ${account} ${password} ${window.wizPath}\\Bin`
                 console.log(exe)
                 // shell.openPath(exe)
                 child_process.exec(exe,(err, stdout, stderr)=>{
@@ -465,12 +465,12 @@
                     callback()
                 })
                 
-            } else if (!names.includes('launch.exe')) {
+            } else if (!names.includes('launchWizard101.exe')) {
                 // startWizard.bat
                 console.log('下载开始')
-                getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/83202b9e-7b0e-448b-8b6c-c5ec416a7df7.exe`, `${window.wizPath}\\Bin\\launch.exe`, (error) => {
+                getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/83202b9e-7b0e-448b-8b6c-c5ec416a7df7.exe`, `${window.wizPath}\\Bin\\launchWizard101.exe`, (error) => {
                     console.log('添加launch.exe成功', error)
-                    let exe = `"${window.wizPath}\\Bin\\launch.exe" ${account} ${password} ${window.wizPath}\\Bin`
+                    let exe = `"${window.wizPath}\\Bin\\launchWizard101.exe" ${account} ${password} ${window.wizPath}\\Bin`
                     console.log(exe)
                     // shell.openPath(exe)
 
