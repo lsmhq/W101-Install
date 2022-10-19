@@ -256,6 +256,7 @@ function BodyMain(props){
                                         duration: 2000
                                     })
                                     setShowLogin(false)
+                                    window.tools.killExe('launch.exe')
                                 }
                             })
                         }else{   
