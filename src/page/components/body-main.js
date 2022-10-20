@@ -1,4 +1,4 @@
-import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message, Popconfirm  } from '@arco-design/web-react'
+import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message  } from '@arco-design/web-react'
 import { useEffect, useState } from 'react'
 let carouselIndex = 0
 let { TabPane } = Tabs
@@ -27,7 +27,7 @@ function BodyMain(props){
             dataMap[account] = password
             localStorage.setItem('accountsMap', JSON.stringify({...dataMap}))
         }
-    }, [dataMap])
+    }, [account, dataMap, password])
     return <div className='body-main'>
     <div className='body-main-top'>
         <div className='left'>
@@ -258,9 +258,7 @@ function BodyMain(props){
                                         content: err,
                                         duration: 2000,
                                         onClose:()=>{
-                                            timerKill = setTimeout(() => {
-                                                window.tools.killExe('launchWizard101.exe')
-                                            }, 30000);
+                                            window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
                                         }
                                     })
@@ -273,9 +271,7 @@ function BodyMain(props){
                                         content: err,
                                         duration: 2000,
                                         onClose:()=>{
-                                            timerKill = setTimeout(() => {
-                                                window.tools.killExe('launchWizard101.exe')
-                                            }, 30000);
+                                            window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
                                         }
                                     })

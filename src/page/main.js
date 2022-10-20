@@ -1,6 +1,6 @@
 import { useEffect, useState} from 'react';
 import '../css/main.css'
-import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip, Form, Grid  } from '@arco-design/web-react';
+import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import { IconClose, IconMinus, IconTool } from '@arco-design/web-react/icon';
 import zfb from '../image/zfb.jpg'
@@ -13,11 +13,11 @@ import BodyMain from './components/body-main';
 import Setting from './components/setting';
 // import { alertText } from './util/dialog';
 // let {alertTextLive2d} = window.electronAPI
-let { Row, Col } = Grid
+// let { Row, Col } = Grid
 //'ws://localhost:8000'
 let wsPath = 'ws://101.43.216.253:8000'
-let box = document.getElementById('live2d-widget')
-let position = []
+// let box = document.getElementById('live2d-widget')
+// let position = []
 let update = false
 let timerr
 let style = {
@@ -40,10 +40,10 @@ let imgMap = {
     zf:zfb
 }
 let isDown = false;  // 鼠标状态
-let isDown_live2d = false
+// let isDown_live2d = false
 let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
-let useTime = 0, useTimer = null
+let useTimer = null
 function Main(){
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
@@ -185,9 +185,9 @@ function Main(){
                     duration: 2000
                 })
                 // alertTextLive2d(`安装完成!共用时间${useTime}秒`)
-                setTimeout(() => {
-                    useTime = 0
-                }, 1000);   
+                // setTimeout(() => {
+                //     useTime = 0
+                // }, 1000);   
             }
             // window.tools.changeType(localStorage.getItem('type'))
         }
@@ -195,9 +195,9 @@ function Main(){
         if(percent <= 3 && percent >= 1){
             // alertTextLive2d('开始！')
             clearInterval(useTimer)
-            useTimer = setInterval(() => {
-                useTime+=1
-            }, 1000);
+            // useTimer = setInterval(() => {
+            //     useTime+=1
+            // }, 1000);
         }
         if(percent >= 25 && percent <= 30){
             // alertTextLive2d('已经下载四分之一了！')
@@ -383,7 +383,7 @@ function Main(){
         })
         document.addEventListener('mouseup',()=>{
             isDown = false
-            isDown_live2d = false
+            // isDown_live2d = false
         })
     }
     function getCarousel(){

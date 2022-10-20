@@ -40,10 +40,10 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  mainWindow.webContents.openDevTools() // 打开窗口调试
+  // mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
-  mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
+  // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
     // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
@@ -54,7 +54,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:5000/#/');
+  mainWindow.loadURL('http://localhost:5000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -76,10 +76,12 @@ function createWindow () {
     mainWindow = null;
     tray && tray.destroy()
     tray = null
-    killExe('launchWizard101.exe')
     // newWin = null
 
   });
+  mainWindow.on('close',()=>{
+    killExe('launchWizard101.exe')
+  })
   mainWindow.on('resize',()=>{
     // return false
     mainWindow.setMinimumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
@@ -152,6 +154,11 @@ function createWindow () {
           mainWindow.webContents.send('changeBd', 'd')
         }, checked: flag.type === 'd', type:'radio'}
       ]},
+      {label:'账号', submenu:[
+        {label:'开发中', click:()=>{  
+          
+        }}
+      ]},
       {label: "更多", submenu:[
         {
           label:'卸载Subata',
@@ -189,6 +196,11 @@ function createWindow () {
             {label:'测试版' ,click:()=>{
               mainWindow.webContents.send('changeBd', 'd')
             }, checked: type === 'd', type:'radio'}
+          ]},
+          {label:'账号', submenu:[
+            {label:'开发中', click:()=>{  
+              
+            }}
           ]},
           {label: "更多", submenu:[
             {
