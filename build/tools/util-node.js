@@ -6,7 +6,7 @@
     iconv.skipDecodeWarning = true;
     const child_process = require('child_process'); //引入模块
     const {
-        shell
+        shell, app
     } = require('electron')
     window.path = localStorage.getItem('gameDataPath') || '' // 打包路径
     window.wizPath = localStorage.getItem('wizPath') || '' // Wiz路径
@@ -441,14 +441,19 @@
         console.log(window.wizPath)
         console.log(localStorage.getItem('steamPath'))
         try {
+            let appPath = app.getPath('exe')
+            appPath = appPath.split('\\')
+            appPath.pop()
+            console.log(appPath.join('\\'))
+            let dirPath = `${appPath.join('\\')}`
             let files = fs.readdirSync(`${window.wizPath}\\Bin\\`, {
                 withFileTypes: true
             })
-            // let files_root = fs.readdirSync(`${window.wizPath}`, {
-            //     withFileTypes: true
-            // })
+            let files_root = fs.readdirSync(`${dirPath}`, {
+                withFileTypes: true
+            })
             let names = files.map(file => file.name)
-            // let names_root = files_root.map(file => file.name)
+            let names_root = files_root.map(file => file.name)
             if(!names.includes('WizardGraphicalClient.exe')){
                 callback(true, '出现错误：WizardGraphicalClient.exe不存在')
                 return
@@ -458,7 +463,7 @@
             //         console.log('添加bat成功')
             //     }, () => {})
             // }
-            if (names.includes('launchWizard101.exe')) {
+            if (names_root.includes('launchWizard101.exe')) {
                 let exe = `${window.wizPath}\\Bin\\launchWizard101.exe ${account} ${password} ${window.wizPath}\\Bin`
                 console.log(exe)
                 // shell.openPath(exe)
@@ -478,7 +483,12 @@
             } else if (!names.includes('launchWizard101.exe')) {
                 // startWizard.bat
                 console.log('下载开始')
-                getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/83202b9e-7b0e-448b-8b6c-c5ec416a7df7.exe`, `${window.wizPath}\\Bin\\launchWizard101.exe`, (error) => {
+                let appPath = app.getPath('exe')
+                appPath = appPath.split('\\')
+                appPath.pop()
+                console.log(appPath.join('\\'))
+                let dirPath = `${appPath.join('\\')}`
+                getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/83202b9e-7b0e-448b-8b6c-c5ec416a7df7.exe`, `${dirPath}\\launchWizard101.exe`, (error) => {
                     console.log('添加launch.exe成功', error)
                     let exe = `${window.wizPath}\\Bin\\launchWizard101.exe ${account} ${password} ${window.wizPath}\\Bin`
                     console.log(exe)

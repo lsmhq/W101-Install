@@ -139,7 +139,11 @@ function Main(){
         window.electronAPI.getVersion((version)=>{
             setVersion(version)
         })
-
+        // 获取installPath
+        window.electronAPI.getPath((path)=>{
+            window.installPath = path
+            localStorage.setItem('installPath', path)
+        })
         window.electronAPI.ready()
         window.electronAPI.menuChangeType((type)=>{
             localStorage.setItem('type', type)
