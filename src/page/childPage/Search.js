@@ -1,9 +1,10 @@
 import { List, Tabs } from "@arco-design/web-react";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { api } from "../util/http";
 import MusicBox from '../components/Music/music'
 import globalData from "../context/context";
 import Albums from "../components/albumsBox/album";
+import MvBox from "../components/MvBox/mvBox";
 let lastHeight = 0
 function Search(){
     // 默认为 1 即单曲 , 取值意义 : 1: 单曲, 10: 专辑, 100: 歌手, 1000: 歌单, 1002: 用户, 1004: MV, 1006: 歌词, 1009: 电台, 1014: 视频, 1018:综合, 2000:声音(搜索声音返回字段格式会不一样)
@@ -52,6 +53,12 @@ function Search(){
         }
         search(0)
     }, [type])
+    useCallback(
+        () => {
+            
+        },
+        [search],
+    )
     useEffect(() => {
         search()
     }, [offset])
@@ -174,9 +181,9 @@ function Search(){
                 <List
                     grid={{
                       sm: 24,
-                      md: 12,
-                      lg: 8,
-                      xl: 6,
+                      md: 24,
+                      lg: 24,
+                      xl: 24,
                     }}
                     style={{height:'470px', overflowY:"scroll", padding:'0 10px'}}
                     loading={loading}
@@ -192,7 +199,8 @@ function Search(){
                         }
                     }}
                     render={(item, idx)=><List.Item key={idx}>
-
+                        {/* {item.name} */}
+                        <MvBox {...item}/>
                     </List.Item> 
                     }
                 />

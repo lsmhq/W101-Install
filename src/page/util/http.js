@@ -110,7 +110,7 @@ let api = {
     getAlbum: params => http.get('/album', params), // 获取专辑
     getPlayList: params=>http.get('/playlist/detail', params), // 获取歌单
     getPlayListAll: params=>http.get('/playlist/track/all', params), // 获取歌单
-
+    getMvUrl: params=>http.get('/mv/url', params), // 获取mvUrl
   }
 export {
     http, api

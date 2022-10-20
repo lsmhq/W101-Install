@@ -97,6 +97,7 @@ function Audio(props){
         }
     },[activeIndex])
     useEffect(()=>{
+        console.log('paused' ,audio.current.paused)
         if(audio.current){
             setPaused(audio.current.paused)
             audio.current.addEventListener('play', ()=>{
