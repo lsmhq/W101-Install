@@ -43,7 +43,7 @@ function createWindow () {
   mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
-  // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
+  mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
     // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
@@ -54,7 +54,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:5000/#/');
+  // mainWindow.loadURL('http://localhost:5000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -103,7 +103,8 @@ function createWindow () {
   })
   //接收关闭命令
   ipcMain.on('close', function() {
-    mainWindow.close();
+    // mainWindow.close()
+    app.quit()
   })
   // 最小化
   ipcMain.on('mini', function() {
@@ -171,7 +172,8 @@ function createWindow () {
         }
       ] },
       {label: "退出", click:()=>{
-        mainWindow && mainWindow.close()
+        // mainWindow && mainWindow.close()
+        app.quit()
       }}
     ]
     const menu = new Menu.buildFromTemplate(config)
@@ -214,7 +216,8 @@ function createWindow () {
             }
           ] },
           {label: "退出", click:()=>{
-            mainWindow && mainWindow.close()
+            // mainWindow && mainWindow.close()
+            app.quit()
           }}
         ]
         tray.setContextMenu(new Menu.buildFromTemplate(config))
@@ -294,9 +297,37 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 });
-
-app.on('before-quit',()=>{
-  killExe('launchWizard101.exe')
+let canQuit = false
+app.on('before-quit',(e)=>{
+  if(!canQuit){
+    e.preventDefault()
+  }
+  function killExe (name, callback) {
+    // process 不用引入，nodeJS 自带
+    // 带有命令行的list进程命令是：“cmd.exe /c wmic process list full”
+    //  tasklist 是没有带命令行参数的。可以把这两个命令再cmd里面执行一下看一下效果
+    // 注意：命令行获取的都带有换行符，获取之后需要更换换行符。可以执行配合这个使用 str.replace(/[\r\n]/g,""); 去除回车换行符 
+    let cmd = process.platform === 'win32' ? 'tasklist' : 'ps aux'
+    child_process.exec(cmd, function (err, stdout, stderr) {
+        if (err) {
+            return console.error(err)
+        }
+        // console.log(stdout)
+        stdout.split('\n').forEach((line) => {
+            let processMessage = line.trim().split(/\s+/)
+            let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
+            if (processName === name) {
+                console.log('Kill Process---->', processMessage[1], processMessage)
+                process.kill(processMessage[1])
+            }
+        })
+        callback && callback()
+    })
+  }
+  killExe('launchWizard101.exe', ()=>{
+    canQuit = true
+    app.quit()
+  })
 })
 // app.on('activate', () => {
 //   if (BrowserWindow.getAllWindows().length === 0) {
@@ -323,24 +354,3 @@ if (!gotTheLock) {
 }
 
 
-function killExe (name) {
-  // process 不用引入，nodeJS 自带
-  // 带有命令行的list进程命令是：“cmd.exe /c wmic process list full”
-  //  tasklist 是没有带命令行参数的。可以把这两个命令再cmd里面执行一下看一下效果
-  // 注意：命令行获取的都带有换行符，获取之后需要更换换行符。可以执行配合这个使用 str.replace(/[\r\n]/g,""); 去除回车换行符 
-  let cmd = process.platform === 'win32' ? 'tasklist' : 'ps aux'
-  child_process.exec(cmd, function (err, stdout, stderr) {
-      if (err) {
-          return console.error(err)
-      }
-      // console.log(stdout)
-      stdout.split('\n').forEach((line) => {
-          let processMessage = line.trim().split(/\s+/)
-          let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
-          if (processName === name) {
-              console.log('Kill Process---->', processMessage[1], processMessage)
-              process.kill(processMessage[1])
-          }
-      })
-  })
-}
