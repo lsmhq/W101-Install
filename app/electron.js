@@ -1,4 +1,4 @@
-const { ChildProcess } = require('child_process');
+const child_process = require('child_process');
 const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, ipcRenderer, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
 let mainWindow, loading, tray, width = 1250, height = 700
@@ -40,7 +40,7 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  // mainWindow.webContents.openDevTools() // 打开窗口调试
+  mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
@@ -328,7 +328,7 @@ function killExe (name) {
   //  tasklist 是没有带命令行参数的。可以把这两个命令再cmd里面执行一下看一下效果
   // 注意：命令行获取的都带有换行符，获取之后需要更换换行符。可以执行配合这个使用 str.replace(/[\r\n]/g,""); 去除回车换行符 
   let cmd = process.platform === 'win32' ? 'tasklist' : 'ps aux'
-  ChildProcess.exec(cmd, function (err, stdout, stderr) {
+  child_process.exec(cmd, function (err, stdout, stderr) {
       if (err) {
           return console.error(err)
       }

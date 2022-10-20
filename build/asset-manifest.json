@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.62a01836.css",
-    "main.js": "./static/js/main.ed39a92e.js",
+    "main.js": "./static/js/main.bd38a9de.js",
     "static/js/787.48cdcb01.chunk.js": "./static/js/787.48cdcb01.chunk.js",
     "static/media/zfb.jpg": "./static/media/zfb.8d7ecf20c8e4efb92610.jpg",
     "static/media/wechat.jpg": "./static/media/wechat.3f55ac4480c706480acd.jpg",
@@ -10,11 +10,11 @@
     "static/media/Subata_logo.png": "./static/media/Subata_logo.a66888c88454abf5eb74.png",
     "index.html": "./index.html",
     "main.62a01836.css.map": "./static/css/main.62a01836.css.map",
-    "main.ed39a92e.js.map": "./static/js/main.ed39a92e.js.map",
+    "main.bd38a9de.js.map": "./static/js/main.bd38a9de.js.map",
     "787.48cdcb01.chunk.js.map": "./static/js/787.48cdcb01.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.62a01836.css",
-    "static/js/main.ed39a92e.js"
+    "static/js/main.bd38a9de.js"
   ]
 }

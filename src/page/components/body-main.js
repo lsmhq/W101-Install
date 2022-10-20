@@ -18,6 +18,12 @@ function BodyMain(props){
     let [save, setSave] = useState(false)
     let [delable, setDelable] = useState(false)
     useEffect(()=>{
+        if(!showLogin){
+            setAccount('')
+            setPassword('')
+        }
+    },[showLogin])
+    useEffect(()=>{
         if(data.length > 0){
             localStorage.setItem('accounts', JSON.stringify(data))
         }
@@ -27,7 +33,7 @@ function BodyMain(props){
             dataMap[account] = password
             localStorage.setItem('accountsMap', JSON.stringify({...dataMap}))
         }
-    }, [account, dataMap, password])
+    }, [dataMap])
     return <div className='body-main'>
     <div className='body-main-top'>
         <div className='left'>
