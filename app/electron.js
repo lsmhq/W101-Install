@@ -43,7 +43,7 @@ function createWindow () {
   mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
-  mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
+  // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
     // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
@@ -54,7 +54,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:5000/#/');
+  mainWindow.loadURL('http://localhost:5000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -71,6 +71,7 @@ function createWindow () {
   })
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
   mainWindow.on('closed', () => {
+    
     mainWindow = null;
     // newWin && newWin.close()
     mainWindow = null;
@@ -79,9 +80,6 @@ function createWindow () {
     // newWin = null
 
   });
-  mainWindow.on('close',()=>{
-    killExe('launchWizard101.exe')
-  })
   mainWindow.on('resize',()=>{
     // return false
     mainWindow.setMinimumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
@@ -297,6 +295,9 @@ app.on('window-all-closed', () => {
   }
 });
 
+app.on('before-quit',()=>{
+  killExe('launchWizard101.exe')
+})
 // app.on('activate', () => {
 //   if (BrowserWindow.getAllWindows().length === 0) {
 //     createWindow()

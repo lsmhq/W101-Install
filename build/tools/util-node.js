@@ -456,7 +456,7 @@
             //     }, () => {})
             // }
             if (names.includes('launchWizard101.exe')) {
-                let exe = `"${window.wizPath}\\Bin\\launchWizard101.exe" ${account} ${password} ${window.wizPath}\\Bin`
+                let exe = `${window.wizPath}\\Bin\\launchWizard101.exe ${account} ${password} ${window.wizPath}\\Bin`
                 console.log(exe)
                 // shell.openPath(exe)
                 child_process.exec(exe,(err, stdout, stderr)=>{
@@ -469,7 +469,7 @@
                 console.log('下载开始')
                 getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/83202b9e-7b0e-448b-8b6c-c5ec416a7df7.exe`, `${window.wizPath}\\Bin\\launchWizard101.exe`, (error) => {
                     console.log('添加launch.exe成功', error)
-                    let exe = `"${window.wizPath}\\Bin\\launchWizard101.exe" ${account} ${password} ${window.wizPath}\\Bin`
+                    let exe = `${window.wizPath}\\Bin\\launchWizard101.exe ${account} ${password} ${window.wizPath}\\Bin`
                     console.log(exe)
                     // shell.openPath(exe)
 
