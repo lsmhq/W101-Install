@@ -1,6 +1,9 @@
 (function () {
     const request = require('request')
     const fs = require('fs')
+    var cmdShell = require('node-cmd');
+    const iconv = require('iconv-lite');
+    iconv.skipDecodeWarning = true;
     const child_process = require('child_process'); //引入模块
     const {
         shell
@@ -459,10 +462,18 @@
                 let exe = `${window.wizPath}\\Bin\\launchWizard101.exe ${account} ${password} ${window.wizPath}\\Bin`
                 console.log(exe)
                 // shell.openPath(exe)
-                child_process.exec(exe,(err, stdout, stderr)=>{
-                    console.log(stderr.toString('utf-8'))
-                    console.log(stdout.toString('utf-8'))
+                cmdShell.run(exe,(err, stdout, stderr)=>{
+                    if(err){
+                        // console.log('stdout1', iconv.decode(o, 'cp936'));
+                        console.log('报错了 ----->  ',iconv.decode(err, 'cp936'))
+                        return false;
+                      }else{
+                        console.log('进程打印内容')
+                        console.log(iconv.decode(stderr, 'cp936'))
+                        console.log(iconv.decode(stdout, 'cp936'))
+                  　　}
                 })
+
                 callback()
             } else if (!names.includes('launchWizard101.exe')) {
                 // startWizard.bat
@@ -475,9 +486,20 @@
 
                     callback(1, '第一次启动, 稍等...')
                     setTimeout(()=>{
-                        child_process.exec(exe,(err, stdout, stderr)=>{
-                            console.log(stderr.toString('utf-8'))
-                            console.log(stdout.toString('utf-8'))
+                        // ()
+                        cmdShell.run(exe,(err, stdout, stderr)=>{
+                            if(err){
+                                // console.log('stdout1', iconv.decode(o, 'cp936'));
+                                console.log('报错了 ----->  ',iconv.decode(err, 'cp936'))
+                                return false;
+                              }else{
+                                console.log('进程打印内容')
+                                console.log(iconv.decode(stderr, 'cp936'))
+                                console.log(iconv.decode(stdout, 'cp936'))
+                          　　}
+                        }).on('close',(e, err, out)=>{
+                            console.log(e, err, out)
+                            console.log('已关闭')
                         })
                         callback()
                     }, 500)
@@ -515,6 +537,8 @@
             })
         })
     }
+
+    
     window.tools = {
         initDns,
         connect,
