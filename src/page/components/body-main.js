@@ -1,5 +1,9 @@
 import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message  } from '@arco-design/web-react'
 import { useEffect, useState } from 'react'
+import bodyBear from '../../image/body.png'
+import emo1 from '../../image/emo1.png'
+import emo2 from '../../image/emo2.png'
+import emo3 from '../../image/emo3.png'
 let carouselIndex = 0
 let { TabPane } = Tabs
 let { Row, Col } = Grid
@@ -17,6 +21,7 @@ function BodyMain(props){
     let [account, setAccount] = useState('')
     let [save, setSave] = useState(false)
     let [delable, setDelable] = useState(false)
+    let [emo, setEmo] = useState(1)
     useEffect(()=>{
         if(!showLogin){
             setAccount('')
@@ -139,6 +144,26 @@ function BodyMain(props){
             setShowLogin(false)
         }}
         children={<div className='login-right'>
+            <div className='shakeBox'>
+                <div className='shake'>
+                    <div className='body' onMouseEnter={()=>{
+                        setEmo(2)
+                    }} onMouseLeave={()=>{
+                        setEmo(3)
+                    }}>
+                        <img className='bodyImg'src={bodyBear} alt="body"/>
+                        {emo === 1 && <img className='emo' src={emo1} alt='emo'/>}
+                        {emo === 2 && <img className='emo' src={emo2} alt='emo'/>}
+                        {emo === 3 && <img className='emo' src={emo3} alt='emo'/>}
+                    </div>
+                    <div className={`shake-mask ${password?'shake-mask-close':''}`}>
+                        <div className='shake-mask-bottom'>
+                            
+                        </div>
+                        <div className='shake-mask-switch'></div>
+                    </div>
+                </div>
+            </div>
         {play==='true' && <Form>
                <Form.Item  style={{display:'flex',justifyContent:'center'}} label=''>
                    <AutoComplete 
