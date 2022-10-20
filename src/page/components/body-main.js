@@ -1,5 +1,6 @@
 import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message  } from '@arco-design/web-react'
 import { useEffect, useState } from 'react'
+import '../../css/shark.css'
 import bodyBear from '../../image/body.png'
 import emo1 from '../../image/emo1.png'
 import emo2 from '../../image/emo2.png'
@@ -22,6 +23,7 @@ function BodyMain(props){
     let [save, setSave] = useState(false)
     let [delable, setDelable] = useState(false)
     let [emo, setEmo] = useState(1)
+    let [closedMask, setClosedMask] = useState(false)
     useEffect(()=>{
         if(!showLogin){
             setAccount('')
@@ -156,10 +158,11 @@ function BodyMain(props){
                         {emo === 2 && <img className='emo' src={emo2} alt='emo'/>}
                         {emo === 3 && <img className='emo' src={emo3} alt='emo'/>}
                     </div>
-                    <div className={`shake-mask ${password?'shake-mask-close':''}`}>
-                        <div className='shake-mask-bottom'>
-                            
-                        </div>
+                    <div onClick={()=>{
+                        setClosedMask(!closedMask)
+                    }} className={`shake-mask ${closedMask?'shake-mask-close':''}`}>
+                        <div className='shake-mask-text'>秘</div>
+                        <div className='shake-mask-bottom'></div>
                         <div className='shake-mask-switch'></div>
                     </div>
                 </div>
@@ -195,6 +198,11 @@ function BodyMain(props){
                <Form.Item label=''  style={{display:'flex',justifyContent:'center'}}>
                    <Input.Password placeholder='密码' value={password} onChange={(val)=>{
                        setPassword(val)
+                       if(val.length>0){
+                            setClosedMask(true)
+                       }else{
+                            setClosedMask(false)
+                       }
                    }}/>
                </Form.Item>
                <Form.Item label=''  style={{display:'flex',justifyContent:'center'}}>

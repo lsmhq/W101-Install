@@ -465,12 +465,12 @@
                 cmdShell.run(exe,(err, stdout, stderr)=>{
                     if(err){
                         // console.log('stdout1', iconv.decode(o, 'cp936'));
-                        console.log('报错了 ----->  ',iconv.decode(err, 'cp936'))
+                        console.log('报错了 ----->  ',iconv.decode(new Buffer.from(err), 'cp936'))
                         return false;
                       }else{
                         console.log('进程打印内容')
-                        console.log(iconv.decode(stderr, 'cp936'))
-                        console.log(iconv.decode(stdout, 'cp936'))
+                        console.log(iconv.decode(new Buffer.from(stderr), 'cp936'))
+                        console.log(iconv.decode(new Buffer.from(stdout), 'cp936'))
                   　　}
                 })
 
@@ -490,12 +490,13 @@
                         cmdShell.run(exe,(err, stdout, stderr)=>{
                             if(err){
                                 // console.log('stdout1', iconv.decode(o, 'cp936'));
-                                console.log('报错了 ----->  ',iconv.decode(err, 'cp936'))
+                                console.log(new Buffer.from(err))
+                                console.log('报错了 ----->  ',iconv.decode(new Buffer.from(err), 'cp936'))
                                 return false;
                               }else{
                                 console.log('进程打印内容')
-                                console.log(iconv.decode(stderr, 'cp936'))
-                                console.log(iconv.decode(stdout, 'cp936'))
+                                console.log(iconv.decode(new Buffer.from(stderr), 'cp936'))
+                                console.log(iconv.decode(new Buffer.from(stdout), 'cp936'))
                           　　}
                         }).on('close',(e, err, out)=>{
                             console.log(e, err, out)

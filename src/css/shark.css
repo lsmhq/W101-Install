@@ -6,7 +6,7 @@
     justify-content: center;
 }
 .shake{
-    background-color: #dddddd;
+    background-color: #5e5e5e;
     height: 90px;
     width: 90px;
     border-radius: 90px;
@@ -47,13 +47,21 @@
 .shake-mask-close{
     top: -230px;
 }
+.shake-mask-text{
+    font-size: 25px;
+    color: rgb(221, 242, 255);
+    position: absolute;
+    bottom: 20px;
+    left: 37px;
+}
 .shake-mask-switch{
     width: 30px;
     height: 5px;
-    background-color: #f8f8f8;
+    background-color: #cbcbcb;
     position: absolute;
-    bottom: 0;
-    left: 40px;
+    bottom: -3px;
+    left: 35px;
+    z-index: 10;
 }
 .shake-mask-bottom{
     background: rgba(42, 42, 42, 0.886);
