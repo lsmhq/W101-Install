@@ -23,8 +23,13 @@
         })},
         getPath:(getExe)=>{
             ipcRenderer.on('install-path',(event, path)=>{
-                console.log('install-path')
-                getExe && getExe(path)
+                console.log('install-path', path)
+                let installPath = path
+                installPath = installPath.split('\\')
+                installPath.pop()
+                console.log(installPath.join('\\'))
+                let dirPath = `${installPath.join('\\')}\\`
+                getExe && getExe(dirPath)
             })
         },
         getVersion:(getVer)=>{
