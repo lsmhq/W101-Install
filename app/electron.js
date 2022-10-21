@@ -1,7 +1,7 @@
 const child_process = require('child_process');
 const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
-const url = require('url');
+// const url = require('url');
 let mainWindow, loading, tray, width = 1250, height = 700
 const message = {
   error: '检查更新出错',
@@ -40,18 +40,18 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  mainWindow.webContents.openDevTools() // 打开窗口调试
+  // mainWindow.webContents.openDevTools() // 打开窗口调试
 
-  mainWindow.loadURL(url.format({
+  // mainWindow.loadURL(url.format({
 
-    pathname: path.join(__dirname, '../build/index.html'),
+  //   pathname: path.join(__dirname, '../build/index.html'),
    
-    protocol: 'file:',
+  //   protocol: 'file:',
 
-  }))
+  // }))
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
