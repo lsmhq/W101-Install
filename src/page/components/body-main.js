@@ -240,16 +240,38 @@ function BodyMain(props){
                             setAccount('')
                             setPassword('')
                         }
-                   }}>删除账号{account && `[${account}]`}</Button>
+                   }}>删除{account && `[${account}]`}</Button>
             </div>
                 <div className='op-btn'>
                     <Button onClick={()=>{
                         // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
                         // console.log(localStorage.getItem('wizInstall'))
                         if(!account){
-                            Message.error({
-                                style:{top:'10px'},
-                                content:'请输入账号'
+                            window.tools.startGame((message)=>{
+                                if(message){
+                                    Notification.error({
+                                        id:'notInstallWizard101',
+                                        style,
+                                        title:'出现错误',
+                                        content: message
+                                    })
+                                }else{
+                                    Notification.success({
+                                        id:'notInstallWizard101',
+                                        style,
+                                        title:'进入游戏中',
+                                        content: '',
+                                        duration: 2000,
+                                        onClose:()=>{
+                                            // window.tools.killExe('launchWizard101.exe')
+                                            // window.tools.killExe('launchWizard101.exe')
+                                            let next = JSON.parse(localStorage.getItem('btnSetting'))
+                                            if(next){
+                                                window.electronAPI.mini()
+                                            } 
+                                        }
+                                    })
+                                }
                             })
                             return
                         }

@@ -342,30 +342,23 @@
                 withFileTypes: true
             })
             let names = files.map(file => file.name)
+            let files_bin = fs.readdirSync(`${window.wizPath}\\Bin`,{
+                withFileTypes: true
+            })
+            let names_bin = files_bin.map(file=>file.name)
+            if(!names_bin.includes('WizardGraphicalClient.exe')){
+                callback('出现错误：WizardGraphicalClient.exe不存在')
+                return
+            }
             console.log(names)
-            if (names.includes('startGame.bat') && names.includes('Wizard101.exe')) {
-                let exe = window.wizPath + "\\startGame.bat"
+            if (names.includes('Wizard101.exe')) {
+                let exe = `${window.wizPath.split(':')[0]}: && cd ${window.wizPath}\\Bin && WizardGraphicalClient.exe -L login.us.wizard101.com 12000`
                 // console.log(exe)
-                shell.openPath(exe)
-                if (JSON.parse(localStorage.getItem('btnSetting'))) {
-                    window.electronAPI.mini()
-                }
-            } else if (!names.includes('startGame.bat') && names.includes('Wizard101.exe')) {
-                getFile(`http://101.43.216.253:3001/bat/startGame.bat`, `${window.wizPath}\\startGame.bat`, () => {
-                    console.log('添加bat成功')
-                    let exe = window.wizPath + "\\startGame.bat"
-                    // console.log(exe)
-                    shell.openPath(exe)
-                    if (JSON.parse(localStorage.getItem('btnSetting'))) {
-                        window.electronAPI.mini()
-                    }
-                }, () => {
-
-                })
-            } else {
-                callback({
-                    path: '没有在游戏根目录下'
-                })
+                // shell.openPath(exe)
+                runExe(exe)
+                callback(false)
+            }  else {
+                callback('没有在游戏根目录下')
             }
         } catch (error) {
             if (error) {
@@ -492,7 +485,7 @@
         cmdShell.run(exe,(err, stdout, stderr)=>{
             if(err){
                 // console.log('stdout1', iconv.decode(o, 'cp936'));
-                console.log(new Buffer.from(err))
+                // console.log(new Buffer.from(err))
                 console.log('报错了 ----->  ',err)
                 return false;
               }else{
