@@ -39,11 +39,11 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  mainWindow.webContents.openDevTools() // 打开窗口调试
+  // mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
@@ -53,7 +53,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:5000/#/');
+  // mainWindow.loadURL('http://localhost:5000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -271,8 +271,8 @@ autoUpdater.on('update-not-available', function (info) {
 // 更新下载进度事件
 autoUpdater.on('download-progress', function (progressObj) {
   console.log('触发下载。。。')
-  console.log(progressObj)
-  mainWindow && mainWindow.setProgressBar(parseFloat(((progressObj.transferred||0)/(progressObj.total || 1)).toFixed(2)))
+  console.log(progressObj.percent)
+  // mainWindow && mainWindow.setProgressBar(Number.parseFloat(progressObj.percent))
   sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })
 })
 

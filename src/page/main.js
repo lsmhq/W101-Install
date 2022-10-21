@@ -116,25 +116,25 @@ function Main(){
             })
         }
         // 获取安装目录
-        setInterval(()=>{
-            // console.log('检测更新')
-            window.electronAPI.getUpdater((data)=>{
-                // console.log('message---->',data)
-                if(data.cmd==='downloadProgress'){
-                    update = true
-                    setPercent(parseInt(data.progressObj.percent))
-                    setTotal(data.progressObj.total)
-                    setCurrent(data.progressObj.transferred)
-                    Notification.warning({
-                        title:'检测到有最新版本',
-                        style,
-                        id:'subata-up',
-                        content:'正在进行下载，稍后进行更新'
-                    })
-                    // alertTextLive2d('检测到有最新版本')
-                }
-            })
-        }, 1000)
+        // setInterval(()=>{
+        // console.log('检测更新')
+        window.electronAPI.getUpdater((data)=>{
+            // console.log('message---->',data)
+            if(data.cmd==='downloadProgress'){
+                update = true
+                setPercent(parseInt(data.progressObj.percent))
+                setTotal(data.progressObj.total)
+                setCurrent(data.progressObj.transferred)
+                Notification.warning({
+                    title:'检测到有最新版本',
+                    style,
+                    id:'subata-up',
+                    content:'正在进行下载，稍后进行更新'
+                })
+                // alertTextLive2d('检测到有最新版本')
+            }
+        })
+        // }, 1000)
         // 获取version
         window.electronAPI.getVersion((version)=>{
             setVersion(version)
