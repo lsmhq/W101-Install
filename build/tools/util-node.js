@@ -2,11 +2,9 @@
     const request = require('request')
     const fs = require('fs')
     var cmdShell = require('node-cmd');
-    const iconv = require('iconv-lite');
-    iconv.skipDecodeWarning = true;
     const child_process = require('child_process'); //引入模块
     const {
-        shell, app
+        shell
     } = require('electron')
     window.path = localStorage.getItem('gameDataPath') || '' // 打包路径
     window.wizPath = localStorage.getItem('wizPath') || '' // Wiz路径
@@ -456,32 +454,15 @@
                 callback(true, '出现错误：WizardGraphicalClient.exe不存在')
                 return
             }
-            // if(!names_root.includes('startWizard.bat')){
-            //     getFile(`http://101.43.216.253:3001/bat/startWizard.bat`, `${window.wizPath}\\startWizard.bat`, () => {
-            //         console.log('添加bat成功')
-            //     }, () => {})
-            // }
             if (names_root.includes('launchWizard101.exe')) {
                 let exe = `${window.wizPath.split(':')[0]}: && ${installPath}\\launchWizard101.exe ${account} ${password} ${window.wizPath}\\Bin`
                 console.log(exe)
                 // shell.openPath(exe)
-                cmdShell.run(exe,(err, stdout, stderr)=>{
-                    if(err){
-                        // console.log('stdout1', iconv.decode(o, 'cp936'));
-                        console.log('报错了 ----->  ',iconv.decode(new Buffer.from(err), 'cp936'))
-                        return false;
-                      }else{
-                        console.log('进程打印内容')
-                        console.log(iconv.decode(new Buffer.from(stderr), 'cp936'))
-                        console.log(iconv.decode(new Buffer.from(stdout), 'cp936'))
-                  　　}
-                })
-
+                runExe(exe)
                 callback()
             } else if (!names_root.includes('launchWizard101.exe')) {
                 // startWizard.bat
-                console.log('下载开始')
-                
+                console.log('下载开始')        
                 getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/32cb7bcd-fec3-4f2f-bce0-670e7615beb3.exe`, `${installPath}\\launchWizard101.exe`, (error) => {
                     console.log('添加launch.exe成功', error)
                     let exe = `${window.wizPath.split(':')[0]}: && ${installPath}\\launchWizard101.exe ${account} ${password} ${window.wizPath}\\Bin`
@@ -491,21 +472,7 @@
                     callback(1, '第一次启动, 稍等...')
                     setTimeout(()=>{
                         // ()
-                        cmdShell.run(exe,(err, stdout, stderr)=>{
-                            if(err){
-                                // console.log('stdout1', iconv.decode(o, 'cp936'));
-                                console.log(new Buffer.from(err))
-                                console.log('报错了 ----->  ',iconv.decode(new Buffer.from(err), 'cp936'))
-                                return false;
-                              }else{
-                                console.log('进程打印内容')
-                                console.log(iconv.decode(new Buffer.from(stderr), 'cp936'))
-                                console.log(iconv.decode(new Buffer.from(stdout), 'cp936'))
-                          　　}
-                        }).on('close',(e, err, out)=>{
-                            console.log(e, err, out)
-                            console.log('已关闭')
-                        })
+                        runExe(exe)
                         callback()
                     }, 500)
                 }, (total, currentTotal) => {
@@ -521,7 +488,23 @@
             }
         }
     }
-
+    function runExe(exe){
+        cmdShell.run(exe,(err, stdout, stderr)=>{
+            if(err){
+                // console.log('stdout1', iconv.decode(o, 'cp936'));
+                console.log(new Buffer.from(err))
+                console.log('报错了 ----->  ',err)
+                return false;
+              }else{
+                console.log('进程打印内容')
+                console.log(stderr)
+                console.log(stdout)
+          　　}
+        }).on('close',(e, err, out)=>{
+            console.log(e, err, out)
+            console.log('已关闭')
+        })
+    }
     function killExe (name) {
         // process 不用引入，nodeJS 自带
         // 带有命令行的list进程命令是：“cmd.exe /c wmic process list full”

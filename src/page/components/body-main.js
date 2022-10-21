@@ -272,7 +272,7 @@ function BodyMain(props){
                             }
                             clearInterval(timerKill)
                             window.tools.login(account, password, (flag, err)=>{
-                                console.log('flag',flag)
+                                // console.log('flag',flag)
                                 if(flag === true){
                                     Notification.error({
                                         id:'notInstallWizard101',
@@ -281,7 +281,7 @@ function BodyMain(props){
                                         content: err
                                     })
                                 }else if(flag === false){
-                                    console.log(err.indexOf('100'))
+                                    // console.log(err.indexOf('100'))
                                     if(err.indexOf('100') > 0){
                                         Notification.success({
                                             id:'notInstallWizard101',
