@@ -271,7 +271,8 @@ function Setting(props){
                                         }
                                     })
                                     let fileStatus = [], indexDownload = 0
-                                    window.fileList_update.split('\n').forEach(path=>{
+                                    let fileList_update = window.fileList_update || localStorage.getItem('fileList_update')
+                                    fileList_update.split('\n').forEach(path=>{
                                         // -1 未开始下载
                                         fileStatus.push({
                                             targetUrl: serverUrl.trim() + path,
