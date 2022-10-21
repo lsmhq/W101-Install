@@ -28,6 +28,15 @@ function BodyMain(props){
         if(!showLogin){
             setAccount('')
             setPassword('')
+            document.onkeydown = null
+        }
+        if(showLogin){
+            document.onkeydown = (e)=>{
+                // console.log(e.keyCode)
+                if(e.keyCode === 13){
+                    console.log(e.keyCode)
+                }
+            }
         }
     },[showLogin])
     useEffect(()=>{
@@ -41,6 +50,16 @@ function BodyMain(props){
             localStorage.setItem('accountsMap', JSON.stringify({...dataMap}))
         }
     }, [dataMap])
+    useEffect(()=>{
+        let accounts = JSON.parse(localStorage.getItem('accounts'))
+        let index = accounts.findIndex(val=>val===account)
+        console.log(index)
+        if(index >= 0){
+            setDelable(false)
+        }else{
+            setDelable(true)
+        }
+    },[account])
     return <div className='body-main'>
     <div className='body-main-top'>
         <div className='left'>
@@ -183,15 +202,6 @@ function BodyMain(props){
                             // console.log(val)  
                             setAccount(val)
                             setPassword(dataMap[val]?dataMap[val]:'')
-                            
-                            let accounts = JSON.parse(localStorage.getItem('accounts'))
-                            let index = accounts.findIndex(val=>val===account)
-                            console.log(index)
-                            if(index >= 0){
-                                setDelable(false)
-                            }else{
-                                setDelable(true)
-                            }
                        }}
                    />
                </Form.Item>
@@ -235,7 +245,7 @@ function BodyMain(props){
                 <div className='op-btn'>
                     <Button onClick={()=>{
                         // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
-                        console.log(localStorage.getItem('wizInstall'))
+                        // console.log(localStorage.getItem('wizInstall'))
                         if(!account){
                             Message.error({
                                 style:{top:'10px'},

@@ -43,8 +43,8 @@ function createWindow () {
   // mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
-  mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+  // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
+    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
@@ -103,8 +103,8 @@ function createWindow () {
   })
   //接收关闭命令
   ipcMain.on('close', function() {
-    // mainWindow.close()
-    app.quit()
+    mainWindow.close()
+    // app.quit()
   })
   // 最小化
   ipcMain.on('mini', function() {
@@ -116,7 +116,7 @@ function createWindow () {
   })
   // 进度条
   ipcMain.on('downLoad', (e, progress)=>{
-    mainWindow.setProgressBar(progress)
+    mainWindow && mainWindow.setProgressBar(progress)
   })
   // 进度条
   ipcMain.on('show', (e)=>{
@@ -152,11 +152,6 @@ function createWindow () {
         {label:'测试版' ,click:()=>{
           mainWindow.webContents.send('changeBd', 'd')
         }, checked: flag.type === 'd', type:'radio'}
-      ]},
-      {label:'账号', submenu:[
-        {label:'开发中', click:()=>{  
-          
-        }}
       ]},
       {label: "更多", submenu:[
         {
@@ -196,11 +191,6 @@ function createWindow () {
             {label:'测试版' ,click:()=>{
               mainWindow.webContents.send('changeBd', 'd')
             }, checked: type === 'd', type:'radio'}
-          ]},
-          {label:'账号', submenu:[
-            {label:'开发中', click:()=>{  
-              
-            }}
           ]},
           {label: "更多", submenu:[
             {
@@ -283,7 +273,7 @@ autoUpdater.on('update-not-available', function (info) {
 autoUpdater.on('download-progress', function (progressObj) {
   console.log('触发下载。。。')
   console.log(progressObj)
-  mainWindow.setProgressBar((progressObj.transferred/progressObj.total).toFixed(2))
+  mainWindow && mainWindow.setProgressBar(parseFloat(((progressObj.transferred||0)/(progressObj.total || 1)).toFixed(2)))
   sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })
 })
 
