@@ -1,6 +1,7 @@
 const child_process = require('child_process');
 const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
+const url = require('url');
 let mainWindow, loading, tray, width = 1250, height = 700
 const message = {
   error: '检查更新出错',
@@ -41,6 +42,13 @@ function createWindow () {
   // let size = mainWindow.getSize()
   mainWindow.webContents.openDevTools() // 打开窗口调试
 
+  mainWindow.loadURL(url.format({
+
+    pathname: path.join(__dirname, '../build/index.html'),
+   
+    protocol: 'file:',
+
+  }))
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
     // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
@@ -53,7 +61,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:5000/#/');
+  // mainWindow.loadURL('http://localhost:5000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -85,6 +93,8 @@ function createWindow () {
     mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
     mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
   })
+
+
   // 自定义
   ipcMain.on("openGame",(e,data)=>{
     // 打开游戏

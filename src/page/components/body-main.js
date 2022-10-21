@@ -51,7 +51,7 @@ function BodyMain(props){
         }
     }, [dataMap])
     useEffect(()=>{
-        let accounts = JSON.parse(localStorage.getItem('accounts'))
+        let accounts = JSON.parse(localStorage.getItem('accounts')) || []
         let index = accounts.findIndex(val=>val===account)
         console.log(index)
         if(index >= 0){
@@ -225,7 +225,7 @@ function BodyMain(props){
            <div className='btn-group'>
             <div className='op-btn del-btn'>
                    <Button disabled={delable} size='large' status='danger' type='primary' className='openGame' onClick={()=>{
-                        let accounts = JSON.parse(localStorage.getItem('accounts'))
+                        let accounts = JSON.parse(localStorage.getItem('accounts')) || []
                         // console.log(accounts)
                         let index = accounts.findIndex(val=>val===account)
                         if(index > -1){
