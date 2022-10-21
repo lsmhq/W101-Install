@@ -309,6 +309,10 @@ function BodyMain(props){
                                         onClose:()=>{
                                             // window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
+                                            let next = JSON.parse(localStorage.getItem('btnSetting'))
+                                            if(next){
+                                                window.electronAPI.mini()
+                                            } 
                                         }
                                     })
                                     setShowLogin(false)
