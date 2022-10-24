@@ -85,9 +85,10 @@
     display: flex;
 }
 .body-main{
-    width: 100%;
+    width: 799px;
     /* height: 100%; */
     max-height: 530px;
+    overflow: hidden;
     /* padding: 0; */
     /* overflow: scroll; */
     display: flex;
