@@ -111,6 +111,11 @@ let api = {
     getPlayList: params=>http.get('/playlist/detail', params), // 获取歌单
     getPlayListAll: params=>http.get('/playlist/track/all', params), // 获取歌单
     getMvUrl: params=>http.get('/mv/url', params), // 获取mvUrl
+    getSongByPerson: params=>http.get('/artist/top/song', params), // 获取歌手前50歌曲
+    getSonger: params=>http.get('/artist/detail', params), // 获取歌手详情
+    getHotSonger: params=> http.get('/toplist/artist', params), // 获取热门歌手 type : 地区 1: 华语2: 欧美 3: 韩国 4: 日本
+    
+
   }
 export {
     http, api

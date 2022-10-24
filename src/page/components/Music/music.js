@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import globalData from '../../context/context';
 import { api } from '../../util/http';
 import { formatSeconds } from '../../util/util';
+import { useNavigate  } from 'react-router-dom'
 const Row = Grid.Row;
 const Col = Grid.Col;
 let count = 0
@@ -12,9 +13,11 @@ let timer = null
 let songId = 0
 function MusicBox(props){
     let globalObj = useContext(globalData)
+    const navigate = useNavigate();
     // 歌名、id、歌手、发布日期、时长
-    let {name, id, ar, dt, grid = [], index} = props
-    return <Row id={`song${id}`} style={{color:globalObj.current.currentSong*1 === id ? 'red' : ''}}  onClick={(e)=>{
+    let { name, id, ar, dt, grid = [1, 9, 11, 3], index } = props
+    return <Row  id={`song${id}`} style={{color:globalObj.current.currentSong*1 === id ? 'red' : ''}} 
+        onClick={(e)=>{
             e.stopPropagation()
             console.log('歌曲id-->', id)
             // getMusic(id)
@@ -83,7 +86,7 @@ function MusicBox(props){
                     }
                 }
         }}>
-        <Col style={{color:'rgb(207, 0, 0)'}} span={grid[0] || 1}>
+        {grid[0] > 0 && <Col style={{color:'rgb(207, 0, 0)'}} span={grid[0] || 1}>
             {globalObj.likeList.likeList.includes(id) ? <IconHeartFill onClick={(e)=>{
                 e.stopPropagation()
                 api.likeMusic({id,like: false}).then(res=>{
@@ -113,19 +116,24 @@ function MusicBox(props){
                 })
             }}/>}
 
-        </Col>
-        <Col style={{ textOverflow:'ellipsis', overflow:'hidden' }} span={grid[1] || 9}>
+        </Col>}
+        {grid[1]>0 && <Col style={{ textOverflow:'ellipsis', overflow:'hidden' }} span={grid[1] || 9}>
             {name}
-        </Col>
-        <Col style={{ textOverflow:'ellipsis', overflow:'hidden' }} span={grid[2] ||11}>
+        </Col>}
+        {grid[2] > 0 && <Col style={{ textOverflow:'ellipsis', overflow:'hidden' }} span={grid[2] ||11}>
             {ar.map((a, idx)=><span key={idx} onClick={(e)=>{
                 console.log('歌手id-->', a.id)
                 e.stopPropagation()
+                navigate('/singer',{replace:true, state:{
+                    id: a.id,
+                    name: a.name,
+                    path: window.location.hash.split('#')[1]
+                }})
             }}>{a.name}</span>)}
-        </Col>
-        <Col span={grid[3] || 3}>
+        </Col>}
+        {grid[3] > 0 && <Col span={grid[3] || 3}>
             {formatSeconds(dt/1000)}
-        </Col>
+        </Col>}
     </Row>
 }
 

@@ -14,7 +14,7 @@ function MvBox(props){
     },[])
     return <div className='mvbox'>
         {name}
-        <video onPlay={()=>{
+        <video onPlay={(e)=>{
             document.getElementsByTagName('audio')[0].pause()
         }} preload='none' className='mvbox-video' src={src} controls poster={cover}/>
         {/* <img className='mvbox-img' src={cover} alt=""/> */}

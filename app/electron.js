@@ -58,7 +58,7 @@ function createWindow () {
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:3000/#/');
+  mainWindow.loadURL('http://localhost:3000/#/home');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {

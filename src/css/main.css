@@ -218,7 +218,7 @@
 }
 .arco-list-item:hover{
     background-color: rgb(211, 211, 211);
-    color: #e10000;
+    color: #e10000 !important;
 }
 .arco-list-item-content{
     /* color: white !important; */

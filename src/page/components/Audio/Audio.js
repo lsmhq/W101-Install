@@ -115,6 +115,9 @@ function Audio(props){
                 let timeBuffered = timeRages.end(timeRages.length - 1);
                 setBuffered(timeBuffered)
             })
+            audio.current.addEventListener('pause',(e)=>{
+                setPaused(audio.current.paused)
+            })
         }
     }, [audio])
     useEffect(()=>{
@@ -173,7 +176,7 @@ function Audio(props){
                             audio.current.play()
                             setPaused(false)
                         }else{
-                            audio.current.pause()
+                            audio.current?.pause()
                             setPaused(true)
                         }
                     }}

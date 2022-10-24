@@ -34,7 +34,7 @@ function LeftNav(props){
             className={`${active===3?'icon-active':''}`}
             onClick={()=>{
                 setActive(3)
-                navigate("/recommend", { replace: true });
+                navigate("/home", { replace: true });
             }}
             tips="推荐"
             // color="#27c346"

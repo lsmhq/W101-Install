@@ -6,6 +6,7 @@ import globalData from "../context/context";
 import Albums from "../components/albumsBox/album";
 import MvBox from "../components/MvBox/mvBox";
 let lastHeight = 0
+// let isSroll = false, timerSroll
 function Search(){
     // 默认为 1 即单曲 , 取值意义 : 1: 单曲, 10: 专辑, 100: 歌手, 1000: 歌单, 1002: 用户, 1004: MV, 1006: 歌词, 1009: 电台, 1014: 视频, 1018:综合, 2000:声音(搜索声音返回字段格式会不一样)
     let [type, setType] = useState('1')
@@ -36,29 +37,12 @@ function Search(){
     },[keywords])
     useEffect(() => {
         setOffset(0)
-        if(type === '1'){
-            // console.log(res.data.result.songs)
-            setSongs([])
-        }
-        if(type === '10'){
-            //albums
-            setAlb([])
-        }
-        if(type === '1000'){
-            //playlists
-            setPlayList([])
-        }
-        if(type === '1004'){
-            setMv([])
-        }
+        setSongs([])
+        setAlb([])
+        setPlayList([])
+        setMv([])
         search(0)
     }, [type])
-    useCallback(
-        () => {
-            
-        },
-        [search],
-    )
     useEffect(() => {
         search()
     }, [offset])
@@ -190,7 +174,21 @@ function Search(){
                     dataSource={mvs}
                     noDataElement={<></>}
                     onListScroll={(e)=>{
+                        // height: 470px;
                         // console.log(e.scrollHeight, e.clientHeight, e.scrollTop)
+                        console.log(e)
+                        // e.onscroll = (ee)=>{
+                        //     ee.preventDefault()
+                        // }
+                        
+                        // if(!isSroll){
+                        //     clearTimeout(timerSroll)
+                        //     e.scrollBy(0, 470)
+                        // }
+                        // isSroll = true
+                        // timerSroll = setTimeout(() => {
+                        //     isSroll = false
+                        // }, 500);
                         if(e.scrollTop + e.clientHeight >= (e.scrollHeight-10) && lastHeight !== e.scrollHeight){
                             console.log('到底')
                             offset += 30
@@ -198,7 +196,7 @@ function Search(){
                             lastHeight = e.scrollHeight
                         }
                     }}
-                    render={(item, idx)=><List.Item key={idx}>
+                    render={(item, idx)=><List.Item id={`mv-${idx}`} key={idx}>
                         {/* {item.name} */}
                         <MvBox {...item}/>
                     </List.Item> 
