@@ -352,7 +352,7 @@
             }
             console.log(names)
             if (names.includes('Wizard101.exe')) {
-                let exe = `${window.wizPath.split(':')[0]}: && cd "${window.wizPath}\\Bin && WizardGraphicalClient.exe -L login.us.wizard101.com 12000"`
+                let exe = `${window.wizPath.split(':')[0]}: && cd "${window.wizPath}\\Bin" && WizardGraphicalClient.exe -L login.us.wizard101.com 12000`
                 // console.log(exe)
                 // shell.openPath(exe)
                 runExe(exe)
