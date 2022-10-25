@@ -329,6 +329,7 @@ app.on('before-quit',(e)=>{
     })
   }
   killExe('launchWizard101.exe', ()=>{
+    // killExe('Subata.exe')
     canQuit = true
     app.quit()
   })
