@@ -1,5 +1,5 @@
 import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message  } from '@arco-design/web-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import '../../css/shark.css'
 import bodyBear from '../../image/body.png'
 import emo1 from '../../image/emo1.png'
@@ -24,6 +24,7 @@ function BodyMain(props){
     let [delable, setDelable] = useState(false)
     let [emo, setEmo] = useState(1)
     let [closedMask, setClosedMask] = useState(false)
+    let submit = useRef()
     useEffect(()=>{
         if(!showLogin){
             setAccount('')
@@ -35,6 +36,7 @@ function BodyMain(props){
                 // console.log(e.keyCode)
                 if(e.keyCode === 13){
                     console.log(e.keyCode)
+                    submit.current.click()
                 }
             }
         }
@@ -243,7 +245,7 @@ function BodyMain(props){
                    }}>删除{account && `[${account}]`}</Button>
             </div>
                 <div className='op-btn'>
-                    <Button onClick={()=>{
+                    <Button ref={submit} onClick={()=>{
                         // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
                         // console.log(localStorage.getItem('wizInstall'))
                         if(!account){
