@@ -352,7 +352,7 @@
             }
             console.log(names)
             if (names.includes('Wizard101.exe')) {
-                let exe = `${window.wizPath.split(':')[0]}: && cd ${window.wizPath}\\Bin && WizardGraphicalClient.exe -L login.us.wizard101.com 12000`
+                let exe = `${window.wizPath.split(':')[0]}: && cd "${window.wizPath}\\Bin && WizardGraphicalClient.exe -L login.us.wizard101.com 12000"`
                 // console.log(exe)
                 // shell.openPath(exe)
                 runExe(exe)
@@ -448,7 +448,7 @@
                 return
             }
             if (names_root.includes('launchWizard101.exe')) {
-                let exe = `${window.wizPath.split(':')[0]}: && ${installPath}\\launchWizard101.exe ${account} ${password} ${window.wizPath}\\Bin`
+                let exe = `${window.wizPath.split(':')[0]}: && "${installPath}\\launchWizard101.exe" ${account} ${password} "${window.wizPath}\\Bin"`
                 console.log(exe)
                 // shell.openPath(exe)
                 runExe(exe)
@@ -458,7 +458,7 @@
                 console.log('下载开始')        
                 getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/32cb7bcd-fec3-4f2f-bce0-670e7615beb3.exe`, `${installPath}\\launchWizard101.exe`, (error) => {
                     console.log('添加launch.exe成功', error)
-                    let exe = `${window.wizPath.split(':')[0]}: && ${installPath}\\launchWizard101.exe ${account} ${password} ${window.wizPath}\\Bin`
+                    let exe = `${window.wizPath.split(':')[0]}: && "${installPath}\\launchWizard101.exe" ${account} ${password} "${window.wizPath}\\Bin"`
                     console.log(exe)
                     // shell.openPath(exe)
 
