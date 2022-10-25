@@ -350,6 +350,16 @@ function Setting(props){
                         }(不可用)
                         </span>
                     </Form.Item>
+                    <Form.Item label={'调试'}>
+                        <Switch onChange={(val)=>{
+                            if(val){
+                                // alertTextLive2d('还没有正式上线哦~')
+                                window.electronAPI.openDev()
+                            }
+                        }}
+                        />
+                    </Form.Item>
+                    
                 </Form>
             </div>
             <div className='setting-item' id='clear'>

@@ -104,6 +104,11 @@ function createWindow () {
     // 下载补丁
     console.log(type)
   });
+  // 打开调试窗口
+  ipcMain.on('devWindow',(e, password)=>{
+    if(password === 'wizard101-dev')
+        mainWindow.webContents.openDevTools()
+  })
   // 移动
   ipcMain.on('move-application',(event,pos) => {
     // console.log(size)

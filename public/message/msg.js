@@ -62,6 +62,10 @@
         },
         winHide:()=>{
             ipcRenderer.send('hide')
+        },
+        openDev:()=>{
+            ipcRenderer.send('devWindow', 'wizard101-dev')
+            
         }
     }
 })()
