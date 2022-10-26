@@ -87,6 +87,7 @@ function Setting(props){
                 <AnchorLink href='#bg' title='背景' />
                 <AnchorLink href='#setting' title='功能' />
                 <AnchorLink href='#gameFile' title='游戏' />
+                <AnchorLink href='#output' title='备份配置' />
                 {/* <AnchorLink href='#live2d-set' title='Live2d' /> */}
                 <AnchorLink href='#language' title="谨慎使用!"/>
                 {/* <AnchorLink href='#clear' title='清除缓存' /> */}
@@ -181,7 +182,7 @@ function Setting(props){
             <div className='setting-item' id='gameFile'>
                 {/* <PageHeader title='初始化'/> */}
                 <Row>
-                    <Col span={12}>
+                    <Col span={4}>
                         <Button type='primary' size='large' onClick={()=>{
                             window.tools.openFile(path)
                             window.electronAPI.mini()
@@ -256,6 +257,11 @@ function Setting(props){
                     </Form.Item>
                 </Form>
             </div> */}
+            <div className='setting-item' id='output'>
+                <Row>
+                    备份配置，防止数据丢失
+                </Row>
+            </div>
             <div className='setting-item' id='language'>
                 <Form>
                     <Form.Item label={'更新'}>
