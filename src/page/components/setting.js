@@ -40,7 +40,7 @@ let { Row, Col } = Grid
 //     },
 // ]
 function Setting(props){
-    let {setBg, setSubataShow, reload} = props
+    let {setBg, setSubataShow} = props
     let [btnSetting, setbtnSetting] = useState(localStorage_subata.getItem('btnSetting') === null?true: localStorage_subata.getItem('btnSetting'))
     let [btnSetting1, setbtnSetting1] = useState(localStorage_subata.getItem('btnSetting1') === null?true: localStorage_subata.getItem('btnSetting1'))
     let [btnSetting2, setbtnSetting2] = useState(localStorage_subata.getItem('btnSetting2') === null?true: localStorage_subata.getItem('btnSetting2'))
@@ -94,7 +94,7 @@ function Setting(props){
                 <AnchorLink href='#output' title='备份配置' />
                 {/* <AnchorLink href='#live2d-set' title='Live2d' /> */}
                 <AnchorLink href='#language' title="谨慎使用!"/>
-                {/* <AnchorLink href='#clear' title='清除缓存' /> */}
+                <AnchorLink href='#clear' title='清除缓存' />
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
         </div>
@@ -266,10 +266,11 @@ function Setting(props){
                     备份配置，防止数据丢失, 配置文件名为 setJson.json
                 </Row>
                 <Row style={{marginBottom:'20px'}}>
-                    如何导入? 答：点击导入配置，并选择 setJson.json 文件，看到提示导入成功，代表成功~
+                    <p>问: 如何导入配置?</p>
+                    <span>答：点击导入配置，并选择 setJson.json 文件，看到提示导入成功，代表成功 , <span style={{color:'red', fontSize:'20px', display:'inline'}}>将会重启</span></span> 
                 </Row>
                 <Row style={{marginBottom:'20px', color:'red'}}>
-                    *注意: 配置文件中包含账号密码信息，禁止随意发送给其他人，保存好自己的信息
+                    *注意: 配置文件中包含账号密码等私密信息，严禁随意发送给其他人，保护好自己的信息
                 </Row>
                 <Row>
                     <Col span={4}><Button type='primary' status='success' onClick={()=>{
@@ -300,12 +301,12 @@ function Setting(props){
                                         content:'导入成功',
                                         duration: 2000,
                                         style:{top:'10px'},
-                                        onClose: reload
+                                        onClose: window.electronAPI.restart
                                     })
                                 })
                             }else{
                                 Message.error({
-                                    content:'不能解析配置',
+                                    content:'解析配置失败',
                                     style:{top:'10px'}
                                 })
                             }
@@ -436,12 +437,12 @@ function Setting(props){
             </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
-                {/* <Button status='danger' type='primary' size='large' onClick={()=>{
+                <Button status='danger' type='primary' size='large' onClick={()=>{
                     window.tools.init(()=>{
                         localStorage.clear()
                         window.electronAPI.restart()
                     })
-                }}>初始化所有</Button> */}
+                }}>初始化所有</Button>
             </div>
 
         </div>

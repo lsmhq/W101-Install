@@ -47,7 +47,7 @@ let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 let useTimer = null
 function Main(props){
-    let { reload } = props
+    // let { reload } = props
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
     let [imgs, setImgs] = useState([]) // 轮播图片
@@ -1032,7 +1032,7 @@ function Main(props){
             children={<Setting
                 setBg={setimgNum}
                 setSubataShow = {setSubataShow}
-                reload = {reload}
+                // reload = {reload}
             />}
             footer={null}
         />

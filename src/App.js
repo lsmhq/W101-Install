@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Main from './page/main';
 function App() {
-  let [show, setShow] = useState(true)
+  // let [show, setShow] = useState(true)
   // getSteam() 
   useEffect(() => {
       document.onkeydown = function(){
@@ -26,12 +26,10 @@ function App() {
       localStorage.setItem('userid',Math.random())
     }  
   }, [])
+
   return (
     <div className="App">
-      {show && <Main reload = {()=>{
-        setShow(false)
-        setShow(true)
-      }}/>}
+      <Main/>
     </div>
   );
 }
