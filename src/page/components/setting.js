@@ -1,6 +1,8 @@
 import { Anchor, Button, Switch, Form, Image, Message, Grid } from '@arco-design/web-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import '../../css/setting.css'
+import LocalStorage_subata from '../util/localStroage'
+let localStorage_subata = new LocalStorage_subata()
 // import { alertText } from '../util/dialog/index'
 // let { alertTextLive2d } = window.electronAPI
 let AnchorLink = Anchor.Link
@@ -39,10 +41,10 @@ let { Row, Col } = Grid
 // ]
 function Setting(props){
     let {setBg, setSubataShow} = props
-    let [btnSetting, setbtnSetting] = useState(localStorage.getItem('btnSetting')|| true)
-    let [btnSetting1, setbtnSetting1] = useState(localStorage.getItem('btnSetting1') || true)
-    let [btnSetting2, setbtnSetting2] = useState(localStorage.getItem('btnSetting2') || true)
-    let [imgNum, setimgNum] = useState(localStorage.getItem('imgNum')? localStorage.getItem('imgNum')*1:0)
+    let [btnSetting, setbtnSetting] = useState(localStorage_subata.getItem('btnSetting') === null?true: localStorage_subata.getItem('btnSetting'))
+    let [btnSetting1, setbtnSetting1] = useState(localStorage_subata.getItem('btnSetting1') === null?true: localStorage_subata.getItem('btnSetting1'))
+    let [btnSetting2, setbtnSetting2] = useState(localStorage_subata.getItem('btnSetting2') === null?true: localStorage_subata.getItem('btnSetting2'))
+    let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0)
     // eslint-disable-next-line no-unused-vars
     let [imgs, setImgs] = useState([])
     let [path, setPath] = useState(window.wizPath)
@@ -53,6 +55,8 @@ function Setting(props){
     let [currentFile, setCurrentFile] = useState(0)
     let [total, setTotal] = useState(0)
     let [current, setCurrent] = useState(0)
+    let outputFile = useRef()
+    let inputFile = useRef()
     // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -67,14 +71,14 @@ function Setting(props){
         //         position: 'left',//位置
         //     },
         // });
-        if(localStorage.getItem('btnSetting2') === null){
-            localStorage.setItem('btnSetting2', true)
+        if(localStorage_subata.getItem('btnSetting2') === null){
+            localStorage_subata.setItem('btnSetting2', true)
         }
-        if(localStorage.getItem('btnSetting1') === null){
-            localStorage.setItem('btnSetting1', true)
+        if(localStorage_subata.getItem('btnSetting1') === null){
+            localStorage_subata.setItem('btnSetting1', true)
         }
-        if(localStorage.getItem('btnSetting') === null){
-            localStorage.setItem('btnSetting', true)
+        if(localStorage_subata.getItem('btnSetting') === null){
+            localStorage_subata.setItem('btnSetting', true)
         }
     },[])
     useEffect(()=>{
@@ -101,19 +105,19 @@ function Setting(props){
                     <Image onClick={()=>{
                         setimgNum(0)
                         setBg(0)
-                        localStorage.setItem('imgNum', 0)
+                        localStorage_subata.setItem('imgNum', 0)
                     }} className={imgNum === 0?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={100} height={100} src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/c3e29bb5-d5a0-4799-a544-264e310356aa.jpg'/>
                     <Image onClick={()=>{
                         setimgNum(1)
                         setBg(1)
-                        localStorage.setItem('imgNum', 1)
+                        localStorage_subata.setItem('imgNum', 1)
                     }}  className={imgNum === 1?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={100} height={100} src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/151d0d95-b330-4ca8-9de7-d0336aed9872.webp'/>
                     {
                         imgs.map((img, index)=>{
                             return <Image key={index} onClick={()=>{
                                 setimgNum(index + 2)
                                 setBg(index + 2)
-                                localStorage.setItem('imgNum', index + 2)
+                                localStorage_subata.setItem('imgNum', index + 2)
                             }} className={(index + 2 === index)?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={100} height={100} src={img}/>
                         })
                     }
@@ -132,48 +136,48 @@ function Setting(props){
                 {/* <PageHeader title='按钮设置'/> */}
                 <Form>
                     <Form.Item label={'开始游戏'}>
-                        <Switch checked={JSON.parse(btnSetting)} onChange={(val)=>{
+                        <Switch checked={btnSetting} onChange={(val)=>{
                             console.log(val)
                             setbtnSetting(val)
                             // true 开始游戏最小化
                             // false 开始游戏不进行操作
-                            localStorage.setItem('btnSetting', val)
+                            localStorage_subata.setItem('btnSetting', val)
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            JSON.parse(btnSetting) ?'启动游戏自动最小化':'启动游戏后不进行操作'
+                            btnSetting ?'启动游戏自动最小化':'启动游戏后不进行操作'
                         }
                         </span>
                     </Form.Item>
                     <Form.Item label="Subata">
-                        <Switch checked={JSON.parse(btnSetting1)} onChange={(val)=>{
+                        <Switch checked={btnSetting1} onChange={(val)=>{
                             // console.log(val)
                             setbtnSetting1(val)
                             setSubataShow(val)
                             // true 开始游戏最小化
                             // false 开始游戏不进行操作
-                            localStorage.setItem('btnSetting1', val)
+                            localStorage_subata.setItem('btnSetting1', val)
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            JSON.parse(btnSetting1) ?'显示':'隐藏'
+                            btnSetting1 ?'显示':'隐藏'
                         }
                         </span>
                     </Form.Item>
                     <Form.Item label="关闭按钮">
-                        <Switch checked={JSON.parse(btnSetting2)} onChange={(val)=>{
+                        <Switch checked={btnSetting2} onChange={(val)=>{
                             // console.log(val)
                             setbtnSetting2(val)
                             // true 开始游戏最小化
                             // false 开始游戏不进行操作
-                            localStorage.setItem('btnSetting2', val)
+                            localStorage_subata.setItem('btnSetting2', val)
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            JSON.parse(btnSetting2) ?'后台运行':'退出程序'
+                            btnSetting2 ?'后台运行':'退出程序'
                         }
                         </span>
                     </Form.Item>
@@ -197,7 +201,7 @@ function Setting(props){
                 <br/><br/>
                 <span>当前路径：</span>
                 <span>{path?path:<Button onClick={()=>{
-                        console.log(localStorage.getItem('wizInstall'))
+                        console.log(localStorage_subata.getItem('wizInstall'))
                         let fileSelect = document.getElementById('selectWiz')
                         fileSelect.click()
                     }} status='success' type='primary'>{'选择Wizard.exe'}</Button>}</span>
@@ -258,8 +262,27 @@ function Setting(props){
                 </Form>
             </div> */}
             <div className='setting-item' id='output'>
+                <Row style={{marginBottom:'20px'}}>
+                    备份配置，防止数据丢失, 未上架功能，开发中
+                </Row>
                 <Row>
-                    备份配置，防止数据丢失
+                    <Col span={4}><Button type='primary' status='success' onClick={()=>{
+                        console.log(localStorage_subata.outPutToJson())
+                        outputFile.current.click()
+                    }}>备份配置</Button></Col>
+                    <Col span={10} offset={2}><Button type='primary' status='default' onClick={()=>{
+                        inputFile.current.click()
+                    }}>导入配置</Button></Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <input ref={outputFile} webkitdirectory multiple id='outputFile' onChange={(e)=>{
+                            console.log(e)
+                        }} type='file' style={{visibility:'hidden'}}/>
+                        <input ref={inputFile} id='inputFile' onChange={(e)=>{
+                            console.log(e)
+                        }} type='file' style={{visibility:'hidden'}}/>
+                    </Col>
                 </Row>
             </div>
             <div className='setting-item' id='language'>
@@ -287,7 +310,7 @@ function Setting(props){
                                         }
                                     })
                                     let fileStatus = [], indexDownload = 0
-                                    let fileList_update = window.fileList_update || localStorage.getItem('fileList_update')
+                                    let fileList_update = window.fileList_update || localStorage_subata.getItem('fileList_update')
                                     fileList_update.split('\n').forEach(path=>{
                                         // -1 未开始下载
                                         fileStatus.push({
@@ -353,7 +376,7 @@ function Setting(props){
                             console.log(val)
                             // true 开始游戏最小化
                             // false 开始游戏不进行操作
-                            localStorage.setItem('zhSound', val)
+                            localStorage_subata.setItem('zhSound', val)
                             setZhSound(val)
                             if(val){
                                 // alertTextLive2d('还没有正式上线哦~')

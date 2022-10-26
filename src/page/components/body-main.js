@@ -1,10 +1,12 @@
 import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message  } from '@arco-design/web-react'
 import { useEffect, useRef, useState } from 'react'
+import LocalStorage_subata from '../util/localStroage'
 import '../../css/shark.css'
 import bodyBear from '../../image/body.png'
 import emo1 from '../../image/emo1.png'
 import emo2 from '../../image/emo2.png'
 import emo3 from '../../image/emo3.png'
+let localStorage_subata = new LocalStorage_subata()
 let carouselIndex = 0
 let { TabPane } = Tabs
 let { Row, Col } = Grid
@@ -15,8 +17,8 @@ let style = {
 let timerKill = null
 function BodyMain(props){
     let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow } = props
-    const [data, setData] = useState(JSON.parse(localStorage.getItem('accounts'))||[]);
-    const [dataMap, setDataMap] = useState(JSON.parse(localStorage.getItem('accountsMap'))||{});
+    const [data, setData] = useState(localStorage_subata.getItem('accounts')||[]);
+    const [dataMap, setDataMap] = useState(localStorage_subata.getItem('accountsMap')||{});
     const [showLogin, setShowLogin] = useState(false)
     let [password, setPassword] = useState('')
     let [account, setAccount] = useState('')
@@ -43,17 +45,17 @@ function BodyMain(props){
     },[showLogin])
     useEffect(()=>{
         if(data.length > 0){
-            localStorage.setItem('accounts', JSON.stringify(data))
+            localStorage_subata.setItem('accounts', data)
         }
     }, [data])
     useEffect(()=>{
         if(account && password){
             dataMap[account] = password
-            localStorage.setItem('accountsMap', JSON.stringify({...dataMap}))
+            localStorage_subata.setItem('accountsMap', {...dataMap})
         }
     }, [dataMap])
     useEffect(()=>{
-        let accounts = JSON.parse(localStorage.getItem('accounts')) || []
+        let accounts = localStorage_subata.getItem('accounts') || []
         let index = accounts.findIndex(val=>val===account)
         console.log(index)
         if(index >= 0){
@@ -227,16 +229,16 @@ function BodyMain(props){
            <div className='btn-group'>
             <div className='op-btn del-btn'>
                    <Button disabled={delable} size='large' status='danger' type='primary' className='openGame' onClick={()=>{
-                        let accounts = JSON.parse(localStorage.getItem('accounts')) || []
+                        let accounts = localStorage_subata.getItem('accounts') || []
                         // console.log(accounts)
                         let index = accounts.findIndex(val=>val===account)
                         if(index > -1){
                             console.log(index)
                             accounts.splice(index, 1)
-                            localStorage.setItem('accounts', JSON.stringify(accounts))
-                            let accountsObj = JSON.parse(localStorage.getItem('accountsMap'))
+                            localStorage_subata.setItem('accounts', accounts)
+                            let accountsObj = localStorage_subata.getItem('accountsMap')
                             delete accountsObj[account]
-                            localStorage.setItem('accountsMap', JSON.stringify(accountsObj))
+                            localStorage_subata.setItem('accountsMap', accountsObj)
                             setData([...accounts])
                             setDataMap({...accountsObj})
                             setAccount('')
@@ -267,7 +269,7 @@ function BodyMain(props){
                                         onClose:()=>{
                                             // window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
-                                            let next = JSON.parse(localStorage.getItem('btnSetting'))
+                                            let next = localStorage_subata.getItem('btnSetting')
                                             if(next){
                                                 window.electronAPI.mini()
                                             } 
@@ -284,7 +286,7 @@ function BodyMain(props){
                             })
                             return
                         }
-                        if(localStorage.getItem('wizInstall') === 'true'){
+                        if(localStorage_subata.getItem('wizInstall')){
                             if(save){
                                     if(!data.includes(account)){
                                         data.push(account)
@@ -333,7 +335,7 @@ function BodyMain(props){
                                         onClose:()=>{
                                             // window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
-                                            let next = JSON.parse(localStorage.getItem('btnSetting'))
+                                            let next = localStorage.getItem('btnSetting')
                                             if(next){
                                                 window.electronAPI.mini()
                                             } 
