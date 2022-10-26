@@ -40,7 +40,7 @@ let { Row, Col } = Grid
 //     },
 // ]
 function Setting(props){
-    let {setBg, setSubataShow} = props
+    let {setBg, setSubataShow, reload} = props
     let [btnSetting, setbtnSetting] = useState(localStorage_subata.getItem('btnSetting') === null?true: localStorage_subata.getItem('btnSetting'))
     let [btnSetting1, setbtnSetting1] = useState(localStorage_subata.getItem('btnSetting1') === null?true: localStorage_subata.getItem('btnSetting1'))
     let [btnSetting2, setbtnSetting2] = useState(localStorage_subata.getItem('btnSetting2') === null?true: localStorage_subata.getItem('btnSetting2'))
@@ -263,12 +263,27 @@ function Setting(props){
             </div> */}
             <div className='setting-item' id='output'>
                 <Row style={{marginBottom:'20px'}}>
-                    备份配置，防止数据丢失, 未上架功能，开发中
+                    备份配置，防止数据丢失, 配置文件名为 setJson.json
+                </Row>
+                <Row style={{marginBottom:'20px'}}>
+                    如何导入? 答：点击导入配置，并选择 setJson.json 文件，看到提示导入成功，代表成功~
+                </Row>
+                <Row style={{marginBottom:'20px', color:'red'}}>
+                    *注意: 配置文件中包含账号密码信息，禁止随意发送给其他人，保存好自己的信息
                 </Row>
                 <Row>
                     <Col span={4}><Button type='primary' status='success' onClick={()=>{
-                        console.log(localStorage_subata.outPutToJson())
-                        outputFile.current.click()
+                        // console.log(localStorage_subata.outPutToJson())
+                        window.tools.choseDir((dir)=>{
+                            console.log(dir)
+                            window.tools.writeFile(`${dir}\\setJson.json`,localStorage_subata.outPutToJson(), ()=>{
+                                Message.success({
+                                    content:'保存成功！',
+                                    style:{top:'10px'}
+                                })
+                                window.tools.openFile(`${dir}`)
+                            })
+                        })
                     }}>备份配置</Button></Col>
                     <Col span={10} offset={2}><Button type='primary' status='default' onClick={()=>{
                         inputFile.current.click()
@@ -276,11 +291,26 @@ function Setting(props){
                 </Row>
                 <Row>
                     <Col>
-                        <input ref={outputFile} webkitdirectory multiple id='outputFile' onChange={(e)=>{
-                            console.log(e)
-                        }} type='file' style={{visibility:'hidden'}}/>
                         <input ref={inputFile} id='inputFile' onChange={(e)=>{
-                            console.log(e)
+                            console.log(e.target.files[0].path)
+                            if(e.target.files[0].path.includes('setJson.json')){
+                                window.tools.readFile(e.target.files[0].path, (str)=>{
+                                    localStorage_subata.inputLocalStroage(str)
+                                    Message.success({
+                                        content:'导入成功',
+                                        duration: 2000,
+                                        style:{top:'10px'},
+                                        onClose: reload
+                                    })
+                                })
+                            }else{
+                                Message.error({
+                                    content:'不能解析配置',
+                                    style:{top:'10px'}
+                                })
+                            }
+                            e.target.value = ''
+                            // e.target.files = []
                         }} type='file' style={{visibility:'hidden'}}/>
                     </Col>
                 </Row>
@@ -298,7 +328,10 @@ function Setting(props){
                                 window.tools.getGameVersion((versionArr)=>{
                                     
                                     if(versionArr === undefined){
-                                        Message.error('出现错误，联系灭火器')
+                                        Message.error({
+                                            style:{top:'10px'},
+                                            content:'出现错误，联系灭火器'
+                                        })
                                         return
                                     }
                                     // window.tools.getFile()

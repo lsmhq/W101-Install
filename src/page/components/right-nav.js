@@ -3,6 +3,8 @@
 import Icon from './Icon'
 import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconUserGroup, IconDelete, IconSettings, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import { Message, Button, Notification } from '@arco-design/web-react'
+import LocalStorage_subata from '../util/localStroage';
+let localStorage_subata = new LocalStorage_subata()
 let style = {
     right:'50px',
     top:'20px'
@@ -98,7 +100,7 @@ function RightNav(props){
                     }) 
                     return
                 }
-                window.tools.checkUpdate(localStorage.getItem('type'), (num)=>{
+                window.tools.checkUpdate(localStorage_subata.getItem('type'), (num)=>{
                     console.log('num ----->',num)
                     if(num !== 3){
                         Notification.warning({

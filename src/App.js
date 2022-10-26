@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Main from './page/main';
 function App() {
-  // let [show, setShow] = useState(false)
+  let [show, setShow] = useState(true)
   // getSteam() 
   useEffect(() => {
       document.onkeydown = function(){
@@ -28,7 +28,10 @@ function App() {
   }, [])
   return (
     <div className="App">
-      <Main/>
+      {show && <Main reload = {()=>{
+        setShow(false)
+        setShow(true)
+      }}/>}
     </div>
   );
 }

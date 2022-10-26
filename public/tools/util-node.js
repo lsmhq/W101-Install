@@ -3,9 +3,8 @@
     const fs = require('fs')
     var cmdShell = require('node-cmd');
     const child_process = require('child_process'); //引入模块
-    const {
-        shell
-    } = require('electron')
+    const { shell } = require('electron')
+    const { dialog } = require('@electron/remote')
     window.path = localStorage.getItem('gameDataPath') || '' // 打包路径
     window.wizPath = localStorage.getItem('wizPath') || '' // Wiz路径
     let params = {
@@ -520,7 +519,40 @@
         })
     }
 
-    
+    // 读取本地文件
+    function readFile(path, callBack){
+        try {
+            let str = fs.readFileSync(path, 'utf-8')
+            // return str
+            callBack && callBack(str)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    // 写本地文件
+    function writeFile(path, data, callBack){
+        try {
+            fs.writeFileSync(path, data, 'utf-8')
+            callBack && callBack()
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    // 选择目录
+    function choseDir(callback){
+        dialog.showOpenDialog({
+            // 标题
+            title:'保存路径',
+            // 过滤器,name 后面的值随便写 extensions 里面写允许上传的类型
+            buttonLabel:'选择',
+            properties:['openDirectory']
+        }).then(result => {
+            // console.log(result.filePaths)
+            callback && callback(result.filePaths[0])
+        }).catch(err => {
+            console.log(err)
+        })
+    }
     window.tools = {
         initDns,
         connect,
@@ -537,6 +569,9 @@
         openFile,
         getGameVersion,
         login,
-        killExe
+        killExe,
+        readFile,
+        writeFile,
+        choseDir
     }
 })()

@@ -45,6 +45,16 @@ class LocalStorage_subata{
         return jsonObj
     }
     
+    inputLocalStroage = (json)=>{
+        let jsonObj = JSON.parse(json)
+        for (const key in jsonObj) {
+            if (Object.hasOwnProperty.call(jsonObj, key)) {
+                const element = jsonObj[key];
+                this.setItem(key, element)
+            }
+        }
+    }
+
     getKeys = ()=>{
         let keys = []
         for (let index = 0; index < localStorage.length; index++) {

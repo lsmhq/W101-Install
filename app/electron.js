@@ -1,6 +1,7 @@
 const child_process = require('child_process');
 const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
+const remote = require('@electron/remote/main/index')
 // const url = require('url');
 let mainWindow, loading, tray, width = 1250, height = 700
 const message = {
@@ -37,8 +38,11 @@ function createWindow () {
       scrollBounce:true,
       nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
       preload: path.join(__dirname, 'preload.js'),
+      // enableRemoteModule: true,
     }
   });
+  remote.initialize()
+  remote.enable(mainWindow.webContents)
   // let size = mainWindow.getSize()
   // mainWindow.webContents.openDevTools() // 打开窗口调试
 
