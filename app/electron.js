@@ -2,6 +2,7 @@ const child_process = require('child_process');
 const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
 const remote = require('@electron/remote/main/index')
+const url = require('url')
 // const url = require('url');
 let mainWindow, loading, tray, width = 1250, height = 700
 const message = {
@@ -55,15 +56,15 @@ function createWindow () {
   // }))
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
+    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, '../build/index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, './index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
   // 加载应用 --开发阶段  需要运行 npm run start
   // mainWindow.loadURL('http://localhost:5000/#/');
 
