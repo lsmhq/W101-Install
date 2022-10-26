@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "./static/css/main.cf32b491.css",
+    "main.js": "./static/js/main.7a75e192.js",
+    "static/js/787.48cdcb01.chunk.js": "./static/js/787.48cdcb01.chunk.js",
+    "static/media/zfb.jpg": "./static/media/zfb.8d7ecf20c8e4efb92610.jpg",
+    "static/media/wechat.jpg": "./static/media/wechat.3f55ac4480c706480acd.jpg",
+    "static/media/QQ_share.jpg": "./static/media/QQ_share.4692c1838a2254bb72a5.jpg",
+    "static/media/WizardLogoRA.png": "./static/media/WizardLogoRA.3dd8aab8b8f121731661.png",
+    "static/media/Subata_logo.png": "./static/media/Subata_logo.a66888c88454abf5eb74.png",
+    "static/media/body.png": "./static/media/body.1a236e276d3f9b154f94.png",
+    "index.html": "./index.html",
+    "main.cf32b491.css.map": "./static/css/main.cf32b491.css.map",
+    "main.7a75e192.js.map": "./static/js/main.7a75e192.js.map",
+    "787.48cdcb01.chunk.js.map": "./static/js/787.48cdcb01.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cf32b491.css",
+    "static/js/main.7a75e192.js"
+  ]
+}

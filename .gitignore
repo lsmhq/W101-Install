@@ -9,6 +9,8 @@
 /coverage
 /build/release
 /build/debug
+/app/release
+/app/debug
 # production
 # /build
 
