@@ -105,19 +105,6 @@ function Main(props){
         createSocket()
         // 窗口自适应
         resize()
-        if(!localStorage_subata.getItem('wizInstall')){
-            Notification.error({
-                style,
-                id:'notInstallWizard101',
-                title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
-                content: <span>
-                    <Button onClick={()=>{
-                        let fileSelect = document.getElementById('selectWiz')
-                        fileSelect.click()
-                    }}>手动选择游戏路径</Button>
-                </span>
-            })
-        }
         // 获取安装目录
         // setInterval(()=>{
         // console.log('检测更新')
