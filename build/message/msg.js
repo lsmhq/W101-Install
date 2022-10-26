@@ -14,7 +14,7 @@
         sendXY:(e)=>{ipcRenderer.send('move-application',{posX:e.x,posY:e.y})},
         mini:()=>{ipcRenderer.send('mini')},
         close:()=>{ipcRenderer.send('close')},
-        restart:()=>{ipcRenderer.send('restart')},
+        restart:()=>{ipcRenderer.send('relaunch')},
         sound,
         getScale:(getZoom)=>{ipcRenderer.on('scale',(event, scale)=>{
             console.log(scale)
