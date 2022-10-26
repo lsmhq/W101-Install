@@ -1,10 +1,11 @@
-import { Anchor, Button, Switch, Form, Image, Message } from '@arco-design/web-react'
+import { Anchor, Button, Switch, Form, Image, Message, Grid } from '@arco-design/web-react'
 import { useState, useEffect } from 'react'
 import '../../css/setting.css'
 // import { alertText } from '../util/dialog/index'
 // let { alertTextLive2d } = window.electronAPI
 let AnchorLink = Anchor.Link
 let downLoadTimer
+let { Row, Col } = Grid
 // let models = [
 //     {
 //         name:'shizuku',
@@ -83,12 +84,12 @@ function Setting(props){
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}>
-                <AnchorLink href='#bg' title='自定义背景' />
-                <AnchorLink href='#setting' title='按钮设置' />
-                <AnchorLink href='#gameFile' title='游戏文件' />
+                <AnchorLink href='#bg' title='背景' />
+                <AnchorLink href='#setting' title='功能' />
+                <AnchorLink href='#gameFile' title='游戏' />
                 {/* <AnchorLink href='#live2d-set' title='Live2d' /> */}
-                <AnchorLink href='#language' title="实验性功能（谨慎使用!）"/>
-                <AnchorLink href='#clear' title='清除缓存' />
+                <AnchorLink href='#language' title="谨慎使用!"/>
+                {/* <AnchorLink href='#clear' title='清除缓存' /> */}
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
         </div>
@@ -179,10 +180,19 @@ function Setting(props){
             </div>
             <div className='setting-item' id='gameFile'>
                 {/* <PageHeader title='初始化'/> */}
-                <Button type='primary' size='large' onClick={()=>{
-                    window.tools.openFile(path)
-                    window.electronAPI.mini()
-                }}>定位游戏</Button>
+                <Row>
+                    <Col span={12}>
+                        <Button type='primary' size='large' onClick={()=>{
+                            window.tools.openFile(path)
+                            window.electronAPI.mini()
+                        }}>定位游戏</Button>
+                    </Col>
+                    <Col span={10} offset={2}>
+                        <Button type='primary' status='warning' size='large' onClick={()=>{
+                            document.getElementById('selectWiz').click()
+                        }}>重新选择</Button>
+                    </Col>
+                </Row>
                 <br/><br/>
                 <span>当前路径：</span>
                 <span>{path?path:<Button onClick={()=>{
@@ -364,16 +374,12 @@ function Setting(props){
             </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
-                <Button status='danger' type='primary' size='large' onClick={()=>{
+                {/* <Button status='danger' type='primary' size='large' onClick={()=>{
                     window.tools.init(()=>{
                         localStorage.clear()
-                        // 重启
-                        // alertTextLive2d('即将重启...')
-                        // setTimeout(() => {
-                            window.electronAPI.restart()
-                        // }, 2000)
+                        window.electronAPI.restart()
                     })
-                }}>初始化所有</Button>
+                }}>初始化所有</Button> */}
             </div>
 
         </div>
