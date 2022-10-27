@@ -231,7 +231,7 @@ function openLive2D(params){
         focusable:true,
         modal:true,
         alwaysOnTop: true,
-        type:'',
+        type:'toolbar',
         webPreferences:{
           nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
           // webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
