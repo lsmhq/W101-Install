@@ -45,7 +45,7 @@ function Singer(props){
                     {singer.artist.name}
                 </Col>
             </Row>
-            <Tabs style={{color:'white'}}>
+            <Tabs>
                 <TabPane title="介绍" key='1'>
                     <Row className='tab-container'>
                         <Col>
