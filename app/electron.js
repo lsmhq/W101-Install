@@ -4,6 +4,7 @@ let mainWindow, loading
 let mainWidth = 400, mainHeight = 500
 let newWidth = 300, newHeight = 950
 let mainColse = false
+const url = require('url')
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -47,13 +48,13 @@ function createWindow () {
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, '../build/index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, './build/index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:3000/#/');
+  // mainWindow.loadURL('http://localhost:3000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -230,6 +231,7 @@ function openLive2D(params){
         focusable:true,
         modal:true,
         alwaysOnTop: true,
+        type:'',
         webPreferences:{
           nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
           // webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
@@ -245,9 +247,16 @@ function openLive2D(params){
     
     // newWin.loadURL(`https://lsmhq.gitee.io/live2d-html/live2d.html?type=${params.modelName}`)
     // newWin.loadURL(`http://localhost:5500/app/live2d/live2d.html?type=${params.modelName}`)
-    newWin.loadURL(`http://127.0.0.1:5500/live2d.html?type=${params.modelName}`)
-    
-    newWin.webContents.openDevTools()
+    // newWin.loadURL(`http://127.0.0.1:5500/live2d.html?type=${params.modelName}`)
+    newWin.loadURL(url.format({
+      pathname: path.join(__dirname, `./build/live2d.html`),
+      protocol: 'file:',
+      slashes: true,
+      query:{
+        type:params.modelName
+      }
+    }))
+    // newWin.webContents.openDevTools()
     newWin.on('close',()=>{
       if( !mainColse ){
         mainWindow && mainWindow.webContents.send('live2d-closed')
