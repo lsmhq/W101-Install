@@ -124,6 +124,11 @@ function Setting(props){
                         }
                         </span>
                     </Form.Item>
+                    <Form.Item>
+                        <Button status='success' type='primary' onClick={()=>{
+                            window.electronAPI.checkUpdate()
+                        }}>检查更新并下载</Button>
+                    </Form.Item>
                 </Form>
             </div>
         </div>

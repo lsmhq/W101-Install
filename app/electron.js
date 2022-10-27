@@ -1,5 +1,6 @@
 const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
+const url = require('url')
 let mainWindow, loading, tray, windowSongWord = null
 let width = 1000
 let height = 650
@@ -48,17 +49,17 @@ function createWindow () {
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    mainWindow.loadURL('https://static-a8b7147a-cb6a-46ff-b3b2-e4faca26eba3.bspapp.com/#/home')
+    // mainWindow.loadURL('https://static-a8b7147a-cb6a-46ff-b3b2-e4faca26eba3.bspapp.com/#/home')
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
   // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, '../build/index.html'),
+  //   pathname: path.join(__dirname, './build/index.html'),
   //   protocol: 'file:',
   //   slashes: true
   // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:3000/#/home');
+  mainWindow.loadURL('http://localhost:3000/#/home');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -215,6 +216,9 @@ function createWindow () {
     // console.log('set-ignore-mouse-events', args)
     windowSongWord.setIgnoreMouseEvents(...args)
   })
+  ipcMain.on('checkupdate', (event) => {
+    checkUpdate()
+  })
 }
 
 function createWindowB(){
@@ -294,43 +298,45 @@ const showLoading = (cb) => {
 
 
 // app.whenReady().then(()=>{
-
 // });
+function checkUpdate(){
+  sendUpdateMessage({ cmd: 'app-ready', message: message.error })
+  autoUpdater.checkForUpdates()
+  autoUpdater.on('update-downloaded', () => {
+    sendUpdateMessage({ cmd: 'update-downloaded', message: message.error })
+    autoUpdater.quitAndInstall()
+  })
+  
+  autoUpdater.on('error', function (e) {
+    console.log('error', e);
+    sendUpdateMessage({ cmd: 'error', message: message.error })
+  })
+  autoUpdater.on('checking-for-update', function () {
+    console.log(message.checking)
+    sendUpdateMessage({ cmd: 'checking-for-update', message: message.checking })
+  })
+  autoUpdater.on('update-available', function (info) {
+    console.log(message.updateAva)
+    sendUpdateMessage({ cmd: 'update-available', message: message.updateAva, info })
+  })
+  autoUpdater.on('update-not-available', function (info) {
+    console.log(message.updateNotAva)
+    sendUpdateMessage({ cmd: 'update-not-available', message: message.updateNotAva, info: info })
+  })
+  // 更新下载进度事件
+  autoUpdater.on('download-progress', function (progressObj) {
+    console.log('触发下载。。。')
+    console.log(progressObj)
+    mainWindow.setProgressBar((progressObj.transferred/progressObj.total).toFixed(2))
+    sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })
+  })
+}
+
 app.commandLine.appendSwitch("--disable-http-cache")
 app.on('ready', () => {
   // console.log('app-ready')
   showLoading(createWindow)
-  sendUpdateMessage({ cmd: 'app-ready', message: message.error })
-  autoUpdater.checkForUpdates()
-})
-
-autoUpdater.on('update-downloaded', () => {
-  sendUpdateMessage({ cmd: 'update-downloaded', message: message.error })
-  autoUpdater.quitAndInstall()
-})
-
-autoUpdater.on('error', function (e) {
-  console.log('error', e);
-  sendUpdateMessage({ cmd: 'error', message: message.error })
-})
-autoUpdater.on('checking-for-update', function () {
-  console.log(message.checking)
-  sendUpdateMessage({ cmd: 'checking-for-update', message: message.checking })
-})
-autoUpdater.on('update-available', function (info) {
-  console.log(message.updateAva)
-  sendUpdateMessage({ cmd: 'update-available', message: message.updateAva, info })
-})
-autoUpdater.on('update-not-available', function (info) {
-  console.log(message.updateNotAva)
-  sendUpdateMessage({ cmd: 'update-not-available', message: message.updateNotAva, info: info })
-})
-// 更新下载进度事件
-autoUpdater.on('download-progress', function (progressObj) {
-  console.log('触发下载。。。')
-  console.log(progressObj)
-  mainWindow.setProgressBar((progressObj.transferred/progressObj.total).toFixed(2))
-  sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })
+  
 })
 
 function sendUpdateMessage(data) {

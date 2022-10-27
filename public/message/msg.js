@@ -76,6 +76,9 @@
         },
         sendWord:(word)=>{
             ipcRenderer.send('sendWord', word)
+        },
+        checkUpdate: ()=>{
+            ipcRenderer.send('checkupdate')
         }
     }
 })()

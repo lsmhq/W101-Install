@@ -208,7 +208,7 @@
 .arco-tabs-header-title-active{
     color: #1a1a1a !important;
 }
-.arco-tabs-header-ink{
+.arco-tabs-header-ink{ 
     background-color: #e10000 !important;
 }
 .arco-list-item{
@@ -218,7 +218,7 @@
     padding: 0 5px !important;
 }
 .arco-list-item:hover{
-    background-color: rgb(211, 211, 211);
+    background-color: rgba(231, 231, 231, 0.712);
     color: #e10000 !important;
 }
 .arco-list-item-content{
