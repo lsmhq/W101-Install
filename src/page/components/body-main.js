@@ -6,7 +6,9 @@ import bodyBear from '../../image/body.png'
 import emo1 from '../../image/emo1.png'
 import emo2 from '../../image/emo2.png'
 import emo3 from '../../image/emo3.png'
-let localStorage_subata = new LocalStorage_subata()
+let localStorage_subata = new LocalStorage_subata({
+    filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
+})
 let carouselIndex = 0
 let { TabPane } = Tabs
 let { Row, Col } = Grid
@@ -171,7 +173,7 @@ function BodyMain(props){
         children={<div className='login-right'>
             <div className='shakeBox'>
                 <div className='shake'>
-                    <div className='body' onMouseEnter={()=>{
+                    <div className='shake-body' onMouseEnter={()=>{
                         setEmo(2)
                     }} onMouseLeave={()=>{
                         setEmo(3)

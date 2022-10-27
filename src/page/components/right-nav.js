@@ -4,7 +4,9 @@ import Icon from './Icon'
 import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconUserGroup, IconDelete, IconSettings, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import { Message, Button, Notification } from '@arco-design/web-react'
 import LocalStorage_subata from '../util/localStroage';
-let localStorage_subata = new LocalStorage_subata()
+let localStorage_subata = new LocalStorage_subata({
+    filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
+})
 let style = {
     right:'50px',
     top:'20px'

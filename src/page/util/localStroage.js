@@ -1,5 +1,7 @@
 class LocalStorage_subata{
-
+    constructor(option){
+        this.filter = option.filter
+    }
     setItem = (key, item)=>{
         let type = typeof item
         let typeArr = ['object']
@@ -26,12 +28,14 @@ class LocalStorage_subata{
     clear = ()=>{
         localStorage.clear()
     }
-
+    
     outPutToJson = ()=>{
         let keys = this.getKeys()
         let jsonObj = {}
         keys.forEach(key => {
+            if(!this.filter.includes(key)){
                 jsonObj[key] = this.getItem(key)
+            }     
         });
         return JSON.stringify(jsonObj) 
     }
@@ -40,7 +44,9 @@ class LocalStorage_subata{
         let keys = this.getKeys()
         let jsonObj = {}
         keys.forEach(key => {
+            if(!this.filter.includes(key)){
                 jsonObj[key] = this.getItem(key)
+            }     
         });
         return jsonObj
     }

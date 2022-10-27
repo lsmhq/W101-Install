@@ -2,7 +2,9 @@ import { Anchor, Button, Switch, Form, Image, Message, Grid } from '@arco-design
 import { useState, useEffect, useRef } from 'react'
 import '../../css/setting.css'
 import LocalStorage_subata from '../util/localStroage'
-let localStorage_subata = new LocalStorage_subata()
+let localStorage_subata = new LocalStorage_subata({
+    filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath'],
+})
 // import { alertText } from '../util/dialog/index'
 // let { alertTextLive2d } = window.electronAPI
 let AnchorLink = Anchor.Link

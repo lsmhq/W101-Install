@@ -12,7 +12,9 @@ import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
 import LocalStorage_subata from './util/localStroage';
-let localStorage_subata = new LocalStorage_subata()
+let localStorage_subata = new LocalStorage_subata({
+    filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
+})
 // import { alertText } from './util/dialog';
 // let {alertTextLive2d} = window.electronAPI
 // let { Row, Col } = Grid
