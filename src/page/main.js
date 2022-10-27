@@ -296,7 +296,7 @@ function Main(props){
                 getMessage()
             }else if(data.type === 'count'){
                 setOnline(data.onLineNum)
-            }else{
+            }else if(data?.id){
                 window.electronAPI.sound()
                 Notification.info({
                     style,
