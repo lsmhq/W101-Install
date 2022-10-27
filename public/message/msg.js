@@ -66,6 +66,13 @@
         openDev:()=>{
             ipcRenderer.send('devWindow', 'wizard101-dev')
             
+        },
+        checkUpdate:(callback)=>{
+            ipcRenderer.send('update')
+            ipcRenderer.on('checking',(e, type)=>{
+                // console.log(type)
+                callback(type)
+            })
         }
     }
 })()

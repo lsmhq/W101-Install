@@ -96,7 +96,7 @@ function Setting(props){
                 <AnchorLink href='#output' title='备份配置' />
                 {/* <AnchorLink href='#live2d-set' title='Live2d' /> */}
                 <AnchorLink href='#language' title="谨慎使用!"/>
-                <AnchorLink href='#clear' title='清除缓存' />
+                <AnchorLink href='#clear' title='关于' />
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
         </div>
@@ -439,12 +439,21 @@ function Setting(props){
             </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
-                <Button status='danger' type='primary' size='large' onClick={()=>{
-                    window.tools.init(()=>{
-                        localStorage.clear()
-                        window.electronAPI.restart()
-                    })
-                }}>初始化所有</Button>
+                <Row>
+                    <Button status='danger' type='primary' size='large' onClick={()=>{
+                        window.tools.init(()=>{
+                            localStorage.clear()
+                            window.electronAPI.restart()
+                        })
+                    }}>清空缓存</Button>
+                </Row>
+                <Row>
+                    <Button status='success' type='primary' size='large' onClick={()=>{
+                        window.electronAPI.checkUpdate((type)=>{
+                            console.log(type)
+                        })
+                    }}>检查更新并下载</Button>
+                </Row>
             </div>
 
         </div>

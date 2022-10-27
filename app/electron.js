@@ -152,6 +152,13 @@ function createWindow () {
   ipcMain.on('hide', (e)=>{
     mainWindow.hide()
   })
+  // 检查更新
+  ipcMain.on('update',()=>{
+    checkUpdate((type)=>{
+      mainWindow.webContents.send('checking',type)
+    })
+  })
+
   // 准备好显示
   ipcMain.on('ready', function(e, flag){
     if(flag.flag){
@@ -268,41 +275,50 @@ const showLoading = (cb) => {
 
 // });
 app.commandLine.appendSwitch("--disable-http-cache")
+function checkUpdate(callback){
+  sendUpdateMessage({ cmd: 'app-ready', message: message.error })
+  autoUpdater.checkForUpdates()
+  autoUpdater.on('update-downloaded', () => {
+    sendUpdateMessage({ cmd: 'update-downloaded', message: message.error })
+    autoUpdater.quitAndInstall()
+  })
+  
+  autoUpdater.on('error', function (e) {
+    console.log('error', e);
+    callback(1)
+    sendUpdateMessage({ cmd: 'error', message: message.error })
+  })
+  autoUpdater.on('checking-for-update', function () {
+    console.log(message.checking)
+    callback(2)
+    sendUpdateMessage({ cmd: 'checking-for-update', message: message.checking })
+  })
+  autoUpdater.on('update-available', function (info) {
+    console.log(message.updateAva)
+    callback(3)
+    sendUpdateMessage({ cmd: 'update-available', message: message.updateAva, info })
+  })
+  autoUpdater.on('update-not-available', function (info) {
+    console.log(message.updateNotAva)
+    callback(4)
+    sendUpdateMessage({ cmd: 'update-not-available', message: message.updateNotAva, info: info })
+  })
+  // 更新下载进度事件
+  autoUpdater.on('download-progress', function (progressObj) {
+    console.log('触发下载。。。')
+    console.log(progressObj.percent)
+    callback(5)
+    // mainWindow && mainWindow.setProgressBar(Number.parseFloat(progressObj.percent))
+    sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })
+  })
+}
 app.on('ready', () => {
   // console.log('app-ready')
   showLoading(createWindow)
-  sendUpdateMessage({ cmd: 'app-ready', message: message.error })
-  autoUpdater.checkForUpdates()
+
 })
 
-autoUpdater.on('update-downloaded', () => {
-  sendUpdateMessage({ cmd: 'update-downloaded', message: message.error })
-  autoUpdater.quitAndInstall()
-})
 
-autoUpdater.on('error', function (e) {
-  console.log('error', e);
-  sendUpdateMessage({ cmd: 'error', message: message.error })
-})
-autoUpdater.on('checking-for-update', function () {
-  console.log(message.checking)
-  sendUpdateMessage({ cmd: 'checking-for-update', message: message.checking })
-})
-autoUpdater.on('update-available', function (info) {
-  console.log(message.updateAva)
-  sendUpdateMessage({ cmd: 'update-available', message: message.updateAva, info })
-})
-autoUpdater.on('update-not-available', function (info) {
-  console.log(message.updateNotAva)
-  sendUpdateMessage({ cmd: 'update-not-available', message: message.updateNotAva, info: info })
-})
-// 更新下载进度事件
-autoUpdater.on('download-progress', function (progressObj) {
-  console.log('触发下载。。。')
-  console.log(progressObj.percent)
-  // mainWindow && mainWindow.setProgressBar(Number.parseFloat(progressObj.percent))
-  sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })
-})
 
 function sendUpdateMessage(data) {
   mainWindow && mainWindow.webContents.send('message', data)
