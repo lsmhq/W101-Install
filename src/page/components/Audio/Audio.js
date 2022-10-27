@@ -23,8 +23,8 @@ function Audio(props){
     let [bgShow, setBgShow] = useState(false) // 背景
     let [showFy, setFyShow] = useState(JSON.parse(localStorage.getItem('showFy')) || false) // 翻译显示
     let [showRom, setRomShow] = useState(JSON.parse(localStorage.getItem('showRom')) || false) // 发音显示
-    let [playType, setPlayType] = useState(localStorage.getItem('playType') * 1) // 0 单曲循环  1 随机  2 顺序  3 心动
-    let [wordType, setWordType] = useState(localStorage.getItem('wordType') * 1) // 0 单曲循环  1 随机  2 顺序  3 心动
+    let [playType, setPlayType] = useState(localStorage.getItem('playType') * 1 || 0) // 0 单曲循环  1 随机  2 顺序  3 心动
+    let [wordType, setWordType] = useState(localStorage.getItem('wordType') * 1 || 0) // 0 单曲循环  1 随机  2 顺序  3 心动
     let [activeIndex, setActive] = useState(0)
     // let [sounds, setSounds] = useState() // 音量
     useEffect(()=>{
