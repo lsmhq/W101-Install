@@ -83,6 +83,7 @@ function Main(props){
     let [subataShow, setSubataShow] = useState(localStorage_subata.getItem('btnSetting1') === null? true: localStorage_subata.getItem('btnSetting1'))
     let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0)
     let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall'))
+    let [onlineNum, setOnline] = useState(0)
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -281,7 +282,7 @@ function Main(props){
         ws.onmessage = (msg)=>{
             // console.log(msg.data)
             let data = JSON.parse(msg.data)
-            if(data.id === localStorage_subata.getItem('userid')){
+            if(data?.id === localStorage_subata.getItem('userid')){
                 Message.success({
                     style:{top:'20px'},
                     content:'发布成功',
@@ -293,6 +294,8 @@ function Main(props){
                 })
             }else if(data.type === 'del'){
                 getMessage()
+            }else if(data.type === 'count'){
+                setOnline(data.onLineNum)
             }else{
                 window.electronAPI.sound()
                 Notification.info({
@@ -1024,6 +1027,7 @@ function Main(props){
                 setSubataShow = {setSubataShow}
                 // reload = {reload}
                 filePath = {filePath}
+                onlineNum = {onlineNum}
             />}
             footer={null}
         />
