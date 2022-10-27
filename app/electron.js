@@ -2,7 +2,7 @@ const { app, BrowserWindow, nativeImage, ipcMain, screen } = require('electron')
 const { autoUpdater } = require('electron-updater'); 
 let mainWindow, loading
 let mainWidth = 400, mainHeight = 500
-let newWidth = 300, newHeight = 950
+let newWidth = 1920, newHeight = 1080
 let mainColse = false
 const url = require('url')
 const message = {
@@ -256,7 +256,7 @@ function openLive2D(params){
         type:params.modelName
       }
     }))
-    // newWin.webContents.openDevTools()
+    newWin.webContents.openDevTools()
     newWin.on('close',()=>{
       if( !mainColse ){
         mainWindow && mainWindow.webContents.send('live2d-closed')

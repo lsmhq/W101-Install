@@ -10,11 +10,17 @@ const { ipcRenderer } = require("electron")
 window.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('live2d')
     console.log(el)
-    el.addEventListener('mouseenter', () => {
+    document.addEventListener('mousemove',(e)=>{
+      e.stopPropagation()
+      ipcRenderer.send('set-ignore-mouse-events', false)
+    })
+    el.addEventListener('mouseenter', (e) => {
+      e.stopPropagation()
       ipcRenderer.send('set-ignore-mouse-events', false)
       console.log('set-ignore-mouse-events-enter')
     })
-    el.addEventListener('mouseleave', () => {
+    el.addEventListener('mouseleave', (e) => {
+      e.stopPropagation()
       ipcRenderer.send('set-ignore-mouse-events', true, { forward: true })
       console.log('set-ignore-mouse-events-leave')
     })

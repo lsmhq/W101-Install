@@ -38,15 +38,15 @@ html,body{
 
 #waifu {
 	line-height: 0;
-	position: fixed;
+	position: absolute;
+	bottom: 0;
+	right: 0;
 	transform: translateY(3px);
 	transition: transform .3s ease-in-out, bottom 3s ease-in-out;
 	z-index: 99999;
 	max-width: 200px;
 	max-height: 300px;
 	user-select: none;
-	/* right: 0; */
-	/* bottom: 0; */
 }
 
 #waifu:hover {
@@ -63,7 +63,7 @@ html,body{
 	line-height: 24px;
 	/* margin: -40px 20px; */
 	margin: 0 10px;
-	top: 10px;
+	/* top: 10px; */
 	min-height: 60px;
 	max-height: 100px;
 	display: flex;
@@ -131,7 +131,6 @@ html,body{
 #waifu-tool span:hover {
 	color: #0684bd; /* #34495e */
 }
-午后很容易犯困呢，今天的运动目标完成了吗？
 
 @keyframes shake {
 	2% {
