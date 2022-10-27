@@ -39,8 +39,8 @@ html,body{
 #waifu {
 	line-height: 0;
 	position: absolute;
-	bottom: 0;
-	right: 0;
+	/* bottom: 0; */
+	/* right: 0; */
 	transform: translateY(3px);
 	transition: transform .3s ease-in-out, bottom 3s ease-in-out;
 	z-index: 99999;

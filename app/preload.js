@@ -10,10 +10,6 @@ const { ipcRenderer } = require("electron")
 window.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('live2d')
     console.log(el)
-    document.addEventListener('mousemove',(e)=>{
-      e.stopPropagation()
-      ipcRenderer.send('set-ignore-mouse-events', false)
-    })
     el.addEventListener('mouseenter', (e) => {
       e.stopPropagation()
       ipcRenderer.send('set-ignore-mouse-events', false)
