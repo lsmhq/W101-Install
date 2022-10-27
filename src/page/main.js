@@ -82,6 +82,7 @@ function Main(props){
     let [settingShow, setSetShow] = useState(false)
     let [subataShow, setSubataShow] = useState(localStorage_subata.getItem('btnSetting1') === null? true: localStorage_subata.getItem('btnSetting1'))
     let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0)
+    let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall'))
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -220,9 +221,9 @@ function Main(props){
             localStorage_subata.setItem('steamPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
           }
           window.wizPath = localStorage_subata.getItem('wizPath')
-          window.path = localStorage_subata.getItem('gameDataPath')
+          window.gameDataPath = localStorage_subata.getItem('gameDataPath')
           console.log(window.wizPath)
-          console.log(window.path)
+          console.log(window.gameDataPath)
           console.log('============')
           window.tools.checkGameInstall((steam, wizard, err)=>{
             // console.log(steam, wizard, err)
@@ -1022,6 +1023,7 @@ function Main(props){
                 setBg={setimgNum}
                 setSubataShow = {setSubataShow}
                 // reload = {reload}
+                filePath = {filePath}
             />}
             footer={null}
         />
@@ -1029,10 +1031,13 @@ function Main(props){
             console.log(e.target.files[0].path)
             if(e.target.files[0].path.includes('Wizard101.exe')){
                 console.log('---选择成功')
-                localStorage_subata.setItem('wizPath', e.target.files[0].path.split('Wizard101.exe')[0])
-                localStorage_subata.setItem('gameDataPath', e.target.files[0].path.split('Wizard101.exe')[0]+'Data\\GameData\\')
-                window.wizPath = e.target.files[0].path.split('Wizard101.exe')[0]
-                window.path = e.target.files[0].path.split('Wizard101.exe')[0]+'Data\\GameData\\'
+                let wizPath = e.target.files[0].path.split('Wizard101.exe')[0]
+                let gameDataPath = e.target.files[0].path.split('Wizard101.exe')[0]+'Data\\GameData\\'
+                localStorage_subata.setItem('wizPath', wizPath)
+                localStorage_subata.setItem('gameDataPath', gameDataPath)
+                window.wizPath = wizPath
+                window.gameDataPath = gameDataPath
+                setFilePath(wizPath)
                 getSteam(()=>{
                     if(localStorage_subata.getItem('type')){
                         checkUpdate(false) 

@@ -272,6 +272,7 @@ function BodyMain(props){
                                             // window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
                                             let next = localStorage_subata.getItem('btnSetting')
+                                            // console.log(next)
                                             if(next){
                                                 window.electronAPI.mini()
                                             } 
@@ -337,7 +338,8 @@ function BodyMain(props){
                                         onClose:()=>{
                                             // window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
-                                            let next = localStorage.getItem('btnSetting')
+                                            let next = localStorage_subata.getItem('btnSetting')
+                                            console.log(typeof next)
                                             if(next){
                                                 window.electronAPI.mini()
                                             } 

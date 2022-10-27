@@ -5,7 +5,7 @@
     const child_process = require('child_process'); //引入模块
     const { shell } = require('electron')
     const { dialog } = require('@electron/remote')
-    window.path = localStorage.getItem('gameDataPath') || '' // 打包路径
+    window.gameDataPath = localStorage.getItem('gameDataPath') || '' // 打包路径
     window.wizPath = localStorage.getItem('wizPath') || '' // Wiz路径
     let params = {
         r: 'release',
@@ -83,14 +83,14 @@
     // 初始化
     function init(callback) {
         try {
-            let files = fs.readdirSync(window.path, {
+            let files = fs.readdirSync(window.gameDataPath, {
                 withFileTypes: true
             })
             let unlinkArr = ['version_zh_cn_d', 'version_zh_cn_r', 'version_zh_cn_u', 'version_zh_cn_c', 'Locale_English-Root.wad', 'Locale_English-Root.wad.d', 'Locale_English-Root.wad.r', 'Locale_English-Root.wad.c']
             // console.log('卸载')
             files.forEach(file => {
                 if (unlinkArr.includes(file.name)) {
-                    fs.unlinkSync(window.path + file.name)
+                    fs.unlinkSync(window.gameDataPath + file.name)
                 }
             })
         } catch (error) {
@@ -100,7 +100,7 @@
     }
 
     function checkUpdate(type, success, failed, error) {
-        console.log(window.path)
+        console.log(window.gameDataPath)
         request({
             url: `http://101.43.216.253:3001/file/latest?type=${params[type]}`,
             method: 'GET',
@@ -111,7 +111,7 @@
                     let url = JSON.parse(response.body).url
                     let version = url.split('/')[url.split('/').length - 2]
                     console.log(version)
-                    let files = fs.readdirSync(window.path, {
+                    let files = fs.readdirSync(window.gameDataPath, {
                         withFileTypes: true
                     })
                     let names = files.map(file => file.name)
@@ -119,7 +119,7 @@
                     // console.log(names.includes(`version_zh_cn_${type}`))
                     if (names.includes(`version_zh_cn_${type}`)) {
                         // console.log('判断')
-                        let ver = fs.readFileSync(window.path + `version_zh_cn_${type}`)
+                        let ver = fs.readFileSync(window.gameDataPath + `version_zh_cn_${type}`)
                         if (compareVersion(version + '', ver.toString()) === 1) {
                             // console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
                             // console.log(1)
@@ -184,24 +184,24 @@
                 let mark = JSON.parse(response.body).mark || '暂无描述内容'
                 // console.log(response.body)
                 let version = url.split('/')[url.split('/').length - 2]
-                let files = fs.readdirSync(window.path, {
+                let files = fs.readdirSync(window.gameDataPath, {
                     withFileTypes: true
                 })
                 let names = files.map(file => file.name)
                 // console.log(names)
                 if (names.includes(`version_zh_cn_${type}`)) {
-                    let ver = fs.readFileSync(window.path + `version_zh_cn_${type}`)
+                    let ver = fs.readFileSync(window.gameDataPath + `version_zh_cn_${type}`)
                     if (compareVersion(version + '', ver.toString()) === 1) {
-                        let out = window.path + 'Locale_English-Root.wad.' + type
+                        let out = window.gameDataPath + 'Locale_English-Root.wad.' + type
                         if (names.includes('Locale_English-Root.wad.' + type)) {
-                            fs.unlinkSync(window.path + 'Locale_English-Root.wad.' + type)
+                            fs.unlinkSync(window.gameDataPath + 'Locale_English-Root.wad.' + type)
                         }
                         console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
                         console.log(`\n此次更新的内容如下:\n`)
                         console.log(mark)
                         getMark(mark)
                         getFile(url, out, () => {
-                            fs.writeFileSync(window.path + `version_zh_cn_${[type]}`, version)
+                            fs.writeFileSync(window.gameDataPath + `version_zh_cn_${[type]}`, version)
                             changeType(type, () => {
                                 changed(1)
                             })
@@ -213,14 +213,14 @@
                         })
                     }
                 } else {
-                    let out = window.path + 'Locale_English-Root.wad.' + type
+                    let out = window.gameDataPath + 'Locale_English-Root.wad.' + type
                     let mark = JSON.parse(response.body).mark || '暂无描述内容'
                     if (names.includes('Locale_English-Root.wad.' + type)) {
-                        fs.unlinkSync(window.path + 'Locale_English-Root.wad.' + type)
+                        fs.unlinkSync(window.gameDataPath + 'Locale_English-Root.wad.' + type)
                     }
                     getMark(mark)
                     getFile(url, out, (filePath) => {
-                        fs.writeFileSync(window.path + `version_zh_cn_${type}`, version)
+                        fs.writeFileSync(window.gameDataPath + `version_zh_cn_${type}`, version)
                         changeType(type, () => {
                             changed(1)
                         })
@@ -267,14 +267,14 @@
 
     // 改变type
     function changeType(type, callback) {
-        let files = fs.readdirSync(window.path, {
+        let files = fs.readdirSync(window.gameDataPath, {
             withFileTypes: true
         })
         let names = files.map(file => file.name)
         if (names.includes('Locale_English-Root.wad.' + type)) {
             console.log(`\n检测到${obj[type]}版，正在切换...`)
-            let file = fs.createReadStream(window.path + 'Locale_English-Root.wad.' + type)
-            let out = fs.createWriteStream(window.path + 'Locale_English-Root.wad')
+            let file = fs.createReadStream(window.gameDataPath + 'Locale_English-Root.wad.' + type)
+            let out = fs.createWriteStream(window.gameDataPath + 'Locale_English-Root.wad')
             file.pipe(out)
             callback(true)
             // out.close()
