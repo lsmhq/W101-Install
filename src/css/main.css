@@ -139,7 +139,7 @@
 }
 .left{
     position: relative;
-    width: 500px;
+    width: 800px;
     height: 100%;
 }
 .right{
@@ -175,13 +175,13 @@
 .carousel-main{
     position: absolute;
     top: 125px;
-    left: 65px;
+    left: 165px;
     width: 400px;
     height: 205px;
     border-radius: 5px;
     /* overflow: hidden; */
     background-color: #0052881d;
-    overflow: hidden;
+    /* overflow: hidden; */
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -211,11 +211,11 @@
     height: 95% !important;
 }
 .tips{
-    width: 450px;
+    width: 600px;
     /* height: 230px; */
     position: absolute;
     bottom: 35px;
-    left: 35px;
+    left: 65px;
     border-radius: 5px;
     background-color: rgba(45, 45, 45, 0.805);
 }
@@ -425,6 +425,6 @@
     background: url(../image/login-bg.webp);
     background-repeat: no-repeat;
     background-size: cover;
-    filter: brightness(0.4);
+    filter: brightness(0.6);
     border-radius: 10px;
 }

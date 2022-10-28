@@ -80,11 +80,11 @@ function BodyMain(props){
                 <Spin dot tip="拼命中" style={{color:'white'}} loading={loading}>
                     <Carousel
                         // showArrow='hover'
-                        showArrow='never'
+                        // showArrow='never'
                         indicatorClassName="indicatorClassName"
                         // indicatorPosition='outer'
                         arrowClassName='arrowClassName'
-                        // animation='card'
+                        animation='card'
                         style={{ width: 350}}
                         autoPlay={true}
                         onChange={(index)=>{

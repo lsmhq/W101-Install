@@ -159,7 +159,7 @@ function RightNav(props){
             // color="#e4e517"
             content="账号"
         /> */}
-        <Icon
+        {/* <Icon
             Child={<IconBug className="icon-child"/>}
             onClick={()=>{
                 setZf('qq')
@@ -167,7 +167,7 @@ function RightNav(props){
             tips="联系我们"
             // color="#e4e517"
             content="建议"
-        />
+        /> */}
         <div className='nav-bottom'>
             <Icon
                 Child={<IconWechat className="icon-child"/>}
