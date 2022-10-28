@@ -48,12 +48,14 @@ function BodyMain(props){
     useEffect(()=>{
         if(data.length > 0){
             localStorage_subata.setItem('accounts', data)
+            window.electronAPI.addAccount()
         }
     }, [data])
     useEffect(()=>{
         if(account && password){
             dataMap[account] = password
             localStorage_subata.setItem('accountsMap', {...dataMap})
+            window.electronAPI.addAccount()
         }
     }, [dataMap])
     useEffect(()=>{
@@ -162,15 +164,18 @@ function BodyMain(props){
     </div>
     <Modal 
         visible={showLogin}
-        title='登录'
+        title=''
         focusLock={true}
         autoFocus={false}
         footer={null}
+        className="login-modal"
         hideCancel={true}
+        maskClosable = {false}
         onCancel={()=>{
             setShowLogin(false)
         }}
         children={<div className='login-right'>
+            <div className='login-modal-bg'></div>
             <div className='shakeBox'>
                 <div className='shake'>
                     <div className='shake-body' onMouseEnter={()=>{
@@ -273,6 +278,7 @@ function BodyMain(props){
                                             // window.tools.killExe('launchWizard101.exe')
                                             let next = localStorage_subata.getItem('btnSetting')
                                             // console.log(next)
+                                            setShowLogin(false)
                                             if(next){
                                                 window.electronAPI.mini()
                                             } 
@@ -297,7 +303,6 @@ function BodyMain(props){
                                     }
                                     dataMap[account] = password
                                     setDataMap({...dataMap})
-                                    
                             }
                             clearInterval(timerKill)
                             window.tools.login(account, password, (flag, err)=>{
@@ -339,13 +344,13 @@ function BodyMain(props){
                                             // window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
                                             let next = localStorage_subata.getItem('btnSetting')
-                                            console.log(typeof next)
+                                            // console.log(typeof next)
+                                            setShowLogin(false)
                                             if(next){
                                                 window.electronAPI.mini()
                                             } 
                                         }
                                     })
-                                    setShowLogin(false)
                                 }else if(flag === 1){
                                     Notification.success({
                                         id:'notInstallWizard101',
@@ -354,11 +359,11 @@ function BodyMain(props){
                                         content: err,
                                         duration: 2000,
                                         onClose:()=>{
+                                            setShowLogin(false)
                                             // window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
                                         }
                                     })
-                                    setShowLogin(false)
                                 }
                             })
                         }else{   

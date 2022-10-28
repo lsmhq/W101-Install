@@ -1,7 +1,7 @@
 .setting{
     display: flex;
-    width: 600px;
-    height: 480px;
+    width: 660px;
+    height: 510px;
     flex-direction: row;
     overflow: hidden;
 }
@@ -11,7 +11,7 @@
 .setting-right{
     flex: 1;
     height: 480px;
-    overflow-y: scroll;
+    overflow: hidden;
     box-sizing: border-box;
     padding: 20px;
 }
@@ -21,23 +21,44 @@
 }
 .setting-bg{
     /* height: 100%; */
-    width: 100%;
+    width: 110%;
     display: flex;
     align-items: flex-start;
-    justify-content: space-around;
+    justify-content: flex-start;
     flex-wrap: wrap;
 }
 .arco-image-img{
     object-fit: cover;
     cursor: pointer;
-    border-radius: 5px !important;   
+    border-radius: 5px !important;      
 }
 .arco-image{
     filter: brightness(0.4);
+    margin: 5px !important;
 }
 .arco-image:hover{
     filter: brightness(0.8);
 }
 .arco-image-active{
     filter: brightness(1);
+}
+.arco-upload-trigger-picture{
+    margin: 5px;
+}
+.addBgImg{
+    font-size: 48px;
+    border-radius: 5px;
+    width: 82px;
+    height: 82px;
+    margin: 5px;
+    background-color: rgb(70, 70, 70);
+    border: 1px solid rgb(76, 76, 76);
+    cursor: pointer;
+    font-weight: 100;
+    color: rgb(210, 210, 210);
+    text-align: center;
+    transition: all ease 0.1s;
+}
+.addBgImg:hover{
+    filter: brightness(1.2);
 }

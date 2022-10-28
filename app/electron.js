@@ -14,6 +14,7 @@ const message = {
 }
 const path = require('path');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+app.commandLine.appendSwitch("--disable-http-cache")
 function createWindow () {
   let scaleFactor = (screen.getAllDisplays()[0].scaleFactor >= 2) ? 1 : screen.getAllDisplays()[0].scaleFactor
   scaleFactor = 1
@@ -151,6 +152,10 @@ function createWindow () {
   })
   ipcMain.on('hide', (e)=>{
     mainWindow.hide()
+    // tray?.displayBalloon({
+    //   title: 'subata',
+    //   content: '在这里~'
+    // })
   })
   // 检查更新
   ipcMain.on('update',()=>{
@@ -158,7 +163,7 @@ function createWindow () {
       mainWindow.webContents.send('checking',type)
     })
   })
-
+  let config
   // 准备好显示
   ipcMain.on('ready', function(e, flag){
     if(flag.flag){
@@ -175,7 +180,8 @@ function createWindow () {
       tray = new Tray(path.join(trayIcon, 'logo.ico'))
     }
     // console.log(trayIcon)
-    let config = [
+    // console.log(flag)
+    config = [
       {label:'补丁切换', submenu:[
         {label:'稳定版', click:()=>{  
           mainWindow.webContents.send('changeBd', 'r')
@@ -186,8 +192,26 @@ function createWindow () {
         {label:'测试版' ,click:()=>{
           mainWindow.webContents.send('changeBd', 'd')
         }, checked: flag.type === 'd', type:'radio'}
-      ]},
-      {label: "更多", submenu:[
+      ]},{
+        label: '账号启动',
+        submenu: flag.account.account.map(account=>{
+          return {
+            label: account,
+            click:()=>{
+              mainWindow.webContents.send('startGame', {
+                account,
+                password: flag.account.accountMap[account]
+              })
+            }
+          }
+        })
+      },{
+        label: '普通螺旋启动',
+        click:()=>{
+          mainWindow.webContents.send('startGame')
+        }
+      },
+      {label: "更多操作", submenu:[
         {
           label:'卸载Subata',
           click:()=>{
@@ -199,7 +223,7 @@ function createWindow () {
             shell.openPath(dirPath)
           }
         }
-      ] },
+      ]},
       {label: "退出", click:()=>{
         // mainWindow && mainWindow.close()
         app.quit()
@@ -212,40 +236,44 @@ function createWindow () {
       mainWindow && mainWindow.show()
       // mainWindow && mainWindow.focus()
     })
-      // 改变补丁
-      ipcMain.on('changeBd', (e, type)=>{
-        config = [
-          {label:'补丁切换', submenu:[
-            {label:'稳定版', click:()=>{
-              mainWindow.webContents.send('changeBd', 'r')
-            }, checked: type === 'r', type:'radio'},
-            {label:"聊天纯享" ,click:()=>{
-              mainWindow.webContents.send('changeBd', 'c')
-            }, checked: type === 'c', type:'radio'},
-            {label:'测试版' ,click:()=>{
-              mainWindow.webContents.send('changeBd', 'd')
-            }, checked: type === 'd', type:'radio'}
-          ]},
-          {label: "更多", submenu:[
-            {
-              label:'卸载Subata',
-              click:()=>{
-                let appPath = app.getPath('exe')
-                appPath = appPath.split('\\')
-                appPath.pop()
-                console.log(appPath.join('\\'))
-                let dirPath = `${appPath.join('\\')}\\Uninstall Subata.exe`
-                shell.openPath(dirPath)
-              }
+  })
+        // 改变补丁
+  ipcMain.on('changeBd', (e, data)=>{
+    if(config){
+      config[0] = {label:'补丁切换', submenu:[
+        {label:'稳定版', click:()=>{  
+          mainWindow.webContents.send('changeBd', 'r')
+        }, checked: data.type === 'r', type:'radio'},
+        {label:"聊天纯享" ,click:()=>{
+          mainWindow.webContents.send('changeBd', 'c')
+        }, checked: data.type === 'c', type:'radio'},
+        {label:'测试版' ,click:()=>{
+          mainWindow.webContents.send('changeBd', 'd')
+        }, checked: data.type === 'd', type:'radio'}
+      ]}
+      tray?.setContextMenu(new Menu.buildFromTemplate(config))
+    }
+  })
+  // 账号修改
+  ipcMain.on('changeAccount', (e, data)=>{
+    // console.log(data)
+    if(config){
+      config[1] = {
+        label: '账号启动',
+        submenu: data.account.account.map(account=>{
+          return {
+            label: account,
+            click:()=>{
+              mainWindow.webContents.send('startGame', {
+                account,
+                password: data.account.accountMap[account]
+              })
             }
-          ] },
-          {label: "退出", click:()=>{
-            // mainWindow && mainWindow.close()
-            app.quit()
-          }}
-        ]
-        tray.setContextMenu(new Menu.buildFromTemplate(config))
-      })
+          }
+        })
+      }
+      tray?.setContextMenu(new Menu.buildFromTemplate(config))
+    }
   })
 }
 
@@ -274,9 +302,8 @@ const showLoading = (cb) => {
 // app.whenReady().then(()=>{
 
 // });
-app.commandLine.appendSwitch("--disable-http-cache")
+
 function checkUpdate(callback){
-  sendUpdateMessage({ cmd: 'app-ready', message: message.error })
   autoUpdater.checkForUpdates()
   autoUpdater.on('update-downloaded', () => {
     sendUpdateMessage({ cmd: 'update-downloaded', message: message.error })
@@ -285,29 +312,29 @@ function checkUpdate(callback){
   
   autoUpdater.on('error', function (e) {
     console.log('error', e);
-    callback(1)
+    callback({type: 1, data: e})
     sendUpdateMessage({ cmd: 'error', message: message.error })
   })
   autoUpdater.on('checking-for-update', function () {
     console.log(message.checking)
-    callback(2)
+    callback({type: 2, data: {}})
     sendUpdateMessage({ cmd: 'checking-for-update', message: message.checking })
   })
   autoUpdater.on('update-available', function (info) {
     console.log(message.updateAva)
-    callback(3)
+    callback({type: 3, data: info})
     sendUpdateMessage({ cmd: 'update-available', message: message.updateAva, info })
   })
   autoUpdater.on('update-not-available', function (info) {
     console.log(message.updateNotAva)
-    callback(4)
+    callback({type: 4, data: info})
     sendUpdateMessage({ cmd: 'update-not-available', message: message.updateNotAva, info: info })
   })
   // 更新下载进度事件
   autoUpdater.on('download-progress', function (progressObj) {
     console.log('触发下载。。。')
     console.log(progressObj.percent)
-    callback(5)
+    callback({type: 5, data: progressObj})
     // mainWindow && mainWindow.setProgressBar(Number.parseFloat(progressObj.percent))
     sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })
   })
@@ -315,7 +342,7 @@ function checkUpdate(callback){
 app.on('ready', () => {
   // console.log('app-ready')
   showLoading(createWindow)
-
+  sendUpdateMessage({ cmd: 'app-ready', message: message.error })
 })
 
 
@@ -340,20 +367,22 @@ app.on('before-quit',(e)=>{
     // 带有命令行的list进程命令是：“cmd.exe /c wmic process list full”
     //  tasklist 是没有带命令行参数的。可以把这两个命令再cmd里面执行一下看一下效果
     // 注意：命令行获取的都带有换行符，获取之后需要更换换行符。可以执行配合这个使用 str.replace(/[\r\n]/g,""); 去除回车换行符 
-    let cmd = process.platform === 'win32' ? 'tasklist' : 'ps aux'
+    let cmd = 'tasklist'
     child_process.exec(cmd, function (err, stdout, stderr) {
         if (err) {
             return console.error(err)
         }
         // console.log(stdout)
-        stdout.split('\n').forEach((line) => {
+        if(stdout){
+          stdout.split('\n').forEach((line) => {
             let processMessage = line.trim().split(/\s+/)
             let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
             if (processName === name) {
                 console.log('Kill Process---->', processMessage[1], processMessage)
                 process.kill(processMessage[1])
             }
-        })
+          })
+        }
         callback && callback()
     })
   }

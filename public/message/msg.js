@@ -44,13 +44,27 @@
             })
         },
         ready:()=>{
-            ipcRenderer.send('ready', {flag: true, type:localStorage.getItem('type')})
+            // console.log(JSON.parse(localStorage.getItem('accounts')))
+            ipcRenderer.send('ready', {
+                flag: true, 
+                type:localStorage.getItem('type'), 
+                account:{
+                    account: JSON.parse(localStorage.getItem('accounts')) || [],
+                    accountMap: JSON.parse(localStorage.getItem('accountsMap')) || {}
+                }
+            })
         },
         setProgressBar:(progress)=>{
             ipcRenderer.send('downLoad', progress)
         },
         changeType:(type)=>{
-            ipcRenderer.send('changeBd', type)
+            ipcRenderer.send('changeBd', {
+                type, 
+                account:{
+                    account: JSON.parse(localStorage.getItem('accounts')) || [],
+                    accountMap: JSON.parse(localStorage.getItem('accountsMap')) || {}
+                }
+            })
         },
         menuChangeType:(getType)=>{
             ipcRenderer.on('changeBd', (e, type)=>{
@@ -72,6 +86,27 @@
             ipcRenderer.on('checking',(e, type)=>{
                 // console.log(type)
                 callback(type)
+            })
+        },
+        startGame: ()=>{
+            ipcRenderer.on('startGame', (e, userInfo)=>{
+                console.log(userInfo)
+                if(userInfo){
+                    window.tools.login(userInfo.account, userInfo.password,()=>{
+
+                    })
+                }else{
+                    window.tools.startGame()
+                }
+            })
+        },
+        addAccount: ()=>{
+            ipcRenderer.send('changeAccount',{
+                type: localStorage.getItem('type'), 
+                account:{
+                    account: JSON.parse(localStorage.getItem('accounts')) || [],
+                    accountMap: JSON.parse(localStorage.getItem('accountsMap')) || {}
+                }
             })
         }
     }

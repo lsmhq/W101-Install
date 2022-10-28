@@ -149,6 +149,8 @@ function Main(props){
         if(localStorage_subata.getItem('accountsMap') === null){
             localStorage_subata.setItem('accountsMap', {})
         }
+        // 监听开始游戏
+        window.electronAPI.startGame()
         return () => {
             // 注销
             destroy()

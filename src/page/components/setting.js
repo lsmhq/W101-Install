@@ -1,4 +1,4 @@
-import { Anchor, Button, Switch, Form, Image, Message, Grid } from '@arco-design/web-react'
+import { Anchor, Button, Switch, Form, Image, Message, Grid, Notification, Upload } from '@arco-design/web-react'
 import { useState, useEffect, useRef } from 'react'
 import '../../css/setting.css'
 import LocalStorage_subata from '../util/localStroage'
@@ -10,6 +10,10 @@ let localStorage_subata = new LocalStorage_subata({
 let AnchorLink = Anchor.Link
 let downLoadTimer
 let { Row, Col } = Grid
+let style = {
+    right:'50px',
+    top:'20px'
+}
 // let models = [
 //     {
 //         name:'shizuku',
@@ -100,7 +104,7 @@ function Setting(props){
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
         </div>
-        <div className='setting-right' id='setting-right'>
+        <div className='setting-right' onScroll={(e)=>{e.preventDefault()}} id='setting-right'>
             <div className='setting-item' id='bg'>
                 {/* <PageHeader title='自定义背景图'/> */}
                 <div className='setting-bg'>
@@ -108,25 +112,38 @@ function Setting(props){
                         setimgNum(0)
                         setBg(0)
                         localStorage_subata.setItem('imgNum', 0)
-                    }} className={imgNum === 0?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={100} height={100} src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/c3e29bb5-d5a0-4799-a544-264e310356aa.jpg'/>
+                    }} className={imgNum === 0?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={82} height={82} src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/c3e29bb5-d5a0-4799-a544-264e310356aa.jpg'/>
                     <Image onClick={()=>{
                         setimgNum(1)
                         setBg(1)
                         localStorage_subata.setItem('imgNum', 1)
-                    }}  className={imgNum === 1?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={100} height={100} src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/151d0d95-b330-4ca8-9de7-d0336aed9872.webp'/>
+                    }}  className={imgNum === 1?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={82} height={82} src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/151d0d95-b330-4ca8-9de7-d0336aed9872.webp'/>
                     {
                         imgs.map((img, index)=>{
-                            return <Image key={index} onClick={()=>{
+                            return <Image key={index} width={82} height={82} onClick={()=>{
+                                console.log(index)
                                 setimgNum(index + 2)
                                 setBg(index + 2)
                                 localStorage_subata.setItem('imgNum', index + 2)
-                            }} className={(index + 2 === index)?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={100} height={100} src={img}/>
+                            }} className={(index + 2 === imgNum)?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} src={img}/>
                         })
                     }
+                    <div className='addBgImg' onClick={()=>{
+                        document.getElementById('bgUpload').click()
+                    }}>
+                        <span>+</span>
+                    </div>
+                    <input accept="image/*" id='bgUpload' style={{visibility:'hidden'}} type="file" onChange={(e)=>{
+                        console.log(e.target.files[0])
+                        imgs.push(URL.createObjectURL(e.target.files[0]))
+                        setImgs([...imgs])
+                    }}/>
                     {/* <Upload
-                        
                         showUploadList={false}
+                        listType='picture-card'
+                        accept="image/*"
                         onChange={(_, currentFile) => {
+                            console.log(_)
                             console.log(URL.createObjectURL(currentFile.originFile))
                             imgs.push(URL.createObjectURL(currentFile.originFile))
                             setImgs([...imgs])
@@ -212,57 +229,6 @@ function Setting(props){
                     window.tools.checkFiles(path)
                 }}>检查游戏基本文件</Button> */}
             </div>
-            {/* <div className='setting-item' id='live2d-set'>
-                <Form>
-                    <Form.Item label={'开关'}>
-                        <Switch checked={live2dOpen} onChange={(val)=>{
-                            console.log(val)
-                            setlive2dOpen(val)
-                            if(val){
-                                window.electronAPI.openLive2d({
-                                    modelName: localStorage.getItem('live2d') || 'shizuku'
-                                })
-                            }else{
-                                window.electronAPI.closeLive2d()
-                            }
-                            window.electronAPI.closedLive2d(()=>{
-                                setlive2dOpen(false)
-                            })
-                        }}
-                        />
-                        <span style={{paddingLeft:'10px'}}>
-                        {
-                            live2dOpen ?'开启':'关闭'
-                        }
-                        </span>
-                    </Form.Item>
-                    <Form.Item label={'模型切换'}>
-                        <Radio.Group direction='vertical' defaultValue={liveName} onChange={(val)=>{
-                        // console.log(val)
-                        localStorage.setItem('live2d', val)
-                        setLive2d(val)
-                        if(live2dOpen){
-                            window.electronAPI.closeLive2d()
-                            window.electronAPI.openLive2d({
-                                modelName: localStorage.getItem('live2d') || 'shizuku'
-                            })
-                            setTimeout(() => {
-                                setlive2dOpen(true)
-                            }, 500);
-                        }
-                        // alertTextLive2d('重启才能看到呦~')
-                    }}>
-                    {
-                        models.map((item, index)=>{
-                            return <Radio value={item.name} key={item.name}>
-                                {item.label}
-                            </Radio>
-                        })
-                    }
-                    </Radio.Group>
-                    </Form.Item>
-                </Form>
-            </div> */}
             <div className='setting-item' id='output'>
                 <Row style={{marginBottom:'20px'}}>
                     备份配置，防止数据丢失, 配置文件名为 setJson.json
@@ -319,127 +285,161 @@ function Setting(props){
                 </Row>
             </div>
             <div className='setting-item' id='language'>
-                <Form>
-                    <Form.Item label={'更新'}>
-                        <Button
-                            type='primary'
-                            status='success'
-                            loading={loadFile}
-                            onClick={()=>{
-                                setLoadFile(true)
-                                console.log(window.fileList_update.split('\n'))
-                                window.tools.getGameVersion((versionArr)=>{
-                                    
-                                    if(versionArr === undefined){
-                                        Message.error({
-                                            style:{top:'10px'},
-                                            content:'出现错误，联系灭火器'
-                                        })
-                                        return
-                                    }
-                                    // window.tools.getFile()
-                                    let serverUrl
-                                    versionArr.forEach((line)=>{
-                                        if(line.includes('UrlPrefix')){
-                                            console.log(line.split('=')[1])
-                                            serverUrl = line.split('=')[1]
-                                        }
-                                    })
-                                    let fileStatus = [], indexDownload = 0
-                                    let fileList_update = window.fileList_update || localStorage_subata.getItem('fileList_update')
-                                    fileList_update.split('\n').forEach(path=>{
-                                        // -1 未开始下载
-                                        fileStatus.push({
-                                            targetUrl: serverUrl.trim() + path,
-                                            outPut: window.wizPath + path,
-                                            status: -1
-                                        })
-                                    })
-                                    setLength(fileStatus.length)
-                                    // console.log(fileStatus)
-                                    clearInterval(downLoadTimer)
-                                    downLoadTimer = setInterval(()=>{
-                                        // console.log(indexDownload, fileStatus.length)
-                                        if(indexDownload === (fileStatus.length - 1)){
-                                            // console.log(fileStatus.find(item=>item.status !== 1))
-                                            clearInterval(downLoadTimer)
-                                        }
-                                        // console.log(fileStatus)
-                                        if(fileStatus[indexDownload].status === -1){
-                                            let {targetUrl, outPut} = fileStatus[indexDownload]
-                                            fileStatus[indexDownload].status = 0
-                                            window.tools.getFile(targetUrl, outPut, (sign)=>{}, (total, currentTotal)=>{
-                                                if(total){
-                                                    setTotal(total)
-                                                    setCurrent(currentTotal)
-                                                    // console.log(total, currentTotal)
-                                                    if(total * 1 === currentTotal * 1){
-                                                        fileStatus[indexDownload].status = 1
-                                                        if(!fileStatus.find(item=>item.status !== 1)){
-                                                            setLoadFile(false)
-                                                            setLength(0)
-                                                            setCurrentFile(0)
-                                                        }
-                                                    }
-                                                }
-                                                if(!total){
-                                                    fileStatus[indexDownload].status = 1
-                                                    if(!fileStatus.find(item=>item.status !== 1)){
-                                                        setLoadFile(false)
-                                                        setLength(0)
-                                                        setCurrentFile(0)
-                                                    }
+                    <Row style={{marginTop:'10px'}}>
+                        <Col span={3}>语音</Col>
+                        <Col span={3}>
+                            <Switch checked={zhSound} onChange={(val)=>{
+                                console.log(val)
+                                // true 开始游戏最小化
+                                // false 开始游戏不进行操作
+                                localStorage_subata.setItem('zhSound', val)
+                                setZhSound(val)
+                                if(val){
+                                    // alertTextLive2d('还没有正式上线哦~')
+                                }
+                            }}
+                            />
+                        </Col>
+                        <Col span={10}>
+                            <span style={{paddingLeft:'10px'}}>
+                            {
+                                zhSound ?'中文':'英文'
+                            }(不可用)
+                            </span>
+                        </Col>
+                    </Row>  
+                    <Row style={{marginTop:'10px'}}>
+                        <Col span={3}>调试</Col>
+                        <Col span={3}>
+                            <Switch onChange={(val)=>{
+                                if(val){
+                                    // alertTextLive2d('还没有正式上线哦~')
+                                    window.electronAPI.openDev()
+                                }
+                            }}
+                            />
+                        </Col>
+                    </Row>  
+                    <Row style={{marginTop:'10px'}} align="center">
+                        <Row>
+                            <Col span={6}>更新</Col>
+                            <Col span={10}>
+                                <Button
+                                    type='primary'
+                                    status='success'
+                                    loading={loadFile}
+                                    onClick={()=>{
+                                        setLoadFile(true)
+                                        console.log(window.fileList_update.split('\n'))
+                                        window.tools.getGameVersion((versionArr)=>{
+                                            
+                                            if(versionArr === undefined){
+                                                Message.error({
+                                                    style:{top:'10px'},
+                                                    content:'出现错误，联系灭火器'
+                                                })
+                                                return
+                                            }
+                                            // window.tools.getFile()
+                                            let serverUrl
+                                            versionArr.forEach((line)=>{
+                                                if(line.includes('UrlPrefix')){
+                                                    console.log(line.split('=')[1])
+                                                    serverUrl = line.split('=')[1]
                                                 }
                                             })
-                                        }
-                                        if(fileStatus[indexDownload].status === 1){
-                                            indexDownload++
-                                            setCurrentFile(indexDownload + 1)
-                                        }
-                                    }, 500)
+                                            let fileStatus = [], indexDownload = 0
+                                            let fileList_update = window.fileList_update || localStorage_subata.getItem('fileList_update')
+                                            fileList_update.split('\n').forEach(path=>{
+                                                // -1 未开始下载
+                                                fileStatus.push({
+                                                    targetUrl: serverUrl.trim() + path,
+                                                    outPut: window.wizPath + path,
+                                                    status: -1
+                                                })
+                                            })
+                                            setLength(fileStatus.length)
+                                            // console.log(fileStatus)
+                                            clearInterval(downLoadTimer)
+                                            downLoadTimer = setInterval(()=>{
+                                                // console.log(indexDownload, fileStatus.length)
+                                                if(indexDownload === (fileStatus.length - 1)){
+                                                    // console.log(fileStatus.find(item=>item.status !== 1))
+                                                    clearInterval(downLoadTimer)
+                                                }
+                                                // console.log(fileStatus)
+                                                if(fileStatus[indexDownload].status === -1){
+                                                    let {targetUrl, outPut} = fileStatus[indexDownload]
+                                                    fileStatus[indexDownload].status = 0
+                                                    window.tools.getFile(targetUrl, outPut, (sign)=>{}, (total, currentTotal)=>{
+                                                        if(total){
+                                                            setTotal(total)
+                                                            setCurrent(currentTotal)
+                                                            // console.log(total, currentTotal)
+                                                            if(total * 1 === currentTotal * 1){
+                                                                fileStatus[indexDownload].status = 1
+                                                                if(!fileStatus.find(item=>item.status !== 1)){
+                                                                    setLoadFile(false)
+                                                                    setLength(0)
+                                                                    setCurrentFile(0)
+                                                                }
+                                                            }
+                                                        }
+                                                        if(!total){
+                                                            fileStatus[indexDownload].status = 1
+                                                            if(!fileStatus.find(item=>item.status !== 1)){
+                                                                setLoadFile(false)
+                                                                setLength(0)
+                                                                setCurrentFile(0)
+                                                            }
+                                                        }
+                                                    })
+                                                }
+                                                if(fileStatus[indexDownload].status === 1){
+                                                    indexDownload++
+                                                    setCurrentFile(indexDownload + 1)
+                                                }
+                                            }, 500)
 
-                                    // window.tools.getFile()
-                                })
-                            }}
-                        > {fileLength > 0 ? `正在下载中( 测试谨慎操作 )`:'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
-                        <br/>
-                        {fileLength > 0 && `已下载：${currentFile}个 \n总数：${fileLength}（个）`}<br/>
-                        {fileLength > 0 && `当前文件进度：${((current/total)*100).toFixed(2)}%`}<br/>
-                        {fileLength > 0 && `下载过程中终止可能会导致游戏无法启动，下载过程中可以关掉设置窗口`}
-                    </Form.Item>
-                    <Form.Item label={'语音'}>
-                        <Switch checked={zhSound} onChange={(val)=>{
-                            console.log(val)
-                            // true 开始游戏最小化
-                            // false 开始游戏不进行操作
-                            localStorage_subata.setItem('zhSound', val)
-                            setZhSound(val)
-                            if(val){
-                                // alertTextLive2d('还没有正式上线哦~')
-                            }
-                        }}
-                        />
-                        <span style={{paddingLeft:'10px'}}>
-                        {
-                            zhSound ?'中文':'英文'
-                        }(不可用)
-                        </span>
-                    </Form.Item>
-                    <Form.Item label={'调试'}>
-                        <Switch onChange={(val)=>{
-                            if(val){
-                                // alertTextLive2d('还没有正式上线哦~')
-                                window.electronAPI.openDev()
-                            }
-                        }}
-                        />
-                    </Form.Item>
-                    
-                </Form>
+                                            // window.tools.getFile()
+                                        })
+                                    }}
+                                > {fileLength > 0 ? `正在下载中( 测试谨慎操作 )`:'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
+                            </Col>
+                        </Row>
+                        <Row style={{marginTop:'5px'}}>
+                            {fileLength > 0 && `已下载：${currentFile}个 \n总数：${fileLength}（个）`}<br/>
+                        </Row>
+                        <Row style={{marginTop:'5px'}}>
+                            {fileLength > 0 && `当前文件进度：${((current/total)*100).toFixed(2)}%`}<br/>
+                        </Row>
+                        <Row style={{marginTop:'5px'}}>
+                            {fileLength > 0 && `下载过程中终止可能会导致游戏无法启动，下载过程中可以关掉设置窗口`}
+                        </Row>
+                    </Row>
             </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
-                <Row>
+                <Row align='center'>
+                    <Col span={5}>开发者</Col>
+                    <Col span={5}>蓝色灭火器</Col>
+                </Row>
+                <Row align='center' style={{marginTop:'5px'}}>
+                    <Col span={5}>支持一下</Col>
+                    <Col span={5}>
+                        <Button onClick={()=>{
+                            window.electronAPI.openBroswer('https://gitee.com/lsmhq/one-click-installation-script/tree/web-install/')
+                        }}>前往 Star ~</Button>
+                    </Col>
+                    <Col span={10} offset={2}>项目仅供学习交流</Col>
+                </Row>
+                <Row align='center' style={{marginTop:'5px'}}>
+                    <Col span={5}>联系我们</Col>
+                    <Col span={15}><Button onClick={()=>{
+                        window.electronAPI.openBroswer('https://jq.qq.com/?_wv=1027&k=46lAbmFk')
+                    }}>美服汉化群</Button></Col>
+                </Row>
+                <Row style={{marginTop:'30px'}}>
                     <Button status='danger' type='primary' size='large' onClick={()=>{
                         window.tools.init(()=>{
                             localStorage.clear()
@@ -447,10 +447,59 @@ function Setting(props){
                         })
                     }}>清空缓存</Button>
                 </Row>
-                <Row>
+                <Row style={{marginTop:'30px'}}>
                     <Button status='success' type='primary' size='large' onClick={()=>{
-                        window.electronAPI.checkUpdate((type)=>{
-                            console.log(type)
+                        window.electronAPI.checkUpdate((data)=>{
+                            // console.log(data)
+                            switch (data.type) {
+                                case 1: // 1 error
+                                    console.log('error-check')
+                                    Notification.error({
+                                        title: '更新出错',
+                                        id: 'checkSubataUpdate',
+                                        content: JSON.stringify(data.data),
+                                        style
+                                    })
+                                    break;
+                                case 2: // 2 checking
+                                    console.log('checking-check')
+                                    Notification.info({
+                                        title: '正在检测更新',
+                                        id: 'checkSubataUpdate',
+                                        content: '',
+                                        style
+                                    })
+                                    break;
+                                case 3: // 3 可用更新
+                                    console.log('可用更新-check')
+                                    Notification.info({
+                                        title: '存在可用更新',
+                                        id: 'checkSubataUpdate',
+                                        content: JSON.stringify(data.data),
+                                        style
+                                    })
+                                    break;
+                                case 4: // 4 不可用更新
+                                    console.log('不可用更新-check')
+                                    Notification.success({
+                                        title: '当前已是最新版本',
+                                        id: 'checkSubataUpdate',
+                                        content: data.data.version,
+                                        style
+                                    })
+                                    break;
+                                case 5: // 5 正在下载
+                                    console.log('正在下载-check')
+                                    Notification.info({
+                                        title: '正在进行下载',
+                                        // id: 'checkSubataUpdate',
+                                        content: `下载进度${data.data.percent}`,
+                                        style
+                                    })
+                                    break;
+                                default:
+                                    break;
+                            }
                         })
                     }}>检查更新并下载</Button>
                 </Row>

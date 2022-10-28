@@ -1,6 +1,8 @@
 .shakeBox{
     height: 80px;
     width: 100%;
+	position: relative;
+	top: -30px;
     display: flex;
     align-items: center;
     justify-content: center;

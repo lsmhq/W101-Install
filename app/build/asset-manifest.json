@@ -1,21 +1,22 @@
 {
   "files": {
-    "main.css": "./static/css/main.198b3d56.css",
-    "main.js": "./static/js/main.f961e616.js",
+    "main.css": "./static/css/main.f8daecd9.css",
+    "main.js": "./static/js/main.e23835a7.js",
     "static/js/787.48cdcb01.chunk.js": "./static/js/787.48cdcb01.chunk.js",
     "static/media/zfb.jpg": "./static/media/zfb.8d7ecf20c8e4efb92610.jpg",
     "static/media/wechat.jpg": "./static/media/wechat.3f55ac4480c706480acd.jpg",
+    "static/media/login-bg.webp": "./static/media/login-bg.6b1a6d6363801c1d56d7.webp",
     "static/media/QQ_share.jpg": "./static/media/QQ_share.4692c1838a2254bb72a5.jpg",
     "static/media/WizardLogoRA.png": "./static/media/WizardLogoRA.3dd8aab8b8f121731661.png",
     "static/media/Subata_logo.png": "./static/media/Subata_logo.a66888c88454abf5eb74.png",
     "static/media/body.png": "./static/media/body.1a236e276d3f9b154f94.png",
     "index.html": "./index.html",
-    "main.198b3d56.css.map": "./static/css/main.198b3d56.css.map",
-    "main.f961e616.js.map": "./static/js/main.f961e616.js.map",
+    "main.f8daecd9.css.map": "./static/css/main.f8daecd9.css.map",
+    "main.e23835a7.js.map": "./static/js/main.e23835a7.js.map",
     "787.48cdcb01.chunk.js.map": "./static/js/787.48cdcb01.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.198b3d56.css",
-    "static/js/main.f961e616.js"
+    "static/css/main.f8daecd9.css",
+    "static/js/main.e23835a7.js"
   ]
 }
