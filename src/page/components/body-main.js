@@ -37,6 +37,19 @@ function BodyMain(props){
     let [choseHead, setChoseHead] = useState(false)
     let submit = useRef()
     useEffect(()=>{
+        console.log('accounts----->',localStorage_subata.getItem('accounts')) 
+        let newAccounts = localStorage_subata.getItem('accounts')?.map((account, idx)=>{
+            console.log(typeof account)
+            if(typeof account !== 'object'){
+                return {account, icon: -1}
+            }
+            return account
+        })
+        console.log(newAccounts)
+        localStorage_subata.setItem('accounts', newAccounts || [])
+        setData(newAccounts || [])
+    },[])
+    useEffect(()=>{
         if(!showLogin){
             setAccount('')
             setPassword('')
@@ -204,7 +217,7 @@ function BodyMain(props){
                         </>}
                         {
                             headImgs.map((img, idx)=>{
-                                return <>{ idx === headIndex && <img className='bodyImg animated fadeIn fast' src={img} alt=""/>}</>
+                                return <div key={idx}>{ idx === headIndex && <img className='bodyImg animated fadeIn fast' src={img} alt=""/>}</div>
                             })
                         }
                     </div>
@@ -223,6 +236,7 @@ function BodyMain(props){
                        strict = {true}
                        placeholder='账号' 
                        value={account}
+                       allowClear={true}
                        data={data.map(account=>account.account)}
                         dropdownRender={(menu, idx)=>{
                             return <Row justify='center' align='center' key={idx} className='autoItem'>
@@ -417,7 +431,7 @@ function BodyMain(props){
                 {/* <Image /> */}
                 {
                     headImgs.map((img, idx)=>{
-                        return <Image className={headIndex === idx?'arco-image-active':''} preview={false} onClick={()=>{
+                        return <Image key={idx} className={headIndex === idx?'arco-image-active':''} preview={false} onClick={()=>{
                             setHeadIndex(idx)
                             setChoseHead(false)
                         }} src={img} width={60} height={60}/>
