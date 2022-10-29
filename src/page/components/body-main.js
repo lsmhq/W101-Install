@@ -170,13 +170,13 @@ function BodyMain(props){
                 }
                 <div className='subata-right-btn'>
                         <Button status='success' onClick={()=>{
-                            if(play === 'true'){
+                            if(play){
                                 setShowLogin(true)
                             }else{
                                 document.getElementById('selectWiz').click()
                             }
                         }} type='primary' className='right-openGame' size='large'>
-                            {play === 'true'?'开始游戏':'选择Wizard.exe'}
+                            {play?'开始游戏':'选择Wizard.exe'}
                         </Button>
                 </div>
             </div>
@@ -230,7 +230,7 @@ function BodyMain(props){
                     </div>
                 </div>
             </div>
-        {play==='true' && <Form>
+        {play && <Form>
                <Form.Item  style={{display:'flex',justifyContent:'center'}} label=''>
                    <AutoComplete 
                        strict = {true}
@@ -427,7 +427,7 @@ function BodyMain(props){
             setChoseHead(false)
         }}
         children={<>
-            <div className='setting-bg'>
+            <div className='head-img-box'>
                 {/* <Image /> */}
                 {
                     headImgs.map((img, idx)=>{

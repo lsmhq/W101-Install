@@ -492,7 +492,7 @@ function Setting(props){
                                     console.log('正在下载-check')
                                     Notification.info({
                                         title: '正在进行下载',
-                                        // id: 'checkSubataUpdate',
+                                        id: 'checkSubataUpdate',
                                         content: `下载进度${data.data.percent}`,
                                         style
                                     })

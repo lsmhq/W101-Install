@@ -238,7 +238,7 @@ function Main(props){
             }
             if(wizard){
                 localStorage_subata.setItem('wizInstall', true)
-                setPlay('true')
+                setPlay(true)
             }else{
                 localStorage_subata.setItem('wizInstall', false)
             }
@@ -259,7 +259,7 @@ function Main(props){
             }
             if(wizard){
                 localStorage_subata.setItem('wizInstall', true)
-                setPlay('true')
+                setPlay(true)
             }else{
                 localStorage_subata.setItem('wizInstall', false)
             }
@@ -1049,7 +1049,7 @@ function Main(props){
                         checkUpdate(false) 
                     }
                     localStorage_subata.setItem('wizInstall', true)
-                    setPlay('true')
+                    setPlay(true)
                 })
             }else{
                 Message.error({

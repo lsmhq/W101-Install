@@ -199,7 +199,7 @@ function createWindow () {
             label: account.account,
             click:()=>{
               mainWindow.webContents.send('startGame', {
-                account,
+                account: account.account,
                 password: flag.account.accountMap[account]
               })
             }
@@ -266,7 +266,7 @@ function createWindow () {
             label: account.account,
             click:()=>{
               mainWindow.webContents.send('startGame', {
-                account,
+                account: account.account,
                 password: data.account.accountMap[account]
               })
             }
@@ -291,7 +291,12 @@ const showLoading = (cb) => {
   });
 
   loading.once("show", cb);
-  loading.loadURL('https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/');
+  // loading.loadURL('https://static-a3e579e1-12c0-4985-8d49-3ab58c03387a.bspapp.com/');
+  loading.loadURL(url.format({
+    pathname: path.join(__dirname, './build/loading.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
   loading.on('ready-to-show',()=>{
     loading.focus()
     loading.show();
@@ -351,13 +356,13 @@ app.on('ready', () => {
 function sendUpdateMessage(data) {
   mainWindow && mainWindow.webContents.send('message', data)
 }
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    mainWindow && mainWindow.show()
-    mainWindow && mainWindow.focus()
-    app.quit()
-  }
-});
+// app.on('window-all-closed', () => {
+//   if (process.platform !== 'darwin') {
+//     mainWindow && mainWindow.show()
+//     mainWindow && mainWindow.focus()
+//     app.quit()
+//   }
+// });
 let canQuit = false
 app.on('before-quit',(e)=>{
   if(!canQuit){

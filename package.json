@@ -1,6 +1,6 @@
 {
   "name": "subata",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "author": {
     "name": "lsmhq",
     "email": "784433957@qq.com"
@@ -27,6 +27,7 @@
     "browserslist": "^4.18.1",
     "camelcase": "^6.2.1",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
+    "compressing": "^1.6.2",
     "concurrently": "^7.3.0",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.2.0",
@@ -106,7 +107,7 @@
     },
     "publish": {
       "provider": "generic",
-      "url": "http://101.43.216.253:3001/file/subataUpdate"
+      "url": "http://101.43.216.253:3001/file/subataTest"
     },
     "win": {
       "icon": "app/images/logo.ico"
