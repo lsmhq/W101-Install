@@ -94,7 +94,7 @@ function Setting(props){
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}>
-                <AnchorLink href='#bg' title='背景' />
+                <AnchorLink href='#bg' title='背景(不可上传)' />
                 <AnchorLink href='#setting' title='功能' />
                 <AnchorLink href='#gameFile' title='游戏' />
                 <AnchorLink href='#output' title='备份配置' />

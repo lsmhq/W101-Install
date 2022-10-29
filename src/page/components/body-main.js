@@ -1,4 +1,4 @@
-import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message  } from '@arco-design/web-react'
+import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message, Image  } from '@arco-design/web-react'
 import { useEffect, useRef, useState } from 'react'
 import LocalStorage_subata from '../util/localStroage'
 import '../../css/shark.css'
@@ -6,6 +6,11 @@ import bodyBear from '../../image/body.png'
 import emo1 from '../../image/emo1.png'
 import emo2 from '../../image/emo2.png'
 import emo3 from '../../image/emo3.png'
+// import head1 from '../../image/headImg/icon_0.jpeg'
+let headImgPath = 'image/headImg/'
+const headImgs = new Array(19).fill(headImgPath).map((path, index)=>{
+    return require(`../../${path}icon_${index}.jpeg`)
+})
 let localStorage_subata = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -28,6 +33,8 @@ function BodyMain(props){
     let [delable, setDelable] = useState(false)
     let [emo, setEmo] = useState(1)
     let [closedMask, setClosedMask] = useState(false)
+    let [headIndex, setHeadIndex] = useState(-1)
+    let [choseHead, setChoseHead] = useState(false)
     let submit = useRef()
     useEffect(()=>{
         if(!showLogin){
@@ -60,12 +67,16 @@ function BodyMain(props){
     }, [dataMap])
     useEffect(()=>{
         let accounts = localStorage_subata.getItem('accounts') || []
-        let index = accounts.findIndex(val=>val===account)
+        let index = accounts.findIndex(val=> {
+            return val.account === account
+        })
         console.log(index)
         if(index >= 0){
             setDelable(false)
+            setHeadIndex(accounts[index].icon)
         }else{
             setDelable(true)
+            setHeadIndex(-1)
         }
     },[account])
     return <div className='body-main'>
@@ -178,15 +189,24 @@ function BodyMain(props){
             <div className='login-modal-bg'></div>
             <div className='shakeBox'>
                 <div className='shake'>
-                    <div className='shake-body' onMouseEnter={()=>{
+                    <div className='shake-body' onClick={()=>{
+                        setChoseHead(true)
+                    }} onMouseEnter={()=>{
                         setEmo(2)
                     }} onMouseLeave={()=>{
                         setEmo(3)
                     }}>
-                        <img className='bodyImg'src={bodyBear} alt="body"/>
-                        {emo === 1 && <img className='emo' src={emo1} alt='emo'/>}
-                        {emo === 2 && <img className='emo' src={emo2} alt='emo'/>}
-                        {emo === 3 && <img className='emo' src={emo3} alt='emo'/>}
+                        { headIndex === -1 && <>
+                            <img className='bodyImg'src={bodyBear} alt="body"/>
+                            {emo === 1 && <img className='emo' src={emo1} alt='emo'/>}
+                            {emo === 2 && <img className='emo' src={emo2} alt='emo'/>}
+                            {emo === 3 && <img className='emo' src={emo3} alt='emo'/>}
+                        </>}
+                        {
+                            headImgs.map((img, idx)=>{
+                                return <>{ idx === headIndex && <img className='bodyImg animated fadeIn fast' src={img} alt=""/>}</>
+                            })
+                        }
                     </div>
                     <div onClick={()=>{
                         setClosedMask(!closedMask)
@@ -203,7 +223,7 @@ function BodyMain(props){
                        strict = {true}
                        placeholder='账号' 
                        value={account}
-                       data={data}
+                       data={data.map(account=>account.account)}
                         dropdownRender={(menu, idx)=>{
                             return <Row justify='center' align='center' key={idx} className='autoItem'>
                                 <Col span={24} className="autoItem-col" >{menu}</Col>
@@ -238,7 +258,7 @@ function BodyMain(props){
                    <Button disabled={delable} size='large' status='danger' type='primary' className='openGame' onClick={()=>{
                         let accounts = localStorage_subata.getItem('accounts') || []
                         // console.log(accounts)
-                        let index = accounts.findIndex(val=>val===account)
+                        let index = accounts.findIndex(val=>val.account===account)
                         if(index > -1){
                             console.log(index)
                             accounts.splice(index, 1)
@@ -297,8 +317,12 @@ function BodyMain(props){
                         }
                         if(localStorage_subata.getItem('wizInstall')){
                             if(save){
-                                    if(!data.includes(account)){
-                                        data.push(account)
+                                    let index = data.findIndex(val=>val.account === account)
+                                    if(index >= 0){
+                                        data[index] = {account, icon: headIndex}
+                                        setData([...data])
+                                    }else{
+                                        data.push({account, icon: headIndex})
                                         setData([...data])
                                     }
                                     dataMap[account] = password
@@ -374,6 +398,33 @@ function BodyMain(props){
                 </div>
             </div>
        </div>}
+    />
+    <Modal
+        visible={choseHead}
+        title=''
+        focusLock={true}
+        closable={false}
+        autoFocus={false}
+        footer={null}
+        className="login-modal"
+        hideCancel={true}
+        maskClosable = {false}
+        onCancel={()=>{
+            setChoseHead(false)
+        }}
+        children={<>
+            <div className='setting-bg'>
+                {/* <Image /> */}
+                {
+                    headImgs.map((img, idx)=>{
+                        return <Image className={headIndex === idx?'arco-image-active':''} preview={false} onClick={()=>{
+                            setHeadIndex(idx)
+                            setChoseHead(false)
+                        }} src={img} width={60} height={60}/>
+                    })
+                }
+            </div>
+        </>}
     />
 </div>
 }

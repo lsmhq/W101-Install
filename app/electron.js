@@ -62,14 +62,14 @@ function createWindow () {
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
 
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, './build/index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, './build/index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
   
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:5000/#/');
+  // mainWindow.loadURL('http://localhost:5000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -196,7 +196,7 @@ function createWindow () {
         label: '账号启动',
         submenu: flag.account.account.map(account=>{
           return {
-            label: account,
+            label: account.account,
             click:()=>{
               mainWindow.webContents.send('startGame', {
                 account,
@@ -256,13 +256,14 @@ function createWindow () {
   })
   // 账号修改
   ipcMain.on('changeAccount', (e, data)=>{
-    // console.log(data)
+    // console.log(data.account.account)
     if(config){
       config[1] = {
         label: '账号启动',
         submenu: data.account.account.map(account=>{
+          // console.log(account)
           return {
-            label: account,
+            label: account.account,
             click:()=>{
               mainWindow.webContents.send('startGame', {
                 account,
