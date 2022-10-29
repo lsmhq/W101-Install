@@ -107,7 +107,7 @@
     },
     "publish": {
       "provider": "generic",
-      "url": "http://101.43.216.253:3001/file/subataTest"
+      "url": "http://101.43.216.253:3001/file/subataUpdate"
     },
     "win": {
       "icon": "app/images/logo.ico"

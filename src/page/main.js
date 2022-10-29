@@ -18,7 +18,7 @@ let localStorage_subata = new LocalStorage_subata({
 // import { alertText } from './util/dialog';
 // let {alertTextLive2d} = window.electronAPI
 // let { Row, Col } = Grid
-//'ws://localhost:8000'
+// let wsPath = 'ws://localhost:8000'
 let wsPath = 'ws://101.43.216.253:8000'
 // let box = document.getElementById('live2d-widget')
 // let position = []
@@ -743,10 +743,13 @@ function Main(props){
             }}
         >
             <div className='nav-logo'><img alt='' src={su}/></div>
-            <div className='nav-title'>Subata{`@${version}`}<Button onMouseDown={(e)=>{e.stopPropagation()}} type='text' onClick={(e)=>{
-                e.stopPropagation()
-                window.electronAPI.openBroswer('https://subata.top/index.php/2022/09/16/startgame/')
-            }} status='success'>简介</Button></div>
+            <div className='nav-title'>
+                Subata{`${version}`}
+                <div className='online-count'>
+                    <span className='online'></span>
+                    <span className='online-text'>{onlineNum}</span>
+                </div>
+            </div>
             {/* <div className='nav-title'> {obj[type]}</div> */}
             <div className='nav-control'
                 onMouseDown={(e)=>{
