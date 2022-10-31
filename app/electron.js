@@ -53,13 +53,13 @@ function createWindow () {
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, './build/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.join(__dirname, './build/index.html'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // }))
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:3000/#/home');
+  mainWindow.loadURL('http://localhost:3000/#/home');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
