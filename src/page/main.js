@@ -180,7 +180,7 @@ function Main(props){
                 Notification.success({
                     id:'download',
                     style,
-                    title:'安装完成!',
+                    title:'安装/更新完成!',
                     content:'请点击下方开始游戏进行体验!',
                     duration: 2000
                 })

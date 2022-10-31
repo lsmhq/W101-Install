@@ -1,4 +1,4 @@
-import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message, Image  } from '@arco-design/web-react'
+import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message, Image, Radio } from '@arco-design/web-react'
 import { useEffect, useRef, useState } from 'react'
 import LocalStorage_subata from '../util/localStroage'
 import '../../css/shark.css'
@@ -180,7 +180,6 @@ function BodyMain(props){
                         </Button>
                 </div>
             </div>
-
         </div>
     </div>
     <div className='body-main-bottom'>
@@ -266,6 +265,17 @@ function BodyMain(props){
                        setSave(val)
                    }}>记住账号和密码</Checkbox>
                </Form.Item>
+               {/* <Row style={{marginTop:'-15px'}}>
+                   <Col offset={2}>
+                        <Form.Item label='启动方式'  style={{display:'flex',justifyContent:'center'}}>
+                            <Radio.Group>
+                                <Radio value='d'>全部汉化</Radio>
+                                <Radio value='r'>汉化剧情</Radio>
+                                <Radio value='c'>仅聊天</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                   </Col>
+               </Row> */}
            </Form>}
            <div className='btn-group'>
             <div className='op-btn del-btn'>

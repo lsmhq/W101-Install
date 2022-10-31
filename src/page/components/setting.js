@@ -63,6 +63,7 @@ function Setting(props){
     let [current, setCurrent] = useState(0)
     let outputFile = useRef()
     let inputFile = useRef()
+    let [updateLoading, setUpdateLoading] = useState(false)
     // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -448,9 +449,10 @@ function Setting(props){
                     }}>清空缓存</Button>
                 </Row>
                 <Row style={{marginTop:'30px'}}>
-                    <Button status='success' type='primary' size='large' onClick={()=>{
+                    <Button status='success' loading={updateLoading} type='primary' size='large' onClick={()=>{
                         window.electronAPI.checkUpdate((data)=>{
                             // console.log(data)
+                            setUpdateLoading(true)
                             switch (data.type) {
                                 case 1: // 1 error
                                     console.log('error-check')
@@ -498,6 +500,7 @@ function Setting(props){
                                     })
                                     break;
                                 default:
+                                    setUpdateLoading(false)
                                     break;
                             }
                         })
