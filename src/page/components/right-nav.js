@@ -150,15 +150,20 @@ function RightNav(props){
             tips="卸载补丁"
             content="卸载"
         />
-        {/* <Icon
-            Child={<IconUserGroup className="icon-child"/>}
+        <Icon
+            Child={<img alt='' width={27}  src="https://infinityicon.infinitynewtab.com/assets/windmill.svg"></img>}
             onClick={()=>{
-                setAccountShow(true)
+                // 
+                fetch(`https://infinity-api.infinitynewtab.com/random-wallpaper?_=${new Date().getTime()}`).then(res=>{
+                    return res.json()
+                }).then(data=>{
+                    console.log(data.data[0].src)
+                })
             }}
-            tips="管理账号"
+            tips=""
             // color="#e4e517"
-            content="账号"
-        /> */}
+            content="壁纸"
+        />
         {/* <Icon
             Child={<IconBug className="icon-child"/>}
             onClick={()=>{
