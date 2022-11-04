@@ -12,6 +12,7 @@ import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
 import LocalStorage_subata from './util/localStroage';
+import { Snow, Tree } from './components/tree';
 let localStorage_subata = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -733,11 +734,11 @@ function Main(props){
     }
     return <div className="main">
         <div className={`bottom-bg bottom-bg${imgNum}`}>
-            <img alt='' src={bgImg}/>
+            {/* <img alt='' src={bgImg}/> */}
         </div>
-        {showBg && <div className={`bottom-bg bottom-bg${imgNum} animated faster FadeIn`}>
+        {/* {showBg && <div className={`bottom-bg bottom-bg${imgNum} animated faster FadeIn`}>
             <img alt='' src={bgImg}/>
-        </div>}
+        </div>} */}
         <div className='nav'  
             onMouseDown={(e)=>{
                 e.stopPropagation()
@@ -791,7 +792,6 @@ function Main(props){
             </div>
         </div>
         <div className='body'>
-
             <BodyMain
                 logo={logo}
                 loading={loading}
@@ -1078,6 +1078,9 @@ function Main(props){
             e.target.value = ''
             // e.target.files = []
         }} style={{opacity:0, position:'absolute',width:0, height:0, top:'1000px'}}/>
+        {new Date().getMonth()===10 && new Date().getDate() === 4 && <Snow/>}
+        {new Date().getMonth()===10 && new Date().getDate() === 4 && <Tree/>}
+        
     </div>    
 }
 

@@ -154,7 +154,7 @@ function RightNav(props){
             tips="卸载补丁"
             content="卸载"
         />
-        <Icon
+        {/* <Icon
             Child={<img className={`${changeBz?'changbz-animate':''}`} alt='' width={24}  src="https://infinityicon.infinitynewtab.com/assets/windmill.svg"></img>}
             onClick={throttle(()=>{
                 // 
@@ -172,7 +172,7 @@ function RightNav(props){
             tips=""
             // color="#e4e517"
             content="壁纸"
-        />
+        /> */}
         {/* <Icon
             Child={<IconBug className="icon-child"/>}
             onClick={()=>{
