@@ -1078,8 +1078,8 @@ function Main(props){
             e.target.value = ''
             // e.target.files = []
         }} style={{opacity:0, position:'absolute',width:0, height:0, top:'1000px'}}/>
-        {new Date().getMonth()===10 && new Date().getDate() === 4 && <Snow/>}
-        {new Date().getMonth()===10 && new Date().getDate() === 4 && <Tree/>}
+        {new Date().getMonth()===11 && new Date().getDate() === 25 && <Snow/>}
+        {new Date().getMonth()===11 && new Date().getDate() === 25 && <Tree/>}
         
     </div>    
 }
