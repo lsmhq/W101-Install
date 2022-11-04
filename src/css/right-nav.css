@@ -1,0 +1,7 @@
+
+.changbz-animate{
+    animation: loop 2s ease;
+}
+@keyframes loop{
+    100%{transform:rotate(1440deg);}
+}

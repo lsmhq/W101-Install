@@ -4,6 +4,9 @@ import Icon from './Icon'
 import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconUserGroup, IconDelete, IconSettings, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
 import { Message, Button, Notification } from '@arco-design/web-react'
 import LocalStorage_subata from '../util/localStroage';
+import '../../css/right-nav.css'
+import { useState, useEffect } from 'react';
+import { debounce, throttle } from '../util/util';
 let localStorage_subata = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -12,7 +15,8 @@ let style = {
     top:'20px'
 }
 function RightNav(props){
-    let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count, setAccountShow } = props
+    let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count, onBgImgChange } = props
+    let [changeBz, setChangeBz] = useState(false)
     return <div className='right-nav'             
         onMouseDown={(e)=>{
             if(e.target.className === 'nav-bottom'){
@@ -151,15 +155,20 @@ function RightNav(props){
             content="卸载"
         />
         <Icon
-            Child={<img alt='' width={27}  src="https://infinityicon.infinitynewtab.com/assets/windmill.svg"></img>}
-            onClick={()=>{
+            Child={<img className={`${changeBz?'changbz-animate':''}`} alt='' width={24}  src="https://infinityicon.infinitynewtab.com/assets/windmill.svg"></img>}
+            onClick={throttle(()=>{
                 // 
+                setChangeBz(true)
                 fetch(`https://infinity-api.infinitynewtab.com/random-wallpaper?_=${new Date().getTime()}`).then(res=>{
                     return res.json()
                 }).then(data=>{
-                    console.log(data.data[0].src)
+                    // console.log(data.data[0].src)
+                    onBgImgChange(data.data[0].src)
+                    setTimeout(() => {
+                        setChangeBz(false)
+                    }, 2000);
                 })
-            }}
+            }, 1000)}
             tips=""
             // color="#e4e517"
             content="壁纸"

@@ -3,8 +3,8 @@ import '../css/main.css'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import { IconClose, IconMinus, IconTool } from '@arco-design/web-react/icon';
-import zfb from '../image/zfb.jpg'
-import wechat from '../image/wechat.jpg'
+// import zfb from '../image/zfb.jpg'
+// import wechat from '../image/wechat.jpg'
 import QQ from '../image/QQ_share.jpg'
 import su from '../image/Subata_logo.png'
 import apiPath from './http/api'
@@ -39,9 +39,9 @@ let obj = {
 }
 let ws = null, socketError = false
 let imgMap = {
-    qq:QQ,
-    wx:wechat,
-    zf:zfb
+    qq: QQ,
+    wx: 'http://101.43.216.253:3001/zf/wx.png',
+    zf: 'http://101.43.216.253:3001/zf/zfb.jpg'
 }
 let isDown = false;  // 鼠标状态
 // let isDown_live2d = false
@@ -84,6 +84,8 @@ function Main(props){
     let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0)
     let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall'))
     let [onlineNum, setOnline] = useState(0)
+    let [bgImg, setBgImg] = useState('')
+    let [showBg, setShowBg] = useState(false)
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -731,9 +733,12 @@ function Main(props){
     }
     return <div className="main">
         <div className={`bottom-bg bottom-bg${imgNum}`}>
-            <img alt='' src=''/>
+            <img alt='' src={bgImg}/>
         </div>
-        <div className='nav' 
+        {showBg && <div className={`bottom-bg bottom-bg${imgNum} animated faster FadeIn`}>
+            <img alt='' src={bgImg}/>
+        </div>}
+        <div className='nav'  
             onMouseDown={(e)=>{
                 e.stopPropagation()
                 isDown = true 
@@ -813,6 +818,14 @@ function Main(props){
                 setDrawer = {setDrawer}
                 btnLoading = {btnLoading}
                 count = {count}
+                onBgImgChange={(url)=>{
+                    console.log(url.originalSrc)
+                    setBgImg(url.originalSrc)
+                    setShowBg(false)
+                    setTimeout(() => {
+                        setShowBg(true)
+                    }, 2000);
+                }}
             />
         </div>
         <Drawer 
