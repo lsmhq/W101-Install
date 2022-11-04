@@ -46,7 +46,7 @@ let style = {
 //     },
 // ]
 function Setting(props){
-    let {setBg, setSubataShow} = props
+    let {setBg, setSubataShow, onBgChange, onImgsChange} = props
     let [btnSetting, setbtnSetting] = useState(localStorage_subata.getItem('btnSetting') === null?true: localStorage_subata.getItem('btnSetting'))
     let [btnSetting1, setbtnSetting1] = useState(localStorage_subata.getItem('btnSetting1') === null?true: localStorage_subata.getItem('btnSetting1'))
     let [btnSetting2, setbtnSetting2] = useState(localStorage_subata.getItem('btnSetting2') === null?true: localStorage_subata.getItem('btnSetting2'))
@@ -61,7 +61,6 @@ function Setting(props){
     let [currentFile, setCurrentFile] = useState(0)
     let [total, setTotal] = useState(0)
     let [current, setCurrent] = useState(0)
-    let outputFile = useRef()
     let inputFile = useRef()
     let [updateLoading, setUpdateLoading] = useState(false)
     // let [live2dOpen, setlive2dOpen] = useState(false)
@@ -87,15 +86,49 @@ function Setting(props){
         if(localStorage_subata.getItem('btnSetting') === null){
             localStorage_subata.setItem('btnSetting', true)
         }
+        if(localStorage_subata.getItem('bgImgDir')){
+            readImg(localStorage_subata.getItem('bgImgDir'))
+        }
     },[])
     useEffect(()=>{
         // alertTextLive2d(`你选择了第${imgNum+1}个背景图`)
-
-    }, [imgNum])
+        // console.log('初始化')
+        if(imgs.length > 0){
+            onImgsChange(imgs, imgNum - 2)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [imgs, imgNum])
+    function readImg(dir){
+        window.tools.readDir(dir, (files)=>{
+            // console.log(files)
+            let imgType = ['jpg','png','jpeg','webp']
+            files.forEach(file=>{
+                let fileType = file.name.split('.')[file.name.split('.').length-1]
+                if(imgType.includes(fileType)){
+                    // console.log(`${dir}\\${file.name}`)
+                    window.tools.readFile(`${dir}\\${file.name}`,(str)=>{
+                        // console.log(str)
+                        // window.tools.writeFile(`${localStorage_subata.getItem('installPath')}\\cacheImg`,str,()=>{
+                        // console.log('缓存图片成功')
+                        // console.log(`${__dirname}\\cacheImg`)
+                        let bufferArr = new Int8Array(str)
+                        let blob = new Blob([bufferArr],{ type : `application/${fileType}`})
+                        // console.log(blob)
+                        let url = URL.createObjectURL(blob)
+                        // console.log(url)
+                        imgs.push({url, data: str, type: fileType})
+                        // console.log(imgs)
+                        setImgs([...imgs])
+                        // })
+                    },'')
+                }
+            })
+        })
+    }
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}>
-                <AnchorLink href='#bg' title='背景(不可上传)' />
+                <AnchorLink href='#bg' title='背景' />
                 <AnchorLink href='#setting' title='功能' />
                 <AnchorLink href='#gameFile' title='游戏' />
                 <AnchorLink href='#output' title='备份配置' />
@@ -122,23 +155,29 @@ function Setting(props){
                     {
                         imgs.map((img, index)=>{
                             return <Image key={index} width={82} height={82} onClick={()=>{
-                                console.log(index)
+                                // console.log(index)
                                 setimgNum(index + 2)
-                                setBg(index + 2)
                                 localStorage_subata.setItem('imgNum', index + 2)
-                            }} className={(index + 2 === imgNum)?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} src={img}/>
+                                // console.log('手动改变')
+                                onBgChange(imgs, index)
+                            }} className={(index + 2 === imgNum)?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} src={img.url}/>
                         })
                     }
                     <div className='addBgImg' onClick={()=>{
-                        document.getElementById('bgUpload').click()
+                        // document.getElementById('bgUpload').click()
+                        window.tools.choseDir((dir)=>{
+                            // console.log(dir)
+                            localStorage_subata.setItem('bgImgDir', dir)
+                            readImg(dir)
+                        })
                     }}>
                         <span>+</span>
                     </div>
-                    <input accept="image/*" id='bgUpload' style={{visibility:'hidden'}} type="file" onChange={(e)=>{
+                    {/* <input accept="image/*" id='bgUpload' style={{visibility:'hidden'}} type="file" onChange={(e)=>{
                         console.log(e.target.files[0])
                         imgs.push(URL.createObjectURL(e.target.files[0]))
                         setImgs([...imgs])
-                    }}/>
+                    }}/> */}
                     {/* <Upload
                         showUploadList={false}
                         listType='picture-card'
@@ -457,7 +496,7 @@ function Setting(props){
                                 case 1: // 1 error
                                     console.log('error-check')
                                     Notification.error({
-                                        title: '更新出错',
+                                        title: '更新出错, 联系管理员',
                                         id: 'checkSubataUpdate',
                                         content: JSON.stringify(data.data),
                                         style
@@ -477,7 +516,7 @@ function Setting(props){
                                     Notification.info({
                                         title: '存在可用更新',
                                         id: 'checkSubataUpdate',
-                                        content: JSON.stringify(data.data),
+                                        content: JSON.stringify(data?.data?.version),
                                         style
                                     })
                                     break;
@@ -486,7 +525,7 @@ function Setting(props){
                                     Notification.success({
                                         title: '当前已是最新版本',
                                         id: 'checkSubataUpdate',
-                                        content: data.data.version,
+                                        content: data?.data?.version,
                                         style
                                     })
                                     break;
@@ -495,7 +534,7 @@ function Setting(props){
                                     Notification.info({
                                         title: '正在进行下载',
                                         id: 'checkSubataUpdate',
-                                        content: `下载进度${data.data.percent}`,
+                                        content: `下载进度${data.data?.percent?.toFixed(2)}%`,
                                         style
                                     })
                                     break;

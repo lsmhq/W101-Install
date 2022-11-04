@@ -86,7 +86,7 @@ function Main(props){
     let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall'))
     let [onlineNum, setOnline] = useState(0)
     let [bgImg, setBgImg] = useState('')
-    let [showBg, setShowBg] = useState(false)
+    let [bgShow, setBgShow] = useState(true)
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -154,6 +154,15 @@ function Main(props){
         }
         // 监听开始游戏
         window.electronAPI.startGame()
+        // 壁纸
+        // window.tools.readFile(`${localStorage_subata.getItem('installPath')}\\dataCache`,(data)=>{
+        //     console.log('img---->',data)
+        //     let bufferArr = new Int8Array(data)
+        //     let blob = new Blob([bufferArr],{ type : `application/${localStorage_subata.getItem('lastBgImgType')}`})
+        //     console.log(blob)
+        //     let url = URL.createObjectURL(blob)
+        //     setBgImg(url)
+        // },'')
         return () => {
             // 注销
             destroy()
@@ -228,9 +237,9 @@ function Main(props){
           }
           window.wizPath = localStorage_subata.getItem('wizPath')
           window.gameDataPath = localStorage_subata.getItem('gameDataPath')
-          console.log(window.wizPath)
-          console.log(window.gameDataPath)
-          console.log('============')
+        //   console.log(window.wizPath)
+        //   console.log(window.gameDataPath)
+        //   console.log('============')
           window.tools.checkGameInstall((steam, wizard, err)=>{
             // console.log(steam, wizard, err)
             if(steam){
@@ -248,12 +257,12 @@ function Main(props){
           }) 
           callback()  
       }, (error)=>{
-          console.log('没安装Steam')
+        //   console.log('没安装Steam')
         //   console.log(error)
           window.tools.checkGameInstall((steam, wizard, err)=>{
-            console.log('Steam:' + steam)
-            console.log('Wizard:' + wizard)
-            console.log('Error:' + err)
+            // console.log('Steam:' + steam)
+            // console.log('Wizard:' + wizard)
+            // console.log('Error:' + err)
             if(steam){
               // Message.warning('检测到未安装Steam')
               localStorage_subata.setItem('steamInstall', true)
@@ -273,7 +282,7 @@ function Main(props){
     function createSocket(){
         ws = new WebSocket(wsPath)
         ws.onopen =()=>{
-            console.log('连接成功')   
+            // console.log('连接成功')   
             getMessage()   
         }
         ws.onerror = ()=>{
@@ -520,7 +529,7 @@ function Main(props){
                     // 没有需要的更新
                     if(show)
                     window.tools.changeType(localStorage_subata.getItem('type'),(sign)=>{
-                        console.log(sign)
+                        // console.log(sign)
                         if(!sign){
                             if(show)
                                 install(localStorage_subata.getItem('type'))
@@ -733,9 +742,9 @@ function Main(props){
         })
     }
     return <div className="main">
-        <div className={`bottom-bg bottom-bg${imgNum}`}>
-            {/* <img alt='' src={bgImg}/> */}
-        </div>
+        {bgShow &&<div className={`bottom-bg ${bgImg?'':`bottom-bg${imgNum>=1?1:0}`} animated fast fadeIn`}>
+            { bgImg && <img alt='' src={bgImg}/>}
+        </div>}
         {/* {showBg && <div className={`bottom-bg bottom-bg${imgNum} animated faster FadeIn`}>
             <img alt='' src={bgImg}/>
         </div>} */}
@@ -780,7 +789,7 @@ function Main(props){
                 </div>
                 <div className='control-btn btn-danger' onClick={(e)=>{
                     e.stopPropagation()
-                    console.log(localStorage_subata.getItem('btnSetting2'))
+                    // console.log(localStorage_subata.getItem('btnSetting2'))
                     if(localStorage_subata.getItem('btnSetting2')){
                         window.electronAPI.winHide()
                     }else{
@@ -818,14 +827,14 @@ function Main(props){
                 setDrawer = {setDrawer}
                 btnLoading = {btnLoading}
                 count = {count}
-                onBgImgChange={(url)=>{
-                    console.log(url.originalSrc)
-                    setBgImg(url.originalSrc)
-                    setShowBg(false)
-                    setTimeout(() => {
-                        setShowBg(true)
-                    }, 2000);
-                }}
+                // onBgImgChange={(url)=>{
+                //     console.log(url.originalSrc)
+                //     setBgImg(url.originalSrc)
+                //     setShowBg(false)
+                //     setTimeout(() => {
+                //         setShowBg(true)
+                //     }, 2000);
+                // }}
             />
         </div>
         <Drawer 
@@ -1035,6 +1044,8 @@ function Main(props){
             onCancel={()=>{
                 setSetShow(false)
             }}
+            mountOnEnter={false}
+
             style={{
                 maxHeight:'600px',
                 minHeight:'600px',
@@ -1043,6 +1054,31 @@ function Main(props){
             children={<Setting
                 setBg={setimgNum}
                 setSubataShow = {setSubataShow}
+                onBgChange={(imgs, imgNum)=>{
+                    setBgShow(false)
+                    setBgImg(imgs[imgNum]?.url)
+                    // window.tools.writeFile(`${localStorage_subata.getItem('installPath')}\\dataCache`, imgs[imgNum]?.data,()=>{
+                    //     console.log('缓存成功')
+                    // },'')
+                    setTimeout(() => {
+                        setBgShow(true) 
+                    }, 100);
+                    
+                    localStorage_subata.setItem('lastBgImg', imgNum)
+                    // localStorage_subata.setItem('lastBgImgType', imgs[imgNum]?.type)
+                }}
+                onImgsChange={(imgs, imgNum)=>{
+                    setBgShow(false)
+                    setBgImg(imgs[imgNum]?.url)
+                    // window.tools.writeFile(`${localStorage_subata.getItem('installPath')}\\dataCache`, imgs[imgNum]?.data,()=>{
+                    //     console.log('缓存成功')
+                    // },'')
+                    setTimeout(() => {
+                        setBgShow(true) 
+                    }, 100);
+                    localStorage_subata.setItem('lastBgImg', imgNum)
+                    // localStorage_subata.setItem('lastBgImgType', imgs[imgNum]?.type)
+                }}
                 // reload = {reload}
                 filePath = {filePath}
                 onlineNum = {onlineNum}
@@ -1050,9 +1086,9 @@ function Main(props){
             footer={null}
         />
         <input id='selectWiz' directory="" nwdirectory="" type='file' accept='.exe' onChange={(e)=>{
-            console.log(e.target.files[0].path)
+            // console.log(e.target.files[0].path)
             if(e.target.files[0].path.includes('Wizard101.exe')){
-                console.log('---选择成功')
+                // console.log('---选择成功')
                 let wizPath = e.target.files[0].path.split('Wizard101.exe')[0]
                 let gameDataPath = e.target.files[0].path.split('Wizard101.exe')[0]+'Data\\GameData\\'
                 localStorage_subata.setItem('wizPath', wizPath)
@@ -1078,9 +1114,8 @@ function Main(props){
             e.target.value = ''
             // e.target.files = []
         }} style={{opacity:0, position:'absolute',width:0, height:0, top:'1000px'}}/>
-        {new Date().getMonth()===11 && new Date().getDate() === 25 && <Snow/>}
-        {new Date().getMonth()===11 && new Date().getDate() === 25 && <Tree/>}
-        
+        {new Date().getMonth() === 11 && new Date().getDate() === 25 && <Snow/>}
+        {new Date().getMonth() === 11 && new Date().getDate() === 25 && <Tree/>}
     </div>    
 }
 

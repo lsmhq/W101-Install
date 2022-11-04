@@ -520,9 +520,9 @@
     }
 
     // 读取本地文件
-    function readFile(path, callBack){
+    function readFile(path, callBack, code = 'utf-8'){
         try {
-            let str = fs.readFileSync(path, 'utf-8')
+            let str = fs.readFileSync(path, code)
             // return str
             callBack && callBack(str)
         } catch (error) {
@@ -530,9 +530,9 @@
         }
     }
     // 写本地文件
-    function writeFile(path, data, callBack){
+    function writeFile(path, data, callBack, code = 'utf-8'){
         try {
-            fs.writeFileSync(path, data, 'utf-8')
+            fs.writeFileSync(path, data, code)
             callBack && callBack()
         } catch (error) {
             console.error(error)
@@ -553,6 +553,15 @@
             console.log(err)
         })
     }
+    // 读取目录
+    function readDir(path, callBack){
+        try {
+            let dir = fs.readdirSync(path, {withFileTypes: true})
+            callBack && callBack(dir)
+        } catch (error) {
+            console.error(error)
+        }
+    }
     window.tools = {
         initDns,
         connect,
@@ -572,6 +581,7 @@
         killExe,
         readFile,
         writeFile,
-        choseDir
+        choseDir,
+        readDir
     }
 })()
