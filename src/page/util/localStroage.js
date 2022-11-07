@@ -1,7 +1,8 @@
 class LocalStorage_subata{
+
     /**  
      * @Description 初始化设置 { filter: ['key']}
-     * @params option - 初始化设置，filter: String: [], 传入key的数组过滤掉 
+     * @params option - 初始化设置，filter: String: [], 传入key的数组过滤掉, 修改一下注释 
     **/ 
     constructor(
         option = {
