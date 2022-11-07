@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-// 我修改的地方
 import './App.css';
 import Main from './page/main';
 function App() {
