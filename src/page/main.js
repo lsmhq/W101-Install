@@ -13,6 +13,7 @@ import BodyMain from './components/body-main';
 import Setting from './components/setting';
 import LocalStorage_subata from './util/localStroage';
 import { Snow, Tree } from './components/tree';
+import { installBtn_config } from './config/config.page';
 let localStorage_subata = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -50,7 +51,6 @@ let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 let useTimer = null
 function Main(props){
-    // let { reload } = props
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
     let [imgs, setImgs] = useState([]) // 轮播图片
@@ -60,9 +60,6 @@ function Main(props){
     let [percent, setPercent] = useState(0) // 进度百分比
     let [drawer, setDrawer] = useState(false) // 通知显隐
     let [count, setCount] = useState(0)  // 通知条数
-    // let [news, setNews] = useState([]) // 新闻
-    // let [activity, setActivity] = useState([])  // 活动
-    // let [msgHeight, setHeight] = useState('95%') // 弃用高度
     let [btnLoading, setBtnLoad] = useState(false) // 按钮加载
     let [current, setCurrent] = useState(0)  // 当前进度
     let [total, setTotal] = useState(0) // 总进度
@@ -80,13 +77,13 @@ function Main(props){
     let [play, setPlay] = useState(localStorage_subata.getItem('wizInstall')) // 是否可以开始游戏
     let [version, setVersion] = useState('') // 版本号
     let [nav, setNavs] = useState({})
-    let [settingShow, setSetShow] = useState(false)
-    let [subataShow, setSubataShow] = useState(localStorage_subata.getItem('btnSetting1') === null? true: localStorage_subata.getItem('btnSetting1'))
-    let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0)
-    let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall'))
-    let [onlineNum, setOnline] = useState(0)
-    let [bgImg, setBgImg] = useState('')
-    let [bgShow, setBgShow] = useState(true)
+    let [settingShow, setSetShow] = useState(false) // 设置弹窗显隐
+    let [subataShow, setSubataShow] = useState(localStorage_subata.getItem('btnSetting1') === null? true: localStorage_subata.getItem('btnSetting1')) // subata按钮显隐
+    let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0) // 背景图index
+    let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall')) // wiz安装路径
+    let [onlineNum, setOnline] = useState(0) // 在线人数
+    let [bgImg, setBgImg] = useState('') // 背景图blobUrl
+    let [bgShow, setBgShow] = useState(true) // 背景图显隐
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -424,91 +421,35 @@ function Main(props){
             title:'检测到未安装汉化补丁',
             btn: (
                 <span style={{display:'flex', flexDirection:'column'}}>
-                  {
-                    type ? type==='d' && <Button
-                        loading = {btnLoading}
-                        type='primary'
-                        size='small'
-                        style={{ margin: '5px' }}
-                        status='warning'
-                        onClick={()=>{
-                            downLoad('d')
-                            setType('d')
-                            localStorage_subata.setItem('type', 'd')
-                        }}
-                    >
-                        测试版安装
-                    </Button>: <Button
-                        loading = {btnLoading}
-                        type='primary'
-                        size='small'
-                        style={{ margin: '5px' }}
-                        status='warning'
-                        onClick={()=>{
-                            downLoad('d')
-                            setType('d')
-                            localStorage_subata.setItem('type', 'd')
-                        }}
-                    >
-                        测试版安装
-                    </Button>
-                  }
-                  {
-                    type?type === 'r'&&<Button 
-                        loading={btnLoading}
-                        style={{ margin: '5px' }}
-                        status='success'
-                        onClick={()=>{
-                            downLoad('r')
-                            setType('r')
-                            localStorage_subata.setItem('type', 'r')
-                        }}
-                        type='primary' 
-                        size='small'
-                    >
-                        稳定版安装
-                    </Button>:<Button 
-                        loading={btnLoading}
-                        style={{ margin: '5px' }}
-                        status='success'
-                        onClick={()=>{
-                            downLoad('r')
-                            setType('r')
-                            localStorage_subata.setItem('type', 'r')
-                        }}
-                        type='primary' 
-                        size='small'
-                    >
-                        稳定版安装
-                    </Button>
-                  }
-                  {
-                    type?type==='c'&&<Button 
-                        loading={btnLoading}
-                        style={{ margin: '5px' }}
-                        onClick={()=>{
-                            downLoad('c')
-                            setType('c')
-                            localStorage_subata.setItem('type', 'c')
-                        }}
-                        type='primary' 
-                        size='small'
-                    >
-                        聊天纯享安装
-                    </Button>:<Button 
-                        loading={btnLoading}
-                        style={{ margin: '5px' }}
-                        onClick={()=>{
-                            downLoad('c')
-                            setType('c')
-                            localStorage_subata.setItem('type', 'c')
-                        }}
-                        type='primary' 
-                        size='small'
-                    >
-                        聊天纯享安装
-                    </Button>
-                  }
+                  {installBtn_config.map(btn=>{
+                    return type ? type === btn.zhType && <Button
+                    loading = {btnLoading}
+                    type= {btn.type}
+                    size= {btn.size}
+                    style={btn.style}
+                    status={btn.status}
+                    onClick={()=>{
+                        downLoad('d')
+                        setType('d')
+                        localStorage_subata.setItem('type', 'd')
+                    }}
+                >
+                    {btn.title}
+                </Button>: <Button
+                    loading = {btnLoading}
+                    type= {btn.type}
+                    size= {btn.size}
+                    style={btn.style}
+                    status={btn.status}
+                    onClick={()=>{
+                        downLoad('d')
+                        setType('d')
+                        localStorage_subata.setItem('type', 'd')
+                    }}
+                >
+                    {btn.title}
+                </Button>
+                  })}
                 </span>
             ),
         })
@@ -679,64 +620,53 @@ function Main(props){
             style,
             btn: (
                 <span style={{display:'flex'}}>
-                  <Tooltip style={{zIndex:'999999'}} content={`全面汉化，包含NPC名称、地图名称、剧情文本，适合体验尝鲜，不方便查阅Wiki(攻略)。`}>
-                    <Button
-                        // loading={btnLoading}  
-                        type='primary'
-                        size='small'
-                        status= 'warning'
-                        style={{ margin: '0 12px' }}
-                        disabled={type === 'd'}
-                        onClick={()=>{
-                            Notification.warning({
-                                title:'提示:测试版为全面汉化版本',
-                                style,
-                                duration:100000,
-                                id:'change_bd',
-                                content:<span>
-                                    <Button onClick={()=>{
-                                        localStorage_subata.setItem('type','d')
-                                        setType('d')
-                                        // Notification.remove('change_success')
-                                        checkUpdate(localStorage_subata.getItem('type'))
-                                    }} type='primary' status='warning' size='small' style={{ margin: '0 12px 0 0' }}>
-                                        仍要下载
-                                    </Button>
-                                    <Button onClick={()=>{
-                                        changeBd()
-                                    }} type='primary' status='success' size='small' style={{ margin: '0 12px 0 0' }}>
-                                        返回
-                                    </Button>
-                                </span>
-                            })
-                        }}
-                    >
-                        
-                            测试版
-                    </Button>
-                  </Tooltip>
-                  <Tooltip style={{zIndex:'999999'}} content={`仅汉化剧情文本内容,npc、地图名等依旧英文, 适合剧情党`}>
-                    <Button onClick={()=>{
-                            localStorage_subata.setItem('type','r')
-                            // Notification.remove('change_success')
-                            setType('r')
-                            checkUpdate(localStorage_subata.getItem('type'))
-                        }} type='primary' disabled={type === 'r'} status='success' size='small' style={{ margin: '0 12px 0 0' }}>
-                        
-                            稳定版
-                    </Button>
-                  </Tooltip>
-                  <Tooltip style={{zIndex:'999999'}} content={`仅支持中文输入聊天的补丁`}>
-                    <Button disabled={type === 'c'} onClick={()=>{
-                            localStorage_subata.setItem('type','c')
-                            setType('c')
-                            // Notification.remove('change_success')
-                            checkUpdate(localStorage_subata.getItem('type'))
-                        }} type='primary' size='small'>
-                        
-                            仅聊天
-                    </Button>
-                  </Tooltip>
+
+                     {
+                         installBtn_config.map(btn=>{
+                             return <Tooltip style={{zIndex:'999999'}} content={btn.tips}>
+                                <Button
+                                    // loading={btnLoading}  
+                                    type= {btn.type}
+                                    size= {btn.size}
+                                    status= {btn.status}
+                                    style={btn.style}
+                                    disabled={type === btn.zhType}
+                                    onClick={()=>{
+                                        if(btn.zhType === 'd'){
+                                            Notification.warning({
+                                                title:'提示:测试版为全面汉化版本',
+                                                style,
+                                                duration:100000,
+                                                id:'change_bd',
+                                                content:<span>
+                                                    <Button onClick={()=>{
+                                                        localStorage_subata.setItem('type','d')
+                                                        setType('d')
+                                                        // Notification.remove('change_success')
+                                                        checkUpdate(localStorage_subata.getItem('type'))
+                                                    }} type='primary' status='warning' size='small' style={{ margin: '0 12px 0 0' }}>
+                                                        仍要下载
+                                                    </Button>
+                                                    <Button onClick={()=>{
+                                                        changeBd()
+                                                    }} type='primary' status='success' size='small' style={{ margin: '0 12px 0 0' }}>
+                                                        返回
+                                                    </Button>
+                                                </span>
+                                            })
+                                        }else{
+                                            localStorage_subata.setItem('type', btn.zhType)
+                                            // Notification.remove('change_success')
+                                            setType(btn.zhType)
+                                            checkUpdate(localStorage_subata.getItem('type'))
+                                        }
+                                    }}
+                                >
+                                    {btn.smTitle}
+                                </Button>
+                            </Tooltip>
+                         })
+                     }
                 </span>
             ),
         })
@@ -827,14 +757,6 @@ function Main(props){
                 setDrawer = {setDrawer}
                 btnLoading = {btnLoading}
                 count = {count}
-                // onBgImgChange={(url)=>{
-                //     console.log(url.originalSrc)
-                //     setBgImg(url.originalSrc)
-                //     setShowBg(false)
-                //     setTimeout(() => {
-                //         setShowBg(true)
-                //     }, 2000);
-                // }}
             />
         </div>
         <Drawer 
