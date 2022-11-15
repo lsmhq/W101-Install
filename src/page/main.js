@@ -377,20 +377,6 @@ function Main(props){
                 })
               }
             }
-
-            // if(isDown_live2d){
-            //     const x = ev.clientX
-            //     const y = ev.clientY
-            //     const deltaX = x - position[0]
-            //     // const deltaY = y - position[1]
-            //     const left = parseInt(box.style.left || 0)
-            //     // const top = parseInt(box.style.top || 0)
-            //     if(left + deltaX > 1000) return
-            //     if(left + deltaX < 50) return
-            //     box.style.left = left + deltaX + 'px'
-            //     // box.style.top = top + deltaY + 'px'
-            //     position = [x, y]
-            // }
         })
         document.addEventListener('mouseup',()=>{
             isDown = false
@@ -429,9 +415,9 @@ function Main(props){
                     style={btn.style}
                     status={btn.status}
                     onClick={()=>{
-                        downLoad('d')
-                        setType('d')
-                        localStorage_subata.setItem('type', 'd')
+                        downLoad(btn.zhType)
+                        setType(btn.zhType)
+                        localStorage_subata.setItem('type', btn.zhType)
                     }}
                 >
                     {btn.title}
@@ -442,9 +428,9 @@ function Main(props){
                     style={btn.style}
                     status={btn.status}
                     onClick={()=>{
-                        downLoad('d')
-                        setType('d')
-                        localStorage_subata.setItem('type', 'd')
+                        downLoad(btn.zhType)
+                        setType(btn.zhType)
+                        localStorage_subata.setItem('type', btn.zhType)
                     }}
                 >
                     {btn.title}
@@ -645,7 +631,7 @@ function Main(props){
                                                         // Notification.remove('change_success')
                                                         checkUpdate(localStorage_subata.getItem('type'))
                                                     }} type='primary' status='warning' size='small' style={{ margin: '0 12px 0 0' }}>
-                                                        仍要下载
+                                                        继续
                                                     </Button>
                                                     <Button onClick={()=>{
                                                         changeBd()
