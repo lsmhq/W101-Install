@@ -457,6 +457,14 @@ function Setting(props){
                             {fileLength > 0 && `下载过程中终止可能会导致游戏无法启动，下载过程中可以关掉设置窗口`}
                         </Row>
                     </Row>
+                    <Row style={{marginTop:'10px'}}>
+                        <Col span={3}>
+                            <Button onClick={()=>{
+                                window.electronAPI.openBroswer('https://greasyfork.org/zh-CN/scripts/446159-wizard101-auto-answer')
+                            }}
+                            >皇冠自动答题</Button>
+                        </Col>
+                    </Row> 
             </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}

@@ -92,6 +92,9 @@ function BodyMain(props){
             setHeadIndex(-1)
         }
     },[account])
+    function getMain(){
+        return document.getElementsByClassName('main')[0]
+    }
     return <div className='body-main'>
     <div className='body-main-top'>
         <div className='left'>
@@ -193,6 +196,7 @@ function BodyMain(props){
         footer={null}
         className="login-modal"
         hideCancel={true}
+        getPopupContainer={getMain}
         maskClosable = {false}
         onCancel={()=>{
             setShowLogin(false)
@@ -298,7 +302,7 @@ function BodyMain(props){
                    }}>删除{account && `[${account}]`}</Button>
             </div>
                 <div className='op-btn'>
-                    <Button ref={submit} onClick={()=>{
+                    <Button ref={submit} style={{borderRadius:'5px'}} onClick={()=>{
                         // ws.send(JSON.stringify({msg:'1111', title:'123123'}))
                         // console.log(localStorage.getItem('wizInstall'))
                         if(!account){
@@ -430,6 +434,7 @@ function BodyMain(props){
         closable={false}
         autoFocus={false}
         footer={null}
+        getPopupContainer={getMain}
         className="login-modal"
         hideCancel={true}
         maskClosable = {false}

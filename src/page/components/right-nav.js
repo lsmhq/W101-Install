@@ -1,12 +1,10 @@
 /* eslint-disable no-unused-vars */
 
 import Icon from './Icon'
-import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconUserGroup, IconDelete, IconSettings, IconThunderbolt, IconNotification, IconBug } from '@arco-design/web-react/icon';
+import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconDelete, IconSettings, IconNotification, IconThunderbolt } from '@arco-design/web-react/icon';
 import { Message, Button, Notification } from '@arco-design/web-react'
 import LocalStorage_subata from '../util/localStroage';
 import '../../css/right-nav.css'
-import { useState, useEffect } from 'react';
-import { debounce, throttle } from '../util/util';
 let localStorage_subata = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -15,8 +13,7 @@ let style = {
     top:'20px'
 }
 function RightNav(props){
-    let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count, onBgImgChange } = props
-    let [changeBz, setChangeBz] = useState(false)
+    let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count, drawer } = props
     return <div className='right-nav'             
         onMouseDown={(e)=>{
             if(e.target.className === 'nav-bottom'){
@@ -54,27 +51,34 @@ function RightNav(props){
             tips="给灭火器点个赞"
             content="点赞"
         />               */}
-        {/* <Icon
+        <Icon
             Child={<IconThunderbolt className="icon-child"/>}
             onClick={()=>{
                 // setZf('qq')
-                window.tools.connect(()=>{
-                    window.electronAPI.sound()
-                    Message.success({
-                        style:{top:'20px'},
-                        content:'修改host文件成功，可以尝试在不用加速器的情况下进行游戏！',
-                    })
+                window.tools.connect((error)=>{
+                    if(error){
+                        Message.error({
+                            style:{top:'20px'},
+                            content:'修改host文件失败，请使用管理员权限',
+                        })
+                    }else{
+                        window.electronAPI.sound()
+                        Message.success({
+                            style:{top:'20px'},
+                            content:'修改host文件成功，可以尝试在不用加速器的情况下进行游戏！',
+                        })
+                    }
                 })
             }}
             // color="#fef9bf"
             tips="一键加速"
             content="加速"
-        /> */}
+        />
         <Icon
             Child={<IconNotification className="icon-child"/>}
             count={count}
             onClick={()=>{
-                setDrawer(true)
+                setDrawer(!drawer)
             }}
             tips="通知中心"
             content="通知"

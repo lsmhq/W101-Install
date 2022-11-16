@@ -411,6 +411,7 @@ function Main(props){
                     return type ? type === btn.zhType && <Button
                     loading = {btnLoading}
                     type= {btn.type}
+                    key={btn.zhType}
                     size= {btn.size}
                     style={btn.style}
                     status={btn.status}
@@ -425,6 +426,7 @@ function Main(props){
                     loading = {btnLoading}
                     type= {btn.type}
                     size= {btn.size}
+                    key={btn.zhType}
                     style={btn.style}
                     status={btn.status}
                     onClick={()=>{
@@ -609,11 +611,12 @@ function Main(props){
 
                      {
                          installBtn_config.map(btn=>{
-                             return <Tooltip style={{zIndex:'999999'}} content={btn.tips}>
+                             return <Tooltip key={btn.zhType} style={{zIndex:'999999'}} content={btn.tips}>
                                 <Button
                                     // loading={btnLoading}  
                                     type= {btn.type}
                                     size= {btn.size}
+                                    key={btn.zhType}
                                     status= {btn.status}
                                     style={btn.style}
                                     disabled={type === btn.zhType}
@@ -656,6 +659,9 @@ function Main(props){
                 </span>
             ),
         })
+    }
+    function getMain(){
+        return document.getElementsByClassName('main')[0]
     }
     return <div className="main">
         {bgShow &&<div className={`bottom-bg ${bgImg?'':`bottom-bg${imgNum>=1?1:0}`} animated fast fadeIn`}>
@@ -741,12 +747,14 @@ function Main(props){
                 changeBd={changeBd}
                 install = {install}
                 setDrawer = {setDrawer}
+                drawer = {drawer}
                 btnLoading = {btnLoading}
                 count = {count}
             />
         </div>
         <Drawer 
             visible={drawer}
+            getPopupContainer={getMain}
             footer={(
                 <span>
                     {<Button onClick={()=>{
@@ -766,7 +774,8 @@ function Main(props){
             closable={false}
             maskClosable
             style={{
-                top:'40px'
+                bottom:'0px',
+                right:'70px'
             }}
             bodyStyle={{
                 background:'rgb(104 104 104)',
@@ -815,6 +824,7 @@ function Main(props){
             simple
             style={{textAlign:'center'}}
             visible={show}
+            getPopupContainer={getMain}
             onCancel={()=>{
                 setZf('')
                 setShow(false)
@@ -834,6 +844,7 @@ function Main(props){
             style={{textAlign:'center'}}
             visible={msgShow}
             maskClosable={false}
+            getPopupContainer={getMain}
             onCancel={()=>{
                 setMsgShow(false)
             }}
@@ -904,6 +915,7 @@ function Main(props){
          <Modal
             title={title1}
             style={{textAlign:'center'}}
+            getPopupContainer={getMain}
             visible={msgShow1}
             maskClosable={true}
             onCancel={()=>{
@@ -948,12 +960,13 @@ function Main(props){
             title={'设置'}
             // style={{textAlign:'center'}}
             visible={settingShow}
+            getPopupContainer={getMain}
             maskClosable={false}
             onCancel={()=>{
                 setSetShow(false)
             }}
             mountOnEnter={false}
-
+            
             style={{
                 maxHeight:'600px',
                 minHeight:'600px',

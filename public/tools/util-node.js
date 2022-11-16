@@ -73,8 +73,12 @@
                             // console.log(host, oldHost)
                             content = content.split(`\r\n${oldHost}`)[0] + '\r\n' + host
                             // console.log(content.split(oldHost)[0])
-                            fs.writeFileSync(`${pathC}\\${file.name}`, content)
-                            callback && callback()
+                            try {
+                                fs.writeFileSync(`${pathC}\\${file.name}`, content)
+                                callback && callback()
+                            } catch (error) {
+                                callback && callback('error')
+                            }
                         }
                     });
                 }
