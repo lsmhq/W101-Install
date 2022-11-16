@@ -21,7 +21,7 @@ let localStorage_subata = new LocalStorage_subata({
 // let {alertTextLive2d} = window.electronAPI
 // let { Row, Col } = Grid
 // let wsPath = 'ws://localhost:8000'
-let wsPath = 'ws://101.43.216.253:8000'
+let wsPath = 'ws://101.43.174.221:8000'
 // let box = document.getElementById('live2d-widget')
 // let position = []
 let update = false
@@ -42,8 +42,8 @@ let obj = {
 let ws = null, socketError = false
 let imgMap = {
     qq: QQ,
-    wx: 'http://101.43.216.253:3001/zf/wx.png',
-    zf: 'http://101.43.216.253:3001/zf/zfb.jpg'
+    wx: 'http://101.43.174.221:3001/zf/wx.png',
+    zf: 'http://101.43.174.221:3001/zf/zfb.jpg'
 }
 let isDown = false;  // 鼠标状态
 // let isDown_live2d = false

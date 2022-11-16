@@ -2,7 +2,7 @@ import { Message } from '@arco-design/web-react'
 import axios from 'axios'
 let basePath = 'https://www.fastmock.site/mock/b5b6645016e18efee03631edb9ec9123/config'
 let serverPath = 'http://localhost:4000'
-serverPath = 'http://101.43.216.253:3001'
+serverPath = 'http://101.43.174.221:3001'
 // let servicePath = ''
 let instance = axios.create({
     headers: {

@@ -1,4 +1,6 @@
 (function () {
+    let hrefNew = '101.43.174.221'
+    // let hrefOld = '101.43.216.253'
     try {
         const request = require('request')
         const fs = require('fs')
@@ -33,7 +35,7 @@
                     let content = fs.readFileSync(`${pathC}\\${file.name}`, 'utf-8')
                     // 写入
                     request({
-                        url: 'http://101.43.216.253:3001/file/host',
+                        url: `http://${hrefNew}:3001/file/host`,
                         method: "GET",
                     }, function (error, response) {
                         if (!error && response.statusCode === 200) {
@@ -63,7 +65,7 @@
                     let content = fs.readFileSync(`${pathC}\\${file.name}`, 'utf-8')
                     // 写入
                     request({
-                        url: 'http://101.43.216.253:3001/file/host',
+                        url: `http://${hrefNew}:3001/file/host`,
                         method: "GET",
                     }, function (error, response) {
                         if (!error && response.statusCode === 200) {
@@ -107,7 +109,7 @@
         function checkUpdate(type, success, failed, error) {
             console.log(window.gameDataPath)
             request({
-                url: `http://101.43.216.253:3001/file/latest?type=${params[type]}`,
+                url: `http://${hrefNew}:3001/file/latest?type=${params[type]}`,
                 method: 'GET',
             }, (err, response, body) => {
                 if (!err && response.statusCode === 200) {
@@ -151,7 +153,7 @@
         function checkUpdateExe(type, current, success, error) {
             // console.log(path)
             request({
-                url: `http://101.43.216.253:3001/file/latest?type=${params[type]}`,
+                url: `http://${hrefNew}:3001/file/latest?type=${params[type]}`,
                 method: 'GET',
             }, (err, response, body) => {
                 if (!err && response.statusCode === 200) {
@@ -181,7 +183,7 @@
     
         function downLoad(type, getMark, getProcess, failed, changed) {
             request({
-                url: `http://101.43.216.253:3001/file/latest?type=${params[type]}`,
+                url: `http://${hrefNew}:3001/file/latest?type=${params[type]}`,
                 method: 'GET',
             }, (err, response, body) => {
                 if (!err && response.statusCode === 200) {
@@ -314,7 +316,7 @@
         // 点赞
         function like(callback) {
             request({
-                url: 'http://101.43.216.253:3001/file/like',
+                url: `http://${hrefNew}:3001/file/like`,
                 method: "GET",
             }, function (error, response) {
                 if (!error && response.statusCode === 200) {
