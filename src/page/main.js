@@ -50,6 +50,7 @@ let isDown = false;  // 鼠标状态
 let baseX = 0,baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 let useTimer = null
+let satanTimer = false
 function Main(props){
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
@@ -83,7 +84,8 @@ function Main(props){
     let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall')) // wiz安装路径
     let [onlineNum, setOnline] = useState(0) // 在线人数
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
-    let [bgShow, setBgShow] = useState(true) // 背景图显隐
+    let [bgShow, setBgShow] = useState(false) // 背景图显隐
+    let [satan, setSatan] = useState(false) // 显示圣诞树和雪花
     useEffect(() => {
         // 初始化地址
         getSteam(()=>{
@@ -160,6 +162,25 @@ function Main(props){
         //     let url = URL.createObjectURL(blob)
         //     setBgImg(url)
         // },'')
+        if(satanTimer) clearInterval(satanTimer)
+        satanTimer = setInterval(() => {
+            let targetMonth = 12 // 12月
+            let targetDay = [24, 25] // 24 25号
+            let date = new Date()
+            let month = date.getMonth() + 1
+            let day = date.getDate()
+            let hour = date.getHours()
+            // console.log(month, day)
+            if(month === targetMonth && day === targetDay[0] && hour > 18){
+                setSatan(true)
+            }
+            if(month === targetMonth && day === targetDay[1]){
+                setSatan(true)
+            }
+            if(!targetDay.includes(day)){
+                setSatan(false)
+            }
+        }, 1000);
         return () => {
             // 注销
             destroy()
@@ -978,13 +999,9 @@ function Main(props){
                 onBgChange={(imgs, imgNum)=>{
                     setBgShow(false)
                     setBgImg(imgs[imgNum]?.url)
-                    // window.tools.writeFile(`${localStorage_subata.getItem('installPath')}\\dataCache`, imgs[imgNum]?.data,()=>{
-                    //     console.log('缓存成功')
-                    // },'')
                     setTimeout(() => {
                         setBgShow(true) 
-                    }, 100);
-                    
+                    }, 500);
                     localStorage_subata.setItem('lastBgImg', imgNum)
                     // localStorage_subata.setItem('lastBgImgType', imgs[imgNum]?.type)
                 }}
@@ -1035,8 +1052,8 @@ function Main(props){
             e.target.value = ''
             // e.target.files = []
         }} style={{opacity:0, position:'absolute',width:0, height:0, top:'1000px'}}/>
-        {new Date().getMonth() === 11 && new Date().getDate() === 25 && <Snow/>}
-        {new Date().getMonth() === 11 && new Date().getDate() === 25 && <Tree/>}
+        {satan && <Snow/>}
+        {satan && <Tree/>}
     </div>    
 }
 

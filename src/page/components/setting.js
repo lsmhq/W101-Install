@@ -99,9 +99,11 @@ function Setting(props){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [imgs, imgNum])
     function readImg(dir){
+        setImgs([])
         window.tools.readDir(dir, (files)=>{
             // console.log(files)
             let imgType = ['jpg','png','jpeg','webp']
+            imgs = []
             files.forEach(file=>{
                 let fileType = file.name.split('.')[file.name.split('.').length-1]
                 if(imgType.includes(fileType)){
@@ -114,11 +116,15 @@ function Setting(props){
                         let bufferArr = new Int8Array(str)
                         let blob = new Blob([bufferArr],{ type : `application/${fileType}`})
                         // console.log(blob)
-                        let url = URL.createObjectURL(blob)
-                        // console.log(url)
-                        imgs.push({url, data: str, type: fileType})
-                        // console.log(imgs)
-                        setImgs([...imgs])
+                        let filereder = new FileReader()
+                        filereder.onload = (e)=>{
+                            // console.log(url)
+                            
+                            imgs.push({url: e.target.result, data: str, type: fileType})
+                            // console.log(imgs)
+                            setImgs([...imgs])
+                        }
+                        filereder.readAsDataURL(blob)
                         // })
                     },'')
                 }
@@ -138,7 +144,7 @@ function Setting(props){
                 {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
         </div>
-        <div className='setting-right' onScroll={(e)=>{e.preventDefault()}} id='setting-right'>
+        <div className='setting-right' id='setting-right'>
             <div className='setting-item' id='bg'>
                 {/* <PageHeader title='自定义背景图'/> */}
                 <div className='setting-bg'>
@@ -458,8 +464,9 @@ function Setting(props){
                         </Row>
                     </Row>
                     <Row style={{marginTop:'10px'}}>
+                        <Col span={3}>皇冠</Col>
                         <Col span={3}>
-                            <Button onClick={()=>{
+                            <Button status='danger' onClick={()=>{
                                 window.electronAPI.openBroswer('https://greasyfork.org/zh-CN/scripts/446159-wizard101-auto-answer')
                             }}
                             >皇冠自动答题</Button>
