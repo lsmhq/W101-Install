@@ -1,6 +1,6 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import '../css/main.css'
-import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip  } from '@arco-design/web-react';
+import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import { IconClose, IconMinus, IconTool } from '@arco-design/web-react/icon';
 // import zfb from '../image/zfb.jpg'
@@ -15,7 +15,7 @@ import LocalStorage_subata from './util/localStroage';
 import { Snow, Tree } from './components/tree';
 import { installBtn_config } from './config/config.page';
 let localStorage_subata = new LocalStorage_subata({
-    filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
+    filter: ['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
 // import { alertText } from './util/dialog';
 // let {alertTextLive2d} = window.electronAPI
@@ -27,12 +27,12 @@ let wsPath = 'ws://101.43.174.221:8000'
 let update = false
 let timerr
 let style = {
-    right:'50px',
-    top:'20px'
+    right: '50px',
+    top: '20px'
 }
 Notification.config({
-    maxCount:'5',
-    duration:5000
+    maxCount: '5',
+    duration: 5000
 })
 let obj = {
     r: '<稳定版>',
@@ -47,11 +47,11 @@ let imgMap = {
 }
 let isDown = false;  // 鼠标状态
 // let isDown_live2d = false
-let baseX = 0,baseY = 0; //监听坐标
+let baseX = 0, baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 let useTimer = null
 let satanTimer = false
-function Main(props){
+function Main(props) {
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
     let [imgs, setImgs] = useState([]) // 轮播图片
@@ -74,13 +74,13 @@ function Main(props){
     let [user1, setUser1] = useState('')// 反显
     let [message, setMessage] = useState([]) // 通知
     let [type, setType] = useState(localStorage_subata.getItem('type')) // 汉化type
-    let [root, setRoot] = useState(localStorage_subata.getItem('root')||'') // 是否可以进行发布通知
+    let [root, setRoot] = useState(localStorage_subata.getItem('root') || '') // 是否可以进行发布通知
     let [play, setPlay] = useState(localStorage_subata.getItem('wizInstall')) // 是否可以开始游戏
     let [version, setVersion] = useState('') // 版本号
     let [nav, setNavs] = useState({})
     let [settingShow, setSetShow] = useState(false) // 设置弹窗显隐
-    let [subataShow, setSubataShow] = useState(localStorage_subata.getItem('btnSetting1') === null? true: localStorage_subata.getItem('btnSetting1')) // subata按钮显隐
-    let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0) // 背景图index
+    let [subataShow, setSubataShow] = useState(localStorage_subata.getItem('btnSetting1') === null ? true : localStorage_subata.getItem('btnSetting1')) // subata按钮显隐
+    let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum') ? localStorage_subata.getItem('imgNum') * 1 : 0) // 背景图index
     let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall')) // wiz安装路径
     let [onlineNum, setOnline] = useState(0) // 在线人数
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
@@ -88,13 +88,13 @@ function Main(props){
     let [satan, setSatan] = useState(false) // 显示圣诞树和雪花
     useEffect(() => {
         // 初始化地址
-        getSteam(()=>{
+        getSteam(() => {
             // 检查补丁更新
-            if(localStorage_subata.getItem('type')){
-                checkUpdate(false) 
+            if (localStorage_subata.getItem('type')) {
+                checkUpdate(false)
             }
         })
-        
+
         // 获取轮播
         getCarousel()
         // 拖拽
@@ -104,9 +104,9 @@ function Main(props){
         // 获取活动新闻
         getData()
         clearInterval(timerr)
-        timerr = setInterval(()=>{
+        timerr = setInterval(() => {
             getData()
-        },60000)
+        }, 60000)
         // 创建WebSocket
         createSocket()
         // 窗口自适应
@@ -114,41 +114,41 @@ function Main(props){
         // 获取安装目录
         // setInterval(()=>{
         // console.log('检测更新')
-        window.electronAPI.getUpdater((data)=>{
+        window.electronAPI.getUpdater((data) => {
             // console.log('message---->',data)
-            if(data.cmd==='downloadProgress'){
+            if (data.cmd === 'downloadProgress') {
                 update = true
                 setPercent(parseInt(data.progressObj.percent))
                 setTotal(data.progressObj.total)
                 setCurrent(data.progressObj.transferred)
                 Notification.warning({
-                    title:'检测到有最新版本',
+                    title: '检测到有最新版本',
                     style,
-                    id:'subata-up',
-                    content:'正在进行下载，稍后进行更新'
+                    id: 'subata-up',
+                    content: '正在进行下载，稍后进行更新'
                 })
                 // alertTextLive2d('检测到有最新版本')
             }
         })
         // }, 1000)
         // 获取version
-        window.electronAPI.getVersion((version)=>{
+        window.electronAPI.getVersion((version) => {
             setVersion(version)
         })
         // 获取installPath
-        window.electronAPI.getPath((path)=>{
+        window.electronAPI.getPath((path) => {
             window.installPath = path
             localStorage_subata.setItem('installPath', path)
         })
         window.electronAPI.ready()
-        window.electronAPI.menuChangeType((type)=>{
+        window.electronAPI.menuChangeType((type) => {
             localStorage_subata.setItem('type', type)
             checkUpdate()
         })
-        if(localStorage_subata.getItem('accounts') === null){
+        if (localStorage_subata.getItem('accounts') === null) {
             localStorage_subata.setItem('accounts', [])
         }
-        if(localStorage_subata.getItem('accountsMap') === null){
+        if (localStorage_subata.getItem('accountsMap') === null) {
             localStorage_subata.setItem('accountsMap', {})
         }
         // 监听开始游戏
@@ -162,7 +162,7 @@ function Main(props){
         //     let url = URL.createObjectURL(blob)
         //     setBgImg(url)
         // },'')
-        if(satanTimer) clearInterval(satanTimer)
+        if (satanTimer) clearInterval(satanTimer)
         satanTimer = setInterval(() => {
             let targetMonth = 12 // 12月
             let targetDay = [24, 25] // 24 25号
@@ -171,13 +171,13 @@ function Main(props){
             let day = date.getDate()
             let hour = date.getHours()
             // console.log(month, day)
-            if(month === targetMonth && day === targetDay[0] && hour > 18){
+            if (month === targetMonth && day === targetDay[0] && hour > 18) {
                 setSatan(true)
             }
-            if(month === targetMonth && day === targetDay[1]){
+            if (month === targetMonth && day === targetDay[1]) {
                 setSatan(true)
             }
-            if(!targetDay.includes(day)){
+            if (!targetDay.includes(day)) {
                 setSatan(false)
             }
         }, 1000);
@@ -186,32 +186,32 @@ function Main(props){
             destroy()
             localStorage_subata.setItem('msgLength', message.length)
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    useEffect(()=>{
+    useEffect(() => {
         setImg(imgMap[zfType])
-    },[zfType])
-    useEffect(()=>{
-        if(img)
+    }, [zfType])
+    useEffect(() => {
+        if (img)
             setShow(true)
-    },[img])
-    useEffect(()=>{
+    }, [img])
+    useEffect(() => {
 
-    },[settingShow])
-    useEffect(()=>{
+    }, [settingShow])
+    useEffect(() => {
         setCount(0)
-    },[drawer])
-    useEffect(()=>{
-        if(percent === 100){
+    }, [drawer])
+    useEffect(() => {
+        if (percent === 100) {
             setBtnLoad(false)
             setPercent(0)
             window.electronAPI.sound()
-            if(!update){
+            if (!update) {
                 Notification.success({
-                    id:'download',
+                    id: 'download',
                     style,
-                    title:'安装/更新完成!',
-                    content:'请点击下方开始游戏进行体验!',
+                    title: '安装/更新完成!',
+                    content: '请点击下方开始游戏进行体验!',
                     duration: 2000
                 })
                 // alertTextLive2d(`安装完成!共用时间${useTime}秒`)
@@ -221,140 +221,140 @@ function Main(props){
             }
             // window.tools.changeType(localStorage.getItem('type'))
         }
-        
-        if(percent <= 3 && percent >= 1){
+
+        if (percent <= 3 && percent >= 1) {
             // alertTextLive2d('开始！')
             clearInterval(useTimer)
             // useTimer = setInterval(() => {
             //     useTime+=1
             // }, 1000);
         }
-        if(percent >= 25 && percent <= 30){
+        if (percent >= 25 && percent <= 30) {
             // alertTextLive2d('已经下载四分之一了！')
         }
-        if(percent >= 50 && percent <= 55){
+        if (percent >= 50 && percent <= 55) {
             // alertTextLive2d('已经下载一半了！')
         }
-        if(percent >= 90 && percent <= 95){
+        if (percent >= 90 && percent <= 95) {
             // alertTextLive2d('就快结束辣~')
         }
-        window.electronAPI.setProgressBar(percent/100)
-    },[percent])
-    function getSteam(callback){
+        window.electronAPI.setProgressBar(percent / 100)
+    }, [percent])
+    function getSteam(callback) {
         // console.log('getSteam')
-        window.tools.getPath((stdout, stderr)=>{
-          console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
-          if(localStorage_subata.getItem('gameDataPath') === null){
-            localStorage_subata.setItem('gameDataPath',`${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101\\Data\\GameData\\`)
-          }
-          if(localStorage_subata.getItem('wizPath') === null){  
-            localStorage_subata.setItem('wizPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101`)
-          } 
-          if(localStorage_subata.getItem('steamPath') === null){
-            localStorage_subata.setItem('steamPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
-          }
-          window.wizPath = localStorage_subata.getItem('wizPath')
-          window.gameDataPath = localStorage_subata.getItem('gameDataPath')
-        //   console.log(window.wizPath)
-        //   console.log(window.gameDataPath)
-        //   console.log('============')
-          window.tools.checkGameInstall((steam, wizard, err)=>{
-            // console.log(steam, wizard, err)
-            if(steam){
-              // Message.warning('检测到未安装Steam')
-              localStorage_subata.setItem('steamInstall', true)
-            }else{
-                localStorage_subata.setItem('steamInstall', false)
+        window.tools.getPath((stdout, stderr) => {
+            console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
+            if (localStorage_subata.getItem('gameDataPath') === null) {
+                localStorage_subata.setItem('gameDataPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101\\Data\\GameData\\`)
             }
-            if(wizard){
-                localStorage_subata.setItem('wizInstall', true)
-                setPlay(true)
-            }else{
-                localStorage_subata.setItem('wizInstall', false)
+            if (localStorage_subata.getItem('wizPath') === null) {
+                localStorage_subata.setItem('wizPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101`)
             }
-          }) 
-          callback()  
-      }, (error)=>{
-        //   console.log('没安装Steam')
-        //   console.log(error)
-          window.tools.checkGameInstall((steam, wizard, err)=>{
-            // console.log('Steam:' + steam)
-            // console.log('Wizard:' + wizard)
-            // console.log('Error:' + err)
-            if(steam){
-              // Message.warning('检测到未安装Steam')
-              localStorage_subata.setItem('steamInstall', true)
-            }else{
-                localStorage_subata.setItem('steamInstall', false)
+            if (localStorage_subata.getItem('steamPath') === null) {
+                localStorage_subata.setItem('steamPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
             }
-            if(wizard){
-                localStorage_subata.setItem('wizInstall', true)
-                setPlay(true)
-            }else{
-                localStorage_subata.setItem('wizInstall', false)
-            }
-          }) 
-          callback()  
-      }) 
-      }
-    function createSocket(){
+            window.wizPath = localStorage_subata.getItem('wizPath')
+            window.gameDataPath = localStorage_subata.getItem('gameDataPath')
+            //   console.log(window.wizPath)
+            //   console.log(window.gameDataPath)
+            //   console.log('============')
+            window.tools.checkGameInstall((steam, wizard, err) => {
+                // console.log(steam, wizard, err)
+                if (steam) {
+                    // Message.warning('检测到未安装Steam')
+                    localStorage_subata.setItem('steamInstall', true)
+                } else {
+                    localStorage_subata.setItem('steamInstall', false)
+                }
+                if (wizard) {
+                    localStorage_subata.setItem('wizInstall', true)
+                    setPlay(true)
+                } else {
+                    localStorage_subata.setItem('wizInstall', false)
+                }
+            })
+            callback()
+        }, (error) => {
+            //   console.log('没安装Steam')
+            //   console.log(error)
+            window.tools.checkGameInstall((steam, wizard, err) => {
+                // console.log('Steam:' + steam)
+                // console.log('Wizard:' + wizard)
+                // console.log('Error:' + err)
+                if (steam) {
+                    // Message.warning('检测到未安装Steam')
+                    localStorage_subata.setItem('steamInstall', true)
+                } else {
+                    localStorage_subata.setItem('steamInstall', false)
+                }
+                if (wizard) {
+                    localStorage_subata.setItem('wizInstall', true)
+                    setPlay(true)
+                } else {
+                    localStorage_subata.setItem('wizInstall', false)
+                }
+            })
+            callback()
+        })
+    }
+    function createSocket() {
         ws = new WebSocket(wsPath)
-        ws.onopen =()=>{
+        ws.onopen = () => {
             // console.log('连接成功')   
-            getMessage()   
+            getMessage()
         }
-        ws.onerror = ()=>{
+        ws.onerror = () => {
             reconnet()
         }
-        ws.onclose = ()=>{
+        ws.onclose = () => {
             reconnet()
         }
-        
+
         // console.log(ws)
-        ws.onmessage = (msg)=>{
+        ws.onmessage = (msg) => {
             // console.log(msg.data)
             let data = JSON.parse(msg.data)
-            if(data?.id === localStorage_subata.getItem('userid')){
+            if (data?.id === localStorage_subata.getItem('userid')) {
                 Message.success({
-                    style:{top:'20px'},
-                    content:'发布成功',
-                    duration:3000,
-                    onClose:()=>{
+                    style: { top: '20px' },
+                    content: '发布成功',
+                    duration: 3000,
+                    onClose: () => {
                         setTitle('')
                         setText('')
                     }
                 })
-            }else if(data.type === 'del'){
+            } else if (data.type === 'del') {
                 getMessage()
-            }else if(data.type === 'count'){
+            } else if (data.type === 'count') {
                 setOnline(data.onLineNum)
-            }else if(data?.id){
+            } else if (data?.id) {
                 window.electronAPI.sound()
                 Notification.info({
                     style,
-                    content:data.title,
-                    title:`您收到了一条来自${data.username || '神秘人'}的消息`
+                    content: data.title,
+                    title: `您收到了一条来自${data.username || '神秘人'}的消息`
                 })
                 setCount(1)
             }
             getMessage()
         }
-        let reconnet = ()=>{ //重新连接websock函数
-            if(socketError)
+        let reconnet = () => { //重新连接websock函数
+            if (socketError)
                 return false
             socketError = true
-            setTimeout(()=>{
+            setTimeout(() => {
                 ws = new WebSocket(wsPath)
                 socketError = false
-            },2000)
+            }, 2000)
         }
     }
-    function resize(){
-        window.onresize = ()=>{
+    function resize() {
+        window.onresize = () => {
             // setHeight(window.screen.height - 40 + 'px')
         }
     }
-    function getData(){
+    function getData() {
         // apiPath.mainPage().then(res=>{
         //     if(res.status === 200){
         //         setActivity([...res.data.activity])
@@ -362,114 +362,114 @@ function Main(props){
         //         setLoading1(false)
         //     }
         // })
-        apiPath.getNav().then(res=>{
+        apiPath.getNav().then(res => {
             // console.log(res)
-            if(res.status === 200){
+            if (res.status === 200) {
                 // console.log(res.data.messages)
                 setNavs(res.data.messages)
                 setLoading1(false)
             }
         })
     }
-    function dark(){
+    function dark() {
         document.body.setAttribute('arco-theme', 'dark');
     }
-    function destroy(){
+    function destroy() {
         document.onmousedown = null
         document.onmousemove = null
         window.onresize = null
     }
-    function drag(){
+    function drag() {
         // box.addEventListener('mousedown', function(e){
         //     isDown_live2d = true // 正在移动
         //     position = [e.clientX, e.clientY]
         // })
-        document.addEventListener('mousemove',function(ev){
-            if(isDown){
-              const x = ev.screenX - baseX
-              const y = ev.screenY - baseY
-            //   console.log(x, y)
-              if(prveX !== x || prveY !== y){
-                // console.log(x, y)
-                prveX = x
-                prveY = y
-                window.electronAPI.sendXY({
-                    x, y
-                })
-              }
+        document.addEventListener('mousemove', function (ev) {
+            if (isDown) {
+                const x = ev.screenX - baseX
+                const y = ev.screenY - baseY
+                //   console.log(x, y)
+                if (prveX !== x || prveY !== y) {
+                    // console.log(x, y)
+                    prveX = x
+                    prveY = y
+                    window.electronAPI.sendXY({
+                        x, y
+                    })
+                }
             }
         })
-        document.addEventListener('mouseup',()=>{
+        document.addEventListener('mouseup', () => {
             isDown = false
             // isDown_live2d = false
         })
     }
-    function getCarousel(){
-        apiPath.getCurl().then(res=>{
+    function getCarousel() {
+        apiPath.getCurl().then(res => {
             // console.log(res.data.lunbo)
             setImgs([...res.data.lunbo])
             setLoading(false)
         })
     }
-    function getMessage(){
-        apiPath.getMessage().then(res=>{
+    function getMessage() {
+        apiPath.getMessage().then(res => {
             // console.log(res.data.message)
             setMessage([...res.data.messages.reverse()])
-            if(localStorage_subata.getItem('msgLength') && res.data.messages.length !== localStorage_subata.getItem('msgLength')){
+            if (localStorage_subata.getItem('msgLength') && res.data.messages.length !== localStorage_subata.getItem('msgLength')) {
                 setCount(1)
             }
             localStorage_subata.setItem('msgLength', res.data.messages.length)
         })
     }
-    function install(type){
+    function install(type) {
         Notification.error({
-            id:'notInstall_bd',
+            id: 'notInstall_bd',
             style,
-            title:'检测到未安装汉化补丁',
+            title: '检测到未安装汉化补丁',
             btn: (
-                <span style={{display:'flex', flexDirection:'column'}}>
-                  {installBtn_config.map(btn=>{
-                    return type ? type === btn.zhType && <Button
-                    loading = {btnLoading}
-                    type= {btn.type}
-                    key={btn.zhType}
-                    size= {btn.size}
-                    style={btn.style}
-                    status={btn.status}
-                    onClick={()=>{
-                        downLoad(btn.zhType)
-                        setType(btn.zhType)
-                        localStorage_subata.setItem('type', btn.zhType)
-                    }}
-                >
-                    {btn.title}
-                </Button>: <Button
-                    loading = {btnLoading}
-                    type= {btn.type}
-                    size= {btn.size}
-                    key={btn.zhType}
-                    style={btn.style}
-                    status={btn.status}
-                    onClick={()=>{
-                        downLoad(btn.zhType)
-                        setType(btn.zhType)
-                        localStorage_subata.setItem('type', btn.zhType)
-                    }}
-                >
-                    {btn.title}
-                </Button>
-                  })}
+                <span style={{ display: 'flex', flexDirection: 'column' }}>
+                    {installBtn_config.map(btn => {
+                        return type ? type === btn.zhType && <Button
+                            loading={btnLoading}
+                            type={btn.type}
+                            key={btn.zhType}
+                            size={btn.size}
+                            style={btn.style}
+                            status={btn.status}
+                            onClick={() => {
+                                downLoad(btn.zhType)
+                                setType(btn.zhType)
+                                localStorage_subata.setItem('type', btn.zhType)
+                            }}
+                        >
+                            {btn.title}
+                        </Button> : <Button
+                            loading={btnLoading}
+                            type={btn.type}
+                            size={btn.size}
+                            key={btn.zhType}
+                            style={btn.style}
+                            status={btn.status}
+                            onClick={() => {
+                                downLoad(btn.zhType)
+                                setType(btn.zhType)
+                                localStorage_subata.setItem('type', btn.zhType)
+                            }}
+                        >
+                            {btn.title}
+                        </Button>
+                    })}
                 </span>
             ),
         })
     }
-    function checkUpdate(show = true){
+    function checkUpdate(show = true) {
         console.log(obj[localStorage_subata.getItem('type')])
-        Notification.remove('change_bd') 
+        Notification.remove('change_bd')
         // Notification.clear()
         // console.log(window.tools)
-        window.tools.checkUpdate(localStorage_subata.getItem('type'), (num)=>{
-            console.log('num----->',num)
+        window.tools.checkUpdate(localStorage_subata.getItem('type'), (num) => {
+            console.log('num----->', num)
             switch (num) {
                 case 1:
                     // 有更新
@@ -477,43 +477,43 @@ function Main(props){
                     break;
                 case 2:
                     // 没有需要的更新
-                    if(show)
-                    window.tools.changeType(localStorage_subata.getItem('type'),(sign)=>{
-                        // console.log(sign)
-                        if(!sign){
-                            if(show)
-                                install(localStorage_subata.getItem('type'))
-                            return
-                        }
-                        window.electronAPI.sound()
-                        Message.success({
-                            style:{top:'20px'},
-                            content:`切换${obj[localStorage_subata.getItem('type')]}成功!`
+                    if (show)
+                        window.tools.changeType(localStorage_subata.getItem('type'), (sign) => {
+                            // console.log(sign)
+                            if (!sign) {
+                                if (show)
+                                    install(localStorage_subata.getItem('type'))
+                                return
+                            }
+                            window.electronAPI.sound()
+                            Message.success({
+                                style: { top: '20px' },
+                                content: `切换${obj[localStorage_subata.getItem('type')]}成功!`
+                            })
+                            window.electronAPI.changeType(localStorage_subata.getItem('type'))
+                            setType(localStorage_subata.getItem('type'))
                         })
-                        window.electronAPI.changeType(localStorage_subata.getItem('type'))
-                        setType(localStorage_subata.getItem('type'))
-                    })
                     break
                 case 3:
                     // 未安装
                     console.log('未安装')
-                    if(show)
+                    if (show)
                         install(localStorage_subata.getItem('type'))
                     window.electronAPI.winShow()
                     break
                 default:
                     break;
             }
-        },(err)=>{
+        }, (err) => {
             console.log(err)
-        },(err)=>{
+        }, (err) => {
             console.log(err)
             Notification.error({
                 style,
-                id:'notInstallWizard101',
-                title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
+                id: 'notInstallWizard101',
+                title: '未检测到Wizard101, 可能是官服或自定义Steam安装路径',
                 content: <span>
-                    <Button onClick={()=>{
+                    <Button onClick={() => {
                         let fileSelect = document.getElementById('selectWiz')
                         fileSelect.click()
                     }}>手动选择游戏路径</Button>
@@ -522,149 +522,149 @@ function Main(props){
             window.electronAPI.winShow()
         })
     }
-    function upDate(){
+    function upDate() {
         console.log(obj[localStorage_subata.getItem('type')])
         Notification.warning({
-            title:`检测到${obj[localStorage_subata.getItem('type')]}有最新的补丁！`,
-            id:'update',
+            title: `检测到${obj[localStorage_subata.getItem('type')]}有最新的补丁！`,
+            id: 'update',
             style,
-            duration:1000000000,
+            duration: 1000000000,
             // closable:false,
             btn: (
                 <span>
-                  {
-                    localStorage_subata.getItem('type') === 'd' && <Button
-                        loading={btnLoading}
-                        type='primary'
-                        size='small'
-                        style={{ margin: '0 12px' }}
-                        onClick={()=>{
-                            downLoad()
-                        }} 
-                    >
-                        测试版更新
-                    </Button>
-                  }
-                  {
-                    localStorage_subata.getItem('type') === 'r' && <Button 
-                        loading={btnLoading}
-                        onClick={()=>{
-                            downLoad()
-                        }} 
-                        type='primary' 
-                        size='small'
-                    >
-                        稳定版更新
-                    </Button>
-                  }
-                  {
-                    localStorage_subata.getItem('type') === 'c' && <Button 
-                        loading={btnLoading}
-                        onClick={()=>{
-                            downLoad()
-                        }} 
-                        type='primary' 
-                        size='small'
-                    >
-                        聊天纯享更新
-                    </Button>
-                  }
+                    {
+                        localStorage_subata.getItem('type') === 'd' && <Button
+                            loading={btnLoading}
+                            type='primary'
+                            size='small'
+                            style={{ margin: '0 12px' }}
+                            onClick={() => {
+                                downLoad()
+                            }}
+                        >
+                            测试版更新
+                        </Button>
+                    }
+                    {
+                        localStorage_subata.getItem('type') === 'r' && <Button
+                            loading={btnLoading}
+                            onClick={() => {
+                                downLoad()
+                            }}
+                            type='primary'
+                            size='small'
+                        >
+                            稳定版更新
+                        </Button>
+                    }
+                    {
+                        localStorage_subata.getItem('type') === 'c' && <Button
+                            loading={btnLoading}
+                            onClick={() => {
+                                downLoad()
+                            }}
+                            type='primary'
+                            size='small'
+                        >
+                            聊天纯享更新
+                        </Button>
+                    }
                 </span>
             ),
         })
     }
-    function downLoad(type){
+    function downLoad(type) {
         setBtnLoad(true)
         Notification.clear()
-        window.tools.downLoad(type || localStorage_subata.getItem('type') ,(mark)=>{
+        window.tools.downLoad(type || localStorage_subata.getItem('type'), (mark) => {
             Notification.warning({
-                id:'download',
-                title:'请耐心等待下载...',
-                content:mark,style,duration:10000000
+                id: 'download',
+                title: '请耐心等待下载...',
+                content: mark, style, duration: 10000000
             })
-        },(total, currentTotal)=>{
+        }, (total, currentTotal) => {
             setCurrent(currentTotal)
             setTotal(total)
-            setPercent(Number.parseInt((( currentTotal / total ).toFixed(2) * 100)))
-        }, (err)=>{
-            if(err){
+            setPercent(Number.parseInt(((currentTotal / total).toFixed(2) * 100)))
+        }, (err) => {
+            if (err) {
                 Notification.error({
-                    content:err,
+                    content: err,
                     style,
-                    title:'请将本消息提供给<灭火器>'
+                    title: '请将本消息提供给<灭火器>'
                 })
             }
-        },(num)=>{
+        }, (num) => {
             console.log(num)
-            if(num === 1){
+            if (num === 1) {
                 setBtnLoad(false)
                 setPercent(0)
                 window.electronAPI.sound()
                 Notification.success({
-                    id:'download',
+                    id: 'download',
                     style,
-                    title:'安装完成!',
-                    content:'请点击下方开始游戏进行体验!',
+                    title: '安装完成!',
+                    content: '请点击下方开始游戏进行体验!',
                     duration: 2000
                 })
             }
-            if(num === 2){
+            if (num === 2) {
                 window.electronAPI.sound()
                 Notification.remove('download')
                 Message.success({
-                    style:{top:'20px'},
-                    content:`切换${obj[localStorage_subata.getItem('type')]}成功!`
+                    style: { top: '20px' },
+                    content: `切换${obj[localStorage_subata.getItem('type')]}成功!`
                 })
             }
         })
     }
 
-    function changeBd(){
+    function changeBd() {
         Notification.info({
-            title:'切换/更新',
+            title: '切换/更新',
             // closable:false,
-            showIcon:false,
-            duration:100000,
-            id:'change_bd',
+            showIcon: false,
+            duration: 100000,
+            id: 'change_bd',
             style,
             btn: (
-                <span style={{display:'flex'}}>
+                <span style={{ display: 'flex' }}>
 
-                     {
-                         installBtn_config.map(btn=>{
-                             return <Tooltip key={btn.zhType} style={{zIndex:'999999'}} content={btn.tips}>
+                    {
+                        installBtn_config.map(btn => {
+                            return <Tooltip key={btn.zhType} style={{ zIndex: '999999' }} content={btn.tips}>
                                 <Button
                                     // loading={btnLoading}  
-                                    type= {btn.type}
-                                    size= {btn.size}
+                                    type={btn.type}
+                                    size={btn.size}
                                     key={btn.zhType}
-                                    status= {btn.status}
+                                    status={btn.status}
                                     style={btn.style}
                                     disabled={type === btn.zhType}
-                                    onClick={()=>{
-                                        if(btn.zhType === 'd'){
+                                    onClick={() => {
+                                        if (btn.zhType === 'd') {
                                             Notification.warning({
-                                                title:'提示:测试版为全面汉化版本',
+                                                title: '提示:测试版为全面汉化版本',
                                                 style,
-                                                duration:100000,
-                                                id:'change_bd',
-                                                content:<span>
-                                                    <Button onClick={()=>{
-                                                        localStorage_subata.setItem('type','d')
+                                                duration: 100000,
+                                                id: 'change_bd',
+                                                content: <span>
+                                                    <Button onClick={() => {
+                                                        localStorage_subata.setItem('type', 'd')
                                                         setType('d')
                                                         // Notification.remove('change_success')
                                                         checkUpdate(localStorage_subata.getItem('type'))
                                                     }} type='primary' status='warning' size='small' style={{ margin: '0 12px 0 0' }}>
                                                         继续
                                                     </Button>
-                                                    <Button onClick={()=>{
+                                                    <Button onClick={() => {
                                                         changeBd()
                                                     }} type='primary' status='success' size='small' style={{ margin: '0 12px 0 0' }}>
                                                         返回
                                                     </Button>
                                                 </span>
                                             })
-                                        }else{
+                                        } else {
                                             localStorage_subata.setItem('type', btn.zhType)
                                             // Notification.remove('change_success')
                                             setType(btn.zhType)
@@ -675,32 +675,32 @@ function Main(props){
                                     {btn.smTitle}
                                 </Button>
                             </Tooltip>
-                         })
-                     }
+                        })
+                    }
                 </span>
             ),
         })
     }
-    function getMain(){
+    function getMain() {
         return document.getElementsByClassName('main')[0]
     }
     return <div className="main">
-        {bgShow &&<div className={`bottom-bg ${bgImg?'':`bottom-bg${imgNum>=1?1:0}`} animated fast fadeIn`}>
-            { bgImg && <img alt='' src={bgImg}/>}
+        {bgShow && <div className={`bottom-bg ${bgImg ? '' : `bottom-bg${imgNum >= 1 ? 1 : 0}`} animated fast fadeIn`}>
+            {bgImg && <img alt='' src={bgImg} />}
         </div>}
         {/* {showBg && <div className={`bottom-bg bottom-bg${imgNum} animated faster FadeIn`}>
             <img alt='' src={bgImg}/>
         </div>} */}
-        <div className='nav'  
-            onMouseDown={(e)=>{
+        <div className='nav'
+            onMouseDown={(e) => {
                 e.stopPropagation()
-                isDown = true 
+                isDown = true
                 baseX = e.clientX
                 baseY = e.clientY
                 // console.log(baseX, baseY)
             }}
         >
-            <div className='nav-logo'><img alt='' src={su}/></div>
+            <div className='nav-logo'><img alt='' src={su} /></div>
             <div className='nav-title'>
                 Subata{`${version}`}
                 <div className='online-count'>
@@ -710,36 +710,36 @@ function Main(props){
             </div>
             {/* <div className='nav-title'> {obj[type]}</div> */}
             <div className='nav-control'
-                onMouseDown={(e)=>{
+                onMouseDown={(e) => {
                     e.stopPropagation()
                     isDown = false
                     // console.log(baseX, baseY)
                 }}
             >
-                <div className='control-btn' onClick={(e)=>{
+                <div className='control-btn' onClick={(e) => {
                     e.stopPropagation()
                     // 设置
                     setSetShow(true)
                 }}>
-                    
-                    <IconTool style={{fontSize:'20px'}}/>
+
+                    <IconTool style={{ fontSize: '20px' }} />
                 </div>
-                <div className='control-btn' onClick={(e)=>{
+                <div className='control-btn' onClick={(e) => {
                     e.stopPropagation()
                     window.electronAPI.mini()
                 }}>
-                    <IconMinus style={{fontSize:'20px'}}/>
+                    <IconMinus style={{ fontSize: '20px' }} />
                 </div>
-                <div className='control-btn btn-danger' onClick={(e)=>{
+                <div className='control-btn btn-danger' onClick={(e) => {
                     e.stopPropagation()
                     // console.log(localStorage_subata.getItem('btnSetting2'))
-                    if(localStorage_subata.getItem('btnSetting2')){
+                    if (localStorage_subata.getItem('btnSetting2')) {
                         window.electronAPI.winHide()
-                    }else{
+                    } else {
                         window.electronAPI.close()
                     }
                 }}>
-                    <IconClose style={{fontSize:'20px'}}/>
+                    <IconClose style={{ fontSize: '20px' }} />
                 </div>
             </div>
         </div>
@@ -747,38 +747,38 @@ function Main(props){
             <BodyMain
                 logo={logo}
                 loading={loading}
-                imgs = {imgs}
-                nav = {nav}
-                loading1 = {loading1}
-                btnLoading = {btnLoading}
+                imgs={imgs}
+                nav={nav}
+                loading1={loading1}
+                btnLoading={btnLoading}
                 percent={percent}
                 current={current}
-                total = {total}
-                play = {play}
+                total={total}
+                play={play}
                 subataShow={subataShow}
             />
             <RightNav
-                onMouseDown={(init)=>{
+                onMouseDown={(init) => {
                     let { down, X, Y } = init
                     isDown = down
                     baseX = X
                     baseY = Y
                 }}
-                setZf = {setZf}
+                setZf={setZf}
                 changeBd={changeBd}
-                install = {install}
-                setDrawer = {setDrawer}
-                drawer = {drawer}
-                btnLoading = {btnLoading}
-                count = {count}
+                install={install}
+                setDrawer={setDrawer}
+                drawer={drawer}
+                btnLoading={btnLoading}
+                count={count}
             />
         </div>
-        <Drawer 
+        <Drawer
             visible={drawer}
             getPopupContainer={getMain}
             footer={(
                 <span>
-                    {<Button onClick={()=>{
+                    {<Button onClick={() => {
                         setMsgShow(true)
                     }}>发布通知</Button>}
                 </span>
@@ -795,119 +795,119 @@ function Main(props){
             closable={false}
             maskClosable
             style={{
-                bottom:'0px',
-                right:'70px'
+                bottom: '0px',
+                right: '70px'
             }}
             bodyStyle={{
-                background:'rgb(104 104 104)',
-                padding:0
+                background: 'rgb(104 104 104)',
+                padding: 0
             }}
         >
-            <Collapse       
+            <Collapse
                 style={{ width: '100%' }}
             >
                 {
-                        <List
-                            dataSource={message}
-                            noDataElement={<></>}
-                            render={(item, index) => item.del? null : <List.Item key={index} onClick={()=>{
-                                setMsgShow1(true)
-                                setTitle1(item.title)
-                                setUser1(item.username)
-                                setText1(item.msg)
-                            }}><span><Tooltip position='bl' content={item.time.split(' ')[0]}>{`${item.title}-${item.username||'Subata'}`}</Tooltip> {localStorage_subata.getItem('userid')===item.id && <Button type='text' onClick={(e)=>{
-                                e.preventDefault()
-                                Notification.warning({
-                                    style,
-                                    id:'delmessage',
-                                    title:'确定要删除这条通知吗?',
-                                    content:<><Button onClick={()=>{
-                                        apiPath.delMessage({id:item.msgid}).then(res=>{
-                                            if(res.data.success){
-                                                Message.success({
-                                                    style:{top:'20px'},
-                                                    content:'删除成功'
-                                                })
-                                            }
-                                            Notification.remove('delmessage')
-                                            ws.send(JSON.stringify({type:'del'}))
-                                        })
-                                    }}>确定</Button></>
-                                })
-                            }}>删除</Button>}</span></List.Item>}
-                        />
-                    
+                    <List
+                        dataSource={message}
+                        noDataElement={<></>}
+                        render={(item, index) => item.del ? null : <List.Item key={index} onClick={() => {
+                            setMsgShow1(true)
+                            setTitle1(item.title)
+                            setUser1(item.username)
+                            setText1(item.msg)
+                        }}><span><Tooltip position='bl' content={item.time.split(' ')[0]}>{`${item.title}-${item.username || 'Subata'}`}</Tooltip> {localStorage_subata.getItem('userid') === item.id && <Button type='text' onClick={(e) => {
+                            e.preventDefault()
+                            Notification.warning({
+                                style,
+                                id: 'delmessage',
+                                title: '确定要删除这条通知吗?',
+                                content: <><Button onClick={() => {
+                                    apiPath.delMessage({ id: item.msgid }).then(res => {
+                                        if (res.data.success) {
+                                            Message.success({
+                                                style: { top: '20px' },
+                                                content: '删除成功'
+                                            })
+                                        }
+                                        Notification.remove('delmessage')
+                                        ws.send(JSON.stringify({ type: 'del' }))
+                                    })
+                                }}>确定</Button></>
+                            })
+                        }}>删除</Button>}</span></List.Item>}
+                    />
+
                 }
             </Collapse>
         </Drawer>
         <Modal
             title=''
             simple
-            style={{textAlign:'center'}}
+            style={{ textAlign: 'center' }}
             visible={show}
             getPopupContainer={getMain}
-            onCancel={()=>{
+            onCancel={() => {
                 setZf('')
                 setShow(false)
-                if(zfType !== 'qq'){
+                if (zfType !== 'qq') {
                     Message.info({
-                        content:'打赏将全部用于网站的维护，谢谢老板支持！',
-                        style:{top:'20px'},
-                        duration:2000
+                        content: '打赏将全部用于网站的维护，谢谢老板支持！',
+                        style: { top: '20px' },
+                        duration: 2000
                     })
                 }
             }}
-            children={[<img key={1} className='zf-img' src={img} alt=''/>]}
+            children={[<img key={1} className='zf-img' src={img} alt='' />]}
             footer={null}
         />
         <Modal
             title='通知发布'
-            style={{textAlign:'center'}}
+            style={{ textAlign: 'center' }}
             visible={msgShow}
             maskClosable={false}
             getPopupContainer={getMain}
-            onCancel={()=>{
+            onCancel={() => {
                 setMsgShow(false)
             }}
             children={<>
-                <Input 
+                <Input
                     placeholder='发布者'
                     type='text'
                     maxLength={15}
                     value={user}
-                    onChange = {(val)=>{
+                    onChange={(val) => {
                         setUser(val)
-                        localStorage_subata.setItem('username',val)
+                        localStorage_subata.setItem('username', val)
                     }}
                 />
-                <Input 
+                <Input
                     placeholder='标题'
                     type='text'
                     value={title}
                     maxLength={20}
-                    onChange = {(val)=>{
+                    onChange={(val) => {
                         setTitle(val)
                     }}
                 />
                 <Input.TextArea
                     placeholder='消息内容'
                     style={{
-                        height:'300px'
+                        height: '300px'
                     }}
                     value={text}
-                    onChange={(val)=>{
+                    onChange={(val) => {
                         setText(val)
                     }}
                 />
                 {
-                    root !== 'wizard-subata-lsmhq' && <Input 
+                    root !== 'wizard-subata-lsmhq' && <Input
                         placeholder='管理员口令'
                         type='text'
                         value={root}
-                        onChange = {(val)=>{
+                        onChange={(val) => {
                             setRoot(val)
-                            if(val === 'wizard-subata-lsmhq'){
-                                localStorage_subata.setItem('root','wizard-subata-lsmhq')
+                            if (val === 'wizard-subata-lsmhq') {
+                                localStorage_subata.setItem('root', 'wizard-subata-lsmhq')
                             }
                         }}
                     />
@@ -915,35 +915,35 @@ function Main(props){
             </>}
             footer={(<span>
                 {
-                   root === 'wizard-subata-lsmhq' && <Button type='primary' status='success' onClick={()=>{
-                        
+                    root === 'wizard-subata-lsmhq' && <Button type='primary' status='success' onClick={() => {
+
                         let data = {
-                            msg:text,
-                            title:title,
-                            id:localStorage_subata.getItem('userid'),
-                            username:user,
-                            msgid:Math.random()
+                            msg: text,
+                            title: title,
+                            id: localStorage_subata.getItem('userid'),
+                            username: user,
+                            msgid: Math.random()
                         }
-                        if(text.length === 0) return
-                        if(title.length === 0) return
-                        if(user.length === 0) return
+                        if (text.length === 0) return
+                        if (title.length === 0) return
+                        if (user.length === 0) return
                         ws.send(JSON.stringify(data))
                         setMsgShow(false)
                     }}>发布</Button>
                 }
             </span>)}
         />
-         <Modal
+        <Modal
             title={title1}
-            style={{textAlign:'center'}}
+            style={{ textAlign: 'center' }}
             getPopupContainer={getMain}
             visible={msgShow1}
             maskClosable={true}
-            onCancel={()=>{
+            onCancel={() => {
                 setMsgShow1(false)
             }}
             children={<>
-                <Input 
+                <Input
                     placeholder='发布者'
                     type='text'
                     maxLength={15}
@@ -951,26 +951,26 @@ function Main(props){
                     value={user1}
                     autoFocus={false}
                 />
-                <Input 
+                <Input
                     placeholder='标题'
                     type='text'
                     value={title1}
                     readOnly
                     autoFocus={false}
                     // maxLength={20}
-                    onChange = {(val)=>{
+                    onChange={(val) => {
                         setTitle1(val)
                     }}
                 />
                 <Input.TextArea
                     placeholder='消息内容'
                     style={{
-                        height:'300px'
+                        height: '300px'
                     }}
                     readOnly
                     autoFocus={false}
                     value={text1}
-                    onChange={(val)=>{
+                    onChange={(val) => {
                         setText1(val)
                     }}
                 />
@@ -983,78 +983,78 @@ function Main(props){
             visible={settingShow}
             getPopupContainer={getMain}
             maskClosable={false}
-            onCancel={()=>{
+            onCancel={() => {
                 setSetShow(false)
             }}
             mountOnEnter={false}
-            
+
             style={{
-                maxHeight:'600px',
-                minHeight:'600px',
-                width:'700px',
+                maxHeight: '600px',
+                minHeight: '600px',
+                width: '700px',
             }}
             children={<Setting
                 setBg={setimgNum}
-                setSubataShow = {setSubataShow}
-                onBgChange={(imgs, imgNum)=>{
+                setSubataShow={setSubataShow}
+                onBgChange={(imgs, imgNum) => {
                     setBgShow(false)
                     setBgImg(imgs[imgNum]?.url)
                     setTimeout(() => {
-                        setBgShow(true) 
+                        setBgShow(true)
                     }, 500);
                     localStorage_subata.setItem('lastBgImg', imgNum)
                     // localStorage_subata.setItem('lastBgImgType', imgs[imgNum]?.type)
                 }}
-                onImgsChange={(imgs, imgNum)=>{
+                onImgsChange={(imgs, imgNum) => {
                     setBgShow(false)
                     setBgImg(imgs[imgNum]?.url)
                     // window.tools.writeFile(`${localStorage_subata.getItem('installPath')}\\dataCache`, imgs[imgNum]?.data,()=>{
                     //     console.log('缓存成功')
                     // },'')
                     setTimeout(() => {
-                        setBgShow(true) 
+                        setBgShow(true)
                     }, 100);
                     localStorage_subata.setItem('lastBgImg', imgNum)
                     // localStorage_subata.setItem('lastBgImgType', imgs[imgNum]?.type)
                 }}
                 // reload = {reload}
-                filePath = {filePath}
-                onlineNum = {onlineNum}
+                filePath={filePath}
+                onlineNum={onlineNum}
             />}
             footer={null}
         />
-        <input id='selectWiz' directory="" nwdirectory="" type='file' accept='.exe' onChange={(e)=>{
+        <input id='selectWiz' directory="" nwdirectory="" type='file' accept='.exe' onChange={(e) => {
             // console.log(e.target.files[0].path)
-            if(e.target.files[0].path.includes('Wizard101.exe')){
+            if (e.target.files[0].path.includes('Wizard101.exe')) {
                 // console.log('---选择成功')
                 let wizPath = e.target.files[0].path.split('Wizard101.exe')[0]
-                let gameDataPath = e.target.files[0].path.split('Wizard101.exe')[0]+'Data\\GameData\\'
+                let gameDataPath = e.target.files[0].path.split('Wizard101.exe')[0] + 'Data\\GameData\\'
                 localStorage_subata.setItem('wizPath', wizPath)
                 localStorage_subata.setItem('gameDataPath', gameDataPath)
                 window.wizPath = wizPath
                 window.gameDataPath = gameDataPath
                 setFilePath(wizPath)
-                getSteam(()=>{
-                    if(localStorage_subata.getItem('type')){
-                        checkUpdate(false) 
+                getSteam(() => {
+                    if (localStorage_subata.getItem('type')) {
+                        checkUpdate(false)
                     }
                     localStorage_subata.setItem('wizInstall', true)
                     setPlay(true)
                 })
-            }else{
+            } else {
                 Message.error({
-                    content:'路径错误请重新选择 PS:请选择游戏目录下的Wizard101.exe',
-                    style:{
-                        top:'20px'
+                    content: '路径错误请重新选择 PS:请选择游戏目录下的Wizard101.exe',
+                    style: {
+                        top: '20px'
                     }
                 })
             }
             e.target.value = ''
             // e.target.files = []
-        }} style={{opacity:0, position:'absolute',width:0, height:0, top:'1000px'}}/>
-        {satan && <Snow/>}
-        {satan && <Tree/>}
-    </div>    
+        }} style={{ opacity: 0, position: 'absolute', width: 0, height: 0, top: '1000px' }} />
+        {satan && <Snow />}
+        {satan && <Tree />}
+    </div>
 }
 
 export default Main
