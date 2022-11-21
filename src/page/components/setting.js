@@ -134,7 +134,7 @@ function Setting(props){
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}>
-                <AnchorLink href='#bg' title='背景' />
+                <AnchorLink href='#bg' title='背景(不稳定)' />
                 <AnchorLink href='#setting' title='功能' />
                 <AnchorLink href='#gameFile' title='游戏' />
                 <AnchorLink href='#output' title='备份配置' />
@@ -366,63 +366,80 @@ function Setting(props){
                             />
                         </Col>
                     </Row>  
+                    <Row style={{marginTop:'10px'}}>
+                        <Col span={3}>皇冠</Col>
+                        <Col span={3}>
+                            <Button status='danger' onClick={()=>{
+                                window.electronAPI.openBroswer('https://greasyfork.org/zh-CN/scripts/446159-wizard101-auto-answer')
+                            }}
+                            >皇冠自动答题</Button>
+                        </Col>
+                    </Row> 
                     <Row style={{marginTop:'10px'}} align="center">
-                        <Row>
-                            <Col span={6}>更新</Col>
-                            <Col span={10}>
-                                <Button
-                                    type='primary'
-                                    status='success'
-                                    loading={loadFile}
-                                    onClick={()=>{
-                                        setLoadFile(true)
-                                        console.log(window.fileList_update.split('\n'))
-                                        window.tools.getGameVersion((versionArr)=>{
-                                            
-                                            if(versionArr === undefined){
-                                                Message.error({
-                                                    style:{top:'10px'},
-                                                    content:'出现错误，联系灭火器'
-                                                })
-                                                return
-                                            }
-                                            // window.tools.getFile()
-                                            let serverUrl
-                                            versionArr.forEach((line)=>{
-                                                if(line.includes('UrlPrefix')){
-                                                    console.log(line.split('=')[1])
-                                                    serverUrl = line.split('=')[1]
+                        <Col span={6}>游戏更新</Col>
+                        <Col span={24}>
+                            <Button
+                                        type='primary'
+                                        status='success'
+                                        loading={loadFile}
+                                        onClick={()=>{
+                                            setLoadFile(true)
+                                            console.log(window.fileList_update.split('\n'))
+                                            window.tools.getGameVersion((versionArr)=>{
+                                                
+                                                if(versionArr === undefined){
+                                                    Message.error({
+                                                        style:{top:'10px'},
+                                                        content:'出现错误，联系灭火器'
+                                                    })
+                                                    return
                                                 }
-                                            })
-                                            let fileStatus = [], indexDownload = 0
-                                            let fileList_update = window.fileList_update || localStorage_subata.getItem('fileList_update')
-                                            fileList_update.split('\n').forEach(path=>{
-                                                // -1 未开始下载
-                                                fileStatus.push({
-                                                    targetUrl: serverUrl.trim() + path,
-                                                    outPut: window.wizPath + path,
-                                                    status: -1
+                                                // window.tools.getFile()
+                                                let serverUrl
+                                                versionArr.forEach((line)=>{
+                                                    if(line.includes('UrlPrefix')){
+                                                        console.log(line.split('=')[1])
+                                                        serverUrl = line.split('=')[1]
+                                                    }
                                                 })
-                                            })
-                                            setLength(fileStatus.length)
-                                            // console.log(fileStatus)
-                                            clearInterval(downLoadTimer)
-                                            downLoadTimer = setInterval(()=>{
-                                                // console.log(indexDownload, fileStatus.length)
-                                                if(indexDownload === (fileStatus.length - 1)){
-                                                    // console.log(fileStatus.find(item=>item.status !== 1))
-                                                    clearInterval(downLoadTimer)
-                                                }
+                                                let fileStatus = [], indexDownload = 0
+                                                let fileList_update = window.fileList_update || localStorage_subata.getItem('fileList_update')
+                                                fileList_update.split('\n').forEach(path=>{
+                                                    // -1 未开始下载
+                                                    fileStatus.push({
+                                                        targetUrl: serverUrl.trim() + path,
+                                                        outPut: window.wizPath + path,
+                                                        status: -1
+                                                    })
+                                                })
+                                                setLength(fileStatus.length)
                                                 // console.log(fileStatus)
-                                                if(fileStatus[indexDownload].status === -1){
-                                                    let {targetUrl, outPut} = fileStatus[indexDownload]
-                                                    fileStatus[indexDownload].status = 0
-                                                    window.tools.getFile(targetUrl, outPut, (sign)=>{}, (total, currentTotal)=>{
-                                                        if(total){
-                                                            setTotal(total)
-                                                            setCurrent(currentTotal)
-                                                            // console.log(total, currentTotal)
-                                                            if(total * 1 === currentTotal * 1){
+                                                clearInterval(downLoadTimer)
+                                                downLoadTimer = setInterval(()=>{
+                                                    // console.log(indexDownload, fileStatus.length)
+                                                    if(indexDownload === (fileStatus.length - 1)){
+                                                        // console.log(fileStatus.find(item=>item.status !== 1))
+                                                        clearInterval(downLoadTimer)
+                                                    }
+                                                    // console.log(fileStatus)
+                                                    if(fileStatus[indexDownload].status === -1){
+                                                        let {targetUrl, outPut} = fileStatus[indexDownload]
+                                                        fileStatus[indexDownload].status = 0
+                                                        window.tools.getFile(targetUrl, outPut, (sign)=>{}, (total, currentTotal)=>{
+                                                            if(total){
+                                                                setTotal(total)
+                                                                setCurrent(currentTotal)
+                                                                // console.log(total, currentTotal)
+                                                                if(total * 1 === currentTotal * 1){
+                                                                    fileStatus[indexDownload].status = 1
+                                                                    if(!fileStatus.find(item=>item.status !== 1)){
+                                                                        setLoadFile(false)
+                                                                        setLength(0)
+                                                                        setCurrentFile(0)
+                                                                    }
+                                                                }
+                                                            }
+                                                            if(!total){
                                                                 fileStatus[indexDownload].status = 1
                                                                 if(!fileStatus.find(item=>item.status !== 1)){
                                                                     setLoadFile(false)
@@ -430,29 +447,19 @@ function Setting(props){
                                                                     setCurrentFile(0)
                                                                 }
                                                             }
-                                                        }
-                                                        if(!total){
-                                                            fileStatus[indexDownload].status = 1
-                                                            if(!fileStatus.find(item=>item.status !== 1)){
-                                                                setLoadFile(false)
-                                                                setLength(0)
-                                                                setCurrentFile(0)
-                                                            }
-                                                        }
-                                                    })
-                                                }
-                                                if(fileStatus[indexDownload].status === 1){
-                                                    indexDownload++
-                                                    setCurrentFile(indexDownload + 1)
-                                                }
-                                            }, 500)
+                                                        })
+                                                    }
+                                                    if(fileStatus[indexDownload].status === 1){
+                                                        indexDownload++
+                                                        setCurrentFile(indexDownload + 1)
+                                                    }
+                                                }, 500)
 
-                                            // window.tools.getFile()
-                                        })
-                                    }}
-                                > {fileLength > 0 ? `正在下载中( 测试谨慎操作 )`:'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
-                            </Col>
-                        </Row>
+                                                // window.tools.getFile()
+                                            })
+                                        }}
+                            > {fileLength > 0 ? `正在下载中( 测试谨慎操作 )`:'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
+                        </Col>
                         <Row style={{marginTop:'5px'}}>
                             {fileLength > 0 && `已下载：${currentFile}个 \n总数：${fileLength}（个）`}<br/>
                         </Row>
@@ -463,15 +470,6 @@ function Setting(props){
                             {fileLength > 0 && `下载过程中终止可能会导致游戏无法启动，下载过程中可以关掉设置窗口`}
                         </Row>
                     </Row>
-                    <Row style={{marginTop:'10px'}}>
-                        <Col span={3}>皇冠</Col>
-                        <Col span={3}>
-                            <Button status='danger' onClick={()=>{
-                                window.electronAPI.openBroswer('https://greasyfork.org/zh-CN/scripts/446159-wizard101-auto-answer')
-                            }}
-                            >皇冠自动答题</Button>
-                        </Col>
-                    </Row> 
             </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}

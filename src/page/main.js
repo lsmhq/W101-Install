@@ -84,7 +84,7 @@ function Main(props) {
     let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall')) // wiz安装路径
     let [onlineNum, setOnline] = useState(0) // 在线人数
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
-    let [bgShow, setBgShow] = useState(false) // 背景图显隐
+    let [bgShow, setBgShow] = useState(true) // 背景图显隐
     let [satan, setSatan] = useState(false) // 显示圣诞树和雪花
     useEffect(() => {
         // 初始化地址

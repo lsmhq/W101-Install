@@ -240,7 +240,8 @@
         }
         // 下载文件
         function getFile(uri, filePath, callback, onData) {
-            console.log(filePath)
+            console.log('从', uri)
+            console.log('下载到', filePath)
             if (uri) {
                 let currentTotal = 0
                 let total = 0
@@ -387,7 +388,7 @@
                     withFileTypes: true
                 })
                 let names = files.map(file => file.name)
-                console.log(names)
+                // console.log(names)
                 names.forEach(file => {
                     if (file === 'WizardClient.log') {
                         let content = fs.readFileSync(`${logPath}/${file}`).toString('utf-8')
