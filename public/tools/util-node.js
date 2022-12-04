@@ -568,7 +568,7 @@
                 let dir = fs.readdirSync(path, {withFileTypes: true})
                 callBack && callBack(dir)
             } catch (error) {
-                console.error(error)
+                console.error('报错但问题不大---->',error)
                 error && callbackError(error)
             }
         }
