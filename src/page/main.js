@@ -95,7 +95,7 @@ function Main(props) {
             }
         })
         // 获取软件
-        window.tools.getSoftWares()
+        // window.tools.getSoftWares()
         // 获取轮播
         getCarousel()
         // 拖拽
@@ -142,7 +142,7 @@ function Main(props) {
             localStorage_subata.setItem('installPath', path)
         })
         let bgImgDir = localStorage_subata.getItem('bgImgDir')
-        if(bgImgDir === null){
+        if(!bgImgDir){
             window.electronAPI.ready()
         }
         window.electronAPI.menuChangeType((type) => {

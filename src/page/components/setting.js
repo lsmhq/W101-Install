@@ -130,6 +130,8 @@ function Setting(props){
                     },'')
                 }
             })
+        },(error)=>{
+            window.electronAPI.ready()
         })
     }
     return <div className="setting">

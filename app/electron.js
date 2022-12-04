@@ -166,6 +166,7 @@ function createWindow () {
   let config
   // 准备好显示
   ipcMain.on('ready', function(e, flag){
+    // console.log('ready')
     if(flag.flag){
       mainWindow.focus();
       mainWindow.show();

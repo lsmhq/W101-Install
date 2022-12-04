@@ -563,12 +563,13 @@
             })
         }
         // 读取目录
-        function readDir(path, callBack){
+        function readDir(path, callBack, callbackError){
             try {
                 let dir = fs.readdirSync(path, {withFileTypes: true})
                 callBack && callBack(dir)
             } catch (error) {
                 console.error(error)
+                error && callbackError(error)
             }
         }
         // 获取软件
