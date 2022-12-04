@@ -104,7 +104,9 @@ function Setting(props){
             // console.log(files)
             let imgType = ['jpg','png','jpeg','webp']
             imgs = []
-            files.forEach(file=>{
+            window.electronAPI.ready()
+            files.forEach((file, idx)=>{
+                if(idx > 22) return
                 let fileType = file.name.split('.')[file.name.split('.').length-1]
                 if(imgType.includes(fileType)){
                     // console.log(`${dir}\\${file.name}`)
@@ -119,7 +121,6 @@ function Setting(props){
                         let filereder = new FileReader()
                         filereder.onload = (e)=>{
                             // console.log(url)
-                            
                             imgs.push({url: e.target.result, data: str, type: fileType})
                             // console.log(imgs)
                             setImgs([...imgs])
@@ -134,7 +135,7 @@ function Setting(props){
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}>
-                <AnchorLink href='#bg' title='背景(不稳定)' />
+                <AnchorLink href='#bg' title='背景' />
                 <AnchorLink href='#setting' title='功能' />
                 <AnchorLink href='#gameFile' title='游戏' />
                 <AnchorLink href='#output' title='备份配置' />
@@ -477,7 +478,7 @@ function Setting(props){
                     <Col span={5}>开发者</Col>
                     <Col span={5}>蓝色灭火器</Col>
                 </Row>
-                <Row align='center' style={{marginTop:'5px'}}>
+                {/* <Row align='center' style={{marginTop:'5px'}}>
                     <Col span={5}>支持一下</Col>
                     <Col span={5}>
                         <Button onClick={()=>{
@@ -485,7 +486,7 @@ function Setting(props){
                         }}>前往 Star ~</Button>
                     </Col>
                     <Col span={10} offset={2}>项目仅供学习交流</Col>
-                </Row>
+                </Row> */}
                 <Row align='center' style={{marginTop:'5px'}}>
                     <Col span={5}>联系我们</Col>
                     <Col span={15}><Button onClick={()=>{

@@ -8,6 +8,7 @@
         const child_process = require('child_process'); //引入模块
         const { shell } = require('electron')
         const { dialog } = require('@electron/remote')
+        const regedit = require('regedit');
         window.gameDataPath = localStorage.getItem('gameDataPath') || '' // 打包路径
         window.wizPath = localStorage.getItem('wizPath') || '' // Wiz路径
         let params = {
@@ -570,6 +571,15 @@
                 console.error(error)
             }
         }
+        // 获取软件
+        function getSoftWares(){
+            let path = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\'
+            
+            regedit.list([path]).on('data',(res)=>{
+                console.log(res)
+            })
+        }
+        
         window.tools = {
             initDns,
             connect,
@@ -590,7 +600,8 @@
             readFile,
             writeFile,
             choseDir,
-            readDir
+            readDir,
+            getSoftWares
         }
     } catch (error) {
         console.log('浏览器环境报错', error)

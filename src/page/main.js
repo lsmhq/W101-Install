@@ -94,7 +94,8 @@ function Main(props) {
                 checkUpdate(false)
             }
         })
-
+        // 获取软件
+        window.tools.getSoftWares()
         // 获取轮播
         getCarousel()
         // 拖拽
@@ -140,7 +141,10 @@ function Main(props) {
             window.installPath = path
             localStorage_subata.setItem('installPath', path)
         })
-        window.electronAPI.ready()
+        let bgImgDir = localStorage_subata.getItem('bgImgDir')
+        if(bgImgDir === null){
+            window.electronAPI.ready()
+        }
         window.electronAPI.menuChangeType((type) => {
             localStorage_subata.setItem('type', type)
             checkUpdate()
