@@ -33,10 +33,11 @@ html,body{
 .App{
 	height: 99%;
 	width: 99% ; 
-	box-shadow: 0px 2px 2px 0px rgb(37, 37, 37);
+	box-shadow: 0px 2px 6px 0px rgb(37, 37, 37);
 	border-radius: 10px;
 	position: relative;
 	overflow: hidden;
+	margin: 0 auto;
 }
 /* em 和 i 斜体的文字都不倾斜 */
 em,

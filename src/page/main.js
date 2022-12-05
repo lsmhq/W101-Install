@@ -50,7 +50,7 @@ let isDown = false;  // 鼠标状态
 let baseX = 0, baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 let useTimer = null
-let satanTimer = false
+let satanTimer = false, satanTimerStart
 function Main(props) {
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
@@ -173,16 +173,15 @@ function Main(props) {
             let date = new Date()
             let month = date.getMonth() + 1
             let day = date.getDate()
-            let hour = date.getHours()
+            let hour = date.getHours()  
             // console.log(month, day)
-            if (month === targetMonth && day === targetDay[0] && hour > 18) {
+            if (month === targetMonth && day === targetDay[0] && hour > 9) {
                 setSatan(true)
+                return
             }
             if (month === targetMonth && day === targetDay[1]) {
                 setSatan(true)
-            }
-            if (!targetDay.includes(day)) {
-                setSatan(false)
+                return
             }
         }, 1000);
         return () => {
@@ -192,6 +191,23 @@ function Main(props) {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    useEffect(()=>{
+        if(satan){
+            clearInterval(satanTimer)
+            if(satanTimerStart) clearInterval(satanTimerStart)
+            satanTimerStart = setInterval(() => {
+                let targetMonth = 12 // 12月
+                let targetDay = [24, 25] // 26号
+                let date = new Date()
+                let month = date.getMonth() + 1
+                let day = date.getDate()
+                // let hour = date.getHours()
+                if (month !== targetMonth || !targetDay.includes(day)) {
+                    setSatan(false)
+                }
+            }, 1000);
+        }
+    },[satan])
     useEffect(() => {
         setImg(imgMap[zfType])
     }, [zfType])

@@ -8,7 +8,7 @@
         const child_process = require('child_process'); //引入模块
         const { shell } = require('electron')
         const { dialog } = require('@electron/remote')
-        const regedit = require('regedit');
+        // const regedit = require('regedit');
         window.gameDataPath = localStorage.getItem('gameDataPath') || '' // 打包路径
         window.wizPath = localStorage.getItem('wizPath') || '' // Wiz路径
         let params = {
@@ -576,9 +576,9 @@
         function getSoftWares(){
             let path = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\'
             
-            regedit.list([path]).on('data',(res)=>{
-                console.log(res)
-            })
+            // regedit.list([path]).on('data',(res)=>{
+            //     console.log(res)
+            // })
         }
         
         window.tools = {
