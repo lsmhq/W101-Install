@@ -51,6 +51,7 @@ let baseX = 0, baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 let useTimer = null
 let satanTimer = false, satanTimerStart
+let {getIpLocaltion, getPublicIP, getPath, checkGameInstall, changeType} = window.tools
 function Main(props) {
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
@@ -115,7 +116,7 @@ function Main(props) {
         // 获取安装目录
         // setInterval(()=>{
         // console.log('检测更新')
-        window.tools.getIpLocaltion(window.tools.getPublicIP()).then(address=>{
+        getIpLocaltion(getPublicIP()).then(address=>{
             console.log(address)
             // console.log(address.country)
         })
@@ -266,7 +267,7 @@ function Main(props) {
     }, [percent])
     function getSteam(callback) {
         // console.log('getSteam')
-        window.tools.getPath((stdout, stderr) => {
+        getPath((stdout, stderr) => {
             console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
             if (localStorage_subata.getItem('gameDataPath') === null) {
                 localStorage_subata.setItem('gameDataPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101\\Data\\GameData\\`)
@@ -282,7 +283,7 @@ function Main(props) {
             //   console.log(window.wizPath)
             //   console.log(window.gameDataPath)
             //   console.log('============')
-            window.tools.checkGameInstall((steam, wizard, err) => {
+            checkGameInstall((steam, wizard, err) => {
                 // console.log(steam, wizard, err)
                 if (steam) {
                     // Message.warning('检测到未安装Steam')
@@ -301,7 +302,7 @@ function Main(props) {
         }, (error) => {
             //   console.log('没安装Steam')
             //   console.log(error)
-            window.tools.checkGameInstall((steam, wizard, err) => {
+            checkGameInstall((steam, wizard, err) => {
                 // console.log('Steam:' + steam)
                 // console.log('Wizard:' + wizard)
                 // console.log('Error:' + err)
@@ -502,7 +503,7 @@ function Main(props) {
                 case 2:
                     // 没有需要的更新
                     if (show)
-                        window.tools.changeType(localStorage_subata.getItem('type'), (sign) => {
+                        changeType(localStorage_subata.getItem('type'), (sign) => {
                             // console.log(sign)
                             if (!sign) {
                                 if (show)
@@ -1020,6 +1021,7 @@ function Main(props) {
             children={<Setting
                 setBg={setimgNum}
                 setSubataShow={setSubataShow}
+                setSetShow={setSetShow}
                 onBgChange={(imgs, imgNum) => {
                     setBgShow(false)
                     setBgImg(imgs[imgNum]?.url)

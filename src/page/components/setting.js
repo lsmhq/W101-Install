@@ -46,7 +46,7 @@ let style = {
 //     },
 // ]
 function Setting(props){
-    let {setBg, setSubataShow, onBgChange, onImgsChange} = props
+    let {setBg, setSubataShow, onBgChange, onImgsChange, setSetShow} = props
     let [btnSetting, setbtnSetting] = useState(localStorage_subata.getItem('btnSetting') === null?true: localStorage_subata.getItem('btnSetting'))
     let [btnSetting1, setbtnSetting1] = useState(localStorage_subata.getItem('btnSetting1') === null?true: localStorage_subata.getItem('btnSetting1'))
     let [btnSetting2, setbtnSetting2] = useState(localStorage_subata.getItem('btnSetting2') === null?true: localStorage_subata.getItem('btnSetting2'))
@@ -535,6 +535,7 @@ function Setting(props){
                                         content: JSON.stringify(data?.data?.version),
                                         style
                                     })
+                                    setSetShow(false)
                                     break;
                                 case 4: // 4 不可用更新
                                     console.log('不可用更新-check')
