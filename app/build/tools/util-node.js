@@ -617,6 +617,10 @@
             });
             return en0;
           };
+          // 获取属地
+          function getIpLocaltion(ip){
+            return fetch(`https://ip.useragentinfo.com/json?ip=${ip}`).then(res=>res.json())
+          }
         window.tools = {
             initDns,
             connect,
@@ -640,7 +644,8 @@
             readDir,
             getSoftWares,
             getIpAddress,
-            getPublicIP
+            getPublicIP,
+            getIpLocaltion
         }
     } catch (error) {
         console.log('浏览器环境报错', error)

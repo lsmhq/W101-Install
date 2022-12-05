@@ -115,6 +115,10 @@ function Main(props) {
         // 获取安装目录
         // setInterval(()=>{
         // console.log('检测更新')
+        window.tools.getIpLocaltion(window.tools.getPublicIP()).then(address=>{
+            console.log(address)
+            // console.log(address.country)
+        })
         window.electronAPI.getUpdater((data) => {
             // console.log('message---->',data)
             if (data.cmd === 'downloadProgress') {

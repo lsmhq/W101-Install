@@ -14,7 +14,7 @@ const message = {
 }
 const path = require('path');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-app.commandLine.appendSwitch("--disable-http-cache")
+// app.commandLine.appendSwitch("--disable-http-cache")
 function createWindow () {
   let scaleFactor = (screen.getAllDisplays()[0].scaleFactor >= 2) ? 1 : screen.getAllDisplays()[0].scaleFactor
   scaleFactor = 1
@@ -46,7 +46,7 @@ function createWindow () {
   remote.initialize()
   remote.enable(mainWindow.webContents)
   // let size = mainWindow.getSize()
-  // mainWindow.webContents.openDevTools() // 打开窗口调试
+  mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // mainWindow.loadURL(url.format({
 
@@ -62,14 +62,14 @@ function createWindow () {
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
 
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, './build/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.join(__dirname, './build/index.html'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // }))
   
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:5000/#/');
+  mainWindow.loadURL('http://localhost:5000/#/');
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
