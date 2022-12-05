@@ -8,6 +8,7 @@
         const child_process = require('child_process'); //引入模块
         const { shell } = require('electron')
         const { dialog } = require('@electron/remote')
+        let interfaces = require('os').networkInterfaces();
         // const regedit = require('regedit');
         window.gameDataPath = localStorage.getItem('gameDataPath') || '' // 打包路径
         window.wizPath = localStorage.getItem('wizPath') || '' // Wiz路径
@@ -580,7 +581,42 @@
             //     console.log(res)
             // })
         }
-        
+        // 获取ip
+        function getIpAddress(){
+            let ip
+            for (let devName in interfaces) {
+                let iface = interfaces[devName];
+                for (let i = 0; i < iface.length; i++) {
+                    let alias = iface[i];
+                    if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                        ip = alias.address
+                    }
+                }
+            }
+            return ip
+        }
+        // 获取公网ip
+        function getPublicIP() {
+            const ifaces = interfaces
+            let en0;
+            Object.keys(ifaces).forEach((ifname) => {
+              let alias = 0;
+              ifaces[ifname].forEach(function (iface) {
+                if ("IPv4" !== iface.family || iface.internal !== false) {
+                  return;
+                }
+                if (alias >= 1) {
+                  en0 = iface.address;
+                  console.log(ifname + ":" + alias, iface.address);
+                } else {
+                  console.log(ifname, iface.address);
+                  en0 = iface.address;
+                }
+                ++alias;
+              });
+            });
+            return en0;
+          };
         window.tools = {
             initDns,
             connect,
@@ -602,7 +638,9 @@
             writeFile,
             choseDir,
             readDir,
-            getSoftWares
+            getSoftWares,
+            getIpAddress,
+            getPublicIP
         }
     } catch (error) {
         console.log('浏览器环境报错', error)
