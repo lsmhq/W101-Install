@@ -46,7 +46,7 @@ function createWindow () {
   remote.initialize()
   remote.enable(mainWindow.webContents)
   // let size = mainWindow.getSize()
-  mainWindow.webContents.openDevTools() // 打开窗口调试
+  // mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // mainWindow.loadURL(url.format({
 
@@ -61,6 +61,9 @@ function createWindow () {
     // mainWindow.loadFile(__dirname+'/../build/index.html')
     
   // mainWindow.loadFile(__dirname+'/../build/index.html')
+  // mainWindow.webContents.on("did-finish-load", (event, args) => {
+  //   mainWindow.webContents.setZoomFactor(1);
+  // })
 
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, './build/index.html'),

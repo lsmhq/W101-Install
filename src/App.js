@@ -28,7 +28,7 @@ function App() {
           return false
         }else if(e.keyCode === 116){
           return false
-        }else if(e.ctrlKey && e.keyCode === 116){ // F5
+        }else if(e.ctrlKey){ // F5
           return false
         }
     }
