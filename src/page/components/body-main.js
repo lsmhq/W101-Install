@@ -1,4 +1,4 @@
-import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message, Image, Radio } from '@arco-design/web-react'
+import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message, Image } from '@arco-design/web-react'
 import { useEffect, useRef, useState } from 'react'
 import LocalStorage_subata from '../util/localStroage'
 import '../../css/shark.css'
@@ -77,13 +77,14 @@ function BodyMain(props){
             localStorage_subata.setItem('accountsMap', {...dataMap})
             window.electronAPI.addAccount()
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataMap])
     useEffect(()=>{
         let accounts = localStorage_subata.getItem('accounts') || []
         let index = accounts.findIndex(val=> {
             return val.account === account
         })
-        console.log(index)
+        // console.log(index)
         if(index >= 0){
             setDelable(false)
             setHeadIndex(accounts[index].icon)

@@ -555,7 +555,8 @@
                 title:'保存路径',
                 // 过滤器,name 后面的值随便写 extensions 里面写允许上传的类型
                 buttonLabel:'选择',
-                properties:['openDirectory']
+                properties:['openDirectory'],
+                
             }).then(result => {
                 // console.log(result.filePaths)
                 callback && callback(result.filePaths[0])

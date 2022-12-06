@@ -1,4 +1,5 @@
-import { Anchor, Button, Switch, Form, Image, Message, Grid, Notification, Upload } from '@arco-design/web-react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Anchor, Button, Switch, Form, Image, Message, Grid, Notification } from '@arco-design/web-react'
 import { useState, useEffect, useRef } from 'react'
 import '../../css/setting.css'
 import LocalStorage_subata from '../util/localStroage'
@@ -50,6 +51,7 @@ function Setting(props){
     let [btnSetting, setbtnSetting] = useState(localStorage_subata.getItem('btnSetting') === null?true: localStorage_subata.getItem('btnSetting'))
     let [btnSetting1, setbtnSetting1] = useState(localStorage_subata.getItem('btnSetting1') === null?true: localStorage_subata.getItem('btnSetting1'))
     let [btnSetting2, setbtnSetting2] = useState(localStorage_subata.getItem('btnSetting2') === null?true: localStorage_subata.getItem('btnSetting2'))
+    // let [btnSetting3, setbtnSetting3] = useState(localStorage_subata.getItem('btnSetting3') === null?true: localStorage_subata.getItem('btnSetting3'))
     let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0)
     // eslint-disable-next-line no-unused-vars
     let [imgs, setImgs] = useState([])
@@ -99,40 +101,48 @@ function Setting(props){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [imgs, imgNum])
     function readImg(dir){
-        setImgs([])
-        window.tools.readDir(dir, (files)=>{
-            // console.log(files)
-            let imgType = ['jpg','png','jpeg','webp']
-            imgs = []
-            window.electronAPI.ready()
-            files.forEach((file, idx)=>{
-                if(idx > 22) return
-                let fileType = file.name.split('.')[file.name.split('.').length-1]
-                if(imgType.includes(fileType)){
-                    // console.log(`${dir}\\${file.name}`)
-                    window.tools.readFile(`${dir}\\${file.name}`,(str)=>{
-                        // console.log(str)
-                        // window.tools.writeFile(`${localStorage_subata.getItem('installPath')}\\cacheImg`,str,()=>{
-                        // console.log('缓存图片成功')
-                        // console.log(`${__dirname}\\cacheImg`)
-                        let bufferArr = new Int8Array(str)
-                        let blob = new Blob([bufferArr],{ type : `application/${fileType}`})
-                        // console.log(blob)
-                        let filereder = new FileReader()
-                        filereder.onload = (e)=>{
-                            // console.log(url)
-                            imgs.push({url: e.target.result, data: str, type: fileType})
-                            // console.log(imgs)
-                            setImgs([...imgs])
-                        }
-                        filereder.readAsDataURL(blob)
-                        // })
-                    },'')
-                }
+        if(dir && dir !== 'undefined'){
+            setImgs([])
+            window.tools.readDir(dir, (files)=>{
+                // console.log(files)
+                let imgType = ['jpg','png','jpeg','webp']
+                imgs = []
+                window.electronAPI.ready()
+                files.forEach((file, idx)=>{
+                    if(idx > 22) return
+                    let fileType = file.name.split('.')[file.name.split('.').length-1]
+                    if(imgType.includes(fileType)){
+                        // console.log(`${dir}\\${file.name}`)
+                        window.tools.readFile(`${dir}\\${file.name}`,(str)=>{
+                            // console.log(str)
+                            // window.tools.writeFile(`${localStorage_subata.getItem('installPath')}\\cacheImg`,str,()=>{
+                            // console.log('缓存图片成功')
+                            // console.log(`${__dirname}\\cacheImg`)
+                            let bufferArr = new Int8Array(str)
+                            let blob = new Blob([bufferArr],{ type : `application/${fileType}`})
+                            // console.log(blob)
+                            let filereder = new FileReader()
+                            filereder.onload = (e)=>{
+                                // console.log(url)
+                                imgs.push({url: e.target.result, data: str, type: fileType})
+                                // console.log(imgs)
+                                setImgs([...imgs])
+                            }
+                            filereder.readAsDataURL(blob)
+                            // })
+                        },'')
+                    }
+                })
+            },(error)=>{
+                window.electronAPI.ready()
             })
-        },(error)=>{
-            window.electronAPI.ready()
-        })
+        }else{
+            if(imgs.length === 0 && imgNum > 1){
+                setimgNum(0)
+                setBg(0)
+                localStorage_subata.setItem('imgNum', 0)
+            }
+        }
     }
     return <div className="setting">
         <div className='setting-left'>
@@ -249,6 +259,26 @@ function Setting(props){
                         }
                         </span>
                     </Form.Item>
+                    {/* <Form.Item label="关闭按钮">
+                        <Switch checked={btnSetting3} onChange={(val)=>{
+                            // console.log(val)
+                            setbtnSetting3(val)
+                            if(val){
+                                setLocal('zh-CN')
+                            }else{
+                                setLocal('zh-HK')
+                            }
+                            // true 开始游戏最小化
+                            // false 开始游戏不进行操作
+                            localStorage_subata.setItem('btnSetting3', val)
+                        }}
+                        />
+                        <span style={{paddingLeft:'10px'}}>
+                        {
+                            btnSetting3 ?'简体中文':'繁体中文'
+                        }
+                        </span>
+                    </Form.Item> */}
                 </Form>
             </div>
             <div className='setting-item' id='gameFile'>

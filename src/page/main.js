@@ -53,6 +53,7 @@ let useTimer = null
 let satanTimer = false, satanTimerStart
 let {getIpLocaltion, getPublicIP, getPath, checkGameInstall, changeType} = window.tools
 function Main(props) {
+    let {setLocal} = props
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
     let [imgs, setImgs] = useState([]) // 轮播图片
@@ -147,7 +148,7 @@ function Main(props) {
             localStorage_subata.setItem('installPath', path)
         })
         let bgImgDir = localStorage_subata.getItem('bgImgDir')
-        if(!bgImgDir){
+        if(!bgImgDir || bgImgDir === 'undefined'){
             window.electronAPI.ready()
         }
         window.electronAPI.menuChangeType((type) => {
@@ -180,7 +181,7 @@ function Main(props) {
             let day = date.getDate()
             let hour = date.getHours()  
             // console.log(month, day)
-            if (month === targetMonth && day === targetDay[0] && hour > 9) {
+            if (month === targetMonth && day === targetDay[0] && hour > 18) {
                 setSatan(true)
                 return
             }
@@ -268,7 +269,7 @@ function Main(props) {
     function getSteam(callback) {
         // console.log('getSteam')
         getPath((stdout, stderr) => {
-            console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
+            // console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
             if (localStorage_subata.getItem('gameDataPath') === null) {
                 localStorage_subata.setItem('gameDataPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101\\Data\\GameData\\`)
             }
@@ -489,7 +490,7 @@ function Main(props) {
         })
     }
     function checkUpdate(show = true) {
-        console.log(obj[localStorage_subata.getItem('type')])
+        // console.log(obj[localStorage_subata.getItem('type')])
         Notification.remove('change_bd')
         // Notification.clear()
         // console.log(window.tools)
@@ -1022,6 +1023,7 @@ function Main(props) {
                 setBg={setimgNum}
                 setSubataShow={setSubataShow}
                 setSetShow={setSetShow}
+                setLocal={setLocal}
                 onBgChange={(imgs, imgNum) => {
                     setBgShow(false)
                     setBgImg(imgs[imgNum]?.url)
