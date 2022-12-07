@@ -65,6 +65,7 @@ function Setting(props){
     let [current, setCurrent] = useState(0)
     let inputFile = useRef()
     let [updateLoading, setUpdateLoading] = useState(false)
+    let [lastVer, setLastVer] = useState('')
     // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -91,6 +92,13 @@ function Setting(props){
         if(localStorage_subata.getItem('bgImgDir')){
             readImg(localStorage_subata.getItem('bgImgDir'))
         }
+        fetch('http://101.43.174.221:3001/file/subataUpdate/latest.yml').then(res=>res.text()).then(res=>{
+            if(res){
+                setLastVer(res.split('\n')[0])
+            }    
+        }).catch(err=>{
+            console.error('错误但问题不大---->', err)
+        })
     },[])
     useEffect(()=>{
         // alertTextLive2d(`你选择了第${imgNum+1}个背景图`)
@@ -507,8 +515,8 @@ function Setting(props){
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
                 <Row align='center'>
-                    <Col span={5}>开发者</Col>
-                    <Col span={5}>蓝色灭火器</Col>
+                    <Col span={6}>开发者</Col>
+                    <Col span={15}>蓝色灭火器</Col>
                 </Row>
                 {/* <Row align='center' style={{marginTop:'5px'}}>
                     <Col span={5}>支持一下</Col>
@@ -521,18 +529,18 @@ function Setting(props){
                 </Row> */}
                 <Row align='center' style={{marginTop:'5px'}}>
                     <Col span={5}>联系我们</Col>
-                    <Col span={15}><Button onClick={()=>{
+                    <Col span={15}><Button type='text' onClick={()=>{
                         window.electronAPI.openBroswer('https://jq.qq.com/?_wv=1027&k=46lAbmFk')
                     }}>美服汉化群</Button></Col>
                 </Row>
-                <Row style={{marginTop:'30px'}}>
+                {/* <Row style={{marginTop:'30px'}}>
                     <Button status='danger' type='primary' size='large' onClick={()=>{
                         window.tools.init(()=>{
                             localStorage.clear()
                             window.electronAPI.restart()
                         })
                     }}>清空缓存</Button>
-                </Row>
+                </Row> */}
                 <Row style={{marginTop:'30px'}}>
                     <Button status='success' loading={updateLoading} type='primary' size='large' onClick={()=>{
                         window.electronAPI.checkUpdate((data)=>{
@@ -547,6 +555,7 @@ function Setting(props){
                                         content: JSON.stringify(data.data),
                                         style
                                     })
+                                    setUpdateLoading(false)
                                     break;
                                 case 2: // 2 checking
                                     console.log('checking-check')
@@ -575,6 +584,7 @@ function Setting(props){
                                         content: data?.data?.version,
                                         style
                                     })
+                                    setUpdateLoading(false)
                                     break;
                                 case 5: // 5 正在下载
                                     console.log('正在下载-check')
@@ -590,10 +600,9 @@ function Setting(props){
                                     break;
                             }
                         })
-                    }}>检查更新并下载</Button>
+                    }}>检查更新  {`-> ${lastVer}`}</Button>
                 </Row>
             </div>
-
         </div>
     </div>
 }
