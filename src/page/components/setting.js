@@ -347,7 +347,7 @@ function Setting(props){
                 </Row>
                 <Row>
                     <Col>
-                        <input ref={inputFile} id='inputFile' onChange={(e)=>{
+                        <input ref={inputFile} accept='application/json' id='inputFile' onChange={(e)=>{
                             console.log(e.target.files[0].path)
                             if(e.target.files[0].path.includes('setJson.json')){
                                 window.tools.readFile(e.target.files[0].path, (str)=>{
