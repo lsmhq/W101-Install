@@ -5,6 +5,7 @@ const remote = require('@electron/remote/main/index')
 const url = require('url')
 // const url = require('url');
 let mainWindow, loading, tray, width = 1250, height = 700
+Menu.setApplicationMenu(null)
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -13,6 +14,7 @@ const message = {
   downloadProgress: '正在下载...'
 }
 const path = require('path');
+const { electron } = require('process');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 // app.commandLine.appendSwitch("--disable-http-cache")
 function createWindow () {
@@ -22,18 +24,22 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: parseInt(width/scaleFactor), // 窗口宽度
     height: parseInt(height/scaleFactor), // 窗口高度
+    maxHeight: parseInt(height/scaleFactor),
+    maxWidth: parseInt(width/scaleFactor),
+    minHeight: parseInt(height/scaleFactor),
+    minWidth: parseInt(width/scaleFactor),
     // useContentSize:true,
     title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: false,
-    resizable: false,
+    // resizable: false,
     transparent: true, 
     // backgroundColor:'#282b30',
     focusable:true,
     show:false,
     webPreferences: { // 网页功能设置
       nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
-      // webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
+      webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
       webSecurity: false, // 禁用同源策略
       contextIsolation: false,
       v8CacheOptions:'none',
@@ -45,6 +51,7 @@ function createWindow () {
   });
   remote.initialize()
   remote.enable(mainWindow.webContents)
+  app.commandLine.appendSwitch('high-dpi-support', 'true')
   // let size = mainWindow.getSize()
   // mainWindow.webContents.openDevTools() // 打开窗口调试
 
@@ -82,7 +89,7 @@ function createWindow () {
     mainWindow.webContents.send('install-path', app.getPath('exe'))
     mainWindow.webContents.send('install-version', app.getVersion())
   });
-  mainWindow.on('will-resize',()=>{
+  mainWindow.on('resize',()=>{
     mainWindow.setMinimumSize(parseInt(width/scaleFactor) , parseInt(height/scaleFactor))
     mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
     mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
@@ -98,13 +105,6 @@ function createWindow () {
     // newWin = null
 
   });
-  mainWindow.on('resize',()=>{
-    // return false
-    mainWindow.setMinimumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
-    mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
-  })
-
 
   // 自定义
   ipcMain.on("openGame",(e,data)=>{
@@ -128,9 +128,7 @@ function createWindow () {
   })
   // 移动
   ipcMain.on('move-application',(event,pos) => {
-    // console.log(size)
-    mainWindow.setPosition(parseInt(pos.posX), parseInt(pos.posY), true)
-    // console.log(mainWindow.getSize())
+    mainWindow.setPosition(parseInt(pos.posX), parseInt(pos.posY))
   })
   //接收关闭命令
   ipcMain.on('close', function() {
