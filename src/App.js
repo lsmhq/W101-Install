@@ -3,7 +3,7 @@ import './App.css';
 import Main from './page/main';
 import zhHK from '@arco-design/web-react/es/locale/zh-HK';
 import zhCN from '@arco-design/web-react/es/locale/zh-CN';
-import { ConfigProvider } from '@arco-design/web-react';
+// import { ConfigProvider } from '@arco-design/web-react';
 let zhMap = {
   'zh-CN': zhCN,
   'zh-HK': zhHK
@@ -47,9 +47,9 @@ function App() {
   },[local])
   return (
     <div className="App">
-      <ConfigProvider locale={zhMap[local]}>
+      {/* <ConfigProvider locale={zhMap[local]}> */}
         <Main setLocal = {setLocal}/>
-      </ConfigProvider>
+      {/* </ConfigProvider> */}
     </div>
   );
 }
