@@ -12,7 +12,7 @@ html,body{
 	font: 12px/1.5 Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB, "\5B8B\4F53", sans-serif;
 	color: #666;
 	user-select: none;
-	-webkit-user-drag: none;
+	/* -webkit-user-drag: none; */
 	cursor: url(./image/cursor_mini.png),default;
 	
 }
@@ -23,7 +23,7 @@ html,body{
 * {
 	margin: 0;
 	padding: 0;
-	-webkit-user-drag: none;
+	/* -webkit-user-drag: none; */
 }
 .arco-icon { font-size: 32; }
 #root{
@@ -33,7 +33,7 @@ html,body{
 .App{
 	height: 690px;
 	width: 1230px; 
-	box-shadow: 0px 2px 6px 0px rgb(37, 37, 37);
+	box-shadow: 0px 0px 10px 0.5px #252525;
 	border-radius: 10px;
 	position: relative;
 	overflow: hidden;

@@ -5,7 +5,6 @@ const remote = require('@electron/remote/main/index')
 const url = require('url')
 // const url = require('url');
 let mainWindow, loading, tray, width = 1250, height = 700
-Menu.setApplicationMenu(null)
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -14,7 +13,6 @@ const message = {
   downloadProgress: '正在下载...'
 }
 const path = require('path');
-const { electron } = require('process');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 // app.commandLine.appendSwitch("--disable-http-cache")
 function createWindow () {
@@ -32,54 +30,37 @@ function createWindow () {
     title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: false,
-    // resizable: false,
+    autoHideMenuBar: true,
+    resizable: false,
     transparent: true, 
     // backgroundColor:'#282b30',
-    focusable:true,
-    show:false,
+    // focusable: true,
+    show: false,
     webPreferences: { // 网页功能设置
       nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
       webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
       webSecurity: false, // 禁用同源策略
       contextIsolation: false,
-      v8CacheOptions:'none',
-      scrollBounce:true,
+      v8CacheOptions: 'none',
+      scrollBounce: true,
       nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
       preload: path.join(__dirname, 'preload.js'),
+      // plugins: true
       // enableRemoteModule: true,
-    }
+    },
   });
   remote.initialize()
   remote.enable(mainWindow.webContents)
-  app.commandLine.appendSwitch('high-dpi-support', 'true')
-  // let size = mainWindow.getSize()
-  // mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // mainWindow.loadURL(url.format({
-
-  //   pathname: path.join(__dirname, '../build/index.html'),
-   
+  //   pathname: path.join(__dirname, './build/index.html'),
   //   protocol: 'file:',
-
+  //   slashes: true
   // }))
-  // 加载应用 --打包react应用后，__dirname为当前文件路径
-  // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
-    // mainWindow.loadURL('http://lsmhq.gitee.io/one-click-installation-script/')
-    // mainWindow.loadFile(__dirname+'/../build/index.html')
-    
-  // mainWindow.loadFile(__dirname+'/../build/index.html')
-  // mainWindow.webContents.on("did-finish-load", (event, args) => {
-  //   mainWindow.webContents.setZoomFactor(1);
-  // })
-
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, './build/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
   
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:5000/#/');
+  mainWindow.loadURL('http://localhost:5000/#/');
+  mainWindow.webContents.openDevTools()
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
