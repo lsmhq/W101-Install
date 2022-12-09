@@ -356,7 +356,7 @@
                 })
                 let names_bin = files_bin.map(file=>file.name)
                 if(!names_bin.includes('WizardGraphicalClient.exe')){
-                    callback('出现错误：WizardGraphicalClient.exe不存在')
+                    callback('出现错误：WizardGraphicalClient.exe不存在, 即将打开官方启动器')
                     return
                 }
                 console.log(names)
@@ -453,7 +453,7 @@
                 let names = files.map(file => file.name)
                 let names_root = files_root.map(file => file.name)
                 if(!names.includes('WizardGraphicalClient.exe')){
-                    callback(true, '出现错误：WizardGraphicalClient.exe不存在')
+                    callback(true, '出现错误：WizardGraphicalClient.exe不存在, 即将打开官方启动器')
                     return
                 }
                 if (names_root.includes('launchWizard101.exe')) {

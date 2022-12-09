@@ -308,12 +308,17 @@ function BodyMain(props){
                         // console.log(localStorage.getItem('wizInstall'))
                         if(!account){
                             window.tools.startGame((message)=>{
+                                console.log(message)
                                 if(message){
+
                                     Notification.error({
                                         id:'notInstallWizard101',
                                         style,
                                         title:'出现错误',
-                                        content: message
+                                        content: message,
+                                        onClose:()=>{
+                                            window.tools.openFile(`"${window.wizPath}\\Wizard101.exe"`)
+                                        }
                                     })
                                 }else{
                                     Notification.success({
@@ -359,13 +364,16 @@ function BodyMain(props){
                             }
                             clearInterval(timerKill)
                             window.tools.login(account, password, (flag, err)=>{
-                                // console.log('flag',flag)
+                                console.log('flag',flag)
                                 if(flag === true){
                                     Notification.error({
                                         id:'notInstallWizard101',
                                         style,
                                         title:'出现错误',
-                                        content: err
+                                        content: err,
+                                        onClose:()=>{
+                                            window.tools.openFile(`"${window.wizPath}\\Wizard101.exe"`)
+                                        }
                                     })
                                 }else if(flag === false){
                                     // console.log(err.indexOf('100'))
