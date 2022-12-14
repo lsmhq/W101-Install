@@ -3,8 +3,9 @@ const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = 
 const { autoUpdater } = require('electron-updater'); 
 const remote = require('@electron/remote/main/index')
 const url = require('url')
+let canQuit = false
 // const url = require('url');
-let mainWindow, loading, tray, width = 1250, height = 700
+let mainWindow, loading, tray, width = 1250, height = 725
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -29,11 +30,11 @@ function createWindow () {
     // useContentSize:true,
     title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
-    frame: false,
+    frame: true,
     resizable: false,
-    transparent: true, 
+    // transparent: true, 
     autoHideMenuBar: true,
-    // backgroundColor:'#282b30',
+    backgroundColor:'#282b30',
     // focusable: true,
     show: false,
     webPreferences: { // 网页功能设置
@@ -60,7 +61,7 @@ function createWindow () {
   
   // 加载应用 --开发阶段  需要运行 npm run start
   // mainWindow.loadURL('http://localhost:5000/#/');
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -70,21 +71,17 @@ function createWindow () {
     mainWindow.webContents.send('install-path', app.getPath('exe'))
     mainWindow.webContents.send('install-version', app.getVersion())
   });
-  mainWindow.on('resize',()=>{
-    mainWindow.setMinimumSize(parseInt(width/scaleFactor) , parseInt(height/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
-    mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
-  })
+  // mainWindow.on('resize',()=>{
+  //   mainWindow.setMinimumSize(parseInt(width/scaleFactor) , parseInt(height/scaleFactor))
+  //   mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
+  //   mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
+  // })
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
-  mainWindow.on('closed', () => {
-    
-    mainWindow = null;
-    // newWin && newWin.close()
-    mainWindow = null;
-    tray && tray.destroy()
-    tray = null
-    // newWin = null
-
+  mainWindow.on('close', (e) => {
+    if(!canQuit){
+      e.preventDefault()
+      mainWindow.hide()
+    }
   });
 
   // 自定义
@@ -108,9 +105,9 @@ function createWindow () {
         mainWindow.webContents.openDevTools()
   })
   // 移动
-  ipcMain.on('move-application',(event,pos) => {
-    mainWindow.setPosition(parseInt(pos.posX), parseInt(pos.posY))
-  })
+  // ipcMain.on('move-application',(event,pos) => {
+  //   mainWindow.setPosition(parseInt(pos.posX/scaleFactor), parseInt(pos.posY/scaleFactor))
+  // })
   //接收关闭命令
   ipcMain.on('close', function() {
     mainWindow.close()
@@ -346,7 +343,7 @@ function sendUpdateMessage(data) {
 //     app.quit()
 //   }
 // });
-let canQuit = false
+
 app.on('before-quit',(e)=>{
   if(!canQuit){
     e.preventDefault()

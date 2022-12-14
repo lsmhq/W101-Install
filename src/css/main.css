@@ -1,6 +1,6 @@
 .main{
-    width: 1230px;
-    height: 690px;
+    width: 1250px;
+    height: 700px;
     display: flex;
     flex-direction: column;
     background-color: #505050ce;
@@ -467,15 +467,15 @@
     color: rgb(185, 255, 199);
 }
 .arco-modal-mask{
-    width: 1230px !important;
-    height: 690px !important;
+    width: 1250px !important;
+    height: 700px !important;
     left: auto !important;
-    border-radius: 10px;
+    /* border-radius: 10px; */
 }
 .arco-modal-wrapper{
-    width: 1230px !important;
-    height: 690px !important;
+    width: 1250px !important;
+    height: 700px !important;
     top: 15px !important;
     left: auto !important;
-    border-radius: 10px;
+    /* border-radius: 10px; */
 }

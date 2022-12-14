@@ -461,7 +461,7 @@
                     console.log(exe)
                     // shell.openPath(exe)
                     runExe(exe)
-                    callback()
+                    callback(false)
                 } else if (!names_root.includes('launchWizard101.exe')) {
                     // startWizard.bat
                     console.log('下载开始')        

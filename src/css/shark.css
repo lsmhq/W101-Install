@@ -97,7 +97,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     flex-wrap: wrap;
-	height: 250px;
+	height: 300px;
 	overflow: scroll;
 }
 @keyframes shake {

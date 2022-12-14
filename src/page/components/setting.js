@@ -13,7 +13,7 @@ let downLoadTimer
 let { Row, Col } = Grid
 let style = {
     right:'50px',
-    top:'20px'
+    top:'0px'
 }
 // let models = [
 //     {
@@ -47,11 +47,11 @@ let style = {
 //     },
 // ]
 function Setting(props){
-    let {setBg, setSubataShow, onBgChange, onImgsChange, setSetShow} = props
+    let {setBg, setSubataShow, onBgChange, onImgsChange, setSetShow, satan, onSatanChange} = props
     let [btnSetting, setbtnSetting] = useState(localStorage_subata.getItem('btnSetting') === null?true: localStorage_subata.getItem('btnSetting'))
     let [btnSetting1, setbtnSetting1] = useState(localStorage_subata.getItem('btnSetting1') === null?true: localStorage_subata.getItem('btnSetting1'))
-    let [btnSetting2, setbtnSetting2] = useState(localStorage_subata.getItem('btnSetting2') === null?true: localStorage_subata.getItem('btnSetting2'))
-    // let [btnSetting3, setbtnSetting3] = useState(localStorage_subata.getItem('btnSetting3') === null?true: localStorage_subata.getItem('btnSetting3'))
+    // let [btnSetting2, setbtnSetting2] = useState(localStorage_subata.getItem('btnSetting2') === null?true: localStorage_subata.getItem('btnSetting2'))
+    let [btnSetting3, setbtnSetting3] = useState(localStorage_subata.getItem('btnSetting3') === null?true: localStorage_subata.getItem('btnSetting3'))
     let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0)
     // eslint-disable-next-line no-unused-vars
     let [imgs, setImgs] = useState([])
@@ -252,7 +252,7 @@ function Setting(props){
                         }
                         </span>
                     </Form.Item>
-                    <Form.Item label="关闭按钮">
+                    {/* <Form.Item label="关闭按钮">
                         <Switch checked={btnSetting2} onChange={(val)=>{
                             // console.log(val)
                             setbtnSetting2(val)
@@ -266,27 +266,24 @@ function Setting(props){
                             btnSetting2 ?'后台运行':'退出程序'
                         }
                         </span>
-                    </Form.Item>
-                    {/* <Form.Item label="关闭按钮">
+                    </Form.Item> */}
+                    {satan && <Form.Item label="圣诞">
                         <Switch checked={btnSetting3} onChange={(val)=>{
                             // console.log(val)
                             setbtnSetting3(val)
-                            if(val){
-                                setLocal('zh-CN')
-                            }else{
-                                setLocal('zh-HK')
-                            }
-                            // true 开始游戏最小化
-                            // false 开始游戏不进行操作
+     
+                            // true 显示雪花
+                            // false 关闭雪花
+                            onSatanChange(val)
                             localStorage_subata.setItem('btnSetting3', val)
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            btnSetting3 ?'简体中文':'繁体中文'
+                            btnSetting3 ?'开启':'关闭'
                         }
                         </span>
-                    </Form.Item> */}
+                    </Form.Item>}
                 </Form>
             </div>
             <div className='setting-item' id='gameFile'>

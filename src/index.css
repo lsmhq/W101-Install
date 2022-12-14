@@ -31,10 +31,10 @@ html,body{
 	height: 700px;
 }
 .App{
-	height: 690px;
-	width: 1230px; 
+	height: 700px;
+	width: 1250px; 
 	box-shadow: 0px 0px 10px 0.5px #252525;
-	border-radius: 10px;
+	/* border-radius: 10px; */
 	position: relative;
 	overflow: hidden;
 	margin: 0 auto;

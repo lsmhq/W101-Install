@@ -5,15 +5,16 @@ import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconDelete, I
 import { Message, Button, Notification } from '@arco-design/web-react'
 import LocalStorage_subata from '../util/localStroage';
 import '../../css/right-nav.css'
+import zhIcon from  '../../image/zh.png'
 let localStorage_subata = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
 let style = {
     right:'50px',
-    top:'20px'
+    top:'0px'
 }
 function RightNav(props){
-    let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count, drawer } = props
+    let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count, drawer, opSet } = props
     return <div className='right-nav'             
         onMouseDown={(e)=>{
             if(e.target.className === 'nav-bottom'){
@@ -84,7 +85,7 @@ function RightNav(props){
             content="通知"
         />
         <Icon
-            Child={<IconSettings className="icon-child"/>}
+            Child={<img width={32} alt='' src={zhIcon}/>}
             onClick={()=>{
                 if(btnLoading){
                     Message.error({
@@ -177,15 +178,15 @@ function RightNav(props){
             // color="#e4e517"
             content="壁纸"
         /> */}
-        {/* <Icon
-            Child={<IconBug className="icon-child"/>}
+        <Icon
+            Child={<IconSettings className="icon-child"/>}
             onClick={()=>{
-                setZf('qq')
+                opSet()
             }}
-            tips="联系我们"
+            tips="设置"
             // color="#e4e517"
-            content="建议"
-        /> */}
+            content="设置"
+        />
         <div className='nav-bottom'>
             <Icon
                 Child={<IconWechat className="icon-child"/>}

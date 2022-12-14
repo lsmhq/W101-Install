@@ -28,7 +28,7 @@ let update = false
 let timerr
 let style = {
     right: '50px',
-    top: '20px'
+    top: '0px'
 }
 Notification.config({
     maxCount: '5',
@@ -87,7 +87,8 @@ function Main(props) {
     let [onlineNum, setOnline] = useState(0) // 在线人数
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
     let [bgShow, setBgShow] = useState(true) // 背景图显隐
-    let [satan, setSatan] = useState(false) // 显示圣诞树和雪花
+    let [satan, setSatan] = useState(false) // 显示圣诞树和雪花开关
+    let [satanBegin, setsatanBegin] = useState(false) // 显示圣诞树和雪花
     useEffect(() => {
         // 初始化地址
         getSteam(() => {
@@ -175,7 +176,7 @@ function Main(props) {
         if (satanTimer) clearInterval(satanTimer)
         satanTimer = setInterval(() => {
             let targetMonth = 12 // 12月
-            let targetDay = [24, 25] // 24 25号
+            let targetDay = [13, 14] // 24 25号
             let date = new Date()
             let month = date.getMonth() + 1
             let day = date.getDate()
@@ -203,13 +204,14 @@ function Main(props) {
             if(satanTimerStart) clearInterval(satanTimerStart)
             satanTimerStart = setInterval(() => {
                 let targetMonth = 12 // 12月
-                let targetDay = [24, 25] // 26号
+                let targetDay = [13, 14] // 26号
                 let date = new Date()
                 let month = date.getMonth() + 1
                 let day = date.getDate()
                 // let hour = date.getHours()
                 if (month !== targetMonth || !targetDay.includes(day)) {
                     setSatan(false)
+                    setsatanBegin(false)
                 }
             }, 1000);
         }
@@ -717,7 +719,7 @@ function Main(props) {
         {/* {showBg && <div className={`bottom-bg bottom-bg${imgNum} animated faster FadeIn`}>
             <img alt='' src={bgImg}/>
         </div>} */}
-        <div className='nav'
+        {/* <div className='nav'
             onMouseDown={(e) => {
                 e.stopPropagation()
                 isDown = true
@@ -734,7 +736,6 @@ function Main(props) {
                     <span className='online-text'>{onlineNum}</span>
                 </div>
             </div>
-            {/* <div className='nav-title'> {obj[type]}</div> */}
             <div className='nav-control'
                 onMouseDown={(e) => {
                     e.stopPropagation()
@@ -758,7 +759,7 @@ function Main(props) {
                 </div>
                 <div className='control-btn btn-danger' onClick={(e) => {
                     e.stopPropagation()
-                    // console.log(localStorage_subata.getItem('btnSetting2'))
+                    console.log(localStorage_subata.getItem('btnSetting2'))
                     if (localStorage_subata.getItem('btnSetting2')) {
                         window.electronAPI.winHide()
                     } else {
@@ -768,7 +769,7 @@ function Main(props) {
                     <IconClose style={{ fontSize: '20px' }} />
                 </div>
             </div>
-        </div>
+        </div> */}
         <div className='body'>
             <BodyMain
                 logo={logo}
@@ -782,6 +783,7 @@ function Main(props) {
                 total={total}
                 play={play}
                 subataShow={subataShow}
+                onlineNum={onlineNum}
             />
             <RightNav
                 onMouseDown={(init) => {
@@ -797,6 +799,10 @@ function Main(props) {
                 drawer={drawer}
                 btnLoading={btnLoading}
                 count={count}
+                opSet={()=>{
+                    console.log('打开设置')
+                    setSetShow(!settingShow)
+                }}
             />
         </div>
         <Drawer
@@ -1008,7 +1014,7 @@ function Main(props) {
             // style={{textAlign:'center'}}
             visible={settingShow}
             getPopupContainer={getMain}
-            maskClosable={false}
+            maskClosable={true}
             onCancel={() => {
                 setSetShow(false)
             }}
@@ -1024,6 +1030,10 @@ function Main(props) {
                 setSubataShow={setSubataShow}
                 setSetShow={setSetShow}
                 setLocal={setLocal}
+                satan={satan}
+                onSatanChange={(show)=>{
+                    setsatanBegin(show)
+                }}
                 onBgChange={(imgs, imgNum) => {
                     setBgShow(false)
                     setBgImg(imgs[imgNum]?.url)
@@ -1080,8 +1090,8 @@ function Main(props) {
             e.target.value = ''
             // e.target.files = []
         }} style={{ opacity: 0, position: 'absolute', width: 0, height: 0, top: '1000px' }} />
-        {satan && <Snow />}
-        {satan && <Tree />}
+        {satanBegin && <Snow />}
+        {satanBegin && <Tree />}
     </div>
 }
 

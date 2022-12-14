@@ -7,10 +7,10 @@ import emo1 from '../../image/emo1.png'
 import emo2 from '../../image/emo2.png'
 import emo3 from '../../image/emo3.png'
 // import head1 from '../../image/headImg/icon_0.jpeg'
-let headImgPath = 'image/headImg/'
-const headImgs = new Array(19).fill(headImgPath).map((path, index)=>{
-    return require(`../../${path}icon_${index}.jpeg`)
-})
+// let headImgPath = 'image/headImg/'
+// const headImgs = new Array(19).fill(headImgPath).map((path, index)=>{
+//     return require(`../../${path}icon_${index}.jpeg`)
+// })
 let localStorage_subata = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -19,11 +19,11 @@ let { TabPane } = Tabs
 let { Row, Col } = Grid
 let style = {
     right:'50px',
-    top:'20px'
+    top:'0px'
 }
 let timerKill = null
 function BodyMain(props){
-    let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow } = props
+    let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow, onlineNum } = props
     const [data, setData] = useState(localStorage_subata.getItem('accounts')||[]);
     const [dataMap, setDataMap] = useState(localStorage_subata.getItem('accountsMap')||{});
     const [showLogin, setShowLogin] = useState(false)
@@ -35,6 +35,7 @@ function BodyMain(props){
     let [closedMask, setClosedMask] = useState(false)
     let [headIndex, setHeadIndex] = useState(-1)
     let [choseHead, setChoseHead] = useState(false)
+    let [headImgs, setHeadImgs] = useState([])
     let submit = useRef()
     useEffect(()=>{
         console.log('accounts----->',localStorage_subata.getItem('accounts')) 
@@ -48,6 +49,12 @@ function BodyMain(props){
         console.log(newAccounts)
         localStorage_subata.setItem('accounts', newAccounts || [])
         setData(newAccounts || [])
+        fetch('http://101.43.174.221:3001/curl/getHeadImgs').then(res=>res.json()).then(res=>{
+            if(res.success){
+                console.log(res.imgs)
+                setHeadImgs([...res.imgs])
+            }
+        })
     },[])
     useEffect(()=>{
         if(!showLogin){
@@ -178,9 +185,9 @@ function BodyMain(props){
                                 setShowLogin(true)
                             }else{
                                 document.getElementById('selectWiz').click()
-                            }
+                            } 
                         }} type='primary' className='right-openGame' size='large'>
-                            {play?'开始游戏':'选择Wizard.exe'}
+                            {play?<>开始游戏 · <span>{onlineNum}</span></>:'选择Wizard.exe'}
                         </Button>
                 </div>
             </div>
@@ -195,6 +202,7 @@ function BodyMain(props){
         focusLock={true}
         autoFocus={false}
         footer={null}
+        mountOnEnter={false}
         className="login-modal"
         hideCancel={true}
         getPopupContainer={getMain}
