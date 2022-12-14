@@ -512,7 +512,7 @@ function Setting(props){
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
                 <Row align='center'>
-                    <Col span={6}>开发者</Col>
+                    <Col span={6}>开发者：</Col>
                     <Col span={15}>蓝色灭火器</Col>
                 </Row>
                 {/* <Row align='center' style={{marginTop:'5px'}}>
@@ -524,12 +524,7 @@ function Setting(props){
                     </Col>
                     <Col span={10} offset={2}>项目仅供学习交流</Col>
                 </Row> */}
-                <Row align='center' style={{marginTop:'5px'}}>
-                    <Col span={5}>联系我们</Col>
-                    <Col span={15}><Button type='text' onClick={()=>{
-                        window.electronAPI.openBroswer('https://jq.qq.com/?_wv=1027&k=46lAbmFk')
-                    }}>美服汉化群</Button></Col>
-                </Row>
+
                 {/* <Row style={{marginTop:'30px'}}>
                     <Button status='danger' type='primary' size='large' onClick={()=>{
                         window.tools.init(()=>{
@@ -539,6 +534,7 @@ function Setting(props){
                     }}>清空缓存</Button>
                 </Row> */}
                 <Row style={{marginTop:'30px'}}>
+                    <Col span={5}>应用更新：</Col>
                     <Button status='success' loading={updateLoading} type='primary' size='large' onClick={()=>{
                         window.electronAPI.checkUpdate((data)=>{
                             // console.log(data)
@@ -597,7 +593,13 @@ function Setting(props){
                                     break;
                             }
                         })
-                    }}>检查更新  {`-> ${lastVer}`}</Button>
+                    }}>{window.appVersion}  {`--> ${lastVer.split(':')[1]}`}</Button>
+                </Row>
+                <Row align='center' style={{marginTop:'5px'}}>
+                    <Col span={5}>联系我们</Col>
+                    <Col span={15}><Button type='text' onClick={()=>{
+                        window.electronAPI.openBroswer('https://jq.qq.com/?_wv=1027&k=46lAbmFk')
+                    }}>美服汉化群</Button></Col>
                 </Row>
             </div>
         </div>

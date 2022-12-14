@@ -20,7 +20,7 @@
     position: relative;
     height: 100px;
     width: 100px;
-    animation: shake 50s ease-in-out infinite;
+    /* animation: shake 50s ease-in-out infinite; */
     /* cursor: pointer; */
 	cursor: url(../image/cursor_mini.png),default;
     /* transform: translate(-5px,10px); */
@@ -37,6 +37,14 @@
     top: 0;
     height: 100px;
     width: 100px;
+    object-fit: contain;
+}
+.bodyImg-bg{
+	position: absolute;
+    left: -5px;
+    top: -12px;
+    height: 110px;
+    width: 110px;
     object-fit: contain;
 }
 .shake-mask{

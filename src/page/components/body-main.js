@@ -6,6 +6,7 @@ import bodyBear from '../../image/body.png'
 import emo1 from '../../image/emo1.png'
 import emo2 from '../../image/emo2.png'
 import emo3 from '../../image/emo3.png'
+import apiPath from '../http/api'
 // import head1 from '../../image/headImg/icon_0.jpeg'
 // let headImgPath = 'image/headImg/'
 // const headImgs = new Array(19).fill(headImgPath).map((path, index)=>{
@@ -38,7 +39,7 @@ function BodyMain(props){
     let [headImgs, setHeadImgs] = useState([])
     let submit = useRef()
     useEffect(()=>{
-        console.log('accounts----->',localStorage_subata.getItem('accounts')) 
+        // console.log('accounts----->',localStorage_subata.getItem('accounts')) 
         let newAccounts = localStorage_subata.getItem('accounts')?.map((account, idx)=>{
             console.log(typeof account)
             if(typeof account !== 'object'){
@@ -46,13 +47,13 @@ function BodyMain(props){
             }
             return account
         })
-        console.log(newAccounts)
+        // console.log(newAccounts)
         localStorage_subata.setItem('accounts', newAccounts || [])
         setData(newAccounts || [])
-        fetch('http://101.43.174.221:3001/curl/getHeadImgs').then(res=>res.json()).then(res=>{
-            if(res.success){
-                console.log(res.imgs)
-                setHeadImgs([...res.imgs])
+        apiPath.getHeadImg().then(res=>{
+            if(res.data.success){
+                // console.log(res.data.imgs)
+                setHeadImgs([...res.data.imgs])
             }
         })
     },[])
@@ -229,7 +230,7 @@ function BodyMain(props){
                         </>}
                         {
                             headImgs.map((img, idx)=>{
-                                return <div key={idx}>{ idx === headIndex && <img className='bodyImg animated fadeIn fast' src={img} alt=""/>}</div>
+                                return <div key={idx}>{ idx === headIndex && <img className='bodyImg-bg animated fadeIn fast' src={img} alt=""/>}</div>
                             })
                         }
                     </div>

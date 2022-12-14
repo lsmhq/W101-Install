@@ -61,7 +61,7 @@ function createWindow () {
   
   // 加载应用 --开发阶段  需要运行 npm run start
   // mainWindow.loadURL('http://localhost:5000/#/');
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {

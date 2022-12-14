@@ -1,11 +1,12 @@
 {
   "name": "subata",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "author": {
+    "url": "",
     "name": "蓝色灭火器",
     "email": "784433957@qq.com"
   },
-  "description": "Wizard 启动器",
+  "description": "Wiz Start",
   "private": true,
   "homepage": "./",
   "main": "./app/electron.js",

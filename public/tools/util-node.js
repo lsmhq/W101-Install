@@ -7,7 +7,9 @@
         const cmdShell = require('node-cmd');
         const child_process = require('child_process'); //引入模块
         const { shell } = require('electron')
-        const { dialog } = require('@electron/remote')
+        const { dialog, app } = require('@electron/remote')
+        console.log('version---->',app.getVersion())
+        window.appVersion = app.getVersion()
         let interfaces = require('os').networkInterfaces();
         // const regedit = require('regedit');
         window.gameDataPath = localStorage.getItem('gameDataPath') || '' // 打包路径
