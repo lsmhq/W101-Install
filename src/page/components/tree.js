@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react"
 
-function Tree(){
-    return <div className="tree">
+function Tree(props){
+	let {show} = props
+    return <div style={{display:`${show?'':'none'}`}} className="tree">
 		<div className="star">
 			<div className="star-in"></div>
 		</div>
@@ -61,7 +62,8 @@ function Tree(){
 	</div>
 }
 
-function Snow(){
+function Snow(props){
+	let {show} = props
     const { clientWidth: width, clientHeight: height } = document.documentElement
     let snows = Array.from(new Array(1000)).map(val=>{
         let num = 4 * Math.random()
@@ -98,7 +100,7 @@ function Snow(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canvas, snows])
 
-    return <canvas id="snowBg" ref={canvas} style={{backgroundColor: "rgba(0, 0, 0, 0)"}}></canvas>
+    return <canvas id="snowBg" ref={canvas} style={{backgroundColor: "rgba(0, 0, 0, 0)", display:`${show?'':'none'}`}}></canvas>
 }
 
 

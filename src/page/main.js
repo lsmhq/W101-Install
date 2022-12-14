@@ -176,7 +176,7 @@ function Main(props) {
         if (satanTimer) clearInterval(satanTimer)
         satanTimer = setInterval(() => {
             let targetMonth = 12 // 12月
-            let targetDay = [13, 14] // 24 25号
+            let targetDay = [24, 25] // 24 25号
             let date = new Date()
             let month = date.getMonth() + 1
             let day = date.getDate()
@@ -204,7 +204,7 @@ function Main(props) {
             if(satanTimerStart) clearInterval(satanTimerStart)
             satanTimerStart = setInterval(() => {
                 let targetMonth = 12 // 12月
-                let targetDay = [13, 14] // 26号
+                let targetDay = [24, 25] // 26号
                 let date = new Date()
                 let month = date.getMonth() + 1
                 let day = date.getDate()
@@ -1090,8 +1090,8 @@ function Main(props) {
             e.target.value = ''
             // e.target.files = []
         }} style={{ opacity: 0, position: 'absolute', width: 0, height: 0, top: '1000px' }} />
-        {satanBegin && <Snow />}
-        {satanBegin && <Tree />}
+        <Snow show={satanBegin}/>
+        <Tree show={satanBegin}/>
     </div>
 }
 
