@@ -367,7 +367,7 @@
                     // console.log(exe)
                     // shell.openPath(exe)
                     runExe(exe)
-                    callback(false)
+                    callback(false, '')
                 }  else {
                     callback('没有在游戏根目录下')
                 }
@@ -463,7 +463,7 @@
                     console.log(exe)
                     // shell.openPath(exe)
                     runExe(exe)
-                    callback(false)
+                    callback()
                 } else if (!names_root.includes('launchWizard101.exe')) {
                     // startWizard.bat
                     console.log('下载开始')        

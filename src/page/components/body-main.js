@@ -403,7 +403,7 @@ function BodyMain(props){
                                     })
                                 }else if(flag === false){
                                     // console.log(err.indexOf('100'))
-                                    if(err.indexOf('100') > 0){
+                                    if(err.indexOf('100') > 0){ 
                                         Notification.success({
                                             id:'notInstallWizard101',
                                             style,
