@@ -22,6 +22,7 @@ let style = {
     right:'50px',
     top:'0px'
 }
+let headImgMap ={}
 let timerKill = null
 function BodyMain(props){
     let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow, onlineNum } = props
@@ -37,13 +38,19 @@ function BodyMain(props){
     let [headIndex, setHeadIndex] = useState(-1)
     let [choseHead, setChoseHead] = useState(false)
     let [headImgs, setHeadImgs] = useState([])
+    let [headKey, setHeadKey] = useState([])
+    let [headType, setHeadType] = useState([])
     let submit = useRef()
     useEffect(()=>{
         // console.log('accounts----->',localStorage_subata.getItem('accounts')) 
         let newAccounts = localStorage_subata.getItem('accounts')?.map((account, idx)=>{
             console.log(typeof account)
             if(typeof account !== 'object'){
-                return {account, icon: -1}
+                return {account, icon: -1, iconType: 'wizard101'}
+            }else if(typeof account === 'object'){
+                if(!account.iconType){
+                    return {account: account.account, icon: -1, iconType: 'wizard101'}
+                }
             }
             return account
         })
@@ -54,6 +61,8 @@ function BodyMain(props){
             if(res.data.success){
                 // console.log(res.data.imgs)
                 setHeadImgs([...res.data.imgs])
+                setHeadKey('wizard101')
+                headImgMap = res.data.data
             }
         })
     },[])
@@ -96,9 +105,11 @@ function BodyMain(props){
         if(index >= 0){
             setDelable(false)
             setHeadIndex(accounts[index].icon)
+            setHeadType(accounts[index].headType || 'wizard101')
         }else{
             setDelable(true)
             setHeadIndex(-1)
+            // setHeadType(accounts[index].headType || 'wizard101')
         }
     },[account])
     function getMain(){
@@ -362,10 +373,10 @@ function BodyMain(props){
                             if(save){
                                     let index = data.findIndex(val=>val.account === account)
                                     if(index >= 0){
-                                        data[index] = {account, icon: headIndex}
+                                        data[index] = {account, icon: headIndex, iconType: headType || 'wizard101'}
                                         setData([...data])
                                     }else{
-                                        data.push({account, icon: headIndex})
+                                        data.push({account, icon: headIndex, iconType: headType || 'wizard101'})
                                         setData([...data])
                                     }
                                     dataMap[account] = password
@@ -460,17 +471,30 @@ function BodyMain(props){
             setChoseHead(false)
         }}
         children={<>
-            <div className='head-img-box'>
-                {/* <Image /> */}
+            <Tabs activeTab={headKey} onChange={(key)=>{
+                console.log(key)
+                setHeadKey(key)
+                setHeadImgs([...headImgMap[key]])
+            }} type='card-gutter'>
                 {
-                    headImgs.map((img, idx)=>{
-                        return <Image key={idx} className={headIndex === idx?'arco-image-active':''} preview={false} onClick={()=>{
-                            setHeadIndex(idx)
-                            setChoseHead(false)
-                        }} src={img} width={60} height={60}/>
-                    })
+                    Object.keys(headImgMap).map(key=>{
+                        return <TabPane key={key} title={key}>
+                            <div className='head-img-box'>
+                                {/* <Image /> */}
+                                {
+                                    headImgs.map((img, idx)=>{
+                                        return <Image key={idx} className={headIndex === idx?'arco-image-active':''} preview={false} onClick={()=>{
+                                            setHeadIndex(idx)
+                                            setHeadType(headKey)
+                                            setChoseHead(false)
+                                        }} src={img} width={60} height={60}/>
+                                    })
+                                }
+                            </div>
+                        </TabPane>
+                    }) 
                 }
-            </div>
+            </Tabs>
         </>}
     />
 </div>
