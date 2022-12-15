@@ -38,8 +38,8 @@ function BodyMain(props){
     let [headIndex, setHeadIndex] = useState(-1)
     let [choseHead, setChoseHead] = useState(false)
     let [headImgs, setHeadImgs] = useState([])
-    let [headKey, setHeadKey] = useState([])
-    let [headType, setHeadType] = useState([])
+    let [headKey, setHeadKey] = useState('wizard101')
+    let [headType, setHeadType] = useState('wizard101')
     let submit = useRef()
     useEffect(()=>{
         // console.log('accounts----->',localStorage_subata.getItem('accounts')) 
@@ -105,13 +105,19 @@ function BodyMain(props){
         if(index >= 0){
             setDelable(false)
             setHeadIndex(accounts[index].icon)
-            setHeadType(accounts[index].headType || 'wizard101')
+            setHeadKey(accounts[index]?.iconType || 'wizard101')
         }else{
             setDelable(true)
             setHeadIndex(-1)
-            // setHeadType(accounts[index].headType || 'wizard101')
+            // setHeadType(accounts[index]?.iconType || 'wizard101')
+            setHeadKey(accounts[index]?.iconType || 'wizard101')
         }
     },[account])
+    useEffect(() => {
+        if(headKey && headImgMap[headKey]){
+            setHeadImgs([...headImgMap[headKey]])
+        }
+    }, [headKey])
     function getMain(){
         return document.getElementsByClassName('main')[0]
     }
@@ -474,7 +480,6 @@ function BodyMain(props){
             <Tabs activeTab={headKey} onChange={(key)=>{
                 console.log(key)
                 setHeadKey(key)
-                setHeadImgs([...headImgMap[key]])
             }} type='card-gutter'>
                 {
                     Object.keys(headImgMap).map(key=>{

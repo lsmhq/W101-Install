@@ -34,7 +34,7 @@ function createWindow () {
     resizable: false,
     // transparent: true, 
     autoHideMenuBar: true,
-    backgroundColor:'#282b30',
+    backgroundColor:'#101b51',
     // focusable: true,
     show: false,
     webPreferences: { // 网页功能设置
