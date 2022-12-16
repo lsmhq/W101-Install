@@ -5,7 +5,7 @@ const remote = require('@electron/remote/main/index')
 const url = require('url')
 let canQuit = false
 // const url = require('url');
-let mainWindow, loading, tray, width = 1250, height = 725
+let mainWindow, loading, tray, width = 1255, height = 725
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
