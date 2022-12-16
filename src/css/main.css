@@ -425,9 +425,9 @@
     /* cursor: pointer; */
     cursor: url(../image/cursor_mini.png),default;
 }
-.autoItem:hover{
+/* .autoItem:hover{
     background-color: #4b4b4b;
-}
+} */
 .autoItem-col{
     height: 100%;
     width: 100%;

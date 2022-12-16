@@ -38,8 +38,8 @@ function BodyMain(props){
     let [headIndex, setHeadIndex] = useState(-1)
     let [choseHead, setChoseHead] = useState(false)
     let [headImgs, setHeadImgs] = useState([])
-    let [headKey, setHeadKey] = useState('wizard101')
-    let [headType, setHeadType] = useState('wizard101')
+    let [headKey, setHeadKey] = useState('')
+    let [headType, setHeadType] = useState('')
     let submit = useRef()
     useEffect(()=>{
         // console.log('accounts----->',localStorage_subata.getItem('accounts')) 
@@ -267,11 +267,38 @@ function BodyMain(props){
                        placeholder='账号' 
                        value={account}
                        allowClear={true}
-                       data={data.map(account=>account.account)}
-                        dropdownRender={(menu, idx)=>{
-                            return <Row justify='center' align='center' key={idx} className='autoItem'>
-                                <Col span={24} className="autoItem-col" >{menu}</Col>
+                       data={data.map(account=><AutoComplete.Option style={{height: '70px'}} key={account.account} value={account.account}>
+                            <Row style={{margin:'5px', display:'flex', alignItems:'center'}}>
+                                <Col span={5}>
+                                    {headImgMap[account.iconType] && <img className='sl-headImg' width={30} alt='' src={headImgMap[account.iconType][account.icon]}/>}
+                                </Col>
+                                <Col span={15}>
+                                    <span>{account.account}</span>
+                                </Col>
+                                <Col span={4}>
+                                    <Button size='large' status='danger' type='primary' className='openGame' onClick={(e)=>{
+                                        e.stopPropagation()
+                                        let accounts = localStorage_subata.getItem('accounts') || []
+                                        // console.log(accounts)
+                                        let index = accounts.findIndex(val=>val.account === account.account)
+                                        if(index > -1){
+                                            console.log(index)
+                                            accounts.splice(index, 1)
+                                            localStorage_subata.setItem('accounts', accounts)
+                                            let accountsObj = localStorage_subata.getItem('accountsMap')
+                                            delete accountsObj[account.account]
+                                            localStorage_subata.setItem('accountsMap', accountsObj)
+                                            setData([...accounts])
+                                            setDataMap({...accountsObj})
+                                            setAccount('')
+                                            setPassword('')
+                                        }
+                                    }}>删除</Button>
+                                </Col>
                             </Row>
+                        </AutoComplete.Option>)}
+                        dropdownRender={(menu, idx)=>{
+                            return<span key={idx}>{menu}</span> 
                         }}
                        onChange={(val)=>{
                             // console.log(val)  
@@ -310,23 +337,7 @@ function BodyMain(props){
            </Form>}
            <div className='btn-group'>
             <div className='op-btn del-btn'>
-                   <Button disabled={delable} size='large' status='danger' type='primary' className='openGame' onClick={()=>{
-                        let accounts = localStorage_subata.getItem('accounts') || []
-                        // console.log(accounts)
-                        let index = accounts.findIndex(val=>val.account===account)
-                        if(index > -1){
-                            console.log(index)
-                            accounts.splice(index, 1)
-                            localStorage_subata.setItem('accounts', accounts)
-                            let accountsObj = localStorage_subata.getItem('accountsMap')
-                            delete accountsObj[account]
-                            localStorage_subata.setItem('accountsMap', accountsObj)
-                            setData([...accounts])
-                            setDataMap({...accountsObj})
-                            setAccount('')
-                            setPassword('')
-                        }
-                   }}>删除{account && `[${account}]`}</Button>
+
             </div>
                 <div className='op-btn'>
                     <Button ref={submit} style={{borderRadius:'5px'}} onClick={()=>{
