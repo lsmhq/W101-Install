@@ -6,7 +6,7 @@ import { Message, Button, Notification } from '@arco-design/web-react'
 import LocalStorage_subata from '../util/localStroage';
 import '../../css/right-nav.css'
 import zhIcon from  '../../image/zh.png'
-let localStorage_subata = new LocalStorage_subata({
+let { getItem, setItem } = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
 let style = {
@@ -111,7 +111,7 @@ function RightNav(props){
                     }) 
                     return
                 }
-                window.tools.checkUpdate(localStorage_subata.getItem('type'), (num)=>{
+                window.tools.checkUpdate(getItem('type'), (num)=>{
                     console.log('num ----->',num)
                     if(num !== 3){
                         Notification.warning({

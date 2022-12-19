@@ -2,11 +2,7 @@ import { useEffect, useState } from 'react';
 import '../css/main.css'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
-import { IconClose, IconMinus, IconTool } from '@arco-design/web-react/icon';
-// import zfb from '../image/zfb.jpg'
-// import wechat from '../image/wechat.jpg'
 import QQ from '../image/QQ_share.jpg'
-import su from '../image/Subata_logo.png'
 import apiPath from './http/api'
 import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
@@ -14,16 +10,11 @@ import Setting from './components/setting';
 import LocalStorage_subata from './util/localStroage';
 import { Snow, Tree } from './components/tree';
 import { installBtn_config } from './config/config.page';
-let localStorage_subata = new LocalStorage_subata({
+let { getItem, setItem } = new LocalStorage_subata({
     filter: ['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
-// import { alertText } from './util/dialog';
-// let {alertTextLive2d} = window.electronAPI
-// let { Row, Col } = Grid
 // let wsPath = 'ws://localhost:8000'
 let wsPath = 'ws://101.43.174.221:8000'
-// let box = document.getElementById('live2d-widget')
-// let position = []
 let update = false
 let timerr
 let style = {
@@ -69,21 +60,21 @@ function Main(props) {
     let [msgShow, setMsgShow] = useState(false) // 消息
     let [text, setText] = useState('')  // 内容
     let [title, setTitle] = useState('')  // 标题
-    let [user, setUser] = useState(localStorage_subata.getItem('username')) // 用户名
+    let [user, setUser] = useState(getItem('username')) // 用户名
     let [msgShow1, setMsgShow1] = useState(false)  // 反显
     let [text1, setText1] = useState('')  // 反显 
     let [title1, setTitle1] = useState('')// 反显
     let [user1, setUser1] = useState('')// 反显
     let [message, setMessage] = useState([]) // 通知
-    let [type, setType] = useState(localStorage_subata.getItem('type')) // 汉化type
-    let [root, setRoot] = useState(localStorage_subata.getItem('root') || '') // 是否可以进行发布通知
-    let [play, setPlay] = useState(localStorage_subata.getItem('wizInstall')) // 是否可以开始游戏
+    let [type, setType] = useState(getItem('type')) // 汉化type
+    let [root, setRoot] = useState(getItem('root') || '') // 是否可以进行发布通知
+    let [play, setPlay] = useState(getItem('wizInstall')) // 是否可以开始游戏
     let [version, setVersion] = useState('') // 版本号
     let [nav, setNavs] = useState({})
     let [settingShow, setSetShow] = useState(false) // 设置弹窗显隐
-    let [subataShow, setSubataShow] = useState(localStorage_subata.getItem('btnSetting1') === null ? true : localStorage_subata.getItem('btnSetting1')) // subata按钮显隐
-    let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum') ? localStorage_subata.getItem('imgNum') * 1 : 0) // 背景图index
-    let [filePath, setFilePath] = useState(localStorage_subata.getItem('wizInstall')) // wiz安装路径
+    let [subataShow, setSubataShow] = useState(getItem('btnSetting1') === null ? true : getItem('btnSetting1')) // subata按钮显隐
+    let [imgNum, setimgNum] = useState(getItem('imgNum') ? getItem('imgNum') * 1 : 0) // 背景图index
+    let [filePath, setFilePath] = useState(getItem('wizInstall')) // wiz安装路径
     let [onlineNum, setOnline] = useState(0) // 在线人数
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
     let [bgShow, setBgShow] = useState(true) // 背景图显隐
@@ -93,7 +84,7 @@ function Main(props) {
         // 初始化地址
         getSteam(() => {
             // 检查补丁更新
-            if (localStorage_subata.getItem('type')) {
+            if (getItem('type')) {
                 checkUpdate(false)
             }
         })
@@ -146,29 +137,29 @@ function Main(props) {
         // 获取installPath
         window.electronAPI.getPath((path) => {
             window.installPath = path
-            localStorage_subata.setItem('installPath', path)
+            setItem('installPath', path)
         })
-        let bgImgDir = localStorage_subata.getItem('bgImgDir')
+        let bgImgDir = getItem('bgImgDir')
         if(!bgImgDir || bgImgDir === 'undefined'){
             window.electronAPI.ready()
         }
         window.electronAPI.menuChangeType((type) => {
-            localStorage_subata.setItem('type', type)
+            setItem('type', type)
             checkUpdate()
         })
-        if (localStorage_subata.getItem('accounts') === null) {
-            localStorage_subata.setItem('accounts', [])
+        if (getItem('accounts') === null) {
+            setItem('accounts', [])
         }
-        if (localStorage_subata.getItem('accountsMap') === null) {
-            localStorage_subata.setItem('accountsMap', {})
+        if (getItem('accountsMap') === null) {
+            setItem('accountsMap', {})
         }
         // 监听开始游戏
         window.electronAPI.startGame()
         // 壁纸
-        // window.tools.readFile(`${localStorage_subata.getItem('installPath')}\\dataCache`,(data)=>{
+        // window.tools.readFile(`${getItem('installPath')}\\dataCache`,(data)=>{
         //     console.log('img---->',data)
         //     let bufferArr = new Int8Array(data)
-        //     let blob = new Blob([bufferArr],{ type : `application/${localStorage_subata.getItem('lastBgImgType')}`})
+        //     let blob = new Blob([bufferArr],{ type : `application/${getItem('lastBgImgType')}`})
         //     console.log(blob)
         //     let url = URL.createObjectURL(blob)
         //     setBgImg(url)
@@ -194,7 +185,7 @@ function Main(props) {
         return () => {
             // 注销
             destroy()
-            localStorage_subata.setItem('msgLength', message.length)
+            setItem('msgLength', message.length)
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -272,17 +263,17 @@ function Main(props) {
         // console.log('getSteam')
         getPath((stdout, stderr) => {
             // console.log(stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
-            if (localStorage_subata.getItem('gameDataPath') === null) {
-                localStorage_subata.setItem('gameDataPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101\\Data\\GameData\\`)
+            if (getItem('gameDataPath') === null) {
+                setItem('gameDataPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101\\Data\\GameData\\`)
             }
-            if (localStorage_subata.getItem('wizPath') === null) {
-                localStorage_subata.setItem('wizPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101`)
+            if (getItem('wizPath') === null) {
+                setItem('wizPath', `${stdout.split('InstallPath')[1].split('REG_SZ')[1].trim()}\\steamapps\\common\\Wizard101`)
             }
-            if (localStorage_subata.getItem('steamPath') === null) {
-                localStorage_subata.setItem('steamPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
+            if (getItem('steamPath') === null) {
+                setItem('steamPath', stdout.split('InstallPath')[1].split('REG_SZ')[1].trim())
             }
-            window.wizPath = localStorage_subata.getItem('wizPath')
-            window.gameDataPath = localStorage_subata.getItem('gameDataPath')
+            window.wizPath = getItem('wizPath')
+            window.gameDataPath = getItem('gameDataPath')
             //   console.log(window.wizPath)
             //   console.log(window.gameDataPath)
             //   console.log('============')
@@ -290,15 +281,15 @@ function Main(props) {
                 // console.log(steam, wizard, err)
                 if (steam) {
                     // Message.warning('检测到未安装Steam')
-                    localStorage_subata.setItem('steamInstall', true)
+                    setItem('steamInstall', true)
                 } else {
-                    localStorage_subata.setItem('steamInstall', false)
+                    setItem('steamInstall', false)
                 }
                 if (wizard) {
-                    localStorage_subata.setItem('wizInstall', true)
+                    setItem('wizInstall', true)
                     setPlay(true)
                 } else {
-                    localStorage_subata.setItem('wizInstall', false)
+                    setItem('wizInstall', false)
                 }
             })
             callback()
@@ -311,15 +302,15 @@ function Main(props) {
                 // console.log('Error:' + err)
                 if (steam) {
                     // Message.warning('检测到未安装Steam')
-                    localStorage_subata.setItem('steamInstall', true)
+                    setItem('steamInstall', true)
                 } else {
-                    localStorage_subata.setItem('steamInstall', false)
+                    setItem('steamInstall', false)
                 }
                 if (wizard) {
-                    localStorage_subata.setItem('wizInstall', true)
+                    setItem('wizInstall', true)
                     setPlay(true)
                 } else {
-                    localStorage_subata.setItem('wizInstall', false)
+                    setItem('wizInstall', false)
                 }
             })
             callback()
@@ -342,7 +333,7 @@ function Main(props) {
         ws.onmessage = (msg) => {
             // console.log(msg.data)
             let data = JSON.parse(msg.data)
-            if (data?.id === localStorage_subata.getItem('userid')) {
+            if (data?.id === getItem('userid')) {
                 Message.success({
                     style: { top: '20px' },
                     content: '发布成功',
@@ -443,10 +434,10 @@ function Main(props) {
         apiPath.getMessage().then(res => {
             // console.log(res.data.message)
             setMessage([...res.data.messages.reverse()])
-            if (localStorage_subata.getItem('msgLength') && res.data.messages.length !== localStorage_subata.getItem('msgLength')) {
+            if (getItem('msgLength') && res.data.messages.length !== getItem('msgLength')) {
                 setCount(1)
             }
-            localStorage_subata.setItem('msgLength', res.data.messages.length)
+            setItem('msgLength', res.data.messages.length)
         })
     }
     function install(type) {
@@ -467,7 +458,7 @@ function Main(props) {
                             onClick={() => {
                                 downLoad(btn.zhType)
                                 setType(btn.zhType)
-                                localStorage_subata.setItem('type', btn.zhType)
+                                setItem('type', btn.zhType)
                             }}
                         >
                             {btn.title}
@@ -481,7 +472,7 @@ function Main(props) {
                             onClick={() => {
                                 downLoad(btn.zhType)
                                 setType(btn.zhType)
-                                localStorage_subata.setItem('type', btn.zhType)
+                                setItem('type', btn.zhType)
                             }}
                         >
                             {btn.title}
@@ -492,11 +483,11 @@ function Main(props) {
         })
     }
     function checkUpdate(show = true) {
-        // console.log(obj[localStorage_subata.getItem('type')])
+        // console.log(obj[getItem('type')])
         Notification.remove('change_bd')
         // Notification.clear()
         // console.log(window.tools)
-        window.tools.checkUpdate(localStorage_subata.getItem('type'), (num) => {
+        window.tools.checkUpdate(getItem('type'), (num) => {
             console.log('num----->', num)
             switch (num) {
                 case 1:
@@ -506,27 +497,27 @@ function Main(props) {
                 case 2:
                     // 没有需要的更新
                     if (show)
-                        changeType(localStorage_subata.getItem('type'), (sign) => {
+                        changeType(getItem('type'), (sign) => {
                             // console.log(sign)
                             if (!sign) {
                                 if (show)
-                                    install(localStorage_subata.getItem('type'))
+                                    install(getItem('type'))
                                 return
                             }
                             window.electronAPI.sound()
                             Message.success({
                                 style: { top: '20px' },
-                                content: `切换${obj[localStorage_subata.getItem('type')]}成功!`
+                                content: `切换${obj[getItem('type')]}成功!`
                             })
-                            window.electronAPI.changeType(localStorage_subata.getItem('type'))
-                            setType(localStorage_subata.getItem('type'))
+                            window.electronAPI.changeType(getItem('type'))
+                            setType(getItem('type'))
                         })
                     break
                 case 3:
                     // 未安装
                     console.log('未安装')
                     if (show)
-                        install(localStorage_subata.getItem('type'))
+                        install(getItem('type'))
                     window.electronAPI.winShow()
                     break
                 default:
@@ -551,9 +542,9 @@ function Main(props) {
         })
     }
     function upDate() {
-        console.log(obj[localStorage_subata.getItem('type')])
+        console.log(obj[getItem('type')])
         Notification.warning({
-            title: `检测到${obj[localStorage_subata.getItem('type')]}有最新的补丁！`,
+            title: `检测到${obj[getItem('type')]}有最新的补丁！`,
             id: 'update',
             style,
             duration: 1000000000,
@@ -561,7 +552,7 @@ function Main(props) {
             btn: (
                 <span>
                     {
-                        localStorage_subata.getItem('type') === 'd' && <Button
+                        getItem('type') === 'd' && <Button
                             loading={btnLoading}
                             type='primary'
                             size='small'
@@ -574,7 +565,7 @@ function Main(props) {
                         </Button>
                     }
                     {
-                        localStorage_subata.getItem('type') === 'r' && <Button
+                        getItem('type') === 'r' && <Button
                             loading={btnLoading}
                             onClick={() => {
                                 downLoad()
@@ -586,7 +577,7 @@ function Main(props) {
                         </Button>
                     }
                     {
-                        localStorage_subata.getItem('type') === 'c' && <Button
+                        getItem('type') === 'c' && <Button
                             loading={btnLoading}
                             onClick={() => {
                                 downLoad()
@@ -604,7 +595,7 @@ function Main(props) {
     function downLoad(type) {
         setBtnLoad(true)
         Notification.clear()
-        window.tools.downLoad(type || localStorage_subata.getItem('type'), (mark) => {
+        window.tools.downLoad(type || getItem('type'), (mark) => {
             Notification.warning({
                 id: 'download',
                 title: '请耐心等待下载...',
@@ -641,7 +632,7 @@ function Main(props) {
                 Notification.remove('download')
                 Message.success({
                     style: { top: '20px' },
-                    content: `切换${obj[localStorage_subata.getItem('type')]}成功!`
+                    content: `切换${obj[getItem('type')]}成功!`
                 })
             }
         })
@@ -678,10 +669,10 @@ function Main(props) {
                                                 id: 'change_bd',
                                                 content: <span>
                                                     <Button onClick={() => {
-                                                        localStorage_subata.setItem('type', 'd')
+                                                        setItem('type', 'd')
                                                         setType('d')
                                                         // Notification.remove('change_success')
-                                                        checkUpdate(localStorage_subata.getItem('type'))
+                                                        checkUpdate(getItem('type'))
                                                     }} type='primary' status='warning' size='small' style={{ margin: '0 12px 0 0' }}>
                                                         继续
                                                     </Button>
@@ -693,10 +684,10 @@ function Main(props) {
                                                 </span>
                                             })
                                         } else {
-                                            localStorage_subata.setItem('type', btn.zhType)
+                                            setItem('type', btn.zhType)
                                             // Notification.remove('change_success')
                                             setType(btn.zhType)
-                                            checkUpdate(localStorage_subata.getItem('type'))
+                                            checkUpdate(getItem('type'))
                                         }
                                     }}
                                 >
@@ -759,8 +750,8 @@ function Main(props) {
                 </div>
                 <div className='control-btn btn-danger' onClick={(e) => {
                     e.stopPropagation()
-                    console.log(localStorage_subata.getItem('btnSetting2'))
-                    if (localStorage_subata.getItem('btnSetting2')) {
+                    console.log(getItem('btnSetting2'))
+                    if (getItem('btnSetting2')) {
                         window.electronAPI.winHide()
                     } else {
                         window.electronAPI.close()
@@ -847,7 +838,7 @@ function Main(props) {
                             setTitle1(item.title)
                             setUser1(item.username)
                             setText1(item.msg)
-                        }}><span><Tooltip position='bl' content={item.time.split(' ')[0]}>{`${item.title}-${item.username || 'Subata'}`}</Tooltip> {localStorage_subata.getItem('userid') === item.id && <Button type='text' onClick={(e) => {
+                        }}><span><Tooltip position='bl' content={item.time.split(' ')[0]}>{`${item.title}-${item.username || 'Subata'}`}</Tooltip> {getItem('userid') === item.id && <Button type='text' onClick={(e) => {
                             e.preventDefault()
                             Notification.warning({
                                 style,
@@ -909,7 +900,7 @@ function Main(props) {
                     value={user}
                     onChange={(val) => {
                         setUser(val)
-                        localStorage_subata.setItem('username', val)
+                        setItem('username', val)
                     }}
                 />
                 <Input
@@ -939,7 +930,7 @@ function Main(props) {
                         onChange={(val) => {
                             setRoot(val)
                             if (val === 'wizard-subata-lsmhq') {
-                                localStorage_subata.setItem('root', 'wizard-subata-lsmhq')
+                                setItem('root', 'wizard-subata-lsmhq')
                             }
                         }}
                     />
@@ -952,7 +943,7 @@ function Main(props) {
                         let data = {
                             msg: text,
                             title: title,
-                            id: localStorage_subata.getItem('userid'),
+                            id: getItem('userid'),
                             username: user,
                             msgid: Math.random()
                         }
@@ -1040,20 +1031,20 @@ function Main(props) {
                     setTimeout(() => {
                         setBgShow(true)
                     }, 500);
-                    localStorage_subata.setItem('lastBgImg', imgNum)
-                    // localStorage_subata.setItem('lastBgImgType', imgs[imgNum]?.type)
+                    setItem('lastBgImg', imgNum)
+                    // setItem('lastBgImgType', imgs[imgNum]?.type)
                 }}
                 onImgsChange={(imgs, imgNum) => {
                     setBgShow(false)
                     setBgImg(imgs[imgNum]?.url)
-                    // window.tools.writeFile(`${localStorage_subata.getItem('installPath')}\\dataCache`, imgs[imgNum]?.data,()=>{
+                    // window.tools.writeFile(`${getItem('installPath')}\\dataCache`, imgs[imgNum]?.data,()=>{
                     //     console.log('缓存成功')
                     // },'')
                     setTimeout(() => {
                         setBgShow(true)
                     }, 100);
-                    localStorage_subata.setItem('lastBgImg', imgNum)
-                    // localStorage_subata.setItem('lastBgImgType', imgs[imgNum]?.type)
+                    setItem('lastBgImg', imgNum)
+                    // setItem('lastBgImgType', imgs[imgNum]?.type)
                 }}
                 // reload = {reload}
                 filePath={filePath}
@@ -1067,16 +1058,16 @@ function Main(props) {
                 // console.log('---选择成功')
                 let wizPath = e.target.files[0].path.split('Wizard101.exe')[0]
                 let gameDataPath = e.target.files[0].path.split('Wizard101.exe')[0] + 'Data\\GameData\\'
-                localStorage_subata.setItem('wizPath', wizPath)
-                localStorage_subata.setItem('gameDataPath', gameDataPath)
+                setItem('wizPath', wizPath)
+                setItem('gameDataPath', gameDataPath)
                 window.wizPath = wizPath
                 window.gameDataPath = gameDataPath
                 setFilePath(wizPath)
                 getSteam(() => {
-                    if (localStorage_subata.getItem('type')) {
+                    if (getItem('type')) {
                         checkUpdate(false)
                     }
-                    localStorage_subata.setItem('wizInstall', true)
+                    setItem('wizInstall', true)
                     setPlay(true)
                 })
             } else {

@@ -3,7 +3,7 @@ import { Anchor, Button, Switch, Form, Image, Message, Grid, Notification } from
 import { useState, useEffect, useRef } from 'react'
 import '../../css/setting.css'
 import LocalStorage_subata from '../util/localStroage'
-let localStorage_subata = new LocalStorage_subata({
+let { getItem, setItem, outPutToJson, inputLocalStroage } = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath'],
 })
 // import { alertText } from '../util/dialog/index'
@@ -48,11 +48,11 @@ let style = {
 // ]
 function Setting(props){
     let {setBg, setSubataShow, onBgChange, onImgsChange, setSetShow, satan, onSatanChange} = props
-    let [btnSetting, setbtnSetting] = useState(localStorage_subata.getItem('btnSetting') === null?true: localStorage_subata.getItem('btnSetting'))
-    let [btnSetting1, setbtnSetting1] = useState(localStorage_subata.getItem('btnSetting1') === null?true: localStorage_subata.getItem('btnSetting1'))
-    // let [btnSetting2, setbtnSetting2] = useState(localStorage_subata.getItem('btnSetting2') === null?true: localStorage_subata.getItem('btnSetting2'))
-    let [btnSetting3, setbtnSetting3] = useState(localStorage_subata.getItem('btnSetting3') === null?true: localStorage_subata.getItem('btnSetting3'))
-    let [imgNum, setimgNum] = useState(localStorage_subata.getItem('imgNum')? localStorage_subata.getItem('imgNum')*1:0)
+    let [btnSetting, setbtnSetting] = useState(getItem('btnSetting') === null?true: getItem('btnSetting'))
+    let [btnSetting1, setbtnSetting1] = useState(getItem('btnSetting1') === null?true: getItem('btnSetting1'))
+    // let [btnSetting2, setbtnSetting2] = useState(getItem('btnSetting2') === null?true: getItem('btnSetting2'))
+    let [btnSetting3, setbtnSetting3] = useState(getItem('btnSetting3') === null?true: getItem('btnSetting3'))
+    let [imgNum, setimgNum] = useState(getItem('imgNum')? getItem('imgNum')*1:0)
     // eslint-disable-next-line no-unused-vars
     let [imgs, setImgs] = useState([])
     let [path, setPath] = useState(window.wizPath)
@@ -80,17 +80,17 @@ function Setting(props){
         //         position: 'left',//位置
         //     },
         // });
-        if(localStorage_subata.getItem('btnSetting2') === null){
-            localStorage_subata.setItem('btnSetting2', true)
+        if(getItem('btnSetting2') === null){
+            setItem('btnSetting2', true)
         }
-        if(localStorage_subata.getItem('btnSetting1') === null){
-            localStorage_subata.setItem('btnSetting1', true)
+        if(getItem('btnSetting1') === null){
+            setItem('btnSetting1', true)
         }
-        if(localStorage_subata.getItem('btnSetting') === null){
-            localStorage_subata.setItem('btnSetting', true)
+        if(getItem('btnSetting') === null){
+            setItem('btnSetting', true)
         }
-        if(localStorage_subata.getItem('bgImgDir')){
-            readImg(localStorage_subata.getItem('bgImgDir'))
+        if(getItem('bgImgDir')){
+            readImg(getItem('bgImgDir'))
         }
         fetch('http://101.43.174.221:3001/file/subataUpdate/latest.yml').then(res=>res.text()).then(res=>{
             if(res){
@@ -123,7 +123,7 @@ function Setting(props){
                         // console.log(`${dir}\\${file.name}`)
                         window.tools.readFile(`${dir}\\${file.name}`,(str)=>{
                             // console.log(str)
-                            // window.tools.writeFile(`${localStorage_subata.getItem('installPath')}\\cacheImg`,str,()=>{
+                            // window.tools.writeFile(`${getItem('installPath')}\\cacheImg`,str,()=>{
                             // console.log('缓存图片成功')
                             // console.log(`${__dirname}\\cacheImg`)
                             let bufferArr = new Int8Array(str)
@@ -148,7 +148,7 @@ function Setting(props){
             if(imgs.length === 0 && imgNum > 1){
                 setimgNum(0)
                 setBg(0)
-                localStorage_subata.setItem('imgNum', 0)
+                setItem('imgNum', 0)
             }
         }
     }
@@ -172,19 +172,19 @@ function Setting(props){
                     <Image onClick={()=>{
                         setimgNum(0)
                         setBg(0)
-                        localStorage_subata.setItem('imgNum', 0)
+                        setItem('imgNum', 0)
                     }} className={imgNum === 0?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={82} height={82} src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/c3e29bb5-d5a0-4799-a544-264e310356aa.jpg'/>
                     <Image onClick={()=>{
                         setimgNum(1)
                         setBg(1)
-                        localStorage_subata.setItem('imgNum', 1)
+                        setItem('imgNum', 1)
                     }}  className={imgNum === 1?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} width={82} height={82} src='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-a3e579e1-12c0-4985-8d49-3ab58c03387a/151d0d95-b330-4ca8-9de7-d0336aed9872.webp'/>
                     {
                         imgs.map((img, index)=>{
                             return <Image key={index} width={82} height={82} onClick={()=>{
                                 // console.log(index)
                                 setimgNum(index + 2)
-                                localStorage_subata.setItem('imgNum', index + 2)
+                                setItem('imgNum', index + 2)
                                 // console.log('手动改变')
                                 onBgChange(imgs, index)
                             }} className={(index + 2 === imgNum)?'arco-image-active':''} preview={false} style={{objectFit:'cover'}} src={img.url}/>
@@ -194,7 +194,7 @@ function Setting(props){
                         // document.getElementById('bgUpload').click()
                         window.tools.choseDir((dir)=>{
                             // console.log(dir)
-                            localStorage_subata.setItem('bgImgDir', dir)
+                            setItem('bgImgDir', dir)
                             readImg(dir)
                         })
                     }}>
@@ -227,7 +227,7 @@ function Setting(props){
                             setbtnSetting(val)
                             // true 开始游戏最小化
                             // false 开始游戏不进行操作
-                            localStorage_subata.setItem('btnSetting', val)
+                            setItem('btnSetting', val)
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
@@ -243,7 +243,7 @@ function Setting(props){
                             setSubataShow(val)
                             // true 开始游戏最小化
                             // false 开始游戏不进行操作
-                            localStorage_subata.setItem('btnSetting1', val)
+                            setItem('btnSetting1', val)
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
@@ -258,7 +258,7 @@ function Setting(props){
                             setbtnSetting2(val)
                             // true 开始游戏最小化
                             // false 开始游戏不进行操作
-                            localStorage_subata.setItem('btnSetting2', val)
+                            setItem('btnSetting2', val)
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
@@ -275,7 +275,7 @@ function Setting(props){
                             // true 显示雪花
                             // false 关闭雪花
                             onSatanChange(val)
-                            localStorage_subata.setItem('btnSetting3', val)
+                            setItem('btnSetting3', val)
                         }}
                         />
                         <span style={{paddingLeft:'10px'}}>
@@ -304,7 +304,7 @@ function Setting(props){
                 <br/><br/>
                 <span>当前路径：</span>
                 <span>{path?path:<Button onClick={()=>{
-                        console.log(localStorage_subata.getItem('wizInstall'))
+                        console.log(getItem('wizInstall'))
                         let fileSelect = document.getElementById('selectWiz')
                         fileSelect.click()
                     }} status='success' type='primary'>{'选择Wizard.exe'}</Button>}</span>
@@ -326,10 +326,10 @@ function Setting(props){
                 </Row>
                 <Row>
                     <Col span={4}><Button type='primary' status='success' onClick={()=>{
-                        // console.log(localStorage_subata.outPutToJson())
+                        // console.log(outPutToJson())
                         window.tools.choseDir((dir)=>{
                             console.log(dir)
-                            window.tools.writeFile(`${dir}\\setJson.json`,localStorage_subata.outPutToJson(), ()=>{
+                            window.tools.writeFile(`${dir}\\setJson.json`,outPutToJson(), ()=>{
                                 Message.success({
                                     content:'保存成功！',
                                     style:{top:'10px'}
@@ -348,7 +348,7 @@ function Setting(props){
                             console.log(e.target.files[0].path)
                             if(e.target.files[0].path.includes('setJson.json')){
                                 window.tools.readFile(e.target.files[0].path, (str)=>{
-                                    localStorage_subata.inputLocalStroage(str)
+                                    inputLocalStroage(str)
                                     Message.success({
                                         content:'导入成功',
                                         duration: 2000,
@@ -376,7 +376,7 @@ function Setting(props){
                                 console.log(val)
                                 // true 开始游戏最小化
                                 // false 开始游戏不进行操作
-                                localStorage_subata.setItem('zhSound', val)
+                                setItem('zhSound', val)
                                 setZhSound(val)
                                 if(val){
                                     // alertTextLive2d('还没有正式上线哦~')
@@ -441,7 +441,7 @@ function Setting(props){
                                             }
                                         })
                                         let fileStatus = [], indexDownload = 0
-                                        let fileList_update = window.fileList_update || localStorage_subata.getItem('fileList_update')
+                                        let fileList_update = window.fileList_update || getItem('fileList_update')
                                         fileList_update.split('\n').forEach(path=>{
                                             // -1 未开始下载
                                             fileStatus.push({
