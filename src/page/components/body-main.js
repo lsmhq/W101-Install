@@ -113,6 +113,18 @@ function BodyMain(props){
             setHeadKey(accounts[index]?.iconType || 'wizard101')
         }
     },[account])
+    useEffect(()=>{
+        let accounts = localStorage_subata.getItem('accounts') || []
+        let index = accounts.findIndex(val=> {
+            return val.account === account
+        })
+        if(index >= 0){
+            accounts[index].icon = headIndex
+            accounts[index].iconType = headKey
+            console.log(accounts)
+            setData([...accounts])
+        }
+    },[headIndex])
     useEffect(() => {
         if(headKey && headImgMap[headKey]){
             setHeadImgs([...headImgMap[headKey]])
