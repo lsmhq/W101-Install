@@ -26,7 +26,7 @@ function createWindow () {
     // useContentSize:true,
     title: "网易云音乐", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/favicon.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
-    frame: false,
+    // frame: false,
     resizable: false,
     transparent: true, 
     zoomToPageWidth: true,
@@ -45,7 +45,7 @@ function createWindow () {
     }
   });
   // let size = mainWindow.getSize()
-  // mainWindow.webContents.openDevTools() // 打开窗口调试
+  mainWindow.webContents.openDevTools() // 打开窗口调试
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
   // mainWindow.loadURL(`https://static-cb49dc29-e439-4e8c-81f2-5ea0c9772303.bspapp.com/`);
@@ -69,11 +69,6 @@ function createWindow () {
     mainWindow.webContents.send('install-path', app.getPath('exe'))
     mainWindow.webContents.send('install-version', app.getVersion())
   });
-  mainWindow.on('will-resize',()=>{
-    mainWindow.setMinimumSize(parseInt(width/scaleFactor) , parseInt(height/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
-    mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
-  })
 
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
   mainWindow.on('closed', () => {
@@ -86,12 +81,6 @@ function createWindow () {
     // newWin = null
 
   });
-  mainWindow.on('resize',()=>{
-    // return false
-    mainWindow.setMinimumSize(parseInt(width/scaleFactor) , parseInt(height/scaleFactor))
-    mainWindow.setMaximumSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
-    mainWindow.setSize(parseInt(width/scaleFactor), parseInt(height/scaleFactor))
-  })
   // 自定义
   ipcMain.on("openGame",(e,data)=>{
     // 打开游戏
@@ -101,12 +90,6 @@ function createWindow () {
     // 下载补丁
     console.log(type)
   });
-  // 移动
-  ipcMain.on('move-application',(event,pos) => {
-    // console.log(size)
-    mainWindow.setPosition(parseInt(pos.posX), parseInt(pos.posY), true)
-    // console.log(mainWindow.getSize())
-  })
   ipcMain.on('move-applicationB',(event,pos) => {
     // console.log(size)
     windowSongWord.setPosition(parseInt(pos.posX), parseInt(pos.posY), true)

@@ -3,7 +3,7 @@ import {  IconPlayArrow, IconPause, IconSkipNext, IconSound, IconMute } from '@a
 import { api } from '../../util/http';
 import './audio.css'
 import Icon from '../Icon'
-import { useEffect, useState, useRef, useContext } from 'react';
+import { useEffect, useState, useRef, useContext, useCallback } from 'react';
 import globalData from '../../context/context';
 import { formatSeconds, formatSecondsV2 } from '../../util/util';
 let { Row, Col } = Grid
@@ -118,18 +118,13 @@ function Audio(props){
             audio.current.addEventListener('pause',(e)=>{
                 setPaused(audio.current.paused)
             })
+            audio.current.onended = () => {
+                console.log('end')
+                changeSong()
+            }
         }
     }, [audio])
-    useEffect(()=>{
-        audio.current.onended = () => {
-            console.log('end')
-            changeSong({ playType, audio, globalObj, setPaused, setBgShow },()=>{
-                changeSong({ playType, audio, globalObj, setPaused, setBgShow },()=>{
-                    changeSong({ playType, audio, globalObj, setPaused, setBgShow })
-                })
-            })
-        }
-    },[globalObj, playType, audio])
+
     useEffect(()=>{
         if(playType === 3){
             api.heartbeatSongs({id: globalObj.current.getCurrentSong(), pid: globalObj.songListId.getSongListId()}).then(res=>{
@@ -154,7 +149,86 @@ function Audio(props){
         localStorage.setItem('showFy', showFy)
         localStorage.setItem('showRom', showRom)
     },[wordType, showFy, showRom])
-
+    let changeSong = useCallback(()=>{
+            // 0 单曲循环  1 随机  2 顺序  3 心动
+            console.log(playType)
+            if(playType === 0){
+                audio.current.currentTime = 0
+                audio.current.play()
+            }
+            if(playType === 1){
+                // console.log()
+                if(globalObj.currentList.getCurrentList().length > 0){
+                    
+                    let songIndex = Math.floor((Math.random() * globalObj.currentList.getCurrentList().length));
+                    console.log(globalObj.currentList.getCurrentList()[songIndex], songIndex)
+                    // 判断是否有版权
+                    api.checkMusic({
+                      id: globalObj.currentList.getCurrentList()[songIndex]
+                    }).then(res=>{
+                        if(res.data.success === true && res.data.message === 'ok'){
+                            globalObj.current.setCurrentSong(globalObj.currentList.getCurrentList()[songIndex])
+                            globalObj.songIndex.setSongIndex(songIndex)
+                            document.getElementById(`song${globalObj.currentList.getCurrentList()[songIndex]}`)?.scrollIntoView(
+                                {
+                                    behavior: "smooth", 
+                                    block: "center", 
+                                    inline: "nearest"
+                                }
+                            )
+                            // globalObj.song.setSong(globalObj.likeList.likeList[index])
+                            setPaused(audio.current.paused)
+                            setBgShow(false)
+                        }else{
+                            Message.error({
+                                style: {top:'10px'},
+                                content: '暂无版权, 即将下一首',
+                                duration: 1000,
+                                // onClose: callBack
+                            })
+                        }
+                    })
+                }
+            }
+            if(playType === 2 || playType === 3){
+                console.log(globalObj.songIndex.getSongIndex())
+                if(!globalObj.songIndex.getSongIndex()) globalObj.songIndex.setSongIndex(0)
+                if(globalObj.songIndex.getSongIndex() === globalObj.currentList.getCurrentList().length - 1) globalObj.songIndex.setSongIndex(0)
+                if(globalObj.songIndex.getSongIndex() !== undefined && globalObj.currentList.getCurrentList().length){
+                    let idx = globalObj.songIndex.getSongIndex()+1===globalObj.currentList.getCurrentList().length?0:globalObj.songIndex.getSongIndex()+1
+                    api.checkMusic({
+                        id: globalObj.currentList.getCurrentList()[idx]
+                      }).then(res=>{
+                          if(res.data.success === true && res.data.message === 'ok'){
+                              globalObj.current.setCurrentSong(globalObj.currentList.getCurrentList()[idx])
+                              document.getElementById(`song${globalObj.currentList.getCurrentList()[idx]}`)?.scrollIntoView(
+                                  {
+                                      behavior: "smooth", 
+                                      block: "center", 
+                                      inline: "nearest"
+                                  }
+                              )
+                              // globalObj.song.setSong(globalObj.likeList.likeList[index])
+                              setPaused(audio.current.paused)
+                              setBgShow(false)
+                            //   songIndex++
+                              globalObj.songIndex.setSongIndex(idx)
+                          }else{
+                            //   songIndex++
+                            let idx = globalObj.songIndex.getSongIndex()+1===globalObj.currentList.getCurrentList().length?0:globalObj.songIndex.getSongIndex()+1
+                              globalObj.songIndex.setSongIndex(idx)
+                              Message.error({
+                                  style: {top:'10px'},
+                                  content: '暂无版权',
+                                  duration: 1000,
+                                //   onClose: callBack
+                              })
+                          }
+                    })
+                }
+            }
+        
+    },[playType, audio, globalObj])
     return <div className='audio'>
         <div className='audio-controls'>
             <div className='audio-controls-item'>
@@ -188,11 +262,7 @@ function Audio(props){
                 <Icon
                     Child={<IconSkipNext className='audio-icon'/>}
                     onClick={()=>{
-                        changeSong({ playType, audio, globalObj, setPaused, setBgShow },()=>{
-                            changeSong({ playType, audio, globalObj, setPaused, setBgShow },()=>{
-                                changeSong({ playType, audio, globalObj, setPaused, setBgShow })
-                            })
-                        })
+                        changeSong()
                     }}
                     // textStyle={{fontSize:'12px'}}
                     content=""
@@ -323,84 +393,5 @@ function Audio(props){
     </div>
 }
 
-function changeSong(obj, callBack){
-    // 0 单曲循环  1 随机  2 顺序  3 心动
-    let { playType, audio, globalObj, setPaused, setBgShow } = obj
-    console.log(playType)
-    if(playType === 0){
-        audio.current.currentTime = 0
-        audio.current.play()
-    }
-    if(playType === 1){
-        // console.log()
-        if(globalObj.currentList.getCurrentList().length > 0){
-            
-            let songIndex = Math.floor((Math.random() * globalObj.currentList.getCurrentList().length));
-            console.log(globalObj.currentList.getCurrentList()[songIndex], songIndex)
-            // 判断是否有版权
-            api.checkMusic({
-              id: globalObj.currentList.getCurrentList()[songIndex]
-            }).then(res=>{
-                if(res.data.success === true && res.data.message === 'ok'){
-                    globalObj.current.setCurrentSong(globalObj.currentList.getCurrentList()[songIndex])
-                    globalObj.songIndex.setSongIndex(songIndex)
-                    document.getElementById(`song${globalObj.currentList.getCurrentList()[songIndex]}`)?.scrollIntoView(
-                        {
-                            behavior: "smooth", 
-                            block: "center", 
-                            inline: "nearest"
-                        }
-                    )
-                    // globalObj.song.setSong(globalObj.likeList.likeList[index])
-                    setPaused(audio.current.paused)
-                    setBgShow(false)
-                }else{
-                    Message.error({
-                        style: {top:'10px'},
-                        content: '暂无版权, 即将下一首',
-                        duration: 1000,
-                        onClose: callBack
-                    })
-                }
-            })
-        }
-    }
-    if(playType === 2 || playType === 3){
-        console.log(globalObj.songIndex.getSongIndex())
-        if(!globalObj.songIndex.getSongIndex()) globalObj.songIndex.setSongIndex(0)
-        if(globalObj.songIndex.getSongIndex() === globalObj.currentList.getCurrentList().length - 1) globalObj.songIndex.setSongIndex(0)
-        if(globalObj.songIndex.getSongIndex() !== undefined && globalObj.currentList.getCurrentList().length){
-            let idx = globalObj.songIndex.getSongIndex()+1===globalObj.currentList.getCurrentList().length?0:globalObj.songIndex.getSongIndex()+1
-            api.checkMusic({
-                id: globalObj.currentList.getCurrentList()[idx]
-              }).then(res=>{
-                  if(res.data.success === true && res.data.message === 'ok'){
-                      globalObj.current.setCurrentSong(globalObj.currentList.getCurrentList()[idx])
-                      document.getElementById(`song${globalObj.currentList.getCurrentList()[idx]}`)?.scrollIntoView(
-                          {
-                              behavior: "smooth", 
-                              block: "center", 
-                              inline: "nearest"
-                          }
-                      )
-                      // globalObj.song.setSong(globalObj.likeList.likeList[index])
-                      setPaused(audio.current.paused)
-                      setBgShow(false)
-                    //   songIndex++
-                      globalObj.songIndex.setSongIndex(idx)
-                  }else{
-                    //   songIndex++
-                    let idx = globalObj.songIndex.getSongIndex()+1===globalObj.currentList.getCurrentList().length?0:globalObj.songIndex.getSongIndex()+1
-                      globalObj.songIndex.setSongIndex(idx)
-                      Message.error({
-                          style: {top:'10px'},
-                          content: '暂无版权',
-                          duration: 1000,
-                          onClose: callBack
-                      })
-                  }
-            })
-        }
-    }
-}
+
 export default Audio
