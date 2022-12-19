@@ -114,7 +114,7 @@ function BodyMain(props){
         }
     },[account])
     useEffect(()=>{
-        let accounts = localStorage_subata.getItem('accounts') || []
+        let accounts = getItem('accounts') || []
         let index = accounts.findIndex(val=> {
             return val.account === account
         })
@@ -500,7 +500,7 @@ function BodyMain(props){
             setChoseHead(false)
         }}
         children={<>
-            <Tabs activeTab={headKey} onChange={(key)=>{
+            <Tabs activeTab={headKey} destroyOnHide={false} onChange={(key)=>{
                 console.log(key)
                 setHeadKey(key)
             }} type='card-gutter'>

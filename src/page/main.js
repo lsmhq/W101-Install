@@ -69,7 +69,7 @@ function Main(props) {
     let [type, setType] = useState(getItem('type')) // 汉化type
     let [root, setRoot] = useState(getItem('root') || '') // 是否可以进行发布通知
     let [play, setPlay] = useState(getItem('wizInstall')) // 是否可以开始游戏
-    let [version, setVersion] = useState('') // 版本号
+    // let [version, setVersion] = useState('') // 版本号
     let [nav, setNavs] = useState({})
     let [settingShow, setSetShow] = useState(false) // 设置弹窗显隐
     let [subataShow, setSubataShow] = useState(getItem('btnSetting1') === null ? true : getItem('btnSetting1')) // subata按钮显隐
@@ -80,6 +80,7 @@ function Main(props) {
     let [bgShow, setBgShow] = useState(true) // 背景图显隐
     let [satan, setSatan] = useState(false) // 显示圣诞树和雪花开关
     let [satanBegin, setsatanBegin] = useState(false) // 显示圣诞树和雪花
+    let [status, setStatus] = useState('')
     useEffect(() => {
         // 初始化地址
         getSteam(() => {
@@ -131,9 +132,9 @@ function Main(props) {
         })
         // }, 1000)
         // 获取version
-        window.electronAPI.getVersion((version) => {
-            setVersion(version)
-        })
+        // window.electronAPI.getVersion((version) => {
+        //     // setVersion(version)
+        // })
         // 获取installPath
         window.electronAPI.getPath((path) => {
             window.installPath = path
@@ -259,6 +260,9 @@ function Main(props) {
         }
         window.electronAPI.setProgressBar(percent / 100)
     }, [percent])
+    useEffect(()=>{
+        document.title = ` V ${window.appVersion} / 在线人数 · ${onlineNum} / 状态 · ${status}`
+    }, [onlineNum, status])
     function getSteam(callback) {
         // console.log('getSteam')
         getPath((stdout, stderr) => {
@@ -276,7 +280,7 @@ function Main(props) {
             window.gameDataPath = getItem('gameDataPath')
             //   console.log(window.wizPath)
             //   console.log(window.gameDataPath)
-            //   console.log('============')
+            //   console.log('============')  
             checkGameInstall((steam, wizard, err) => {
                 // console.log(steam, wizard, err)
                 if (steam) {
@@ -321,12 +325,15 @@ function Main(props) {
         ws.onopen = () => {
             // console.log('连接成功')   
             getMessage()
+            setStatus('在线')
         }
         ws.onerror = () => {
             reconnet()
+            setStatus('离线')
         }
         ws.onclose = () => {
             reconnet()
+            setStatus('离线')
         }
 
         // console.log(ws)
