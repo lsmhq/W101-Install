@@ -6,3 +6,4 @@ version*
 *.rar
 *.zip
 *.lnk
+/app

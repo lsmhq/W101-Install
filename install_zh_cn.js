@@ -32,7 +32,7 @@ question()
 // 核心
 function downLoad() {
     request({
-        url: `http://101.43.216.253:3001/file/latest?type=${params[type]}`,
+        url: `http://101.43.174.221:3001/file/latest?type=${params[type]}`,
         method: 'GET',
     }, (err, response, body) => {
         if (!err && response.statusCode === 200) {
