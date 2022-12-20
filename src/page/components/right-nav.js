@@ -10,8 +10,8 @@ let { getItem, setItem } = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
 let style = {
-    right:'50px',
-    top:'0px'
+    right: '50px',
+    top: '0px'
 }
 function RightNav(props){
     let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count, drawer, opSet } = props

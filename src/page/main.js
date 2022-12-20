@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../css/main.css'
+import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import QQ from '../image/QQ_share.jpg'
@@ -7,6 +8,7 @@ import apiPath from './http/api'
 import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
+import su from '../image/Subata_logo.png'
 import LocalStorage_subata from './util/localStroage';
 import { Snow, Tree } from './components/tree';
 import { installBtn_config } from './config/config.page';
@@ -42,9 +44,9 @@ let baseX = 0, baseY = 0; //监听坐标
 let prveX = 0, prveY = 0 // 上次XY
 let useTimer = null
 let satanTimer = false, satanTimerStart
-let {getIpLocaltion, getPublicIP, getPath, checkGameInstall, changeType} = window.tools
+let { getPath, checkGameInstall, changeType} = window.tools
 function Main(props) {
-    let {setLocal} = props
+    // let {setLocal} = props
     let [loading, setLoading] = useState(true) // 轮播加载
     let [loading1, setLoading1] = useState(true) // List加载
     let [imgs, setImgs] = useState([]) // 轮播图片
@@ -69,7 +71,6 @@ function Main(props) {
     let [type, setType] = useState(getItem('type')) // 汉化type
     let [root, setRoot] = useState(getItem('root') || '') // 是否可以进行发布通知
     let [play, setPlay] = useState(getItem('wizInstall')) // 是否可以开始游戏
-    // let [version, setVersion] = useState('') // 版本号
     let [nav, setNavs] = useState({})
     let [settingShow, setSetShow] = useState(false) // 设置弹窗显隐
     let [subataShow, setSubataShow] = useState(getItem('btnSetting1') === null ? true : getItem('btnSetting1')) // subata按钮显隐
@@ -106,30 +107,13 @@ function Main(props) {
         // 创建WebSocket
         createSocket()
         // 窗口自适应
-        resize()
         // 获取安装目录
         // setInterval(()=>{
         // console.log('检测更新')
-        getIpLocaltion(getPublicIP()).then(address=>{
-            console.log(address)
-            // console.log(address.country)
-        })
-        window.electronAPI.getUpdater((data) => {
-            // console.log('message---->',data)
-            if (data.cmd === 'downloadProgress') {
-                update = true
-                setPercent(parseInt(data.progressObj.percent))
-                setTotal(data.progressObj.total)
-                setCurrent(data.progressObj.transferred)
-                Notification.warning({
-                    title: '检测到有最新版本',
-                    style,
-                    id: 'subata-up',
-                    content: '正在进行下载，稍后进行更新'
-                })
-                // alertTextLive2d('检测到有最新版本')
-            }
-        })
+        // getIpLocaltion(getPublicIP()).then(address=>{
+        //     console.log(address)
+        //     // console.log(address.country)
+        // })
         // }, 1000)
         // 获取version
         // window.electronAPI.getVersion((version) => {
@@ -182,11 +166,12 @@ function Main(props) {
                 setSatan(true)
                 return
             }
-        }, 1000);
+        }, 10000);
         return () => {
             // 注销
             destroy()
             setItem('msgLength', message.length)
+            clearInterval(satanTimer)
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -205,7 +190,7 @@ function Main(props) {
                     setSatan(false)
                     setsatanBegin(false)
                 }
-            }, 1000);
+            }, 10000);
         }
     },[satan])
     useEffect(() => {
@@ -221,45 +206,7 @@ function Main(props) {
     useEffect(() => {
         setCount(0)
     }, [drawer])
-    useEffect(() => {
-        if (percent === 100) {
-            setBtnLoad(false)
-            setPercent(0)
-            window.electronAPI.sound()
-            if (!update) {
-                Notification.success({
-                    id: 'download',
-                    style,
-                    title: '安装/更新完成!',
-                    content: '请点击下方开始游戏进行体验!',
-                    duration: 2000
-                })
-                // alertTextLive2d(`安装完成!共用时间${useTime}秒`)
-                // setTimeout(() => {
-                //     useTime = 0
-                // }, 1000);   
-            }
-            // window.tools.changeType(localStorage.getItem('type'))
-        }
 
-        if (percent <= 3 && percent >= 1) {
-            // alertTextLive2d('开始！')
-            clearInterval(useTimer)
-            // useTimer = setInterval(() => {
-            //     useTime+=1
-            // }, 1000);
-        }
-        if (percent >= 25 && percent <= 30) {
-            // alertTextLive2d('已经下载四分之一了！')
-        }
-        if (percent >= 50 && percent <= 55) {
-            // alertTextLive2d('已经下载一半了！')
-        }
-        if (percent >= 90 && percent <= 95) {
-            // alertTextLive2d('就快结束辣~')
-        }
-        window.electronAPI.setProgressBar(percent / 100)
-    }, [percent])
     useEffect(()=>{
         document.title = ` V ${window.appVersion} / 在线人数 · ${onlineNum} / 状态 · ${status}`
     }, [onlineNum, status])
@@ -375,11 +322,6 @@ function Main(props) {
             }, 2000)
         }
     }
-    function resize() {
-        window.onresize = () => {
-            // setHeight(window.screen.height - 40 + 'px')
-        }
-    }
     function getData() {
         // apiPath.mainPage().then(res=>{
         //     if(res.status === 200){
@@ -404,6 +346,7 @@ function Main(props) {
         document.onmousedown = null
         document.onmousemove = null
         window.onresize = null
+
     }
     function drag() {
         // box.addEventListener('mousedown', function(e){
@@ -603,15 +546,12 @@ function Main(props) {
         setBtnLoad(true)
         Notification.clear()
         window.tools.downLoad(type || getItem('type'), (mark) => {
+
             Notification.warning({
                 id: 'download',
                 title: '请耐心等待下载...',
                 content: mark, style, duration: 10000000
             })
-        }, (total, currentTotal) => {
-            setCurrent(currentTotal)
-            setTotal(total)
-            setPercent(Number.parseInt(((currentTotal / total).toFixed(2) * 100)))
         }, (err) => {
             if (err) {
                 Notification.error({
@@ -728,7 +668,7 @@ function Main(props) {
         >
             <div className='nav-logo'><img alt='' src={su} /></div>
             <div className='nav-title'>
-                Subata{`${version}`}
+                Subata{`${window.appVersion}`}
                 <div className='online-count'>
                     <span className='online'></span>
                     <span className='online-text'>{onlineNum}</span>
@@ -747,7 +687,7 @@ function Main(props) {
                     setSetShow(true)
                 }}>
 
-                    <IconTool style={{ fontSize: '20px' }} />
+                    <IconSettings style={{ fontSize: '20px' }} />
                 </div>
                 <div className='control-btn' onClick={(e) => {
                     e.stopPropagation()
@@ -1027,7 +967,7 @@ function Main(props) {
                 setBg={setimgNum}
                 setSubataShow={setSubataShow}
                 setSetShow={setSetShow}
-                setLocal={setLocal}
+                // setLocal={setLocal}
                 satan={satan}
                 onSatanChange={(show)=>{
                     setsatanBegin(show)

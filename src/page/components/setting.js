@@ -12,8 +12,8 @@ let AnchorLink = Anchor.Link
 let downLoadTimer
 let { Row, Col } = Grid
 let style = {
-    right:'50px',
-    top:'0px'
+    right: '50px',
+    top: '0px'
 }
 // let models = [
 //     {

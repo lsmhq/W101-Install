@@ -19,13 +19,13 @@ let carouselIndex = 0
 let { TabPane } = Tabs
 let { Row, Col } = Grid
 let style = {
-    right:'50px',
-    top:'0px'
+    right: '50px',
+    top: '0px'
 }
 let headImgMap ={}
 let timerKill = null
 function BodyMain(props){
-    let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow, onlineNum } = props
+    let { logo, imgs, loading, loading1, nav, btnLoading, play, subataShow, onlineNum } = props
     const [data, setData] = useState(getItem('accounts')||[]);
     const [dataMap, setDataMap] = useState(getItem('accountsMap')||{});
     const [showLogin, setShowLogin] = useState(false)
@@ -223,18 +223,18 @@ function BodyMain(props){
             </div>
         </div>
     </div>
-    <div className='body-main-bottom'>
+    {/* <div className='body-main-bottom'>
         {percent > 0 && <Progress formatText={()=><span style={{color:'white'}}>{`${(current / 1024 / 1024).toFixed(2)}MB / ${(total / 1024 / 1024).toFixed(2)}MB`}</span>} percent={percent} width='100%' color={'#00b42a'} style={{display:'block'}}/>}
-    </div>
+    </div> */}
     <Modal 
         visible={showLogin}
         title=''
         focusLock={true}
         autoFocus={false}
         footer={null}
-        mountOnEnter={false}
         className="login-modal"
         hideCancel={true}
+        unmountOnExit = {true}
         getPopupContainer={getMain}
         maskClosable = {false}
         onCancel={()=>{
@@ -508,7 +508,6 @@ function BodyMain(props){
                     Object.keys(headImgMap).map(key=>{
                         return <TabPane key={key} title={key}>
                             <div className='head-img-box'>
-                                {/* <Image /> */}
                                 {
                                     headImgs.map((img, idx)=>{
                                         return <Image key={idx} className={headIndex === idx?'arco-image-active':''} preview={false} onClick={()=>{
