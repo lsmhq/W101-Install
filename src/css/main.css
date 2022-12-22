@@ -445,10 +445,10 @@
     width: 105%;
     height: 110%;
     background: url(../image/login-bg.webp);
-    /* background: url(../image/loginBG.png); */
+    /* background: url(../image/); */
     background-repeat: no-repeat;
-    background-size: 150%;
-    background-position: -90px;
+    background-size: cover;
+    /* background-position: -90px; */
     filter: brightness(0.6);
     border-radius: 10px;
 }
