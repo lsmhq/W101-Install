@@ -272,6 +272,10 @@ function Main(props) {
         ws.onopen = () => {
             // console.log('连接成功')   
             getMessage()
+            let person = {
+                name: '',
+                account: '',
+            }
             setStatus('在线')
         }
         ws.onerror = () => {
@@ -301,6 +305,8 @@ function Main(props) {
                 getMessage()
             } else if (data.type === 'count') {
                 setOnline(data.onLineNum)
+            }else if(data.type === 'onlineList'){
+                console.log(data.list)
             } else if (data?.id) {
                 window.electronAPI.sound()
                 Notification.info({
