@@ -109,6 +109,7 @@ function Setting(props){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [imgs, imgNum])
     function readImg(dir){
+        console.log('图片加载')
         if(dir && dir !== 'undefined'){
             setImgs([])
             window.tools.readDir(dir, (files)=>{

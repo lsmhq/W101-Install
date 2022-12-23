@@ -45,7 +45,8 @@
                 })
             },
             ready:()=>{
-                // console.log(JSON.parse(localStorage.getItem('accounts')))
+                console.log('------->','123123')
+                console.log(JSON.parse(localStorage.getItem('accounts')))
                 ipcRenderer.send('ready', {
                     flag: true, 
                     type:localStorage.getItem('type'), 
