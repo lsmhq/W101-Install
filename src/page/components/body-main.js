@@ -12,22 +12,22 @@ import apiPath from '../http/api'
 // const headImgs = new Array(19).fill(headImgPath).map((path, index)=>{
 //     return require(`../../${path}icon_${index}.jpeg`)
 // })
-let localStorage_subata = new LocalStorage_subata({
+let { getItem, setItem } = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
 let carouselIndex = 0
 let { TabPane } = Tabs
 let { Row, Col } = Grid
 let style = {
-    right:'50px',
-    top:'0px'
+    right: '50px',
+    top: '0px'
 }
 let headImgMap ={}
 let timerKill = null
 function BodyMain(props){
-    let { logo, imgs, loading, loading1, nav, btnLoading, percent, current, total, play, subataShow, onlineNum } = props
-    const [data, setData] = useState(localStorage_subata.getItem('accounts')||[]);
-    const [dataMap, setDataMap] = useState(localStorage_subata.getItem('accountsMap')||{});
+    let { logo, imgs, loading, loading1, nav, btnLoading, play, subataShow, onlineNum } = props
+    const [data, setData] = useState(getItem('accounts')||[]);
+    const [dataMap, setDataMap] = useState(getItem('accountsMap')||{});
     const [showLogin, setShowLogin] = useState(false)
     let [password, setPassword] = useState('')
     let [account, setAccount] = useState('')
@@ -42,8 +42,8 @@ function BodyMain(props){
     let [headType, setHeadType] = useState('')
     let submit = useRef()
     useEffect(()=>{
-        // console.log('accounts----->',localStorage_subata.getItem('accounts')) 
-        let newAccounts = localStorage_subata.getItem('accounts')?.map((account, idx)=>{
+        // console.log('accounts----->',getItem('accounts')) 
+        let newAccounts = getItem('accounts')?.map((account, idx)=>{
             console.log(typeof account)
             if(typeof account !== 'object'){
                 return {account, icon: -1, iconType: 'wizard101'}
@@ -55,7 +55,7 @@ function BodyMain(props){
             return account
         })
         // console.log(newAccounts)
-        localStorage_subata.setItem('accounts', newAccounts || [])
+        setItem('accounts', newAccounts || [])
         setData(newAccounts || [])
         apiPath.getHeadImg().then(res=>{
             if(res.data.success){
@@ -84,20 +84,20 @@ function BodyMain(props){
     },[showLogin])
     useEffect(()=>{
         if(data.length > 0){
-            localStorage_subata.setItem('accounts', data)
+            setItem('accounts', data)
             window.electronAPI.addAccount()
         }
     }, [data])
     useEffect(()=>{
         if(account && password){
             dataMap[account] = password
-            localStorage_subata.setItem('accountsMap', {...dataMap})
+            setItem('accountsMap', {...dataMap})
             window.electronAPI.addAccount()
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataMap])
     useEffect(()=>{
-        let accounts = localStorage_subata.getItem('accounts') || []
+        let accounts = getItem('accounts') || []
         let index = accounts.findIndex(val=> {
             return val.account === account
         })
@@ -114,7 +114,7 @@ function BodyMain(props){
         }
     },[account])
     useEffect(()=>{
-        let accounts = localStorage_subata.getItem('accounts') || []
+        let accounts = getItem('accounts') || []
         let index = accounts.findIndex(val=> {
             return val.account === account
         })
@@ -223,18 +223,18 @@ function BodyMain(props){
             </div>
         </div>
     </div>
-    <div className='body-main-bottom'>
+    {/* <div className='body-main-bottom'>
         {percent > 0 && <Progress formatText={()=><span style={{color:'white'}}>{`${(current / 1024 / 1024).toFixed(2)}MB / ${(total / 1024 / 1024).toFixed(2)}MB`}</span>} percent={percent} width='100%' color={'#00b42a'} style={{display:'block'}}/>}
-    </div>
+    </div> */}
     <Modal 
         visible={showLogin}
         title=''
         focusLock={true}
         autoFocus={false}
         footer={null}
-        mountOnEnter={false}
         className="login-modal"
         hideCancel={true}
+        unmountOnExit = {true}
         getPopupContainer={getMain}
         maskClosable = {false}
         onCancel={()=>{
@@ -290,16 +290,16 @@ function BodyMain(props){
                                 <Col span={4}>
                                     <Button size='large' status='danger' type='primary' className='openGame' onClick={(e)=>{
                                         e.stopPropagation()
-                                        let accounts = localStorage_subata.getItem('accounts') || []
+                                        let accounts = getItem('accounts') || []
                                         // console.log(accounts)
                                         let index = accounts.findIndex(val=>val.account === account.account)
                                         if(index > -1){
                                             console.log(index)
                                             accounts.splice(index, 1)
-                                            localStorage_subata.setItem('accounts', accounts)
-                                            let accountsObj = localStorage_subata.getItem('accountsMap')
+                                            setItem('accounts', accounts)
+                                            let accountsObj = getItem('accountsMap')
                                             delete accountsObj[account.account]
-                                            localStorage_subata.setItem('accountsMap', accountsObj)
+                                            setItem('accountsMap', accountsObj)
                                             setData([...accounts])
                                             setDataMap({...accountsObj})
                                             setAccount('')
@@ -379,7 +379,7 @@ function BodyMain(props){
                                         onClose:()=>{
                                             // window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
-                                            let next = localStorage_subata.getItem('btnSetting')
+                                            let next = getItem('btnSetting')
                                             // console.log(next)
                                             setShowLogin(false)
                                             if(next){
@@ -398,7 +398,7 @@ function BodyMain(props){
                             })
                             return
                         }
-                        if(localStorage_subata.getItem('wizInstall')){
+                        if(getItem('wizInstall')){
                             if(save){
                                     let index = data.findIndex(val=>val.account === account)
                                     if(index >= 0){
@@ -453,7 +453,7 @@ function BodyMain(props){
                                         onClose:()=>{
                                             // window.tools.killExe('launchWizard101.exe')
                                             // window.tools.killExe('launchWizard101.exe')
-                                            let next = localStorage_subata.getItem('btnSetting')
+                                            let next = getItem('btnSetting')
                                             // console.log(typeof next)
                                             setShowLogin(false)
                                             if(next){
@@ -500,7 +500,7 @@ function BodyMain(props){
             setChoseHead(false)
         }}
         children={<>
-            <Tabs activeTab={headKey} onChange={(key)=>{
+            <Tabs activeTab={headKey} destroyOnHide={false} onChange={(key)=>{
                 console.log(key)
                 setHeadKey(key)
             }} type='card-gutter'>
@@ -508,7 +508,6 @@ function BodyMain(props){
                     Object.keys(headImgMap).map(key=>{
                         return <TabPane key={key} title={key}>
                             <div className='head-img-box'>
-                                {/* <Image /> */}
                                 {
                                     headImgs.map((img, idx)=>{
                                         return <Image key={idx} className={headIndex === idx?'arco-image-active':''} preview={false} onClick={()=>{

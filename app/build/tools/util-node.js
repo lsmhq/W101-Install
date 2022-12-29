@@ -185,7 +185,7 @@
             })
         }
     
-        function downLoad(type, getMark, getProcess, failed, changed) {
+        function downLoad(type, getMark, failed, changed) {
             request({
                 url: `http://${hrefNew}:3001/file/latest?type=${params[type]}`,
                 method: 'GET',
@@ -216,7 +216,11 @@
                                 changeType(type, () => {
                                     changed(1)
                                 })
-                            }, getProcess)
+                            }, (current, total)=>{
+                                let percent = Number.parseInt(((current / total).toFixed(2) * 100))
+                                // setPercent(percent)
+                                window.electronAPI.setProgressBar(percent)
+                            })
                         } else {
                             // 切换补丁
                             changeType(type, () => {
@@ -235,7 +239,12 @@
                             changeType(type, () => {
                                 changed(1)
                             })
-                        }, getProcess)
+                        }, (total, current)=>{
+                            let percent = Number.parseInt(((current / total).toFixed(2) * 100))
+                            // setPercent(percent)
+                            // console.log(current, total)
+                            window.electronAPI.setProgressBar(percent/100)
+                        })
                     }
                 } else {
                     failed(err)

@@ -14,8 +14,6 @@ const message = {
   downloadProgress: '正在下载...'
 }
 const path = require('path');
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-// app.commandLine.appendSwitch("--disable-http-cache")
 function createWindow () {
   let scaleFactor = (screen.getAllDisplays()[0].scaleFactor >= 2) ? 1 : screen.getAllDisplays()[0].scaleFactor
   scaleFactor = 1
@@ -32,9 +30,9 @@ function createWindow () {
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: true,
     resizable: false,
-    // transparent: true, 
+    transparent: true, 
     autoHideMenuBar: true,
-    backgroundColor:'#101b51',
+    // backgroundColor:'#101b51',
     // focusable: true,
     show: false,
     webPreferences: { // 网页功能设置
@@ -114,7 +112,7 @@ function createWindow () {
     // app.quit()
   })
   // 最小化
-  ipcMain.on('mini', function() {
+  ipcMain.on('mini', function(e, data) {
     mainWindow.minimize();
   })
   // 重启

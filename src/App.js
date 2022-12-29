@@ -1,16 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './App.css';
 import Main from './page/main';
-import zhHK from '@arco-design/web-react/es/locale/zh-HK';
-import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 // import { ConfigProvider } from '@arco-design/web-react';
-let zhMap = {
-  'zh-CN': zhCN,
-  'zh-HK': zhHK
-}
+// let zhMap = {
+//   'zh-CN': zhCN,
+//   'zh-HK': zhHK
+// }
 function App() {
   // let [show, setShow] = useState(true)
-  let [local, setLocal] = useState('zh-CN')
+  // let [local, setLocal] = useState('zh-CN')
   // getSteam() 
   useEffect(() => {
       document.onkeydown = function(){
@@ -41,14 +39,14 @@ function App() {
       localStorage.setItem('userid',Math.random())
     }  
   }, [])
-  useEffect(()=>{
-    console.log(local)
-    console.log(zhMap[local])
-  },[local])
+  // useEffect(()=>{
+  //   console.log(local)
+  //   console.log(zhMap[local])
+  // },[local])
   return (
     <div className="App">
       {/* <ConfigProvider locale={zhMap[local]}> */}
-        <Main setLocal = {setLocal}/>
+        <Main/>
       {/* </ConfigProvider> */}
     </div>
   );
