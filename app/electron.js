@@ -60,7 +60,6 @@ function createWindow () {
   // 加载应用 --开发阶段  需要运行 npm run start
   // mainWindow.loadURL('http://localhost:5000/#/');
   // mainWindow.webContents.openDevTools()
-
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
     loading.hide();
@@ -121,7 +120,12 @@ function createWindow () {
   })
   // 进度条
   ipcMain.on('downLoad', (e, progress)=>{
-    mainWindow && mainWindow.setProgressBar(progress)
+    // console.log(progress)
+    if(progress<=0){
+      mainWindow && mainWindow.setProgressBar(0.01)
+    }else{
+      mainWindow && mainWindow.setProgressBar(parseFloat(progress) )
+    }
   })
   // 进度条
   ipcMain.on('show', (e)=>{
@@ -234,18 +238,18 @@ function createWindow () {
   })
   // 账号修改
   ipcMain.on('changeAccount', (e, data)=>{
-    // console.log(data.account.account)
+    console.log(data.account)
     if(config){
       config[1] = {
         label: '账号启动',
         submenu: data.account.account.map(account=>{
-          // console.log(account)
+          console.log(account)
           return {
             label: account.account,
             click:()=>{
               mainWindow.webContents.send('startGame', {
                 account: account.account,
-                password: data.account.accountMap[account]
+                password: data.account.accountMap[account.account]
               })
             }
           }
@@ -317,7 +321,7 @@ function checkUpdate(callback){
   // 更新下载进度事件
   autoUpdater.on('download-progress', function (progressObj) {
     console.log('触发下载。。。')
-    console.log(progressObj.percent)
+    // console.log(progressObj.percent)
     callback({type: 5, data: progressObj})
     // mainWindow && mainWindow.setProgressBar(Number.parseFloat(progressObj.percent))
     sendUpdateMessage({ cmd: 'downloadProgress', message: message.downloadProgress, progressObj })

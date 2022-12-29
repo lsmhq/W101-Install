@@ -185,7 +185,7 @@
             })
         }
     
-        function downLoad(type, getMark, failed, changed) {
+        function downLoad(type, getMark, failed, changed, progress) {
             request({
                 url: `http://${hrefNew}:3001/file/latest?type=${params[type]}`,
                 method: 'GET',
@@ -216,10 +216,13 @@
                                 changeType(type, () => {
                                     changed(1)
                                 })
-                            }, (current, total)=>{
-                                let percent = Number.parseInt(((current / total).toFixed(2) * 100))
+                            }, (total, current)=>{
+                                // console.log(current, total, current/total)
+                                let percent = (current / total).toFixed(2)
                                 // setPercent(percent)
+                                console.log(percent)
                                 window.electronAPI.setProgressBar(percent)
+                                progress && progress(percent)
                             })
                         } else {
                             // 切换补丁

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../css/main.css'
 import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
-import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
+import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip, Progress } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import QQ from '../image/QQ_share.jpg'
 import apiPath from './http/api'
@@ -588,6 +588,9 @@ function Main(props) {
                     content: `切换${obj[getItem('type')]}成功!`
                 })
             }
+        },(percent)=>{
+            console.log('----->', percent)
+            setPercent(percent)
         })
     }
 

@@ -1,4 +1,4 @@
-import { Spin, Carousel, Tabs, List, Button, Grid, Progress, Notification, AutoComplete, Form, Input, Checkbox, Modal, Message, Image } from '@arco-design/web-react'
+import { Spin, Carousel, Tabs, List, Button, Grid, Notification,Progress, AutoComplete, Form, Input, Checkbox, Modal, Message, Image } from '@arco-design/web-react'
 import { useEffect, useRef, useState } from 'react'
 import LocalStorage_subata from '../util/localStroage'
 import '../../css/shark.css'
@@ -25,7 +25,7 @@ let style = {
 let headImgMap ={}
 let timerKill = null
 function BodyMain(props){
-    let { logo, imgs, loading, loading1, nav, btnLoading, play, subataShow, onlineNum } = props
+    let { logo, imgs, loading, loading1, nav, btnLoading, play, subataShow, onlineNum, percent } = props
     const [data, setData] = useState(getItem('accounts')||[]);
     const [dataMap, setDataMap] = useState(getItem('accountsMap')||{});
     const [showLogin, setShowLogin] = useState(false)
@@ -223,9 +223,9 @@ function BodyMain(props){
             </div>
         </div>
     </div>
-    {/* <div className='body-main-bottom'>
-        {percent > 0 && <Progress formatText={()=><span style={{color:'white'}}>{`${(current / 1024 / 1024).toFixed(2)}MB / ${(total / 1024 / 1024).toFixed(2)}MB`}</span>} percent={percent} width='100%' color={'#00b42a'} style={{display:'block'}}/>}
-    </div> */}
+    <div className='body-main-bottom'>
+        {percent > 0 && <Progress formatText={()=><span>{(percent*100).toFixed(0)}%</span>} percent={percent*100} width='100%' color={'#00b42a'} style={{display:'block'}}/>}
+    </div>
     <Modal 
         visible={showLogin}
         title=''
