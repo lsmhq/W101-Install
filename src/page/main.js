@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import '../css/main.css'
-import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
-import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip, Progress } from '@arco-design/web-react';
+// import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
+import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import QQ from '../image/QQ_share.jpg'
 import apiPath from './http/api'
 import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
-import su from '../image/Subata_logo.png'
+// import su from '../image/Subata_logo.png'
 import LocalStorage_subata from './util/localStroage';
-import { Snow, Tree } from './components/tree';
 import { installBtn_config } from './config/config.page';
 let { getItem, setItem } = new LocalStorage_subata({
     filter: ['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
@@ -38,12 +37,7 @@ let imgMap = {
     wx: 'http://101.43.174.221:3001/zf/wx.png',
     zf: 'http://101.43.174.221:3001/zf/zfb.jpg'
 }
-let isDown = false;  // 鼠标状态
-// let isDown_live2d = false
-let baseX = 0, baseY = 0; //监听坐标
-let prveX = 0, prveY = 0 // 上次XY
-let useTimer = null
-let satanTimer = false, satanTimerStart
+// let satanTimer = false, satanTimerStart
 let { getPath, checkGameInstall, changeType} = window.tools
 function Main(props) {
     // let {setLocal} = props
@@ -57,8 +51,6 @@ function Main(props) {
     let [drawer, setDrawer] = useState(false) // 通知显隐
     let [count, setCount] = useState(0)  // 通知条数
     let [btnLoading, setBtnLoad] = useState(false) // 按钮加载
-    let [current, setCurrent] = useState(0)  // 当前进度
-    let [total, setTotal] = useState(0) // 总进度
     let [msgShow, setMsgShow] = useState(false) // 消息
     let [text, setText] = useState('')  // 内容
     let [title, setTitle] = useState('')  // 标题
@@ -71,7 +63,7 @@ function Main(props) {
     let [type, setType] = useState(getItem('type')) // 汉化type
     let [root, setRoot] = useState(getItem('root') || '') // 是否可以进行发布通知
     let [play, setPlay] = useState(getItem('wizInstall')) // 是否可以开始游戏
-    let [nav, setNavs] = useState({})
+    let [nav, setNavs] = useState({}) // subata 文章 tabs
     let [settingShow, setSetShow] = useState(false) // 设置弹窗显隐
     let [subataShow, setSubataShow] = useState(getItem('btnSetting1') === null ? true : getItem('btnSetting1')) // subata按钮显隐
     let [imgNum, setimgNum] = useState(getItem('imgNum') ? getItem('imgNum') * 1 : 0) // 背景图index
@@ -79,9 +71,7 @@ function Main(props) {
     let [onlineNum, setOnline] = useState(0) // 在线人数
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
     let [bgShow, setBgShow] = useState(true) // 背景图显隐
-    let [satan, setSatan] = useState(false) // 显示圣诞树和雪花开关
-    let [satanBegin, setsatanBegin] = useState(false) // 显示圣诞树和雪花
-    let [status, setStatus] = useState('')
+    let [status, setStatus] = useState('') // webSocket 状态
     useEffect(() => {
         // 初始化地址
         getSteam(() => {
@@ -95,7 +85,7 @@ function Main(props) {
         // 获取轮播
         getCarousel()
         // 拖拽
-        drag()
+        // drag()
         // 黑主题
         dark()
         // 获取活动新闻
@@ -107,18 +97,6 @@ function Main(props) {
         // 创建WebSocket
         createSocket()
         // 窗口自适应
-        // 获取安装目录
-        // setInterval(()=>{
-        // console.log('检测更新')
-        // getIpLocaltion(getPublicIP()).then(address=>{
-        //     console.log(address)
-        //     // console.log(address.country)
-        // })
-        // }, 1000)
-        // 获取version
-        // window.electronAPI.getVersion((version) => {
-        //     // setVersion(version)
-        // })
         // 获取installPath
         window.electronAPI.getPath((path) => {
             window.installPath = path
@@ -140,59 +118,15 @@ function Main(props) {
         }
         // 监听开始游戏
         window.electronAPI.startGame()
-        // 壁纸
-        // window.tools.readFile(`${getItem('installPath')}\\dataCache`,(data)=>{
-        //     console.log('img---->',data)
-        //     let bufferArr = new Int8Array(data)
-        //     let blob = new Blob([bufferArr],{ type : `application/${getItem('lastBgImgType')}`})
-        //     console.log(blob)
-        //     let url = URL.createObjectURL(blob)
-        //     setBgImg(url)
-        // },'')
-        if (satanTimer) clearInterval(satanTimer)
-        satanTimer = setInterval(() => {
-            let targetMonth = 12 // 12月
-            let targetDay = [24, 25] // 24 25号
-            let date = new Date()
-            let month = date.getMonth() + 1
-            let day = date.getDate()
-            let hour = date.getHours()  
-            // console.log(month, day)
-            if (month === targetMonth && day === targetDay[0] && hour > 18) {
-                setSatan(true)
-                return
-            }
-            if (month === targetMonth && day === targetDay[1]) {
-                setSatan(true)
-                return
-            }
-        }, 10000);
+
         return () => {
             // 注销
             destroy()
             setItem('msgLength', message.length)
-            clearInterval(satanTimer)
+            // clearInterval(satanTimer)
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    useEffect(()=>{
-        if(satan){
-            clearInterval(satanTimer)
-            if(satanTimerStart) clearInterval(satanTimerStart)
-            satanTimerStart = setInterval(() => {
-                let targetMonth = 12 // 12月
-                let targetDay = [24, 25] // 26号
-                let date = new Date()
-                let month = date.getMonth() + 1
-                let day = date.getDate()
-                // let hour = date.getHours()
-                if (month !== targetMonth || !targetDay.includes(day)) {
-                    setSatan(false)
-                    setsatanBegin(false)
-                }
-            }, 10000);
-        }
-    },[satan])
     useEffect(() => {
         setImg(imgMap[zfType])
     }, [zfType])
@@ -267,7 +201,7 @@ function Main(props) {
             callback()
         })
     }
-    function createSocket() {
+    function createSocket(callback) {
         ws = new WebSocket(wsPath)
         ws.onopen = () => {
             // console.log('连接成功')   
@@ -277,12 +211,15 @@ function Main(props) {
                 account: '',
             }
             setStatus('在线')
+            callback && callback()
         }
         ws.onerror = () => {
+            console.log('ws Error!!!')
             reconnet()
             setStatus('离线')
         }
         ws.onclose = () => {
+            console.log('ws Closed!!!')
             reconnet()
             setStatus('离线')
         }
@@ -306,7 +243,7 @@ function Main(props) {
             } else if (data.type === 'count') {
                 setOnline(data.onLineNum)
             }else if(data.type === 'onlineList'){
-                console.log(data.list)
+                // console.log(data.list)
             } else if (data?.id) {
                 window.electronAPI.sound()
                 Notification.info({
@@ -318,15 +255,18 @@ function Main(props) {
             }
             getMessage()
         }
-        let reconnet = () => { //重新连接websock函数
-            if (socketError)
-                return false
-            socketError = true
-            setTimeout(() => {
-                ws = new WebSocket(wsPath)
+
+    }
+    function reconnet(){ //重新连接websock函数
+        if (socketError)
+            return false
+        socketError = true
+        setTimeout(() => {
+            createSocket(()=>{
                 socketError = false
-            }, 2000)
-        }
+                setStatus('在线')
+            })
+        }, 5000)
     }
     function getData() {
         // apiPath.mainPage().then(res=>{
@@ -354,31 +294,31 @@ function Main(props) {
         window.onresize = null
 
     }
-    function drag() {
-        // box.addEventListener('mousedown', function(e){
-        //     isDown_live2d = true // 正在移动
-        //     position = [e.clientX, e.clientY]
-        // })
-        document.addEventListener('mousemove', function (ev) {
-            if (isDown) {
-                const x = ev.screenX - baseX
-                const y = ev.screenY - baseY
-                //   console.log(x, y)
-                if (prveX !== x || prveY !== y) {
-                    // console.log(x, y)
-                    prveX = x
-                    prveY = y
-                    window.electronAPI.sendXY({
-                        x, y
-                    })
-                }
-            }
-        })
-        document.addEventListener('mouseup', () => {
-            isDown = false
-            // isDown_live2d = false
-        })
-    }
+    // function drag() {
+    //     // box.addEventListener('mousedown', function(e){
+    //     //     isDown_live2d = true // 正在移动
+    //     //     position = [e.clientX, e.clientY]
+    //     // })
+    //     document.addEventListener('mousemove', function (ev) {
+    //         if (isDown) {
+    //             const x = ev.screenX - baseX
+    //             const y = ev.screenY - baseY
+    //             //   console.log(x, y)
+    //             if (prveX !== x || prveY !== y) {
+    //                 // console.log(x, y)
+    //                 prveX = x
+    //                 prveY = y
+    //                 window.electronAPI.sendXY({
+    //                     x, y
+    //                 })
+    //             }
+    //         }
+    //     })
+    //     document.addEventListener('mouseup', () => {
+    //         isDown = false
+    //         // isDown_live2d = false
+    //     })
+    // }
     function getCarousel() {
         apiPath.getCurl().then(res => {
             // console.log(res.data.lunbo)
@@ -617,34 +557,12 @@ function Main(props) {
                                     style={btn.style}
                                     disabled={type === btn.zhType}
                                     onClick={() => {
-                                        if (btn.zhType === 'd') {
-                                            Notification.warning({
-                                                title: '提示:测试版为全面汉化版本',
-                                                style,
-                                                duration: 100000,
-                                                id: 'change_bd',
-                                                content: <span>
-                                                    <Button onClick={() => {
-                                                        setItem('type', 'd')
-                                                        setType('d')
-                                                        // Notification.remove('change_success')
-                                                        checkUpdate(getItem('type'))
-                                                    }} type='primary' status='warning' size='small' style={{ margin: '0 12px 0 0' }}>
-                                                        继续
-                                                    </Button>
-                                                    <Button onClick={() => {
-                                                        changeBd()
-                                                    }} type='primary' status='success' size='small' style={{ margin: '0 12px 0 0' }}>
-                                                        返回
-                                                    </Button>
-                                                </span>
-                                            })
-                                        } else {
-                                            setItem('type', btn.zhType)
-                                            // Notification.remove('change_success')
-                                            setType(btn.zhType)
-                                            checkUpdate(getItem('type'))
-                                        }
+
+                                        setItem('type', btn.zhType)
+                                        // Notification.remove('change_success')
+                                        setType(btn.zhType)
+                                        checkUpdate(getItem('type'))
+                                        
                                     }}
                                 >
                                     {btn.smTitle}
@@ -726,19 +644,11 @@ function Main(props) {
                 loading1={loading1}
                 btnLoading={btnLoading}
                 percent={percent}
-                current={current}
-                total={total}
                 play={play}
                 subataShow={subataShow}
                 onlineNum={onlineNum}
             />
             <RightNav
-                onMouseDown={(init) => {
-                    let { down, X, Y } = init
-                    isDown = down
-                    baseX = X
-                    baseY = Y
-                }}
                 setZf={setZf}
                 changeBd={changeBd}
                 install={install}
@@ -977,10 +887,10 @@ function Main(props) {
                 setSubataShow={setSubataShow}
                 setSetShow={setSetShow}
                 // setLocal={setLocal}
-                satan={satan}
-                onSatanChange={(show)=>{
-                    setsatanBegin(show)
-                }}
+                // satan={satan}
+                // onSatanChange={(show)=>{
+                //     setsatanBegin(show)
+                // }}
                 onBgChange={(imgs, imgNum) => {
                     setBgShow(false)
                     setBgImg(imgs[imgNum]?.url)
@@ -1037,8 +947,6 @@ function Main(props) {
             e.target.value = ''
             // e.target.files = []
         }} style={{ opacity: 0, position: 'absolute', width: 0, height: 0, top: '1000px' }} />
-        <Snow show={satanBegin}/>
-        <Tree show={satanBegin}/>
     </div>
 }
 

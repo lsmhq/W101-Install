@@ -1,20 +1,19 @@
 {
   "files": {
     "main.css": "./static/css/main.82be0984.css",
-    "main.js": "./static/js/main.047c7413.js",
+    "main.js": "./static/js/main.62f5ee19.js",
     "static/js/787.48cdcb01.chunk.js": "./static/js/787.48cdcb01.chunk.js",
     "static/media/login-bg.webp": "./static/media/login-bg.6b1a6d6363801c1d56d7.webp",
     "static/media/QQ_share.jpg": "./static/media/QQ_share.4692c1838a2254bb72a5.jpg",
     "static/media/WizardLogoRA.png": "./static/media/WizardLogoRA.3dd8aab8b8f121731661.png",
-    "static/media/Subata_logo.png": "./static/media/Subata_logo.a66888c88454abf5eb74.png",
     "static/media/body.png": "./static/media/body.1a236e276d3f9b154f94.png",
     "index.html": "./index.html",
     "main.82be0984.css.map": "./static/css/main.82be0984.css.map",
-    "main.047c7413.js.map": "./static/js/main.047c7413.js.map",
+    "main.62f5ee19.js.map": "./static/js/main.62f5ee19.js.map",
     "787.48cdcb01.chunk.js.map": "./static/js/787.48cdcb01.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.82be0984.css",
-    "static/js/main.047c7413.js"
+    "static/js/main.62f5ee19.js"
   ]
 }

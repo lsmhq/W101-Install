@@ -32,7 +32,7 @@ function BodyMain(props){
     let [password, setPassword] = useState('')
     let [account, setAccount] = useState('')
     let [save, setSave] = useState(false)
-    let [delable, setDelable] = useState(false)
+    // let [delable, setDelable] = useState(false)
     let [emo, setEmo] = useState(1)
     let [closedMask, setClosedMask] = useState(false)
     let [headIndex, setHeadIndex] = useState(-1)
@@ -103,11 +103,11 @@ function BodyMain(props){
         })
         // console.log(index)
         if(index >= 0){
-            setDelable(false)
+            // setDelable(false)
             setHeadIndex(accounts[index].icon)
             setHeadKey(accounts[index]?.iconType || 'wizard101')
         }else{
-            setDelable(true)
+            // setDelable(true)
             setHeadIndex(-1)
             // setHeadType(accounts[index]?.iconType || 'wizard101')
             setHeadKey(accounts[index]?.iconType || 'wizard101')

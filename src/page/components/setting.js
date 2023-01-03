@@ -15,43 +15,12 @@ let style = {
     right: '50px',
     top: '0px'
 }
-// let models = [
-//     {
-//         name:'shizuku',
-//         label:'默认'
-//     },
-//     {
-//         name:'xxban',
-//         label:'血小板'
-//     },{
-//         name:'22-0default',
-//         label:'22'
-//     },{
-//         name:'33-0default',
-//         label:'33'
-//     },{
-//         name:'haruto',
-//         label:'小可爱(男)'
-//     },{
-//         name:'koharu',
-//         label:'小可爱(女)'
-//     },{
-//         name:'hijiki',
-//         label:'黑喵'
-//     },{
-//         name:'tororo',
-//         label:'白喵'
-//     },{
-//         name:'wanko',
-//         label:'碗狗'
-//     },
-// ]
 function Setting(props){
-    let {setBg, setSubataShow, onBgChange, onImgsChange, setSetShow, satan, onSatanChange} = props
+    let {setBg, setSubataShow, onBgChange, onImgsChange, setSetShow} = props
     let [btnSetting, setbtnSetting] = useState(getItem('btnSetting') === null?true: getItem('btnSetting'))
     let [btnSetting1, setbtnSetting1] = useState(getItem('btnSetting1') === null?true: getItem('btnSetting1'))
     // let [btnSetting2, setbtnSetting2] = useState(getItem('btnSetting2') === null?true: getItem('btnSetting2'))
-    let [btnSetting3, setbtnSetting3] = useState(getItem('btnSetting3') === null?true: getItem('btnSetting3'))
+    // let [btnSetting3, setbtnSetting3] = useState(getItem('btnSetting3') === null?true: getItem('btnSetting3'))
     let [imgNum, setimgNum] = useState(getItem('imgNum')? getItem('imgNum')*1:0)
     // eslint-disable-next-line no-unused-vars
     let [imgs, setImgs] = useState([])
@@ -160,10 +129,8 @@ function Setting(props){
                 <AnchorLink href='#setting' title='功能' />
                 <AnchorLink href='#gameFile' title='游戏' />
                 <AnchorLink href='#output' title='备份配置' />
-                {/* <AnchorLink href='#live2d-set' title='Live2d' /> */}
                 <AnchorLink href='#language' title="谨慎使用!"/>
                 <AnchorLink href='#clear' title='关于' />
-                {/* <AnchorLink href='#bug' title='bug上报' /> */}
             </Anchor>
         </div>
         <div className='setting-right' id='setting-right'>
@@ -201,22 +168,6 @@ function Setting(props){
                     }}>
                         <span>+</span>
                     </div>
-                    {/* <input accept="image/*" id='bgUpload' style={{visibility:'hidden'}} type="file" onChange={(e)=>{
-                        console.log(e.target.files[0])
-                        imgs.push(URL.createObjectURL(e.target.files[0]))
-                        setImgs([...imgs])
-                    }}/> */}
-                    {/* <Upload
-                        showUploadList={false}
-                        listType='picture-card'
-                        accept="image/*"
-                        onChange={(_, currentFile) => {
-                            console.log(_)
-                            console.log(URL.createObjectURL(currentFile.originFile))
-                            imgs.push(URL.createObjectURL(currentFile.originFile))
-                            setImgs([...imgs])
-                        }}
-                    ></Upload> */}
                 </div>
             </div>
             <div className='setting-item' id='setting'>
@@ -253,38 +204,6 @@ function Setting(props){
                         }
                         </span>
                     </Form.Item>
-                    {/* <Form.Item label="关闭按钮">
-                        <Switch checked={btnSetting2} onChange={(val)=>{
-                            // console.log(val)
-                            setbtnSetting2(val)
-                            // true 开始游戏最小化
-                            // false 开始游戏不进行操作
-                            setItem('btnSetting2', val)
-                        }}
-                        />
-                        <span style={{paddingLeft:'10px'}}>
-                        {
-                            btnSetting2 ?'后台运行':'退出程序'
-                        }
-                        </span>
-                    </Form.Item> */}
-                    {satan && <Form.Item label="圣诞">
-                        <Switch checked={btnSetting3} onChange={(val)=>{
-                            // console.log(val)
-                            setbtnSetting3(val)
-     
-                            // true 显示雪花
-                            // false 关闭雪花
-                            onSatanChange(val)
-                            setItem('btnSetting3', val)
-                        }}
-                        />
-                        <span style={{paddingLeft:'10px'}}>
-                        {
-                            btnSetting3 ?'开启':'关闭'
-                        }
-                        </span>
-                    </Form.Item>}
                 </Form>
             </div>
             <div className='setting-item' id='gameFile'>

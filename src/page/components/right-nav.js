@@ -14,20 +14,8 @@ let style = {
     top: '0px'
 }
 function RightNav(props){
-    let { onMouseDown, setZf, changeBd, install, setDrawer, btnLoading, count, drawer, opSet } = props
-    return <div className='right-nav'             
-        onMouseDown={(e)=>{
-            if(e.target.className === 'nav-bottom'){
-                onMouseDown({
-                    down: true,
-                    X: e.clientX,
-                    Y: e.clientY
-                })
-                // console.log(baseX, baseY)
-            }
-
-        }
-    }>
+    let { setZf, changeBd, install, setDrawer, btnLoading, count, drawer, opSet } = props
+    return <div className='right-nav'>
         <Icon
             Child={<IconCompass className='icon-child'/>}
             onClick={()=>{
@@ -36,22 +24,6 @@ function RightNav(props){
             tips="前往官网"
             content="官网"
         />
-        {/* <Icon
-            Child={<IconThumbUp className="icon-child"/>}
-            onClick={()=>{
-                window.tools.like(()=>{
-                    Message.success({
-                        // showIcon:false,
-                        content:'你的支持就是我最大的动力！',
-                        style:{top:'20px'},
-                        duration:2000
-                    })
-                })
-            }}
-            // color="#d2881c"
-            tips="给灭火器点个赞"
-            content="点赞"
-        />               */}
         <Icon
             Child={<IconThunderbolt className="icon-child"/>}
             onClick={()=>{
@@ -159,25 +131,6 @@ function RightNav(props){
             tips="卸载补丁"
             content="卸载"
         />
-        {/* <Icon
-            Child={<img className={`${changeBz?'changbz-animate':''}`} alt='' width={24}  src="https://infinityicon.infinitynewtab.com/assets/windmill.svg"></img>}
-            onClick={throttle(()=>{
-                // 
-                setChangeBz(true)
-                fetch(`https://infinity-api.infinitynewtab.com/random-wallpaper?_=${new Date().getTime()}`).then(res=>{
-                    return res.json()
-                }).then(data=>{
-                    // console.log(data.data[0].src)
-                    onBgImgChange(data.data[0].src)
-                    setTimeout(() => {
-                        setChangeBz(false)
-                    }, 2000);
-                })
-            }, 1000)}
-            tips=""
-            // color="#e4e517"
-            content="壁纸"
-        /> */}
         <Icon
             Child={<IconSettings className="icon-child"/>}
             onClick={()=>{
