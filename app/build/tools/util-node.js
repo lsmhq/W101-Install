@@ -220,8 +220,12 @@
                                 // console.log(current, total, current/total)
                                 let percent = (current / total).toFixed(2)
                                 // setPercent(percent)
-                                console.log(percent)
-                                window.electronAPI.setProgressBar(percent)
+                                // console.log(percent)
+                                if(percent>=1){
+                                    window.electronAPI.setProgressBar(-1)
+                                }else{
+                                    window.electronAPI.setProgressBar(percent)
+                                }
                                 progress && progress(percent)
                             })
                         } else {
@@ -243,10 +247,15 @@
                                 changed(1)
                             })
                         }, (total, current)=>{
-                            let percent = Number.parseInt(((current / total).toFixed(2) * 100))
+                            let percent = (current / total).toFixed(2)
                             // setPercent(percent)
                             // console.log(current, total)
-                            window.electronAPI.setProgressBar(percent/100)
+                            if(percent>=1){
+                                window.electronAPI.setProgressBar(-1)
+                            }else{
+                                window.electronAPI.setProgressBar(percent)
+                            }
+                            progress && progress(percent)
                         })
                     }
                 } else {

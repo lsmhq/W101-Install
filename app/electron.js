@@ -122,7 +122,7 @@ function createWindow () {
   ipcMain.on('downLoad', (e, progress)=>{
     // console.log(progress)
     if(progress<=0){
-      mainWindow && mainWindow.setProgressBar(0.01)
+      mainWindow && mainWindow.setProgressBar(-1)
     }else{
       mainWindow && mainWindow.setProgressBar(parseFloat(progress) )
     }
