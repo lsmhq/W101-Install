@@ -1,23 +1,52 @@
 const child_process = require('child_process');//引入模块
-let path = 'HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall'
+// HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\Uninstall 
+// HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall
+// HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths
+let path = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths'
 const regedit = require('regedit');
 var iconv = require('iconv-lite');
-const fs = require('fs')
-let str = ``
+// const fs = require('fs')
+let obj = {}
 var encoding = 'cp936';
 var binaryEncoding = 'binary';
-regedit.list([path], (err, result)=>{
-    if(err){
-        console.log('error!!!', err)
-        return
-    }
-    if(result[path].exists){
-        result[path].keys.forEach((element, idx) => {
-            let softPath = `${path}\\${element}`
-            getAllRgeKeys(softPath)  
-        });
-    }
-})
+
+function getInstall(fun){
+    regedit.list([path], (err, result)=>{
+        if(err){
+            console.log('error!!!', err)
+            return
+        }
+        if(result[path].exists){
+            let pArr = []
+            result[path].keys.forEach((element, idx) => {
+                let softPath = `${path}\\${element}`
+                // console.log(softPath)
+                pArr.push(getRegKey(softPath, element)) 
+            });
+            // console.log(pArr)
+            Promise.all(pArr).then(rArr=>{
+                rArr.forEach((res)=>{
+                    console.log(res)
+                    if(res){
+                        let { stderr, stdout, key } = res
+                        // console.log(stderr)
+                        // console.log(stdout)
+                        obj[key] = stdout.split('\r\n').filter(item=>{
+                            return item != ''
+                        }).map(item=>{
+                            return item.trim()
+                        })
+                    }
+                })
+                return obj
+            }).then(obj=>{
+                fun && fun(obj)
+            }).catch(err=>{
+                console.error('allErr', err)
+            })
+        }
+    })
+}
 let keys = [
     'DisplayIcon',
     'DisplayName',
@@ -36,41 +65,13 @@ let keyMap = {
 function getRegKey(softPath, key){
 
     return new Promise((resolve, reject) => {
-        child_process.exec(`REG QUERY ${softPath} /v ${key}`,{encoding: binaryEncoding},function(error,stdout,stderr){
+        child_process.exec(`REG QUERY ${softPath}`,{encoding: binaryEncoding},function(error,stdout,stderr){
             if(error != null){
                 reject(error)
             }
-            resolve({stdout, stderr, key})
+            resolve({stdout: iconv.decode(stdout, encoding), stderr, key})
         });
-    })
-}
-
-function getAllRgeKeys(softPath){
-    let pArr = []
-    keys.forEach(key=>{
-        // getRegKey(softPath, key).then()
-        pArr.push(getRegKey(softPath, key))
-    })
-
-    Promise.all(pArr).then(rArr=>{
-        rArr.forEach((res)=>{
-            let {key, stderr, stdout} = res
-            if(res.stdout){
-                // console.log(`${keyMap[key]} -----> `, stdout?.split(' ')?.pop())
-                // console.log(stdout)
-                console.log(iconv.decode(stdout, encoding));
-                if(key === 'DisplayIcon'){
-                    str += `--------------------<分割线>---------------------------\r\n`
-                }
-                str += `${key}:${iconv.decode(stdout, 'utf8')?.split(' ')?.pop()}\r\n`
-            }
-            if(res.stderr){
-                // console.log('stderr', stderr)
-            }
-        })
-        // console.log()
-        // fs.writeFileSync(`${__dirname}\\softPath.txt`, str, 'utf-8')
     }).catch(err=>{
-        // console.log('allErr')
+        console.error('Error',err)
     })
 }
