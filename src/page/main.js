@@ -20,7 +20,7 @@ let update = false
 let timerr
 let style = {
     right: '50px',
-    top: '0px'
+    top: '20px'
 }
 Notification.config({
     maxCount: '5',

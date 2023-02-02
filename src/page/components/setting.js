@@ -13,7 +13,7 @@ let downLoadTimer
 let { Row, Col } = Grid
 let style = {
     right: '50px',
-    top: '0px'
+    top: '20px'
 }
 function Setting(props){
     let {setBg, setSubataShow, onBgChange, onImgsChange, setSetShow} = props

@@ -12,7 +12,7 @@ let { getItem, setItem } = new LocalStorage_subata({
 })
 let style = {
     right: '50px',
-    top: '0px'
+    top: '20px'
 }
 function RightNav(props){
     let { setZf, changeBd, install, setDrawer, btnLoading, count, drawer, opSet } = props

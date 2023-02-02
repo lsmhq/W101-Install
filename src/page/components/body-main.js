@@ -20,7 +20,7 @@ let { TabPane } = Tabs
 let { Row, Col } = Grid
 let style = {
     right: '50px',
-    top: '0px'
+    top: '20px'
 }
 let headImgMap ={}
 let timerKill = null

@@ -5,7 +5,7 @@ const remote = require('@electron/remote/main/index')
 const url = require('url')
 let canQuit = false
 // const url = require('url');
-let mainWindow, loading, tray, width = 1255, height = 715
+let mainWindow, loading, tray, width = 1255, height = 705
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -51,14 +51,14 @@ function createWindow () {
   remote.initialize()
   remote.enable(mainWindow.webContents)
 
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, './build/index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, './build/index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
   
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:5000/#/');
+  // mainWindow.loadURL('http://localhost:5000/#/');
   // mainWindow.webContents.openDevTools()
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
