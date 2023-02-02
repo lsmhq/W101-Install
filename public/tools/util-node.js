@@ -464,13 +464,13 @@
             console.log(window.wizPath)
             console.log(localStorage.getItem('steamPath'))
             try {
-                let installPath = window.installPath || localStorage.getItem('installPath')
-                console.log(installPath)
+                let wizPath = window.wizPath || localStorage.getItem('wizPath')
+                console.log(window.wizPath)
                 // return
                 let files = fs.readdirSync(`${window.wizPath}\\Bin\\`, {
                     withFileTypes: true
                 })
-                let files_root = fs.readdirSync(`${installPath}`, {
+                let files_root = fs.readdirSync(`${wizPath}`, {
                     withFileTypes: true
                 })
                 let names = files.map(file => file.name)
@@ -480,7 +480,7 @@
                     return
                 }
                 if (names_root.includes('launchWizard101.exe')) {
-                    let exe = `${window.wizPath.split(':')[0]}: && "${installPath}\\launchWizard101.exe" ${account} ${password} "${window.wizPath}\\Bin"`
+                    let exe = `${window.wizPath.split(':')[0]}: && "${wizPath}\\launchWizard101.exe" ${account} ${password} "${window.wizPath}\\Bin"`
                     console.log(exe)
                     // shell.openPath(exe)
                     runExe(exe)
@@ -488,9 +488,9 @@
                 } else if (!names_root.includes('launchWizard101.exe')) {
                     // startWizard.bat
                     console.log('下载开始')        
-                    getFile(`https://vkceyugu.cdn.bspapp.com/VKCEYUGU-479328cb-417a-467c-9512-83793cb72c1e/32cb7bcd-fec3-4f2f-bce0-670e7615beb3.exe`, `${installPath}\\launchWizard101.exe`, (error) => {
+                    getFile(`http://${hrefNew}:3001/file/launchWizard101.exe`, `${wizPath}\\launchWizard101.exe`, (error) => {
                         console.log('添加launch.exe成功', error)
-                        let exe = `${window.wizPath.split(':')[0]}: && "${installPath}\\launchWizard101.exe" ${account} ${password} "${window.wizPath}\\Bin"`
+                        let exe = `${window.wizPath.split(':')[0]}: && "${wizPath}\\launchWizard101.exe" ${account} ${password} "${window.wizPath}\\Bin"`
                         console.log(exe)
                         // shell.openPath(exe)
     
