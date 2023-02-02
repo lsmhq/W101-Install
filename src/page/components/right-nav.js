@@ -137,15 +137,6 @@ function RightNav(props){
             tips="卸载补丁"
             content="卸载"
         />
-        <Icon
-            Child={<IconSettings className="icon-child"/>}
-            onClick={()=>{
-                opSet()
-            }}
-            tips="设置"
-            // color="#e4e517"
-            content="设置"
-        />
         <div className='nav-drag' id='nav-drag'>
 
         </div>
