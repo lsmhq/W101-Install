@@ -26,7 +26,7 @@ function createWindow () {
     // useContentSize:true,
     title: "网易云音乐", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/favicon.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
-    // frame: false,
+    frame: false,
     resizable: false,
     transparent: true, 
     zoomToPageWidth: true,
