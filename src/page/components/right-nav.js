@@ -6,6 +6,7 @@ import { Message, Button, Notification } from '@arco-design/web-react'
 import LocalStorage_subata from '../util/localStroage';
 import '../../css/right-nav.css'
 import zhIcon from  '../../image/zh.png'
+import { useEffect } from 'react';
 let { getItem, setItem } = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -15,6 +16,11 @@ let style = {
 }
 function RightNav(props){
     let { setZf, changeBd, install, setDrawer, btnLoading, count, drawer, opSet } = props
+    useEffect(()=>{
+        if(!window.drag.supported) {
+            document.querySelector('#nav-drag').style['-webkit-app-region'] = 'drag';
+        }
+    },[])
     return <div className='right-nav'>
         <Icon
             Child={<IconCompass className='icon-child'/>}
@@ -140,6 +146,9 @@ function RightNav(props){
             // color="#e4e517"
             content="设置"
         />
+        <div className='nav-drag' id='nav-drag'>
+
+        </div>
         <div className='nav-bottom'>
             <Icon
                 Child={<IconWechat className="icon-child"/>}

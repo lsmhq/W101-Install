@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../css/main.css'
-// import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
+import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
 import logo from '../image/WizardLogoRA.png'
 import QQ from '../image/QQ_share.jpg'
@@ -8,7 +8,7 @@ import apiPath from './http/api'
 import RightNav from './components/right-nav';
 import BodyMain from './components/body-main';
 import Setting from './components/setting';
-// import su from '../image/Subata_logo.png'
+import su from '../image/Subata_logo.png'
 import LocalStorage_subata from './util/localStroage';
 import { installBtn_config } from './config/config.page';
 let { getItem, setItem } = new LocalStorage_subata({
@@ -118,7 +118,9 @@ function Main(props) {
         }
         // 监听开始游戏
         window.electronAPI.startGame()
-
+        if(!window.drag.supported) {
+            document.querySelector('#nav').style['-webkit-app-region'] = 'drag';
+        }
         return () => {
             // 注销
             destroy()
@@ -581,30 +583,21 @@ function Main(props) {
         {bgShow && <div className={`bottom-bg ${bgImg ? '' : `bottom-bg${imgNum >= 1 ? 1 : 0}`} animated fast fadeIn`}>
             {bgImg && <img alt='' src={bgImg} />}
         </div>}
-        {/* {showBg && <div className={`bottom-bg bottom-bg${imgNum} animated faster FadeIn`}>
-            <img alt='' src={bgImg}/>
-        </div>} */}
-        {/* <div className='nav'
-            onMouseDown={(e) => {
-                e.stopPropagation()
-                isDown = true
-                baseX = e.clientX
-                baseY = e.clientY
-                // console.log(baseX, baseY)
-            }}
-        >
-            <div className='nav-logo'><img alt='' src={su} /></div>
-            <div className='nav-title'>
-                Subata{`${window.appVersion}`}
-                <div className='online-count'>
-                    <span className='online'></span>
-                    <span className='online-text'>{onlineNum}</span>
+        <div className='nav'>   
+            <div className='nav-title' id='nav'>
+                <div className='nav-logo'><img alt='' src={su} /></div>
+                <div className='nav-title'>
+                    Subata{`${window.appVersion}`}
+                    <div className='online-count'>
+                        <span className='online'></span>
+                        <span className='online-text'>{onlineNum}</span>
+                    </div>
                 </div>
             </div>
+
             <div className='nav-control'
                 onMouseDown={(e) => {
                     e.stopPropagation()
-                    isDown = false
                     // console.log(baseX, baseY)
                 }}
             >
@@ -634,7 +627,7 @@ function Main(props) {
                     <IconClose style={{ fontSize: '20px' }} />
                 </div>
             </div>
-        </div> */}
+        </div>
         <div className='body'>
             <BodyMain
                 logo={logo}
