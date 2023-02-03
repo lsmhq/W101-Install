@@ -3,7 +3,7 @@ const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = 
 const { autoUpdater } = require('electron-updater'); 
 const remote = require('@electron/remote/main/index')
 const url = require('url')
-let canQuit = false
+let canQuit = false, work
 // const url = require('url');
 let mainWindow, loading, tray, width = 1255, height = 705
 const message = {
@@ -14,6 +14,7 @@ const message = {
   downloadProgress: '正在下载...'
 }
 const path = require('path');
+const { createWork } = require('./work');
 function createWindow () {
   let scaleFactor = (screen.getAllDisplays()[0].scaleFactor >= 2) ? 1 : screen.getAllDisplays()[0].scaleFactor
   scaleFactor = 1
@@ -101,6 +102,9 @@ function createWindow () {
     if(password === 'wizard101-dev')
         mainWindow.webContents.openDevTools()
   })
+  ipcMain.on('workError', function(){
+    work.close()
+  })
   // 移动
   // ipcMain.on('move-application',(event,pos) => {
   //   mainWindow.setPosition(parseInt(pos.posX/scaleFactor), parseInt(pos.posY/scaleFactor))
@@ -142,6 +146,16 @@ function createWindow () {
   ipcMain.on('update',()=>{
     checkUpdate((type)=>{
       mainWindow.webContents.send('checking',type)
+    })
+  })
+  ipcMain.on('updateGame', (e, data)=>{
+    work = createWork({
+      type:'file',
+      filePath:'./build/work.html'
+    })
+    work.webContents.send('updateGame', data)
+    work.on('closed',()=>{
+      mainWindow && mainWindow.webContents.send('workClosed')
     })
   })
   let config

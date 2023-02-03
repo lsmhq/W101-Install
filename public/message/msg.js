@@ -16,6 +16,14 @@
             mini:()=>{ipcRenderer.send('mini')},
             close:()=>{ipcRenderer.send('close')},
             restart:()=>{ipcRenderer.send('relaunch')},
+            updateGame:()=>{ipcRenderer.send('updateGame',{
+                wizPath: window.wizPath
+            })},
+            workOnClosed:(callback)=>{
+                ipcRenderer.on('workClosed',()=>{
+                    callback()
+                })
+            },
             sound,
             getScale:(getZoom)=>{ipcRenderer.on('scale',(event, scale)=>{
                 console.log(scale)

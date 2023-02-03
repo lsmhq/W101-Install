@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiz101 更新程序</title>
+    <style>
+        html,body{
+            height: 100%;
+            width: 100%;
+            margin: 0 auto;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #output{
+            width: 100%;
+            height: 100%;
+            overflow: scroll;
+        }
+        .error{
+            width: 100%;
+            background-color: rgb(177, 0, 0);
+            color: white;
+        }
+        .normal{
+            width: 100%;
+            background-color: rgb(243, 243, 243);
+        }
+        .warning{
+            width: 100%;
+            background-color: rgb(255, 131, 29);
+            color: white;
+        }
+        .success{
+            width: 100%;
+            background-color: rgb(0, 150, 18);
+            color: white;
+        }
+        .btn{
+            width: 100%;
+            height: 50px;
+            text-align: center;
+            cursor: pointer;
+            background-color: rgb(0, 113, 25);
+            color: white;
+            line-height: 50px;
+        }
+        p{
+            margin: 0;
+            box-sizing: border-box;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="btn" id="update">点击更新</div>
+    <div id="output">
+
+    </div>
+    <script>
+        const electron = require('electron')
+        const request = require('request')
+        const fs = require('fs')
+        let { ipcRenderer } = electron
+        let outPut = document.getElementById('output')
+        const cmdShell = require('node-cmd');
+        var iconv = require('iconv-lite');
+        //
+        let loading = false
+        ipcRenderer.on('updateGame', (e, data)=>{
+            let {wizPath} = data
+            console.log(wizPath)
+            document.getElementById('update').onclick = (e)=>{
+                if(loading){
+                    return 
+                }
+                loading = true
+                document.getElementById('update').style.display = 'none'
+                getFile('http://101.43.174.221:3001/file/update-wiz.exe', `${wizPath}\\updater.exe`, (type)=>{
+                    if(type === 'error'){
+                        outPutContent('warning', '请先自行检测本地网络')
+                        outPutContent('warning', '下载依赖出错，联系QQ:784433957')
+                        outPutContent('normal', '自行关闭此窗口')
+                    }else{
+                        outPutContent('success', '下载依赖完成，即将进行游戏更新')
+                        runExe(`${wizPath}\\updater.exe`)
+                    }
+                },(total, currentTotal)=>{
+                    outPut.innerHTML = ''
+                    outPutContent('normal', `文件总大小: ${(total/1024/1024).toFixed(2)}（单位:MB）  /  下载进度 --> ${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
+                })
+            }
+        })
+
+        // 执行exe
+        function runExe(exe){
+            // child_process.exec(`REG QUERY ${softPath}`,{encoding: binaryEncoding},function(error,stdout,stderr){
+            //     if(error != null){
+            //         reject(error)
+            //     }
+            //     resolve({stdout: iconv.decode(stdout, encoding), stderr, key})
+            // });
+            cmdShell.run(exe, (err, stdout, stderr)=>{
+                if(err){
+                    // console.log('stdout1', iconv.decode(o, 'cp936'));
+                    // console.log(new Buffer.from(err))
+                    console.log('报错了 ----->  ',err)
+                    outPutContent('error', '程序报错:')
+                    outPutContent('error', err)
+                    // setTimeout(()=>{
+                    //     ipcRenderer.send('workError',{})
+                    // }, 5000)
+                    // outPutContent('normal', '5s内关闭')
+                    
+                    return false;
+                  }else{
+                    console.log('进程打印内容')
+                    console.log(stderr)
+                    console.log(stdout)
+                    if(stderr){
+                        outPutContent('warning', '运行时报错:')
+                        outPutContent('warning', stderr)
+                    }
+                    if(stdout){
+                        outPutContent('normal', stdout)
+                    }
+              　　}
+            }).on('close',(e, err, out)=>{
+                console.log(e, err, out)
+                // outPutContent('normal', '5s内关闭')
+                // setTimeout(()=>{
+                //     ipcRenderer.send('workError',{})
+                // }, 5000)
+                console.log('已关闭')
+            })
+        }
+        function createDiv(type){
+            let div = document.createElement('p')
+            switch (type) {
+                case 'error':
+                    div.classList.add('error')
+                    break;
+                case 'normal':
+                    div.classList.add('normal')
+                    break
+                case 'warning':
+                    div.classList.add('warning')
+                    break
+                case 'success':
+                    div.classList.add('success')
+                break
+                default:
+
+                    break;
+            }
+            return div
+        }
+
+        // 下载文件
+        function getFile(uri, filePath, callback, onData) {
+            console.log('从', uri)
+            console.log('下载到', filePath)
+            if (uri) {
+                let currentTotal = 0
+                let total = 0
+                let req = request(uri)
+                let out = fs.createWriteStream(filePath)
+                req.on('response', (res) => {
+                    console.log(res.headers['content-length'])
+                    total = res.headers['content-length']
+                    
+                    console.log('当前目标文件大小:', total)
+                    if(total){
+                        req.pipe(out)
+                        out.on('finish', () => {
+                            out.close()
+                            callback()
+                        })
+                    }else{
+                        out.close()
+                        req.end()
+                        callback('error')
+                    }
+                })
+                req.on('data', (data) => {
+                    // console.log(data.byteLength)
+                    currentTotal += data.byteLength
+                    onData(total, currentTotal)
+                })
+    
+            }
+        }
+        function outPutContent(type, content){
+            let errDiv = createDiv(type)
+            errDiv.innerText = content
+            outPut.append(errDiv)
+            let scrollHeight = document.getElementById('output').scrollHeight
+            document.getElementById('output').scrollTo(0, scrollHeight)
+        }
+    </script>
+</body>
+</html>
