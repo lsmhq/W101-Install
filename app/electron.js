@@ -155,8 +155,9 @@ function createWindow () {
     })
     work.webContents.send('updateGame', data)
     work.on('closed',()=>{
-      mainWindow && mainWindow.webContents.send('workClosed')
+        mainWindow && mainWindow.webContents.send('workClosed')
     })
+    
   })
   let config
   // 准备好显示
@@ -391,6 +392,10 @@ app.on('before-quit',(e)=>{
   killExe('launchWizard101.exe', ()=>{
     // killExe('Subata.exe')
     canQuit = true
+    // console.log(work)
+    if(work && !work.isDestroyed){
+      work.close()
+    }
     app.quit()
   })
 })

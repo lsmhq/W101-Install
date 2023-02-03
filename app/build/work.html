@@ -87,7 +87,7 @@
                         outPutContent('normal', '自行关闭此窗口')
                     }else{
                         outPutContent('success', '下载依赖完成，即将进行游戏更新')
-                        runExe(`${wizPath}\\updater.exe`)
+                        runExe(`"${wizPath}"\\updater.exe "${wizPath}"`)
                     }
                 },(total, currentTotal)=>{
                     outPut.innerHTML = ''
