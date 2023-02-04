@@ -65,6 +65,7 @@
         const electron = require('electron')
         const request = require('request')
         const fs = require('fs')
+        const child_process = require('child_process'); //引入模块
         let { ipcRenderer } = electron
         let outPut = document.getElementById('output')
         const cmdShell = require('node-cmd');
@@ -87,7 +88,7 @@
                         outPutContent('normal', '自行关闭此窗口')
                     }else{
                         outPutContent('success', '下载依赖完成，即将进行游戏更新')
-                        runExe(`"${wizPath}"\\updater.exe "${wizPath}"`)
+                        runExe(`${wizPath.split(':')[0]}: && "${wizPath}"\\updater.exe "${wizPath}"`)
                     }
                 },(total, currentTotal)=>{
                     outPut.innerHTML = ''
@@ -104,39 +105,60 @@
             //     }
             //     resolve({stdout: iconv.decode(stdout, encoding), stderr, key})
             // });
-            cmdShell.run(exe, (err, stdout, stderr)=>{
-                if(err){
-                    // console.log('stdout1', iconv.decode(o, 'cp936'));
-                    // console.log(new Buffer.from(err))
-                    console.log('报错了 ----->  ',err)
-                    outPutContent('error', '程序报错:')
-                    outPutContent('error', err)
-                    // setTimeout(()=>{
-                    //     ipcRenderer.send('workError',{})
-                    // }, 5000)
-                    // outPutContent('normal', '5s内关闭')
-                    
-                    return false;
-                  }else{
-                    console.log('进程打印内容')
-                    console.log(stderr)
-                    console.log(stdout)
-                    if(stderr){
-                        outPutContent('warning', '运行时报错:')
-                        outPutContent('warning', stderr)
-                    }
-                    if(stdout){
-                        outPutContent('normal', stdout)
-                    }
-              　　}
-            }).on('close',(e, err, out)=>{
-                console.log(e, err, out)
-                // outPutContent('normal', '5s内关闭')
-                // setTimeout(()=>{
-                //     ipcRenderer.send('workError',{})
-                // }, 5000)
-                console.log('已关闭')
+            var workerProcess = child_process.exec(exe, {maxBuffer: 1024 * 1000})
+            workerProcess.stdout.on('data', function (data) {
+                outPut.innerHTML = ''
+                outPutContent('normal', data)
+            });
+            workerProcess.stderr.on('data', function (data) {
+                outPutContent('warning', '运行时报错:')
+                outPutContent('warning: ' + data);
+
+            });
+
+            workerProcess.on('close', function (code) { 
+                console.log('child process exited with code ' + code); 
+                outPutContent('normal', '程序退出:');
+                outPutContent('normal', code);
+            }); 
+            workerProcess.on('error', function (error){
+                outPutContent('error', '程序出错:');
+                outPutContent('error', error);
+                // console.log(error)
             })
+            // cmdShell.run(exe, (err, stdout, stderr)=>{
+            //     if(err){
+            //         // console.log('stdout1', iconv.decode(o, 'cp936'));
+            //         // console.log(new Buffer.from(err))
+            //         console.log('报错了 ----->  ',err)
+            //         outPutContent('error', '程序报错:')
+            //         outPutContent('error', err)
+            //         // setTimeout(()=>{
+            //         //     ipcRenderer.send('workError',{})
+            //         // }, 5000)
+            //         // outPutContent('normal', '5s内关闭')
+                    
+            //         return false;
+            //       }else{
+            //         console.log('进程打印内容')
+            //         console.log(stderr)
+            //         console.log(stdout)
+            //         if(stderr){
+            //             outPutContent('warning', '运行时报错:')
+            //             outPutContent('warning', stderr)
+            //         }
+            //         if(stdout){
+            //             outPutContent('normal', stdout)
+            //         }
+            //   　　}
+            // }).on('close',(e, err, out)=>{
+            //     console.log(e, err, out)
+            //     // outPutContent('normal', '5s内关闭')
+            //     // setTimeout(()=>{
+            //     //     ipcRenderer.send('workError',{})
+            //     // }, 5000)
+            //     console.log('已关闭')
+            // })
         }
         function createDiv(type){
             let div = document.createElement('p')

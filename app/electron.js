@@ -155,7 +155,10 @@ function createWindow () {
     })
     work.webContents.send('updateGame', data)
     work.on('closed',()=>{
-        mainWindow && mainWindow.webContents.send('workClosed')
+      if(mainWindow.isDestroyed){
+        return
+      }
+      mainWindow && mainWindow.webContents.send('workClosed')
     })
     
   })
