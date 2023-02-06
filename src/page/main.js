@@ -386,7 +386,7 @@ function Main(props) {
         // Notification.clear()
         // console.log(window.tools)
         window.tools.checkUpdate(getItem('type'), (num) => {
-            console.log('num----->', num)
+            // console.log('num----->', num)
             switch (num) {
                 case 1:
                     // 有更新

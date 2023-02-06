@@ -1,5 +1,6 @@
 (function () {
     let hrefNew = '101.43.174.221'
+
     // let hrefOld = '101.43.216.253'
     try {
         const request = require('request')
@@ -9,6 +10,9 @@
         const { shell } = require('electron')
         const { dialog, app } = require('@electron/remote')
         console.log('version---->',app.getVersion())
+        let binaryEncoding = 'binary' // 输出编码格式
+        let encoding = 'cp936'; // 解码格式
+        const iconv = require('iconv-lite'); // 解码
         window.appVersion = app.getVersion()
         let interfaces = require('os').networkInterfaces();
         // const regedit = require('regedit');
@@ -353,9 +357,9 @@
         // 获取Steam
         function getPath(callback, r) {
             //查
-            child_process.exec(`REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam /v InstallPath`, function (error, stdout, stderr) {
+            child_process.exec(`REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam /v InstallPath`,{encoding: binaryEncoding}, function (error, stdout, stderr) {
                 if (error != null) {
-                    console.log('Steam 注册表查询失败:', String(error));
+                    console.log('Steam 注册表查询失败:', iconv.decode(error, encoding));
                     r(error)
                     return
                 }

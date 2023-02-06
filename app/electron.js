@@ -5,6 +5,7 @@ const remote = require('@electron/remote/main/index')
 const url = require('url')
 let canQuit = false, work
 // const url = require('url');
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 let mainWindow, loading, tray, width = 1255, height = 705
 const message = {
   error: '检查更新出错',

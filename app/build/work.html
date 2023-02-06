@@ -62,14 +62,16 @@
         
     </div>
     <script>
-        const electron = require('electron')
-        const request = require('request')
-        const fs = require('fs')
-        const child_process = require('child_process'); //引入模块
-        let { ipcRenderer } = electron
-        let outPut = document.getElementById('output')
-        const cmdShell = require('node-cmd');
-        var iconv = require('iconv-lite');
+        const electron = require('electron') // electron
+        const request = require('request') // http请求
+        const fs = require('fs') // 文件操作
+        const child_process = require('child_process'); // 子进程
+        const { ipcRenderer } = electron  // 渲染进程
+        const cmdShell = require('node-cmd'); // 没用了
+        const iconv = require('iconv-lite'); // 解码
+        let outPut = document.getElementById('output') // node节点
+        let binaryEncoding = 'binary' // 输出编码格式
+        let encoding = 'cp936'; // 解码格式
         //
         let loading = false
         ipcRenderer.on('updateGame', (e, data)=>{
@@ -105,14 +107,25 @@
             //     }
             //     resolve({stdout: iconv.decode(stdout, encoding), stderr, key})
             // });
-            var workerProcess = child_process.exec(exe, {maxBuffer: 1024 * 500})
+            var workerProcess = child_process.exec(exe, {maxBuffer: 1024 * 500, encoding: binaryEncoding})
             workerProcess.stdout.on('data', function (data) {
                 // outPut.innerHTML = ''
-                outPutContent('normal', data)
+                try {
+                    let stdout = iconv.decode(data, encoding)
+                    outPutContent('normal', iconv.decode(data, encoding))
+                } catch (error) {
+                    outPutContent('error', 'Js报错但问题不大-->' + error)
+                }
+                
             });
             workerProcess.stderr.on('data', function (data) {
                 outPutContent('warning', '运行时报错:')
-                outPutContent('warning: ' + data);
+                try {
+                    let stderr = iconv.decode(data, encoding)
+                    outPutContent('warning: ', stderr);
+                } catch (error) {
+                    outPutContent('error', 'Js报错但问题不大-->' + error)
+                }
             });
 
             workerProcess.on('close', function (code) { 
@@ -122,8 +135,14 @@
                 outPutContent('normal', '关闭此窗口进行游戏体验...');
             }); 
             workerProcess.on('error', function (error){
-                outPutContent('error', '程序出错:');
-                outPutContent('error', error);
+                try {
+                    let errorText = iconv.decode(error, encoding)
+                    outPutContent('error', '程序出错:');
+                    outPutContent('error', errorText);
+                } catch (error) {
+                    outPutContent('error', 'Js报错但问题不大-->' + error)
+                }
+
                 // console.log(error)
             })
             // cmdShell.run(exe, (err, stdout, stderr)=>{
