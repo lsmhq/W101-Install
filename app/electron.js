@@ -155,7 +155,8 @@ function createWindow () {
     })
     work.webContents.send('updateGame', data)
     work.on('closed',()=>{
-      if(mainWindow.isDestroyed){
+      if(mainWindow.isDestroyed()){
+        
         return
       }
       mainWindow && mainWindow.webContents.send('workClosed')
@@ -218,7 +219,7 @@ function createWindow () {
             let appPath = app.getPath('exe')
             appPath = appPath.split('\\')
             appPath.pop()
-            console.log(appPath.join('\\'))
+            // console.log(appPath.join('\\'))
             let dirPath = `${appPath.join('\\')}\\Uninstall Subata.exe`
             shell.openPath(dirPath)
           }
@@ -256,12 +257,12 @@ function createWindow () {
   })
   // 账号修改
   ipcMain.on('changeAccount', (e, data)=>{
-    console.log(data.account)
+    // console.log(data.account)
     if(config){
       config[1] = {
         label: '账号启动',
         submenu: data.account.account.map(account=>{
-          console.log(account)
+          // console.log(account)
           return {
             label: account.account,
             click:()=>{
@@ -396,7 +397,7 @@ app.on('before-quit',(e)=>{
     // killExe('Subata.exe')
     canQuit = true
     // console.log(work)
-    if(work && !work.isDestroyed){
+    if(work && !work.isDestroyed()){
       work.close()
     }
     app.quit()

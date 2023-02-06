@@ -141,6 +141,12 @@ function RightNav(props){
 
         </div>
         <div className='nav-bottom'>
+            {/* <Icon
+                Child={<i className='iconfont icon-dashang'></i>}
+                onClick={()=>{
+                    setZf('kf')
+                }}
+            /> */}
             <Icon
                 Child={<IconWechat className="icon-child"/>}
                 onClick={()=>{

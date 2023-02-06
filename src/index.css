@@ -26,9 +26,6 @@ html,body{
 	/* -webkit-user-drag: none; */
 }
 .arco-icon { font-size: 32; }
-.arco-modal-content{
-	padding: 0 !important;
-}
 #root{
 	width: 1250px;
 	height: 700px;
@@ -41,6 +38,9 @@ html,body{
 	position: relative;
 	overflow: hidden;
 	margin: 0 auto;
+}
+.iconfont{
+	font-size: 30px!important;
 }
 /* em 和 i 斜体的文字都不倾斜 */
 em,

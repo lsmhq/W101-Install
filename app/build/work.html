@@ -59,7 +59,7 @@
 <body>
     <div class="btn" id="update">点击更新</div>
     <div id="output">
-
+        
     </div>
     <script>
         const electron = require('electron')
@@ -105,21 +105,21 @@
             //     }
             //     resolve({stdout: iconv.decode(stdout, encoding), stderr, key})
             // });
-            var workerProcess = child_process.exec(exe, {maxBuffer: 1024 * 1000})
+            var workerProcess = child_process.exec(exe, {maxBuffer: 1024 * 500})
             workerProcess.stdout.on('data', function (data) {
-                outPut.innerHTML = ''
+                // outPut.innerHTML = ''
                 outPutContent('normal', data)
             });
             workerProcess.stderr.on('data', function (data) {
                 outPutContent('warning', '运行时报错:')
                 outPutContent('warning: ' + data);
-
             });
 
             workerProcess.on('close', function (code) { 
                 console.log('child process exited with code ' + code); 
                 outPutContent('normal', '程序退出:');
                 outPutContent('normal', code);
+                outPutContent('normal', '关闭此窗口进行游戏体验...');
             }); 
             workerProcess.on('error', function (error){
                 outPutContent('error', '程序出错:');

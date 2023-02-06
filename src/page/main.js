@@ -11,6 +11,8 @@ import Setting from './components/setting';
 import su from '../image/Subata_logo.png'
 import LocalStorage_subata from './util/localStroage';
 import { installBtn_config } from './config/config.page';
+import imgKfWx from '../image/kfwx.jpg'
+import imgKfZfb from '../image/kfzfb.jpg'
 let { getItem, setItem } = new LocalStorage_subata({
     filter: ['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -72,6 +74,7 @@ function Main(props) {
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
     let [bgShow, setBgShow] = useState(true) // 背景图显隐
     let [status, setStatus] = useState('') // webSocket 状态
+    let [kfShow,setKfShow] = useState(false)
     useEffect(() => {
         // 初始化地址
         getSteam(() => {
@@ -642,7 +645,13 @@ function Main(props) {
                 onlineNum={onlineNum}
             />
             <RightNav
-                setZf={setZf}
+                setZf={(type)=>{
+                    if(type === 'kf'){
+                        setKfShow(true)
+                        return
+                    }
+                    setZf(type)
+                }}
                 changeBd={changeBd}
                 install={install}
                 setDrawer={setDrawer}
@@ -904,6 +913,9 @@ function Main(props) {
                     }, 100);
                     setItem('lastBgImg', imgNum)
                     // setItem('lastBgImgType', imgs[imgNum]?.type)
+                }}
+                onKfChange = {()=>{
+                    setKfShow(true)
                 }}
                 // reload = {reload}
                 filePath={filePath}

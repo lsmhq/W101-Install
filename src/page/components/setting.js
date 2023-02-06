@@ -3,6 +3,8 @@ import { Anchor, Button, Switch, Form, Image, Message, Grid, Notification } from
 import { useState, useEffect, useRef } from 'react'
 import '../../css/setting.css'
 import LocalStorage_subata from '../util/localStroage'
+import imgKfWx from '../../image/kfwx.jpg'
+import imgKfZfb from '../../image/kfzfb.jpg'
 let { getItem, setItem, outPutToJson, inputLocalStroage } = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath'],
 })
@@ -133,6 +135,7 @@ function Setting(props){
                 <AnchorLink href='#gameFile' title='游戏' />
                 <AnchorLink href='#output' title='备份配置' />
                 <AnchorLink href='#language' title="谨慎使用!"/>
+                <AnchorLink href='#kf' title="打赏开发者"/>
                 <AnchorLink href='#clear' title='关于' />
             </Anchor>
         </div>
@@ -360,6 +363,17 @@ function Setting(props){
                             {fileLength > 0 && `下载过程中终止可能会导致游戏无法启动，下载过程中可以关掉设置窗口`}
                         </Row>
                     </Row>
+            </div>
+            <div className='setting-item' id='kf'>
+                <div className='kf-container-col'>
+                    <div>注意！！！此打赏是给这个客户端开发者打赏，随意</div>
+                    <div>我本身已游戏退坑，有任何建议联系我</div>
+                    <div>联系QQ: 784433957</div>
+                    <div className='kf-container'>
+                        <img key={1} className='kf-img' src={imgKfWx} alt='' />
+                        <img key={1} className='kf-img' src={imgKfZfb} alt='' />
+                    </div>
+                </div>
             </div>
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
