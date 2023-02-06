@@ -371,7 +371,7 @@ function Setting(props){
                     <div>联系QQ: 784433957</div>
                     <div className='kf-container'>
                         <img key={1} className='kf-img' src={imgKfWx} alt='' />
-                        <img key={1} className='kf-img' src={imgKfZfb} alt='' />
+                        <img key={2} className='kf-img' src={imgKfZfb} alt='' />
                     </div>
                 </div>
             </div>
