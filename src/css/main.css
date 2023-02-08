@@ -494,7 +494,7 @@
     height: 700px !important;
     left: auto !important;
     margin-top: 2px;
-    /* border-radius: 10px; */
+    border-radius: 10px;
 }
 .arco-modal-wrapper{
     width: 1250px !important;

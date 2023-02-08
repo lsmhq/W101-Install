@@ -115,7 +115,7 @@
         }
     
         function checkUpdate(type, success, failed, error) {
-            console.log(window.gameDataPath)
+            // console.log(window.gameDataPath)
             request({
                 url: `http://${hrefNew}:3001/file/latest?type=${params[type]}`,
                 method: 'GET',
@@ -359,7 +359,7 @@
             //查
             child_process.exec(`REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam /v InstallPath`,{encoding: binaryEncoding}, function (error, stdout, stderr) {
                 if (error != null) {
-                    console.log('Steam 注册表查询失败:', iconv.decode(error, encoding));
+                    console.warn(iconv.decode(error+'', encoding))
                     r(error)
                     return
                 }
@@ -432,7 +432,7 @@
         // 检测Wizard和Steam
         function checkGameInstall(callback) {
             let steamPath = localStorage.getItem('steamPath')
-            console.log(steamPath, window.wizPath)
+            // console.log(steamPath, window.wizPath)
             let steamInstall = false
             let wizInstall = false
             let errors = []
@@ -597,7 +597,7 @@
                 let dir = fs.readdirSync(path, {withFileTypes: true})
                 callBack && callBack(dir)
             } catch (error) {
-                console.error('报错但问题不大---->',error)
+                console.warn('报错但问题不大---->',error)
                 error && callbackError(error)
             }
         }
