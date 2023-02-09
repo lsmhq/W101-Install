@@ -24,6 +24,12 @@
                     callback()
                 })
             },
+            devOnclosed:(callback)=>{
+                
+                ipcRenderer.on('devClosed',()=>{
+                    callback()
+                })
+            },
             sound,
             getScale:(getZoom)=>{ipcRenderer.on('scale',(event, scale)=>{
                 console.log(scale)

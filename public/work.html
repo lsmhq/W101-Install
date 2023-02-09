@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wiz101 更新程序</title>
+    <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_2930698_8e9hj2hsms3.css?spm=a313x.7781069.1998910419.52&file=font_2930698_8e9hj2hsms3.css">
     <style>
         html,body{
             height: 100%;
@@ -18,6 +19,8 @@
             background-color: rgb(45, 45, 45);
             border-radius: 10px;
             overflow: hidden;
+            /* padding: 15px 24px; */
+            /* box-sizing: border-box; */
         }
         ::-webkit-scrollbar{
             display: none;
@@ -30,34 +33,39 @@
         .error{
             width: 100%;
             color: rgb(255, 44, 44);
-            font-weight: 600;
+            /* font-weight: 600; */
             /* color: white; */
         }
         .normal{
             width: 100%;
-            color: rgb(0, 179, 255);
-            font-weight: 600;
+            color: rgb(0, 166, 237);
+            /* font-weight: 600; */
         }
         .warning{
             width: 100%;
             color: rgb(242, 255, 0);
-            font-weight: 600;
+            /* font-weight: 600; */
             /* color: white; */
         }
         .success{
             width: 100%;
             color: rgb(0, 255, 30);
-            font-weight: 600;
+            /* font-weight: 600; */
             /* color: white; */
         }
         .btn{
-            width: 100%;
-            height: 50px;
+            width: 150px;
+            height: 150px;
             text-align: center;
             cursor: pointer;
             /* color: rgb(0, 113, 25); */
             color: white;
-            line-height: 50px;
+            font-weight: 600;
+            line-height: 150px;
+            position: absolute;
+            background-color: rgb(0, 153, 20);
+            border-radius: 150px;
+            user-select: none;
         }
         p{
             margin: 0;
@@ -71,28 +79,80 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            user-select: none;
         }
         .nav-drag{
             width: 100%;
             height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 10px;
+            box-sizing: border-box;
+            color: white;
         }
         .nav-op{
             width: 60px;
             height: 40px;
-            background-color: red;
+            background-color: rgb(52, 52, 52);
             color: white;
-            font-size: 26px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+        }
+        .nav-op:hover{
+            background-color: rgb(227, 0, 0);
+        }
+        .progress{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 30px;
+            box-sizing: border-box;
+            padding: 0 21px;
+            margin: 5px 0;
+        }
+        .pro-bg{
+            background-color: rgb(140, 140, 140);
+            width: 100%;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .pro-percent{
+            height: 8px;
+            background-color: rgb(0, 149, 255);
+            border-radius: 10px;
+        }
+        .pro-desc{
+            width: 100%;
+            /* height: 5px; */
+            color: white;
+            /* padding-left: 10px; */
+            padding-top: 5px;
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
     <div class="nav">
-        <div class="nav-drag" id="nav-drag"></div>
+        <div class="nav-drag" id="nav-drag">Wiz101 更新程序</div>
         <div class="nav-op" id="close">
-            <div class="nav-op-close">x</div>
+            <div class="nav-op-close"> 
+                <i class="iconfont icon-guanbi"></i>
+            </div>
+        </div>
+    </div>
+    <div class="progress">
+        <div class="pro-bg">
+            <div class="pro-percent" id="pro-percent">
+
+            </div>
+        </div>
+        <div class="pro-desc" id="pro-desc">
+            下载进度:0%
         </div>
     </div>
     <div class="btn" id="update">点击更新</div>
@@ -108,13 +168,15 @@
             const fs = require('fs') // 文件操作
             const child_process = require('child_process'); // 子进程
             const { ipcRenderer } = electron  // 渲染进程
-            const cmdShell = require('node-cmd'); // 没用了
             const iconv = require('iconv-lite'); // 解码
             let outPut = document.getElementById('output') // node节点
             let binaryEncoding = 'binary' // 输出编码格式
             let encoding = 'cp936'; // 解码格式
             let loading = false
             let close  = document.getElementById('close')
+            let percent = document.getElementById('pro-percent')
+            let wizPath = ''
+            let update = document.getElementById('update')
             if(!drag.supported) {
                 document.querySelector('#nav-drag').style['-webkit-app-region'] = 'drag';
             }
@@ -122,9 +184,12 @@
                 ipcRenderer.send('workError')
             }
             ipcRenderer.on('updateGame', (e, data)=>{
-                let {wizPath} = data
-                console.log(wizPath)
-                document.getElementById('update').onclick = (e)=>{
+                wizPath = data.wizPath
+                // console.log(wizPath)
+            })
+            update.onclick = (e)=>{
+                    console.log(loading)
+                    console.log(e)
                     if(loading){
                         return 
                     }
@@ -137,33 +202,45 @@
                             outPutContent('normal', '自行关闭此窗口')
                         }else{
                             outPutContent('success', '下载依赖完成，即将进行游戏更新')
-                            runExe(`${wizPath.split(':')[0]}: && "${wizPath}"\\updater.exe "${wizPath}"`)
+                            setTimeout(() => {
+                                runExe(`${wizPath.split(':')[0]}: && "${wizPath}"\\updater.exe "${wizPath}"`)
+                            }, 2000);
+                            
                         }
                     },(total, currentTotal)=>{
-                        outPut.innerHTML = ''
-                        outPutContent('normal', `文件总大小: ${(total/1024/1024).toFixed(2)}（单位:MB）  /  下载进度 --> ${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
+                        // outPut.innerHTML = ''
+                        // outPutContent('normal', `文件总大小: ${(total/1024/1024).toFixed(2)}（单位:MB）  /  下载进度 --> ${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
+                        // percent.style.width = 
+                        setProgress(`${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
+
                     })
                 }
-            })
-
+            function setProgress(num){
+                let reg = new RegExp(/^\d+\.{0,1}\d+%$/)
+                if(reg.test(num)){
+                    if(num === '100%'){
+                        percent.style.backgroundColor = 'rgb(3, 206, 0)'
+                    }else{
+                        percent.style.backgroundColor = 'rgb(0, 149, 255)'
+                    }
+                    percent.style.width = num
+                    document.getElementById('pro-desc').innerHTML = '进度:' + num
+                }else{
+                    document.getElementById('pro-desc').innerHTML = '进度数值不合法'
+                }
+            }
             // 执行exe
             function runExe(exe){
-                // child_process.exec(`REG QUERY ${softPath}`,{encoding: binaryEncoding},function(error,stdout,stderr){
-                //     if(error != null){
-                //         reject(error)
-                //     }
-                //     resolve({stdout: iconv.decode(stdout, encoding), stderr, key})
-                // });
-                var workerProcess = child_process.exec(exe, {maxBuffer: 1024 * 500, encoding: binaryEncoding})
+                let workerProcess = child_process.spawn(exe, [], { shell: true, encoding: binaryEncoding })
                 workerProcess.stdout.on('data', function (data) {
                     // outPut.innerHTML = ''
                     try {
                         let stdout = iconv.decode(data, encoding)
                         outPutContent('normal', iconv.decode(data, encoding))
+                        setProgress(`${stdout}%`)
                     } catch (error) {
                         outPutContent('error', 'Js报错但问题不大-->' + error)
                     }
-                    
                 });
                 workerProcess.stderr.on('data', function (data) {
                     outPutContent('warning', '运行时报错:')
@@ -192,39 +269,6 @@
 
                     // console.log(error)
                 })
-                // cmdShell.run(exe, (err, stdout, stderr)=>{
-                //     if(err){
-                //         // console.log('stdout1', iconv.decode(o, 'cp936'));
-                //         // console.log(new Buffer.from(err))
-                //         console.log('报错了 ----->  ',err)
-                //         outPutContent('error', '程序报错:')
-                //         outPutContent('error', err)
-                //         // setTimeout(()=>{
-                //         //     ipcRenderer.send('workError',{})
-                //         // }, 5000)
-                //         // outPutContent('normal', '5s内关闭')
-                        
-                //         return false;
-                //       }else{
-                //         console.log('进程打印内容')
-                //         console.log(stderr)
-                //         console.log(stdout)
-                //         if(stderr){
-                //             outPutContent('warning', '运行时报错:')
-                //             outPutContent('warning', stderr)
-                //         }
-                //         if(stdout){
-                //             outPutContent('normal', stdout)
-                //         }
-                //   　　}
-                // }).on('close',(e, err, out)=>{
-                //     console.log(e, err, out)
-                //     // outPutContent('normal', '5s内关闭')
-                //     // setTimeout(()=>{
-                //     //     ipcRenderer.send('workError',{})
-                //     // }, 5000)
-                //     console.log('已关闭')
-                // })
             }
             function createDiv(type){
                 let div = document.createElement('p')

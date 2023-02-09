@@ -40,6 +40,7 @@ function Setting(props){
     let [updateLoading, setUpdateLoading] = useState(false)
     let [lastVer, setLastVer] = useState('')
     let {t: translation} = useTranslation()
+    let [devOpen, setDevOpen] = useState(false)
     // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -75,6 +76,9 @@ function Setting(props){
         })
         window.electronAPI.workOnClosed(()=>{
             setLoadFile(false)
+        })
+        window.electronAPI.devOnclosed(()=>{
+            setDevOpen(false)
         })
     },[])
     useEffect(()=>{
@@ -334,11 +338,12 @@ function Setting(props){
                     <Row style={{marginTop:'10px'}}>
                         <Col span={3}>调试</Col>
                         <Col span={3}>
-                            <Switch onChange={(val)=>{
+                            <Switch checked={devOpen} onChange={(val)=>{
                                 if(val){
                                     // alertTextLive2d('还没有正式上线哦~')
                                     window.electronAPI.openDev()
                                 }
+                                setDevOpen(val)
                             }}
                             />
                         </Col>
