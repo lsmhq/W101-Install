@@ -3,9 +3,10 @@ const url = require('url')
 const path = require('path');
 function createWork(option){
     let work = new BrowserWindow({
-        width:500,
+        width:750,
         height:500,
         autoHideMenuBar: true,
+        frame: false,
         webPreferences: { // 网页功能设置
             nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
             webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
