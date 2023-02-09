@@ -157,9 +157,11 @@ function createWindow () {
   ipcMain.on('updateGame', (e, data)=>{
     work = createWork({
       type:'file',
-      filePath:'./build/work.html'
+      filePath:'./work.html'
     })
-    work.webContents.send('updateGame', data)
+    setTimeout(() => {
+      work.webContents.send('updateGame', data)
+    }, 1000);
     work.on('closed',()=>{
       if(mainWindow.isDestroyed()){
         
