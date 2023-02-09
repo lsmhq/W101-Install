@@ -231,7 +231,7 @@
             }
             // 执行exe
             function runExe(exe){
-                let workerProcess = child_process.spawn(exe, [], { shell: true, encoding: binaryEncoding })
+                var workerProcess = child_process.spawn(exe, [], { shell: true, encoding: binaryEncoding })
                 workerProcess.stdout.on('data', function (data) {
                     // outPut.innerHTML = ''
                     try {
