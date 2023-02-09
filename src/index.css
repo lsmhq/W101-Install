@@ -3,7 +3,7 @@ html,body{
   /* margin-top: 2px; */
   overflow: hidden;
   position: relative;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   height: 700px !important;
   width: 1251px !important; 
   /* 抗锯齿性,避免文字被放大后会产生锯齿 */
@@ -56,7 +56,9 @@ li {
 
 img {
 	border: 0;/* 为了照顾低版本浏览器,如果 图片的外面包含了链接 会出现边框的问题 */
-	vertical-align: middle /* 解决图片底侧出现空白缝隙的问题 */
+	vertical-align: middle; /* 解决图片底侧出现空白缝隙的问题 */
+	user-select: none;
+	-webkit-user-drag: none;
 }
 
 

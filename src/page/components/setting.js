@@ -137,13 +137,13 @@ function Setting(props){
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}>
-                <AnchorLink href='#bg' title={translation('background')} />
-                <AnchorLink href='#setting' title='功能' />
-                <AnchorLink href='#gameFile' title='游戏' />
-                <AnchorLink href='#output' title='备份配置' />
-                <AnchorLink href='#language' title="实验室"/>
-                <AnchorLink href='#kf' title="打赏"/>
-                <AnchorLink href='#clear' title='关于' />
+                <AnchorLink href='#bg' title={translation('Background')} />
+                <AnchorLink href='#setting' title={translation('Function')} />
+                <AnchorLink href='#gameFile' title={translation('Game')} />
+                <AnchorLink href='#output' title={translation('Backups')} />
+                <AnchorLink href='#language' title={translation('Future')}/>
+                <AnchorLink href='#kf' title={translation('Reward')}/>
+                <AnchorLink href='#clear' title={translation('About')}/>
             </Anchor>
         </div>
         <div className='setting-right' id='setting-right'>
@@ -221,6 +221,7 @@ function Setting(props){
                     <Form.Item label={'切换语言'}>
                         <Radio.Group onChange={(val)=>{
                             console.log(val)
+                            setItem('lang', val)
                         }} defaultValue={getItem('lang')} style={{ marginBottom: 20 }}>
                             <Radio value='en'>English</Radio>
                             <Radio value='zh'>中文简体</Radio>

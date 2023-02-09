@@ -22,6 +22,9 @@ function RightNav(props){
         }
     },[])
     return <div className='right-nav'>
+        <div className='right-nav-bg'>
+            
+        </div>
         <Icon
             Child={<IconCompass className='icon-child'/>}
             onClick={()=>{

@@ -235,6 +235,7 @@ function BodyMain(props){
         className="login-modal"
         hideCancel={true}
         unmountOnExit = {true}
+        mountOnEnter= {false}
         getPopupContainer={getMain}
         maskClosable = {true}
         onCancel={()=>{
@@ -494,6 +495,7 @@ function BodyMain(props){
         footer={null}
         getPopupContainer={getMain}
         className="login-modal"
+        mountOnEnter= {false}
         hideCancel={true}
         maskClosable = {false}
         onCancel={()=>{

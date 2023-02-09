@@ -733,6 +733,7 @@ function Main(props) {
             style={{ textAlign: 'center' }}
             visible={show}
             getPopupContainer={getMain}
+            mountOnEnter= {false}
             onCancel={() => {
                 setZf('')
                 setShow(false)
@@ -750,6 +751,7 @@ function Main(props) {
         <Modal
             title='通知发布'
             style={{ textAlign: 'center' }}
+            mountOnEnter= {false}
             visible={msgShow}
             maskClosable={false}
             getPopupContainer={getMain}
@@ -824,6 +826,7 @@ function Main(props) {
             title={title1}
             style={{ textAlign: 'center' }}
             getPopupContainer={getMain}
+            mountOnEnter= {false}
             visible={msgShow1}
             maskClosable={true}
             onCancel={() => {
