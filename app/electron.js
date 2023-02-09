@@ -1,5 +1,5 @@
 const child_process = require('child_process');
-const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell } = require('electron');
+const { app, BrowserWindow, nativeImage, ipcMain, screen, Tray, Menu, shell, ipcRenderer } = require('electron');
 const { autoUpdater } = require('electron-updater'); 
 const remote = require('@electron/remote/main/index')
 const url = require('url')
@@ -54,14 +54,14 @@ function createWindow () {
   remote.initialize()
   remote.enable(mainWindow.webContents)
 
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, './build/index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, './build/index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
   
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:5000/#/');
+  // mainWindow.loadURL('http://localhost:5000/#/');
   // mainWindow.webContents.openDevTools()
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -83,6 +83,7 @@ function createWindow () {
       mainWindow.hide()
     }
   });
+  
 
   // 自定义
   ipcMain.on("openGame",(e,data)=>{
@@ -103,6 +104,9 @@ function createWindow () {
   ipcMain.on('devWindow',(e, password)=>{
     if(password === 'wizard101-dev')
         mainWindow.webContents.openDevTools()
+  })
+  mainWindow.webContents.on('devtools-closed',()=>{
+    ipcRenderer.send('devClosed')
   })
   ipcMain.on('workError', function(){
     work.close()
