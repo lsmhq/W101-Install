@@ -1,15 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Anchor, Button, Switch, Form, Image, Message, Grid, Notification } from '@arco-design/web-react'
+import { Anchor, Button, Switch, Form, Image, Message, Grid, Notification, Radio } from '@arco-design/web-react'
 import { useState, useEffect, useRef } from 'react'
 import '../../css/setting.css'
 import LocalStorage_subata from '../util/localStroage'
 import imgKfWx from '../../image/kfwx.jpg'
 import imgKfZfb from '../../image/kfzfb.jpg'
+// import { alertText } from '../util/dialog/index'
+// let { alertTextLive2d } = window.electronAPI
+import '../../i18n';
+import { useTranslation } from 'react-i18next'
 let { getItem, setItem, outPutToJson, inputLocalStroage } = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath'],
 })
-// import { alertText } from '../util/dialog/index'
-// let { alertTextLive2d } = window.electronAPI
 let AnchorLink = Anchor.Link
 let downLoadTimer
 let { Row, Col } = Grid
@@ -37,6 +39,7 @@ function Setting(props){
     let inputFile = useRef()
     let [updateLoading, setUpdateLoading] = useState(false)
     let [lastVer, setLastVer] = useState('')
+    let {t: translation} = useTranslation()
     // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -130,7 +133,7 @@ function Setting(props){
     return <div className="setting">
         <div className='setting-left'>
             <Anchor affix={false} hash={false} scrollContainer={'#setting-right'}>
-                <AnchorLink href='#bg' title='背景' />
+                <AnchorLink href='#bg' title={translation('background')} />
                 <AnchorLink href='#setting' title='功能' />
                 <AnchorLink href='#gameFile' title='游戏' />
                 <AnchorLink href='#output' title='备份配置' />
@@ -209,6 +212,16 @@ function Setting(props){
                             btnSetting1 ?'显示':'隐藏'
                         }
                         </span>
+                    </Form.Item>
+
+                    <Form.Item label={'切换语言'}>
+                        <Radio.Group onChange={(val)=>{
+                            console.log(val)
+                        }} defaultValue={getItem('lang')} style={{ marginBottom: 20 }}>
+                            <Radio value='en'>English</Radio>
+                            <Radio value='zh'>中文简体</Radio>
+                            <Radio value='zh_tw'>中文繁體</Radio>
+                        </Radio.Group>
                     </Form.Item>
                 </Form>
             </div>

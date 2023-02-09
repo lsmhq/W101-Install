@@ -6,7 +6,7 @@ const url = require('url')
 let canQuit = false, work
 // const url = require('url');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
-let mainWindow, loading, tray, width = 1255, height = 705
+let mainWindow, loading, tray, width = 1250, height = 700
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -31,19 +31,20 @@ function createWindow () {
     title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: false,
-    resizable: false,
-    transparent: true, 
+    // resizable: false,
+    // transparent: true, 
+    // opacity:0,
     autoHideMenuBar: true,
-    // backgroundColor:'#101b51',
-    // focusable: true,
+    backgroundColor:'#262626',
+    focusable: true,
     show: false,
     webPreferences: { // 网页功能设置
       nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
       webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
       webSecurity: false, // 禁用同源策略
       contextIsolation: false,
-      v8CacheOptions: 'none',
-      scrollBounce: true,
+      // v8CacheOptions: 'none',
+      // scrollBounce: true,
       nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
       preload: path.join(__dirname, 'preload.js'),
       // plugins: true

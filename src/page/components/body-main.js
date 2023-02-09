@@ -229,14 +229,14 @@ function BodyMain(props){
     <Modal 
         visible={showLogin}
         title=''
-        focusLock={true}
+        focusLock={false}
         autoFocus={false}
         footer={null}
         className="login-modal"
         hideCancel={true}
         unmountOnExit = {true}
         getPopupContainer={getMain}
-        maskClosable = {false}
+        maskClosable = {true}
         onCancel={()=>{
             setShowLogin(false)
         }}

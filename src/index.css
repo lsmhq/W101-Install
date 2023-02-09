@@ -1,11 +1,11 @@
 html,body{
   margin: 0 auto;
-  margin-top: 2px;
+  /* margin-top: 2px; */
   overflow: hidden;
   position: relative;
   border-radius: 10px;
   height: 700px !important;
-  width: 1250px !important; 
+  width: 1251px !important; 
   /* 抗锯齿性,避免文字被放大后会产生锯齿 */
   -webkit-font-smoothing: antialiased;
   /* background-color: rgb(50, 50, 50); */

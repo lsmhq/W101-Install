@@ -90,7 +90,7 @@
 </head>
 <body>
     <div class="nav">
-        <div class="nav-drag"></div>
+        <div class="nav-drag" id="nav-drag"></div>
         <div class="nav-op" id="close">
             <div class="nav-op-close">x</div>
         </div>
@@ -115,6 +115,9 @@
             let encoding = 'cp936'; // 解码格式
             let loading = false
             let close  = document.getElementById('close')
+            if(!drag.supported) {
+                document.querySelector('#nav-drag').style['-webkit-app-region'] = 'drag';
+            }
             close.onclick = ()=>{
                 ipcRenderer.send('workError')
             }

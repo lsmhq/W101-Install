@@ -11,6 +11,8 @@ import Setting from './components/setting';
 import su from '../image/Subata_logo.png'
 import LocalStorage_subata from './util/localStroage';
 import { installBtn_config } from './config/config.page';
+import '../i18n';
+import { useTranslation } from 'react-i18next'
 let { getItem, setItem } = new LocalStorage_subata({
     filter: ['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -72,6 +74,7 @@ function Main(props) {
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
     let [bgShow, setBgShow] = useState(true) // 背景图显隐
     let [status, setStatus] = useState('') // webSocket 状态
+    const { t:translation } = useTranslation();
     useEffect(() => {
         // 初始化地址
         getSteam(() => {
@@ -144,7 +147,7 @@ function Main(props) {
     }, [drawer])
 
     useEffect(()=>{
-        document.title = ` V ${window.appVersion} / 在线人数 · ${onlineNum} / 状态 · ${status}`
+        document.title = ` V ${window.appVersion} / ${translation('onlineNum')} · ${onlineNum} / ${translation('status')} · ${status}`
     }, [onlineNum, status])
     function getSteam(callback) {
         // console.log('getSteam')
