@@ -3,7 +3,7 @@ html,body{
   margin-top: 2px;
   overflow: hidden;
   position: relative;
-  border-radius: 5px;
+  border-radius: 10px;
   height: 700px !important;
   width: 1250px !important; 
   /* 抗锯齿性,避免文字被放大后会产生锯齿 */

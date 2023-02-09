@@ -134,8 +134,8 @@ function Setting(props){
                 <AnchorLink href='#setting' title='功能' />
                 <AnchorLink href='#gameFile' title='游戏' />
                 <AnchorLink href='#output' title='备份配置' />
-                <AnchorLink href='#language' title="谨慎使用!"/>
-                <AnchorLink href='#kf' title="打赏开发者"/>
+                <AnchorLink href='#language' title="实验室"/>
+                <AnchorLink href='#kf' title="打赏"/>
                 <AnchorLink href='#clear' title='关于' />
             </Anchor>
         </div>
