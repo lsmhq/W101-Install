@@ -400,8 +400,8 @@ function Setting(props){
             <div className='setting-item' id='kf'>
                 <div className='kf-container-col'>
                     <div>{translation('Kf_tips_1')}</div>
-                    <div>{translation('Kf_tips_1')}</div>
                     <div>{translation('Kf_tips_2')}</div>
+                    <div>{translation('Kf_tips_3')}</div>
                     <div className='kf-container'>
                         <img key={1} className='kf-img' src={imgKfWx} alt='' />
                         <img key={2} className='kf-img' src={imgKfZfb} alt='' />
