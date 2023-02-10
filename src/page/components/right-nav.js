@@ -74,7 +74,7 @@ function RightNav(props){
                 if(btnLoading){
                     Message.error({
                         style:{top:'20px'},
-                        content:translation('tips_2'),
+                        content:translation('Tips_2'),
                     }) 
                     return
                 }
@@ -91,7 +91,7 @@ function RightNav(props){
                 if(btnLoading){
                     Message.error({
                         style:{top:'20px'},
-                        content:translation('tips_2'),
+                        content:translation('Tips_2'),
                     }) 
                     return
                 }
@@ -99,7 +99,7 @@ function RightNav(props){
                     console.log('num ----->',num)
                     if(num !== 3){
                         Notification.warning({
-                            title:translation('tips_3'),
+                            title:translation('Tips_3'),
                             style,
                             id:'unInstall',
                             content:(
@@ -110,7 +110,7 @@ function RightNav(props){
                                             window.electronAPI.sound()
                                             Message.success({
                                                 style:{top:'20px'},
-                                                content:translation('tips_4'),
+                                                content:translation('Tips_4'),
                                                 duration:2000
                                             })
                                         })

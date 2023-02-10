@@ -6,7 +6,7 @@ let tipsArr = [
     `仅汉化剧情文本内容,npc、地图名等依旧英文, 适合剧情党`,
     `仅支持中文输入聊天的补丁`
 ]
-let smTitleArr = ['测试版', '稳定版', '聊天纯享']
+let smTitleArr = ['BetaText', 'StableText', 'ChatText']
 let installBtn_config = typeArr.map((type, idx)=>{
     return {
         type:'primary',

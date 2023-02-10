@@ -347,7 +347,7 @@ function Main(props) {
         Notification.error({
             id: 'notInstall_bd',
             style,
-            title: translation('tips_1'),
+            title: translation('Tips_1'),
             btn: (
                 <span style={{ display: 'flex', flexDirection: 'column' }}>
                     {installBtn_config.map(btn => {
@@ -572,7 +572,7 @@ function Main(props) {
                                         
                                     }}
                                 >
-                                    {btn.smTitle}
+                                    {translation(btn.smTitle)}
                                 </Button>
                             </Tooltip>
                         })
