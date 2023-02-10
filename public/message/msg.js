@@ -6,7 +6,8 @@
             shell.openExternal(url);
         }
         function sound(){
-            shell.beep()
+            // shell.beep()
+            document.getElementById('audio').play()
         }
         window.electronAPI = {
             openGame: (title) => ipcRenderer.send('openGame', title),

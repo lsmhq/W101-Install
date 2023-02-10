@@ -13,6 +13,7 @@ import LocalStorage_subata from './util/localStroage';
 import { installBtn_config } from './config/config.page';
 import '../i18n';
 import { useTranslation } from 'react-i18next'
+import finishAudio from '../audio/get.wav'
 let { getItem, setItem } = new LocalStorage_subata({
     filter: ['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -243,6 +244,7 @@ function Main(props) {
                         setText('')
                     }
                 })
+                window.electronAPI.sound()
             } else if (data.type === 'del') {
                 getMessage()
             } else if (data.type === 'count') {
@@ -948,6 +950,7 @@ function Main(props) {
             e.target.value = ''
             // e.target.files = []
         }} style={{ opacity: 0, position: 'absolute', width: 0, height: 0, top: '1000px' }} />
+        <audio src={finishAudio} id="audio"></audio>
     </div>
 }
 
