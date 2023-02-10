@@ -26,6 +26,7 @@ html,body{
 	/* -webkit-user-drag: none; */
 }
 .arco-icon { font-size: 32; }
+.arco-radio-group{margin-bottom: 0 !important;}
 #root{
 	width: 1250px;
 	height: 700px;

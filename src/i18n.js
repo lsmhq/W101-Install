@@ -6,12 +6,9 @@ import {
   initReactI18next
 } from 'react-i18next';
 import LocalStorage_subata from "./page/util/localStroage";
-let { getItem, setItem } = new LocalStorage_subata({
+let { getItem } = new LocalStorage_subata({
   filter: ['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
-if(getItem('lang') === null){
-  setItem('lang', 'zh')
-}
 i18n
 .use(initReactI18next)
 .init({

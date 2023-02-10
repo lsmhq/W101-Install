@@ -13,7 +13,6 @@ let { getItem, setItem, outPutToJson, inputLocalStroage } = new LocalStorage_sub
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath'],
 })
 let AnchorLink = Anchor.Link
-let downLoadTimer
 let { Row, Col } = Grid
 let style = {
     right: '50px',
@@ -41,6 +40,8 @@ function Setting(props){
     let [lastVer, setLastVer] = useState('')
     let {t: translation} = useTranslation()
     let [devOpen, setDevOpen] = useState(false)
+    let [lang, setLang] = useState(getItem('lang')||'zh')
+    let [reStart, setReStart] = useState(false)
     // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -81,6 +82,12 @@ function Setting(props){
             setDevOpen(false)
         })
     },[])
+    useEffect(()=>{
+        let langArr = ['zh','zh_tw','en']
+        if(langArr.includes(lang)){
+            setItem('lang', lang)
+        }
+    },[lang])
     useEffect(()=>{
         // alertTextLive2d(`你选择了第${imgNum+1}个背景图`)
         // console.log('初始化')
@@ -218,16 +225,23 @@ function Setting(props){
                         </span>
                     </Form.Item>
 
-                    <Form.Item label={'切换语言'}>
+                    <Form.Item label={translation('Languages')}>
                         <Radio.Group onChange={(val)=>{
                             console.log(val)
-                            setItem('lang', val)
-                        }} defaultValue={getItem('lang')} style={{ marginBottom: 20 }}>
-                            <Radio value='en'>English</Radio>
-                            <Radio value='zh'>中文简体</Radio>
-                            <Radio value='zh_tw'>中文繁體</Radio>
+                            setLang(val)
+                            if(val !== getItem('lang')){
+                                setReStart(true)
+                            }
+                        }} defaultValue={lang} style={{ marginBottom: 20 }}>
+                            <Radio value='en'>{translation('En')}</Radio>
+                            <Radio value='zh'>{translation('Zh')}</Radio>
+                            <Radio value='zh_tw'>{translation('Zh_tw')}</Radio>
                         </Radio.Group>
                     </Form.Item>
+                    {reStart && <span>{translation('Lang_tips_1')}<span style={{textDecoration:'underline'}} onClick={(e)=>{
+                        e.preventDefault()
+                        window.electronAPI.restart()
+                    }}>{translation('Lang_tips_2')}</span></span>}
                 </Form>
             </div>
             <div className='setting-item' id='gameFile'>
@@ -237,21 +251,21 @@ function Setting(props){
                         <Button type='primary' size='large' onClick={()=>{
                             window.tools.openFile(path)
                             window.electronAPI.mini()
-                        }}>定位游戏</Button>
+                        }}>{translation('localtion')}</Button>
                     </Col>
                     <Col span={10} offset={2}>
                         <Button type='primary' status='warning' size='large' onClick={()=>{
                             document.getElementById('selectWiz').click()
-                        }}>重新选择</Button>
+                        }}>{translation('Reselect')}</Button>
                     </Col>
                 </Row>
                 <br/><br/>
-                <span>当前路径：</span>
+                <span>{translation('InstallPath')}：</span>
                 <span>{path?path:<Button onClick={()=>{
                         console.log(getItem('wizInstall'))
                         let fileSelect = document.getElementById('selectWiz')
                         fileSelect.click()
-                    }} status='success' type='primary'>{'选择Wizard.exe'}</Button>}</span>
+                    }} status='success' type='primary'>{`${translation('Choice')}Wizard.exe`}</Button>}</span>
                 {/* <br/><br/>
                 <Button type='primary' size='large' onClick={()=>{
                     window.tools.checkFiles(path)
@@ -259,14 +273,14 @@ function Setting(props){
             </div>
             <div className='setting-item' id='output'>
                 <Row style={{marginBottom:'20px'}}>
-                    备份配置，防止数据丢失, 配置文件名为 setJson.json
+                    {translation('settingTips_1')}
                 </Row>
                 <Row style={{marginBottom:'20px'}}>
-                    <p>问: 如何导入配置?</p>
-                    <span>答：点击导入配置，并选择 setJson.json 文件，看到提示导入成功，代表成功 , <span style={{color:'red', fontSize:'20px', display:'inline'}}>将会重启</span></span> 
+                    <p>{translation('settingTips_2')}</p>
+                    <span>{translation('settingTips_3')}<span style={{color:'red', fontSize:'20px', display:'inline'}}>{translation('settingTips_4')}</span></span> 
                 </Row>
                 <Row style={{marginBottom:'20px', color:'red'}}>
-                    *注意: 配置文件中包含账号密码等私密信息，严禁随意发送给其他人，保护好自己的信息
+                {translation('settingTips_5')}
                 </Row>
                 <Row>
                     <Col span={4}><Button type='primary' status='success' onClick={()=>{
@@ -275,16 +289,16 @@ function Setting(props){
                             console.log(dir)
                             window.tools.writeFile(`${dir}\\setJson.json`,outPutToJson(), ()=>{
                                 Message.success({
-                                    content:'保存成功！',
+                                    content: translation('saveSuccess'),
                                     style:{top:'10px'}
                                 })
                                 window.tools.openFile(`${dir}`)
                             })
                         })
-                    }}>备份配置</Button></Col>
+                    }}>{translation('Backups')}</Button></Col>
                     <Col span={10} offset={2}><Button type='primary' status='default' onClick={()=>{
                         inputFile.current.click()
-                    }}>导入配置</Button></Col>
+                    }}>{translation('InputSet')}</Button></Col>
                 </Row>
                 <Row>
                     <Col>
@@ -294,7 +308,7 @@ function Setting(props){
                                 window.tools.readFile(e.target.files[0].path, (str)=>{
                                     inputLocalStroage(str)
                                     Message.success({
-                                        content:'导入成功',
+                                        content:translation('InputSuccess'),
                                         duration: 2000,
                                         style:{top:'10px'},
                                         onClose: window.electronAPI.restart
@@ -302,7 +316,7 @@ function Setting(props){
                                 })
                             }else{
                                 Message.error({
-                                    content:'解析配置失败',
+                                    content:translation('Failed'),
                                     style:{top:'10px'}
                                 })
                             }
@@ -314,7 +328,7 @@ function Setting(props){
             </div>
             <div className='setting-item' id='language'>
                     <Row style={{marginTop:'10px'}}>
-                        <Col span={3}>语音</Col>
+                        <Col span={3}>{translation('Voice')}</Col>
                         <Col span={3}>
                             <Switch checked={zhSound} onChange={(val)=>{
                                 console.log(val)
@@ -331,13 +345,13 @@ function Setting(props){
                         <Col span={10}>
                             <span style={{paddingLeft:'10px'}}>
                             {
-                                zhSound ?'中文':'英文'
-                            }(不可用)
+                                zhSound ?translation('Voice_zh'):translation('Voice_en')
+                            }({translation("unUseAble")})
                             </span>
                         </Col>
                     </Row>  
                     <Row style={{marginTop:'10px'}}>
-                        <Col span={3}>调试</Col>
+                        <Col span={3}>{translation('DevTools')}</Col>
                         <Col span={3}>
                             <Switch checked={devOpen} onChange={(val)=>{
                                 if(val){
@@ -350,16 +364,16 @@ function Setting(props){
                         </Col>
                     </Row>  
                     <Row style={{marginTop:'10px'}}>
-                        <Col span={3}>皇冠</Col>
+                        <Col span={3}>{translation('Crown')}</Col>
                         <Col span={3}>
                             <Button status='danger' onClick={()=>{
                                 window.electronAPI.openBroswer('https://greasyfork.org/zh-CN/scripts/446159-wizard101-auto-answer')
                             }}
-                            >皇冠自动答题</Button>
+                            >{translation('CrownAutoAnswer')}</Button>
                         </Col>
                     </Row> 
                     <Row style={{marginTop:'10px'}} align="center">
-                        <Col span={6}>游戏更新</Col>
+                        <Col span={6}>{translation('Updater')}</Col>
                         <Col span={24}>
                             <Button
                                 type='primary'
@@ -385,9 +399,9 @@ function Setting(props){
             </div>
             <div className='setting-item' id='kf'>
                 <div className='kf-container-col'>
-                    <div>注意！！！此打赏是给这个客户端开发者打赏，随意</div>
-                    <div>我本身已游戏退坑，有任何建议联系我</div>
-                    <div>联系QQ: 784433957</div>
+                    <div>{translation('Kf_tips_1')}</div>
+                    <div>{translation('Kf_tips_1')}</div>
+                    <div>{translation('Kf_tips_2')}</div>
                     <div className='kf-container'>
                         <img key={1} className='kf-img' src={imgKfWx} alt='' />
                         <img key={2} className='kf-img' src={imgKfZfb} alt='' />
@@ -397,8 +411,8 @@ function Setting(props){
             <div className='setting-item' id='clear'>
                 {/* <PageHeader title='初始化'/> */}
                 <Row align='center'>
-                    <Col span={6}>开发者：</Col>
-                    <Col span={15}>蓝色灭火器</Col>
+                    <Col span={6}>{translation('Author')}:</Col>
+                    <Col span={15}>{translation('Lsmhq')}</Col>
                 </Row>
                 {/* <Row align='center' style={{marginTop:'5px'}}>
                     <Col span={5}>支持一下</Col>
@@ -428,7 +442,7 @@ function Setting(props){
                                 case 1: // 1 error
                                     console.log('error-check')
                                     Notification.error({
-                                        title: '更新出错, 联系管理员',
+                                        title: translation('UpdateError'),
                                         id: 'checkSubataUpdate',
                                         content: JSON.stringify(data.data),
                                         style
@@ -438,7 +452,7 @@ function Setting(props){
                                 case 2: // 2 checking
                                     console.log('checking-check')
                                     Notification.info({
-                                        title: '正在检测更新',
+                                        title: translation('CheckUpdate'),
                                         id: 'checkSubataUpdate',
                                         content: '',
                                         style
@@ -447,7 +461,7 @@ function Setting(props){
                                 case 3: // 3 可用更新
                                     console.log('可用更新-check')
                                     Notification.info({
-                                        title: '存在可用更新',
+                                        title: translation('UpdatesAvailable'),
                                         id: 'checkSubataUpdate',
                                         content: JSON.stringify(data?.data?.version),
                                         style
@@ -457,7 +471,7 @@ function Setting(props){
                                 case 4: // 4 不可用更新
                                     console.log('不可用更新-check')
                                     Notification.success({
-                                        title: '当前已是最新版本',
+                                        title: translation('Latest'),
                                         id: 'checkSubataUpdate',
                                         content: data?.data?.version,
                                         style
@@ -467,9 +481,9 @@ function Setting(props){
                                 case 5: // 5 正在下载
                                     console.log('正在下载-check')
                                     Notification.info({
-                                        title: '正在进行下载',
+                                        title: translation('Downloading'),
                                         id: 'checkSubataUpdate',
-                                        content: `下载进度${data.data?.percent?.toFixed(2)}%`,
+                                        content: `${translation('Progress')}${data.data?.percent?.toFixed(2)}%`,
                                         style
                                     })
                                     break;
@@ -481,10 +495,10 @@ function Setting(props){
                     }}>{window.appVersion}  {`--> ${lastVer.split(':')[1]}`}</Button>
                 </Row>
                 <Row align='center' style={{marginTop:'5px'}}>
-                    <Col span={5}>联系我们</Col>
+                    <Col span={5}>{translation('QQ')}</Col>
                     <Col span={15}><Button type='text' onClick={()=>{
                         window.electronAPI.openBroswer('https://jq.qq.com/?_wv=1027&k=46lAbmFk')
-                    }}>美服汉化群</Button></Col>
+                    }}>Subata</Button></Col>
                 </Row>
             </div>
         </div>

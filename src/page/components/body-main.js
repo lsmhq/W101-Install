@@ -7,6 +7,8 @@ import emo1 from '../../image/emo1.png'
 import emo2 from '../../image/emo2.png'
 import emo3 from '../../image/emo3.png'
 import apiPath from '../http/api'
+import '../../i18n';
+import { useTranslation } from 'react-i18next'
 // import head1 from '../../image/headImg/icon_0.jpeg'
 // let headImgPath = 'image/headImg/'
 // const headImgs = new Array(19).fill(headImgPath).map((path, index)=>{
@@ -41,6 +43,7 @@ function BodyMain(props){
     let [headKey, setHeadKey] = useState('')
     let [headType, setHeadType] = useState('')
     let submit = useRef()
+    let {t:translation} = useTranslation()
     useEffect(()=>{
         // console.log('accounts----->',getItem('accounts')) 
         let newAccounts = getItem('accounts')?.map((account, idx)=>{
@@ -217,7 +220,7 @@ function BodyMain(props){
                                 document.getElementById('selectWiz').click()
                             } 
                         }} type='primary' className='right-openGame' size='large'>
-                            {play?<>开始游戏 · <span>{onlineNum}</span></>:'选择Wizard.exe'}
+                            {play?<>{translation('Start Game')} · <span>{onlineNum}</span></>:`${translation('Choice')}Wizard.exe`}
                         </Button>
                 </div>
             </div>
