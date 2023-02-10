@@ -233,9 +233,9 @@ function Setting(props){
                                 setReStart(true)
                             }
                         }} defaultValue={lang} direction='vertical' style={{ marginBottom: 20 }}>
-                            <Radio value='en'>{translation('En')}</Radio>
                             <Radio value='zh'>{translation('Zh')}</Radio>
                             <Radio value='zh_tw'>{translation('Zh_tw')}</Radio>
+                            <Radio value='en'>{translation('En')}-Baidu</Radio>
                         </Radio.Group>
                     </Form.Item>
                     {reStart && <span>{translation('Lang_tips_1')}<span style={{textDecoration:'underline'}} onClick={(e)=>{
