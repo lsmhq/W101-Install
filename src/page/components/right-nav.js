@@ -7,6 +7,8 @@ import LocalStorage_subata from '../util/localStroage';
 import '../../css/right-nav.css'
 import zhIcon from  '../../image/zh.png'
 import { useEffect } from 'react';
+import '../../i18n'
+import { useTranslation } from 'react-i18next'
 let { getItem, setItem } = new LocalStorage_subata({
     filter:['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -16,6 +18,7 @@ let style = {
 }
 function RightNav(props){
     let { setZf, changeBd, install, setDrawer, btnLoading, count, drawer, opSet } = props
+    let {t: translation} = useTranslation()
     useEffect(()=>{
         if(!window.drag.supported) {
             document.querySelector('#nav-drag').style['-webkit-app-region'] = 'drag';
@@ -71,7 +74,7 @@ function RightNav(props){
                 if(btnLoading){
                     Message.error({
                         style:{top:'20px'},
-                        content:'正在安装中，请稍后再试！',
+                        content:translation('tips_2'),
                     }) 
                     return
                 }
@@ -88,7 +91,7 @@ function RightNav(props){
                 if(btnLoading){
                     Message.error({
                         style:{top:'20px'},
-                        content:'正在安装中，请稍后再试！',
+                        content:translation('tips_2'),
                     }) 
                     return
                 }
@@ -96,7 +99,7 @@ function RightNav(props){
                     console.log('num ----->',num)
                     if(num !== 3){
                         Notification.warning({
-                            title:'确定要狠心卸载汉化补丁吗?',
+                            title:translation('tips_3'),
                             style,
                             id:'unInstall',
                             content:(
@@ -107,12 +110,12 @@ function RightNav(props){
                                             window.electronAPI.sound()
                                             Message.success({
                                                 style:{top:'20px'},
-                                                content:'卸载成功!',
+                                                content:translation('tips_4'),
                                                 duration:2000
                                             })
                                         })
-                                    }}>确定</Button>
-                                    <Button size='small' onClick={()=>{Notification.remove('unInstall')}}>取消</Button>
+                                    }}>{translation('Ok')}</Button>
+                                    <Button size='small' onClick={()=>{Notification.remove('unInstall')}}>{translation('No')}</Button>
                                 </span>
                             )
                         })
@@ -126,12 +129,12 @@ function RightNav(props){
                     Notification.error({
                         id:'notInstallWizard101',
                         style,
-                        title:'未检测到Wizard101, 可能是官服或自定义Steam安装路径',
+                        title:translation('Right_Tips_1'),
                         content: <span>
                             <Button onClick={()=>{  
                                 let fileSelect = document.getElementById('selectWiz')
                                 fileSelect.click()
-                            }}>手动选择游戏路径</Button>
+                            }}>{translation('Btn1')}</Button>
                         </span>
                     })
                 })

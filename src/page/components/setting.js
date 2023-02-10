@@ -193,7 +193,7 @@ function Setting(props){
             <div className='setting-item' id='setting'>
                 {/* <PageHeader title='按钮设置'/> */}
                 <Form>
-                    <Form.Item label={'开始游戏'}>
+                    <Form.Item label={translation('Start Game')}>
                         <Switch checked={btnSetting} onChange={(val)=>{
                             console.log(val)
                             setbtnSetting(val)
@@ -204,7 +204,7 @@ function Setting(props){
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            btnSetting ?'启动游戏自动最小化':'启动游戏后不进行操作'
+                            btnSetting ?translation('Mini'):translation('Nothing')
                         }
                         </span>
                     </Form.Item>
@@ -220,7 +220,7 @@ function Setting(props){
                         />
                         <span style={{paddingLeft:'10px'}}>
                         {
-                            btnSetting1 ?'显示':'隐藏'
+                            btnSetting1 ?translation('Show'):translation('Hide')
                         }
                         </span>
                     </Form.Item>
@@ -232,7 +232,7 @@ function Setting(props){
                             if(val !== getItem('lang')){
                                 setReStart(true)
                             }
-                        }} defaultValue={lang} style={{ marginBottom: 20 }}>
+                        }} defaultValue={lang} direction='vertical' style={{ marginBottom: 20 }}>
                             <Radio value='en'>{translation('En')}</Radio>
                             <Radio value='zh'>{translation('Zh')}</Radio>
                             <Radio value='zh_tw'>{translation('Zh_tw')}</Radio>
@@ -273,17 +273,17 @@ function Setting(props){
             </div>
             <div className='setting-item' id='output'>
                 <Row style={{marginBottom:'20px'}}>
-                    {translation('settingTips_1')}
+                    {translation('SettingTips_1')}
                 </Row>
                 <Row style={{marginBottom:'20px'}}>
-                    <p>{translation('settingTips_2')}</p>
-                    <span>{translation('settingTips_3')}<span style={{color:'red', fontSize:'20px', display:'inline'}}>{translation('settingTips_4')}</span></span> 
+                    <p>{translation('SettingTips_2')}</p>
+                    <span>{translation('SettingTips_3')}<span style={{color:'red', fontSize:'20px', display:'inline'}}>{translation('SettingTips_4')}</span></span> 
                 </Row>
                 <Row style={{marginBottom:'20px', color:'red'}}>
-                {translation('settingTips_5')}
+                {translation('SettingTips_5')}
                 </Row>
                 <Row>
-                    <Col span={4}><Button type='primary' status='success' onClick={()=>{
+                    <Col span={10}><Button type='primary' status='success' onClick={()=>{
                         // console.log(outPutToJson())
                         window.tools.choseDir((dir)=>{
                             console.log(dir)
@@ -296,7 +296,11 @@ function Setting(props){
                             })
                         })
                     }}>{translation('Backups')}</Button></Col>
-                    <Col span={10} offset={2}><Button type='primary' status='default' onClick={()=>{
+
+                </Row>
+                <Row style={{marginBottom:'20px'}}></Row>
+                <Row>
+                    <Col span={10}><Button type='primary' status='default' onClick={()=>{
                         inputFile.current.click()
                     }}>{translation('InputSet')}</Button></Col>
                 </Row>
@@ -433,7 +437,7 @@ function Setting(props){
                     }}>清空缓存</Button>
                 </Row> */}
                 <Row style={{marginTop:'30px'}}>
-                    <Col span={5}>应用更新：</Col>
+                    <Col span={5}>{translation('SubataUpdater')}：</Col>
                     <Button status='success' loading={updateLoading} type='primary' size='large' onClick={()=>{
                         window.electronAPI.checkUpdate((data)=>{
                             // console.log(data)

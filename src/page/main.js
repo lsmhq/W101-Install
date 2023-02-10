@@ -345,7 +345,7 @@ function Main(props) {
         Notification.error({
             id: 'notInstall_bd',
             style,
-            title: '检测到未安装汉化补丁',
+            title: translation('tips_1'),
             btn: (
                 <span style={{ display: 'flex', flexDirection: 'column' }}>
                     {installBtn_config.map(btn => {
@@ -408,7 +408,7 @@ function Main(props) {
                             window.electronAPI.sound()
                             Message.success({
                                 style: { top: '20px' },
-                                content: `切换${obj[getItem('type')]}成功!`
+                                content: `${translation('Switch')}${obj[getItem('type')]}${translation('Success')}!`
                             })
                             window.electronAPI.changeType(getItem('type'))
                             setType(getItem('type'))
@@ -431,12 +431,12 @@ function Main(props) {
             Notification.error({
                 style,
                 id: 'notInstallWizard101',
-                title: '未检测到Wizard101, 可能是官服或自定义Steam安装路径',
+                title: translation('Right_Tips_1'),
                 content: <span>
                     <Button onClick={() => {
                         let fileSelect = document.getElementById('selectWiz')
                         fileSelect.click()
-                    }}>手动选择游戏路径</Button>
+                    }}>{translation('Btn1')}</Button>
                 </span>
             })
             window.electronAPI.winShow()
@@ -445,7 +445,7 @@ function Main(props) {
     function upDate() {
         console.log(obj[getItem('type')])
         Notification.warning({
-            title: `检测到${obj[getItem('type')]}有最新的补丁！`,
+            title: `${translation('Checked')}${obj[getItem('type')]}${translation('Have')}！`,
             id: 'update',
             style,
             duration: 1000000000,
@@ -462,7 +462,7 @@ function Main(props) {
                                 downLoad()
                             }}
                         >
-                            测试版更新
+                            {translation('Beta')}
                         </Button>
                     }
                     {
@@ -474,7 +474,7 @@ function Main(props) {
                             type='primary'
                             size='small'
                         >
-                            稳定版更新
+                            {translation('Stable')}
                         </Button>
                     }
                     {
@@ -486,7 +486,7 @@ function Main(props) {
                             type='primary'
                             size='small'
                         >
-                            聊天纯享更新
+                            {translation('Chat')}
                         </Button>
                     }
                 </span>
@@ -500,7 +500,7 @@ function Main(props) {
 
             Notification.warning({
                 id: 'download',
-                title: '请耐心等待下载...',
+                title: translation('Wait'),
                 content: mark, style, duration: 10000000
             })
         }, (err) => {
@@ -520,8 +520,8 @@ function Main(props) {
                 Notification.success({
                     id: 'download',
                     style,
-                    title: '安装完成!',
-                    content: '请点击下方开始游戏进行体验!',
+                    title: translation('FinishedInstall'),
+                    content: translation('Please'),
                     duration: 2000
                 })
             }
@@ -530,7 +530,7 @@ function Main(props) {
                 Notification.remove('download')
                 Message.success({
                     style: { top: '20px' },
-                    content: `切换${obj[getItem('type')]}成功!`
+                    content: `${translation('Switch')}${obj[getItem('type')]}${translation('Success')}!`
                 })
             }
         },(percent)=>{
@@ -868,7 +868,7 @@ function Main(props) {
             footer={null}
         />
         <Modal
-            title={'设置'}
+            title={translation('Settings')}
             // style={{textAlign:'center'}}
             visible={settingShow}
             getPopupContainer={getMain}

@@ -208,7 +208,7 @@ function BodyMain(props){
                         <Button color='#4cc6e7' onClick={()=>{
                             window.electronAPI.openBroswer('https://www.subata.top')
                         }} type='primary' className='right-openGame subata-right-op' size='large'>
-                            中文攻略(subata)
+                            {translation('Introduction')}(subata)
                         </Button>
                     </div>
                 }
@@ -280,7 +280,7 @@ function BodyMain(props){
                <Form.Item  style={{display:'flex',justifyContent:'center'}} label=''>
                    <AutoComplete 
                        strict = {true}
-                       placeholder='账号' 
+                       placeholder={translation('Account')}
                        value={account}
                        allowClear={true}
                        data={data.map(account=><AutoComplete.Option style={{height: '70px'}} key={account.account} value={account.account}>
@@ -309,7 +309,7 @@ function BodyMain(props){
                                             setAccount('')
                                             setPassword('')
                                         }
-                                    }}>删除</Button>
+                                    }}>{translation('Del')}</Button>
                                 </Col>
                             </Row>
                         </AutoComplete.Option>)}
@@ -324,7 +324,7 @@ function BodyMain(props){
                    />
                </Form.Item>
                <Form.Item label=''  style={{display:'flex',justifyContent:'center'}}>
-                   <Input.Password placeholder='密码' value={password} onChange={(val)=>{
+                   <Input.Password placeholder={translation('Password')} value={password} onChange={(val)=>{
                        setPassword(val)
                        if(val.length>0){
                             setClosedMask(true)
@@ -337,7 +337,7 @@ function BodyMain(props){
                    <Checkbox checked={save} onChange={(val)=>{
                        console.log(val)
                        setSave(val)
-                   }}>记住账号和密码</Checkbox>
+                   }}>{translation('Remember')}</Checkbox>
                </Form.Item>
                {/* <Row style={{marginTop:'-15px'}}>
                    <Col offset={2}>
@@ -367,7 +367,7 @@ function BodyMain(props){
                                     Notification.error({
                                         id:'notInstallWizard101',
                                         style,
-                                        title:'出现错误',
+                                        title:translation('Error'),
                                         content: message,
                                         onClose:()=>{
                                             window.tools.openFile(`"${window.wizPath}\\Wizard101.exe"`)
@@ -377,7 +377,7 @@ function BodyMain(props){
                                     Notification.success({
                                         id:'notInstallWizard101',
                                         style,
-                                        title:'进入游戏中',
+                                        title:translation('Enter'),
                                         content: '',
                                         duration: 2000,
                                         onClose:()=>{
@@ -398,7 +398,7 @@ function BodyMain(props){
                         if(!password){
                             Message.error({
                                 style:{top:'10px'},
-                                content:'请输入密码'
+                                content:translation('Input')
                             })
                             return
                         }
@@ -422,7 +422,7 @@ function BodyMain(props){
                                     Notification.error({
                                         id:'notInstallWizard101',
                                         style,
-                                        title:'出现错误',
+                                        title:translation('Error'),
                                         content: err,
                                         onClose:()=>{
                                             window.tools.openFile(`"${window.wizPath}\\Wizard101.exe"`)
@@ -434,7 +434,7 @@ function BodyMain(props){
                                         Notification.success({
                                             id:'notInstallWizard101',
                                             style,
-                                            title:'准备完成',
+                                            title:translation('Finished'),
                                             content: err ,
                                             duration: 2000
                                         })
@@ -443,7 +443,7 @@ function BodyMain(props){
                                     Notification.info({
                                         id:'notInstallWizard101',
                                         style,
-                                        title:'第一次启动需要一些准备工作',
+                                        title:translation('First'),
                                         content: err
                                     })
                                     // window.tools.killExe('launchWizard101.exe')
@@ -451,7 +451,7 @@ function BodyMain(props){
                                     Notification.success({
                                         id:'notInstallWizard101',
                                         style,
-                                        title:'进入游戏中',
+                                        title:translation("Enter"),
                                         content: err,
                                         duration: 2000,
                                         onClose:()=>{
@@ -469,7 +469,7 @@ function BodyMain(props){
                                     Notification.success({
                                         id:'notInstallWizard101',
                                         style,
-                                        title:'进入游戏中',
+                                        title:translation('Enter'),
                                         content: err,
                                         duration: 2000,
                                         onClose:()=>{
@@ -484,7 +484,7 @@ function BodyMain(props){
                             let fileSelect = document.getElementById('selectWiz')
                             fileSelect.click()
                         }
-                    }} status='success' loading={btnLoading} size='large' type='primary' className='openGame'>登录</Button>
+                    }} status='success' loading={btnLoading} size='large' type='primary' className='openGame'>{translation('Login')}</Button>
                 </div>
             </div>
        </div>}
