@@ -27,8 +27,12 @@
     <script src="./tools/util-node.js"></script>
     <script src="./click.js"></script>
     <script>
+      try {
         const drag = require('electron-drag')
         window.drag = drag
+      } catch (error) {
+        console.log(error)
+      }
         //调用特效函数
     </script>
   </body>
