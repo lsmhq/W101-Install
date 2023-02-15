@@ -139,11 +139,11 @@ function BodyMain(props){
     return <div className='body-main'>
     <div className='body-main-top'>
         <div className='left'>
-            <div className='logo' onClick={()=>{
+            {/* <div className='logo' onClick={()=>{
                 window.electronAPI.openBroswer('https://www.wizard101.com')
             }}>
                 <img src={logo} alt=''/>
-            </div>
+            </div> */}
             <div className='carousel-main'>
                 <Spin dot tip="拼命中" style={{color:'white'}} loading={loading}>
                     <Carousel

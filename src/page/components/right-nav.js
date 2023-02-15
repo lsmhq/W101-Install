@@ -5,7 +5,7 @@ import { IconHeartFill, IconWechat, IconAlipayCircle, IconCompass, IconDelete, I
 import { Message, Button, Notification } from '@arco-design/web-react'
 import LocalStorage_subata from '../util/localStroage';
 import '../../css/right-nav.css'
-import zhIcon from  '../../image/zh.png'
+// import zhIcon from  '../../image/zh.png'
 import { useEffect } from 'react';
 import '../../i18n'
 import { useTranslation } from 'react-i18next'
@@ -69,7 +69,7 @@ function RightNav(props){
             content="通知"
         />
         <Icon
-            Child={<img width={32} alt='' src={zhIcon}/>}
+            Child={<i className='iconfont icon-zhongwen'></i>}
             onClick={()=>{
                 if(btnLoading){
                     Message.error({
@@ -80,7 +80,7 @@ function RightNav(props){
                 }
                 changeBd()
             }}
-            tips="补丁切换"
+            tips="汉化管理"
             // color="#27c346"
             content="汉化"
         />
@@ -140,7 +140,7 @@ function RightNav(props){
                 })
             }}
             // textStyle={{fontSize:'12px'}}
-            tips="卸载补丁"
+            tips="卸载汉化"
             content="卸载"
         />
         <div className='nav-drag' id='nav-drag'>
@@ -176,7 +176,7 @@ function RightNav(props){
                     window.electronAPI.openBroswer('https://subata.top/index.php/about/')
                 }}
                 color="#d1080e"
-                tips="支付宝打赏"
+                tips="感谢名单"
             />
         </div>
     </div>

@@ -1,7 +1,5 @@
 import i18n from "i18next";
-import enUsTrans from "./locales/en.json";
-import zhCnTrans from "./locales/zh.json";
-import zhTwTrans from './locales/zh_tw.json'
+import language from "./locales/lang.json";
 import {
   initReactI18next
 } from 'react-i18next';
@@ -14,13 +12,13 @@ i18n
 .init({
   resources: {
     en: {
-      translation: enUsTrans,
+      translation: language.en,
     },
     zh: {
-      translation: zhCnTrans,
+      translation: language.zh,
     },
     zh_tw:{
-      translation:zhTwTrans
+      translation: language.zh_tw
     }
   },
   //默认语言

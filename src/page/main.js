@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import '../css/main.css'
 import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
-import logo from '../image/WizardLogoRA.png'
+// import logo from '../image/WizardLogoRA.png'
 import QQ from '../image/QQ_share.jpg'
 import apiPath from './http/api'
 import RightNav from './components/right-nav';
@@ -592,7 +592,7 @@ function Main(props) {
             <div className='nav-title' id='nav'>
                 <div className='nav-logo'><img alt='' src={su} /></div>
                 <div className='nav-title'>
-                    Subata{`${window.appVersion}`}
+                    Subata<span className='nav-title-version'>{`${window.appVersion}`}</span>
                     <div className='online-count'>
                         <span className='online'></span>
                         <span className='online-text'>{onlineNum}</span>
@@ -635,7 +635,7 @@ function Main(props) {
         </div>
         <div className='body'>
             <BodyMain
-                logo={logo}
+                // logo={logo}
                 loading={loading}
                 imgs={imgs}
                 nav={nav}
@@ -701,10 +701,10 @@ function Main(props) {
                         noDataElement={<></>}
                         render={(item, index) => item.del ? null : <List.Item key={index} onClick={() => {
                             setMsgShow1(true)
-                            setTitle1(item.title)
+                            setTitle1(`${item.title} - ${item.time}`)
                             setUser1(item.username)
                             setText1(item.msg)
-                        }}><span><Tooltip position='bl' content={item.time.split(' ')[0]}>{`${item.title}-${item.username || 'Subata'}`}</Tooltip> {getItem('userid') === item.id && <Button type='text' onClick={(e) => {
+                        }}><span>{`${item.title}-${item.username || 'Subata'}`}{getItem('userid') === item.id && <Button type='text' onClick={(e) => {
                             e.preventDefault()
                             Notification.warning({
                                 style,
@@ -732,10 +732,11 @@ function Main(props) {
         <Modal
             title=''
             simple
-            style={{ textAlign: 'center' }}
+            style={{ textAlign: 'center'}}
             visible={show}
             getPopupContainer={getMain}
-            mountOnEnter= {false}
+            closable={true}
+            // mountOnEnter= {false}
             onCancel={() => {
                 setZf('')
                 setShow(false)
@@ -753,7 +754,7 @@ function Main(props) {
         <Modal
             title='通知发布'
             style={{ textAlign: 'center' }}
-            mountOnEnter= {false}
+            // mountOnEnter= {false}
             visible={msgShow}
             maskClosable={false}
             getPopupContainer={getMain}
@@ -828,44 +829,14 @@ function Main(props) {
             title={title1}
             style={{ textAlign: 'center' }}
             getPopupContainer={getMain}
-            mountOnEnter= {false}
+            // mountOnEnter= {false}
             visible={msgShow1}
             maskClosable={true}
             onCancel={() => {
                 setMsgShow1(false)
             }}
             children={<>
-                <Input
-                    placeholder='发布者'
-                    type='text'
-                    maxLength={15}
-                    readOnly
-                    value={user1}
-                    autoFocus={false}
-                />
-                <Input
-                    placeholder='标题'
-                    type='text'
-                    value={title1}
-                    readOnly
-                    autoFocus={false}
-                    // maxLength={20}
-                    onChange={(val) => {
-                        setTitle1(val)
-                    }}
-                />
-                <Input.TextArea
-                    placeholder='消息内容'
-                    style={{
-                        height: '300px'
-                    }}
-                    readOnly
-                    autoFocus={false}
-                    value={text1}
-                    onChange={(val) => {
-                        setText1(val)
-                    }}
-                />
+                <div style={{textAlign:'left'}} dangerouslySetInnerHTML={{__html:text1.replaceAll('\n','<br>')}}></div>
             </>}
             footer={null}
         />

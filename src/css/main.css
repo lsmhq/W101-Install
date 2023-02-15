@@ -45,6 +45,11 @@
     color: white;
     flex: 1;
 }
+.nav-title-version{
+    font-size: 13px;
+    color: #e4e4e4;
+    margin-left: 5px;
+}
 .nav-bottom{
     flex: 1;
     width: 100%;
@@ -186,7 +191,7 @@
 }
 .carousel-main{
     position: absolute;
-    top: 125px;
+    top: 95px;
     left: 165px;
     width: 400px;
     height: 205px;
@@ -383,9 +388,9 @@
     height: 100% !important;
 }
 .zf-img{
-    height: 600px;
-    width: 400px;
-    object-fit: cover;
+    height: 500px;
+    /* width: 300px; */
+    object-fit: contain;
 }
 .kf-img{
     /* height: 200px; */

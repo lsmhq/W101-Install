@@ -42,6 +42,8 @@ function Setting(props){
     let [devOpen, setDevOpen] = useState(false)
     let [lang, setLang] = useState(getItem('lang')||'zh')
     let [reStart, setReStart] = useState(false)
+    let [clickNum, setClickNum] = useState(0)
+    let [clickTxt, setClickTxt] = useState('没用的按钮，可能没用吧，你可以试试点一点')
     // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -82,6 +84,20 @@ function Setting(props){
             setDevOpen(false)
         })
     },[])
+    useEffect(()=>{
+        if(clickNum>=8 && clickNum<=11){
+            window.clickEffect();
+        }
+        if(clickNum === 4){
+            setClickTxt('继续继续')
+        }
+        if(clickNum === 7){
+            setClickTxt('就要出效果啦！')
+        }
+        if(clickNum >= 8){
+            setClickTxt('要爆炸了')
+        }
+    },[clickNum])
     useEffect(()=>{
         let langArr = ['zh','zh_tw','en']
         if(langArr.includes(lang)){
@@ -502,7 +518,13 @@ function Setting(props){
                     <Col span={5}>{translation('QQ')}</Col>
                     <Col span={15}><Button type='text' onClick={()=>{
                         window.electronAPI.openBroswer('https://jq.qq.com/?_wv=1027&k=46lAbmFk')
-                    }}>Subata</Button></Col>
+                    }}>Subata QQ</Button></Col>
+                </Row>
+                <Row align='center' style={{marginTop:'5px'}}>
+                    <Col span={5}>{translation('QQ')}</Col>
+                    <Col span={15}><Button type='text' onClick={()=>{
+                        setClickNum(clickNum++)
+                    }}>{clickTxt}</Button></Col>
                 </Row>
             </div>
         </div>
