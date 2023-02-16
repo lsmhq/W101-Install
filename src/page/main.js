@@ -19,7 +19,6 @@ let { getItem, setItem } = new LocalStorage_subata({
 })
 // let wsPath = 'ws://localhost:8000'
 let wsPath = 'ws://101.43.174.221:8000'
-let update = false
 let timerr
 let style = {
     right: '50px',
@@ -61,7 +60,6 @@ function Main(props) {
     let [msgShow1, setMsgShow1] = useState(false)  // 反显
     let [text1, setText1] = useState('')  // 反显 
     let [title1, setTitle1] = useState('')// 反显
-    let [user1, setUser1] = useState('')// 反显
     let [message, setMessage] = useState([]) // 通知
     let [type, setType] = useState(getItem('type')) // 汉化type
     let [root, setRoot] = useState(getItem('root') || '') // 是否可以进行发布通知
@@ -149,6 +147,7 @@ function Main(props) {
 
     useEffect(()=>{
         document.title = ` V ${window.appVersion} / ${translation('onlineNum')} · ${onlineNum} / ${translation('status')} · ${status}`
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onlineNum, status])
     function getSteam(callback) {
         // console.log('getSteam')
@@ -212,10 +211,6 @@ function Main(props) {
         ws.onopen = () => {
             // console.log('连接成功')   
             getMessage()
-            let person = {
-                name: '',
-                account: '',
-            }
             setStatus('在线')
             callback && callback()
         }
@@ -702,7 +697,6 @@ function Main(props) {
                         render={(item, index) => item.del ? null : <List.Item key={index} onClick={() => {
                             setMsgShow1(true)
                             setTitle1(`${item.title} - ${item.time}`)
-                            setUser1(item.username)
                             setText1(item.msg)
                         }}><span>{`${item.title}-${item.username || 'Subata'}`}{getItem('userid') === item.id && <Button type='text' onClick={(e) => {
                             e.preventDefault()
@@ -725,7 +719,6 @@ function Main(props) {
                             })
                         }}>删除</Button>}</span></List.Item>}
                     />
-
                 }
             </Collapse>
         </Drawer>

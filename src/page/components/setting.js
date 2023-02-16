@@ -31,10 +31,6 @@ function Setting(props){
     // let [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'defalut')
     let [zhSound, setZhSound] = useState(false)
     let [loadFile, setLoadFile] = useState(false)
-    let [fileLength, setLength] = useState(0)
-    let [currentFile, setCurrentFile] = useState(0)
-    let [total, setTotal] = useState(0)
-    let [current, setCurrent] = useState(0)
     let inputFile = useRef()
     let [updateLoading, setUpdateLoading] = useState(false)
     let [lastVer, setLastVer] = useState('')
@@ -404,17 +400,8 @@ function Setting(props){
                                     window.electronAPI.updateGame()
 
                                 }}
-                            > {fileLength > 0 ? `正在下载中( 测试谨慎操作 )`:'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
+                            > {'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
                         </Col>
-                        <Row style={{marginTop:'5px'}}>
-                            {fileLength > 0 && `已下载：${currentFile}个 \n总数：${fileLength}（个）`}<br/>
-                        </Row>
-                        <Row style={{marginTop:'5px'}}>
-                            {fileLength > 0 && `当前文件进度：${((current/total)*100).toFixed(2)}%`}<br/>
-                        </Row>
-                        <Row style={{marginTop:'5px'}}>
-                            {fileLength > 0 && `下载过程中终止可能会导致游戏无法启动，下载过程中可以关掉设置窗口`}
-                        </Row>
                     </Row>
             </div>
             <div className='setting-item' id='kf'>
