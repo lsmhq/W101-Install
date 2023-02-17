@@ -52,14 +52,14 @@ function createWindow () {
   remote.initialize()
   remote.enable(mainWindow.webContents)
 
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, './build/index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, './build/index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
   
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:5000/#/');
+  // mainWindow.loadURL('http://localhost:5000/#/');
   // mainWindow.webContents.openDevTools()
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -387,14 +387,19 @@ app.on('before-quit',(e)=>{
         }
         // console.log(stdout)
         if(stdout){
-          stdout.split('\n').forEach((line) => {
-            let processMessage = line.trim().split(/\s+/)
-            let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
-            if (processName === name) {
-                console.log('Kill Process---->', processMessage[1], processMessage)
-                process.kill(processMessage[1])
-            }
-          })
+          if(typeof stdout === 'string'){
+            stdout.split('\n').forEach((line) => {
+              let processMessage = line.trim().split(/\s+/)
+              if(processMessage.length > 0){
+                let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
+                if (processName === name) {
+                    console.log('Kill Process---->', processMessage[1], processMessage)
+                    process.kill(processMessage[1])
+                }
+              }
+            })
+          }
+
         }
         callback && callback()
     })
