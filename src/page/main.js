@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../css/main.css'
+import '../css/main_small.css'
 import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
 // import logo from '../image/WizardLogoRA.png'
@@ -601,7 +602,7 @@ function Main(props) {
                     // console.log(baseX, baseY)
                 }}
             >
-                <div className='control-btn' onClick={(e) => {
+                <div className='control-btn set-btn' onClick={(e) => {
                     e.stopPropagation()
                     // 设置
                     setSetShow(true)
@@ -727,7 +728,7 @@ function Main(props) {
             simple
             style={{ textAlign: 'center'}}
             visible={show}
-            getPopupContainer={getMain}
+            // getPopupContainer={getMain}
             closable={true}
             // mountOnEnter= {false}
             onCancel={() => {
@@ -843,12 +844,7 @@ function Main(props) {
                 setSetShow(false)
             }}
             mountOnEnter={false}
-
-            style={{
-                maxHeight: '600px',
-                minHeight: '600px',
-                width: '700px',
-            }}
+            className="setting_container"
             children={<Setting
                 setBg={setimgNum}
                 setSubataShow={setSubataShow}

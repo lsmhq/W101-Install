@@ -1,0 +1,39 @@
+@media only screen and (max-width: 1000px) {
+    .body-main-top{
+        display: flex;
+        width: 100%;
+        flex: 1;
+        flex-direction: column;
+        overflow: scroll;
+    }
+    .tips{
+        display: none;
+    }
+    .left{
+        position: relative;
+        width: 100%;
+        height: 65%;
+    }
+    .right{
+        position: relative;
+        width: 100%;
+        height: 35%;
+    }
+    .right-btn-group{
+        position: relative;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        top: 40%;
+        left: 1%;
+
+    }
+    .carousel-main{
+        top: 15%;
+        left: 20%;
+    }
+    .set-btn{
+        display: none;
+    }
+}
