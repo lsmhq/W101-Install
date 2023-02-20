@@ -83,6 +83,11 @@ function Main(props) {
                 checkUpdate(false)
             }
         })
+        window.tools.getGameInstallPath('f').then((stdout, stderr)=>{
+            console.log('gamePath',stdout, stderr)
+        }).catch(err=>{
+            console.log('gamePathErr',err)
+        })
         // 获取软件
         // window.tools.getSoftWares()
         // 获取轮播

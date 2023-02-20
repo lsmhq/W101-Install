@@ -366,7 +366,20 @@
                 callback(stdout, stderr)
             });
         }
-    
+        // 获取游戏exe
+        function getGameInstallPath(dir){
+            return new Promise((rv, rj)=>{
+                child_process.exec(`${dir}: && dir /S/B *Wizard*.exe`,{encoding: binaryEncoding}, function (error, stdout, stderr) {
+                    if (error != null) {
+                        console.warn(iconv.decode(error+'', encoding))
+                        rj(iconv.decode(error+'', encoding))
+                        return
+                    }
+                    rv(iconv.decode(stdout+'', encoding), iconv.decode(stderr+'', encoding))
+                });
+            })
+
+        }
         // 打开安装包
     
         // 开始游戏
@@ -673,7 +686,8 @@
             getSoftWares,
             getIpAddress,
             getPublicIP,
-            getIpLocaltion
+            getIpLocaltion,
+            getGameInstallPath
         }
     } catch (error) {
         console.log('浏览器环境报错', error)
