@@ -381,37 +381,39 @@ app.on('before-quit',(e)=>{
     //  tasklist 是没有带命令行参数的。可以把这两个命令再cmd里面执行一下看一下效果
     // 注意：命令行获取的都带有换行符，获取之后需要更换换行符。可以执行配合这个使用 str.replace(/[\r\n]/g,""); 去除回车换行符 
     let cmd = 'tasklist'
-    child_process.exec(cmd, function (err, stdout, stderr) {
-        if (err) {
-            return console.error(err)
-        }
-        // console.log(stdout)
-        if(stdout){
-          if(typeof stdout === 'string'){
-            stdout.split('\n').forEach((line) => {
-              let processMessage = line.trim().split(/\s+/)
-              if(processMessage.length > 0){
-                let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
-                if (processName === name) {
-                    console.log('Kill Process---->', processMessage[1], processMessage)
-                    process.kill(processMessage[1])
-                }
-              }
-            })
+    return new Promise((rv, rj)=>{
+        child_process.exec(cmd, function (err, stdout, stderr) {
+          if (err) {
+              rj(err)
           }
-
-        }
-        callback && callback()
+          // console.log(stdout)
+          if(stdout){
+            if(typeof stdout === 'string'){
+              stdout.split('\n').forEach((line) => {
+                let processMessage = line.trim().split(/\s+/)
+                if(processMessage.length > 0){
+                  let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
+                  if (processName === name) {
+                      console.log('Kill Process---->', processMessage[1], processMessage)
+                      process.kill(processMessage[1])
+                  }
+                }
+              })
+            }
+            rv()
+          }
+        })
     })
   }
-  killExe('launchWizard101.exe', ()=>{
-    // killExe('Subata.exe')
+  killExe('launchWizard101.exe').then(res=>{
     canQuit = true
     // console.log(work)
     if(work && !work.isDestroyed()){
       work.close()
     }
     app.quit()
+  }).catch(err=>{
+    console.log(err)
   })
 })
 // app.on('activate', () => {
