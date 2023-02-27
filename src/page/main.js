@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import '../css/main.css'
+import '../css/main_small.css'
 import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
 import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
-import logo from '../image/WizardLogoRA.png'
+// import logo from '../image/WizardLogoRA.png'
 import QQ from '../image/QQ_share.jpg'
 import apiPath from './http/api'
 import RightNav from './components/right-nav';
@@ -19,7 +20,6 @@ let { getItem, setItem } = new LocalStorage_subata({
 })
 // let wsPath = 'ws://localhost:8000'
 let wsPath = 'ws://101.43.174.221:8000'
-let update = false
 let timerr
 let style = {
     right: '50px',
@@ -61,7 +61,6 @@ function Main(props) {
     let [msgShow1, setMsgShow1] = useState(false)  // 反显
     let [text1, setText1] = useState('')  // 反显 
     let [title1, setTitle1] = useState('')// 反显
-    let [user1, setUser1] = useState('')// 反显
     let [message, setMessage] = useState([]) // 通知
     let [type, setType] = useState(getItem('type')) // 汉化type
     let [root, setRoot] = useState(getItem('root') || '') // 是否可以进行发布通知
@@ -83,6 +82,11 @@ function Main(props) {
             if (getItem('type')) {
                 checkUpdate(false)
             }
+        })
+        window.tools.getGameInstallPath('f').then((stdout, stderr)=>{
+            console.log('gamePath',stdout, stderr)
+        }).catch(err=>{
+            console.log('gamePathErr',err)
         })
         // 获取软件
         // window.tools.getSoftWares()
@@ -149,6 +153,7 @@ function Main(props) {
 
     useEffect(()=>{
         document.title = ` V ${window.appVersion} / ${translation('onlineNum')} · ${onlineNum} / ${translation('status')} · ${status}`
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onlineNum, status])
     function getSteam(callback) {
         // console.log('getSteam')
@@ -212,10 +217,6 @@ function Main(props) {
         ws.onopen = () => {
             // console.log('连接成功')   
             getMessage()
-            let person = {
-                name: '',
-                account: '',
-            }
             setStatus('在线')
             callback && callback()
         }
@@ -592,7 +593,7 @@ function Main(props) {
             <div className='nav-title' id='nav'>
                 <div className='nav-logo'><img alt='' src={su} /></div>
                 <div className='nav-title'>
-                    Subata{`${window.appVersion}`}
+                    Subata<span className='nav-title-version'>{`${window.appVersion}`}</span>
                     <div className='online-count'>
                         <span className='online'></span>
                         <span className='online-text'>{onlineNum}</span>
@@ -606,7 +607,7 @@ function Main(props) {
                     // console.log(baseX, baseY)
                 }}
             >
-                <div className='control-btn' onClick={(e) => {
+                <div className='control-btn set-btn' onClick={(e) => {
                     e.stopPropagation()
                     // 设置
                     setSetShow(true)
@@ -635,7 +636,7 @@ function Main(props) {
         </div>
         <div className='body'>
             <BodyMain
-                logo={logo}
+                // logo={logo}
                 loading={loading}
                 imgs={imgs}
                 nav={nav}
@@ -701,10 +702,9 @@ function Main(props) {
                         noDataElement={<></>}
                         render={(item, index) => item.del ? null : <List.Item key={index} onClick={() => {
                             setMsgShow1(true)
-                            setTitle1(item.title)
-                            setUser1(item.username)
+                            setTitle1(`${item.title} - ${item.time}`)
                             setText1(item.msg)
-                        }}><span><Tooltip position='bl' content={item.time.split(' ')[0]}>{`${item.title}-${item.username || 'Subata'}`}</Tooltip> {getItem('userid') === item.id && <Button type='text' onClick={(e) => {
+                        }}><span>{`${item.title}-${item.username || 'Subata'}`}{getItem('userid') === item.id && <Button type='text' onClick={(e) => {
                             e.preventDefault()
                             Notification.warning({
                                 style,
@@ -725,17 +725,17 @@ function Main(props) {
                             })
                         }}>删除</Button>}</span></List.Item>}
                     />
-
                 }
             </Collapse>
         </Drawer>
         <Modal
             title=''
             simple
-            style={{ textAlign: 'center' }}
+            style={{ textAlign: 'center'}}
             visible={show}
-            getPopupContainer={getMain}
-            mountOnEnter= {false}
+            // getPopupContainer={getMain}
+            closable={true}
+            // mountOnEnter= {false}
             onCancel={() => {
                 setZf('')
                 setShow(false)
@@ -753,7 +753,7 @@ function Main(props) {
         <Modal
             title='通知发布'
             style={{ textAlign: 'center' }}
-            mountOnEnter= {false}
+            // mountOnEnter= {false}
             visible={msgShow}
             maskClosable={false}
             getPopupContainer={getMain}
@@ -828,44 +828,14 @@ function Main(props) {
             title={title1}
             style={{ textAlign: 'center' }}
             getPopupContainer={getMain}
-            mountOnEnter= {false}
+            // mountOnEnter= {false}
             visible={msgShow1}
             maskClosable={true}
             onCancel={() => {
                 setMsgShow1(false)
             }}
             children={<>
-                <Input
-                    placeholder='发布者'
-                    type='text'
-                    maxLength={15}
-                    readOnly
-                    value={user1}
-                    autoFocus={false}
-                />
-                <Input
-                    placeholder='标题'
-                    type='text'
-                    value={title1}
-                    readOnly
-                    autoFocus={false}
-                    // maxLength={20}
-                    onChange={(val) => {
-                        setTitle1(val)
-                    }}
-                />
-                <Input.TextArea
-                    placeholder='消息内容'
-                    style={{
-                        height: '300px'
-                    }}
-                    readOnly
-                    autoFocus={false}
-                    value={text1}
-                    onChange={(val) => {
-                        setText1(val)
-                    }}
-                />
+                <div style={{textAlign:'left'}} dangerouslySetInnerHTML={{__html:text1.replaceAll('\n','<br>')}}></div>
             </>}
             footer={null}
         />
@@ -879,12 +849,7 @@ function Main(props) {
                 setSetShow(false)
             }}
             mountOnEnter={false}
-
-            style={{
-                maxHeight: '600px',
-                minHeight: '600px',
-                width: '700px',
-            }}
+            className="setting_container"
             children={<Setting
                 setBg={setimgNum}
                 setSubataShow={setSubataShow}

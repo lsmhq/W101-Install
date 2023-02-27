@@ -6,7 +6,7 @@ const url = require('url')
 let canQuit = false, work
 // const url = require('url');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
-let mainWindow, loading, tray, width = 1250, height = 700
+let mainWindow, loading, tray, width = 740, height = 500
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -23,15 +23,13 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: parseInt(width/scaleFactor), // 窗口宽度
     height: parseInt(height/scaleFactor), // 窗口高度
-    maxHeight: parseInt(height/scaleFactor),
-    maxWidth: parseInt(width/scaleFactor),
-    minHeight: parseInt(height/scaleFactor),
-    minWidth: parseInt(width/scaleFactor),
+    minHeight: parseInt(500/scaleFactor),
+    minWidth: parseInt(740/scaleFactor),
     // useContentSize:true,
     title: "Subata", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('./images/logo.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     frame: false,
-    resizable: false,
+    // resizable: false,
     // transparent: true, 
     // opacity:0,
     autoHideMenuBar: true,
@@ -54,14 +52,14 @@ function createWindow () {
   remote.initialize()
   remote.enable(mainWindow.webContents)
 
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, './build/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.join(__dirname, './build/index.html'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // }))
   
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:5000/#/');
+  mainWindow.loadURL('http://localhost:5000/#/');
   // mainWindow.webContents.openDevTools()
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -80,7 +78,7 @@ function createWindow () {
   mainWindow.on('close', (e) => {
     if(!canQuit){
       e.preventDefault()
-      mainWindow.hide()
+      mainWindow.close()
     }
   });
   
@@ -383,32 +381,39 @@ app.on('before-quit',(e)=>{
     //  tasklist 是没有带命令行参数的。可以把这两个命令再cmd里面执行一下看一下效果
     // 注意：命令行获取的都带有换行符，获取之后需要更换换行符。可以执行配合这个使用 str.replace(/[\r\n]/g,""); 去除回车换行符 
     let cmd = 'tasklist'
-    child_process.exec(cmd, function (err, stdout, stderr) {
-        if (err) {
-            return console.error(err)
-        }
-        // console.log(stdout)
-        if(stdout){
-          stdout.split('\n').forEach((line) => {
-            let processMessage = line.trim().split(/\s+/)
-            let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
-            if (processName === name) {
-                console.log('Kill Process---->', processMessage[1], processMessage)
-                process.kill(processMessage[1])
+    return new Promise((rv, rj)=>{
+        child_process.exec(cmd, function (err, stdout, stderr) {
+          if (err) {
+              rj(err)
+          }
+          // console.log(stdout)
+          if(stdout){
+            if(typeof stdout === 'string'){
+              stdout.split('\n').forEach((line) => {
+                let processMessage = line.trim().split(/\s+/)
+                if(processMessage.length > 0){
+                  let processName = processMessage[0] //processMessage[0]进程名称 ， processMessage[1]进程id
+                  if (processName === name) {
+                      console.log('Kill Process---->', processMessage[1], processMessage)
+                      process.kill(processMessage[1])
+                  }
+                }
+              })
             }
-          })
-        }
-        callback && callback()
+            rv()
+          }
+        })
     })
   }
-  killExe('launchWizard101.exe', ()=>{
-    // killExe('Subata.exe')
+  killExe('launchWizard101.exe').then(res=>{
     canQuit = true
     // console.log(work)
     if(work && !work.isDestroyed()){
       work.close()
     }
     app.quit()
+  }).catch(err=>{
+    console.log(err)
   })
 })
 // app.on('activate', () => {

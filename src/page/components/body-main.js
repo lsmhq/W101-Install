@@ -27,7 +27,7 @@ let style = {
 let headImgMap ={}
 let timerKill = null
 function BodyMain(props){
-    let { logo, imgs, loading, loading1, nav, btnLoading, play, subataShow, onlineNum, percent } = props
+    let { imgs, loading, loading1, nav, btnLoading, play, subataShow, onlineNum, percent } = props
     const [data, setData] = useState(getItem('accounts')||[]);
     const [dataMap, setDataMap] = useState(getItem('accountsMap')||{});
     const [showLogin, setShowLogin] = useState(false)
@@ -127,6 +127,7 @@ function BodyMain(props){
             console.log(accounts)
             setData([...accounts])
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[headIndex])
     useEffect(() => {
         if(headKey && headImgMap[headKey]){
@@ -139,11 +140,11 @@ function BodyMain(props){
     return <div className='body-main'>
     <div className='body-main-top'>
         <div className='left'>
-            <div className='logo' onClick={()=>{
+            {/* <div className='logo' onClick={()=>{
                 window.electronAPI.openBroswer('https://www.wizard101.com')
             }}>
                 <img src={logo} alt=''/>
-            </div>
+            </div> */}
             <div className='carousel-main'>
                 <Spin dot tip="拼命中" style={{color:'white'}} loading={loading}>
                     <Carousel

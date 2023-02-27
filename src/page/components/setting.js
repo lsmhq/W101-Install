@@ -31,10 +31,6 @@ function Setting(props){
     // let [liveName, setLive2d] = useState(localStorage.getItem('live2d') || 'defalut')
     let [zhSound, setZhSound] = useState(false)
     let [loadFile, setLoadFile] = useState(false)
-    let [fileLength, setLength] = useState(0)
-    let [currentFile, setCurrentFile] = useState(0)
-    let [total, setTotal] = useState(0)
-    let [current, setCurrent] = useState(0)
     let inputFile = useRef()
     let [updateLoading, setUpdateLoading] = useState(false)
     let [lastVer, setLastVer] = useState('')
@@ -42,6 +38,8 @@ function Setting(props){
     let [devOpen, setDevOpen] = useState(false)
     let [lang, setLang] = useState(getItem('lang')||'zh')
     let [reStart, setReStart] = useState(false)
+    let [clickNum, setClickNum] = useState(0)
+    let [clickTxt, setClickTxt] = useState('没用的按钮，可能没用吧，你可以试试点一点')
     // let [live2dOpen, setlive2dOpen] = useState(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -82,6 +80,20 @@ function Setting(props){
             setDevOpen(false)
         })
     },[])
+    useEffect(()=>{
+        if(clickNum>=8 && clickNum<=11){
+            window.clickEffect();
+        }
+        if(clickNum === 4){
+            setClickTxt('继续继续')
+        }
+        if(clickNum === 7){
+            setClickTxt('就要出效果啦！')
+        }
+        if(clickNum >= 8){
+            setClickTxt('要爆炸了')
+        }
+    },[clickNum])
     useEffect(()=>{
         let langArr = ['zh','zh_tw','en']
         if(langArr.includes(lang)){
@@ -388,17 +400,8 @@ function Setting(props){
                                     window.electronAPI.updateGame()
 
                                 }}
-                            > {fileLength > 0 ? `正在下载中( 测试谨慎操作 )`:'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
+                            > {'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
                         </Col>
-                        <Row style={{marginTop:'5px'}}>
-                            {fileLength > 0 && `已下载：${currentFile}个 \n总数：${fileLength}（个）`}<br/>
-                        </Row>
-                        <Row style={{marginTop:'5px'}}>
-                            {fileLength > 0 && `当前文件进度：${((current/total)*100).toFixed(2)}%`}<br/>
-                        </Row>
-                        <Row style={{marginTop:'5px'}}>
-                            {fileLength > 0 && `下载过程中终止可能会导致游戏无法启动，下载过程中可以关掉设置窗口`}
-                        </Row>
                     </Row>
             </div>
             <div className='setting-item' id='kf'>
@@ -502,7 +505,13 @@ function Setting(props){
                     <Col span={5}>{translation('QQ')}</Col>
                     <Col span={15}><Button type='text' onClick={()=>{
                         window.electronAPI.openBroswer('https://jq.qq.com/?_wv=1027&k=46lAbmFk')
-                    }}>Subata</Button></Col>
+                    }}>Subata QQ</Button></Col>
+                </Row>
+                <Row align='center' style={{marginTop:'5px'}}>
+                    <Col span={5}>{translation('QQ')}</Col>
+                    <Col span={15}><Button type='text' onClick={()=>{
+                        setClickNum(clickNum++)
+                    }}>{clickTxt}</Button></Col>
                 </Row>
             </div>
         </div>
