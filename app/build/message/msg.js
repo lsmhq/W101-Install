@@ -12,6 +12,7 @@
         window.electronAPI = {
             openGame: (title) => ipcRenderer.send('openGame', title),
             downLoadFile:(type)=>ipcRenderer.send('downLoadFile',type),
+            changeSize:(size)=>ipcRenderer.send('changeWindowSize',size),
             openBroswer:openB,
             sendXY:(e)=>{ipcRenderer.send('move-application',{posX:e.x,posY:e.y})},
             mini:()=>{ipcRenderer.send('mini')},
