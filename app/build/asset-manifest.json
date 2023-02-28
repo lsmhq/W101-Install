@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.f584a9f8.css",
-    "main.js": "./static/js/main.d553501b.js",
+    "main.css": "./static/css/main.6d5a288e.css",
+    "main.js": "./static/js/main.3d837f1f.js",
     "static/js/787.48cdcb01.chunk.js": "./static/js/787.48cdcb01.chunk.js",
     "static/media/get.wav": "./static/media/get.97b3f7e7d478d5acecfb.wav",
     "static/media/kfzfb.jpg": "./static/media/kfzfb.e6d98a2a17b4ca683c45.jpg",
@@ -11,12 +11,12 @@
     "static/media/Subata_logo.png": "./static/media/Subata_logo.a66888c88454abf5eb74.png",
     "static/media/body.png": "./static/media/body.1a236e276d3f9b154f94.png",
     "index.html": "./index.html",
-    "main.f584a9f8.css.map": "./static/css/main.f584a9f8.css.map",
-    "main.d553501b.js.map": "./static/js/main.d553501b.js.map",
+    "main.6d5a288e.css.map": "./static/css/main.6d5a288e.css.map",
+    "main.3d837f1f.js.map": "./static/js/main.3d837f1f.js.map",
     "787.48cdcb01.chunk.js.map": "./static/js/787.48cdcb01.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f584a9f8.css",
-    "static/js/main.d553501b.js"
+    "static/css/main.6d5a288e.css",
+    "static/js/main.3d837f1f.js"
   ]
 }

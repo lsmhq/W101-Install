@@ -9,7 +9,7 @@
         const child_process = require('child_process'); //引入模块
         const { shell } = require('electron')
         const { dialog, app } = require('@electron/remote')
-        console.log('version---->',app.getVersion())
+        console.log('version---->', app.getVersion())
         let binaryEncoding = 'binary' // 输出编码格式
         let encoding = 'cp936'; // 解码格式
         const iconv = require('iconv-lite'); // 解码
@@ -59,7 +59,7 @@
                 }
             })
         }
-    
+
         // 修改host
         function connect(callback) {
             let pathC = 'C:\\Windows\\System32\\drivers\\etc'
@@ -94,7 +94,7 @@
                 }
             })
         }
-    
+
         // 初始化
         function init(callback) {
             try {
@@ -113,7 +113,7 @@
             }
             callback()
         }
-    
+
         function checkUpdate(type, success, failed, error) {
             // console.log(window.gameDataPath)
             request({
@@ -121,7 +121,7 @@
                 method: 'GET',
             }, (err, response, body) => {
                 if (!err && response.statusCode === 200) {
-    
+
                     try {
                         let url = JSON.parse(response.body).url
                         let version = url.split('/')[url.split('/').length - 2]
@@ -130,7 +130,7 @@
                             withFileTypes: true
                         })
                         let names = files.map(file => file.name)
-    
+
                         // console.log(names.includes(`version_zh_cn_${type}`))
                         if (names.includes(`version_zh_cn_${type}`)) {
                             // console.log('判断')
@@ -151,13 +151,13 @@
                         // console.log(err)
                         error && error(err)
                     }
-    
+
                 } else {
                     failed(err)
                 }
             })
         }
-    
+
         function checkUpdateExe(type, current, success, error) {
             // console.log(path)
             request({
@@ -175,7 +175,7 @@
                             // console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
                             // console.log(1)
                             success(1, url, version, mark) // 有最新
-    
+
                         } else {
                             // console.log(2)
                             success(2) // 没有
@@ -188,7 +188,7 @@
                 }
             })
         }
-    
+
         function downLoad(type, getMark, failed, changed, progress) {
             request({
                 url: `http://${hrefNew}:3001/file/latest?type=${params[type]}`,
@@ -220,14 +220,14 @@
                                 changeType(type, () => {
                                     changed(1)
                                 })
-                            }, (total, current)=>{
+                            }, (total, current) => {
                                 // console.log(current, total, current/total)
                                 let percent = (current / total).toFixed(2)
                                 // setPercent(percent)
                                 // console.log(percent)
-                                if(percent>=1){
+                                if (percent >= 1) {
                                     window.electronAPI.setProgressBar(-1)
-                                }else{
+                                } else {
                                     window.electronAPI.setProgressBar(percent)
                                 }
                                 progress && progress(percent)
@@ -250,13 +250,13 @@
                             changeType(type, () => {
                                 changed(1)
                             })
-                        }, (total, current)=>{
+                        }, (total, current) => {
                             let percent = (current / total).toFixed(2)
                             // setPercent(percent)
                             // console.log(current, total)
-                            if(percent>=1){
+                            if (percent >= 1) {
                                 window.electronAPI.setProgressBar(-1)
-                            }else{
+                            } else {
                                 window.electronAPI.setProgressBar(percent)
                             }
                             progress && progress(percent)
@@ -279,15 +279,15 @@
                 req.on('response', (res) => {
                     console.log(res.headers['content-length'])
                     total = res.headers['content-length']
-                    
-                    console.log('当前目标文件大小:',total)
-                    if(total){
+
+                    console.log('当前目标文件大小:', total)
+                    if (total) {
                         req.pipe(out)
                         out.on('finish', () => {
                             out.close()
                             callback()
                         })
-                    }else{
+                    } else {
                         out.close()
                         req.end()
                         callback('error')
@@ -298,10 +298,10 @@
                     currentTotal += data.byteLength
                     onData(total, currentTotal)
                 })
-    
+
             }
         }
-    
+
         // 改变type
         function changeType(type, callback) {
             let files = fs.readdirSync(window.gameDataPath, {
@@ -324,7 +324,7 @@
             v1 = v1.split('.')
             v2 = v2.split('.')
             const len = Math.max(v1.length, v2.length)
-    
+
             while (v1.length < len) {
                 v1.push('0')
             }
@@ -334,7 +334,7 @@
             for (let i = 0; i < len; i++) {
                 const num1 = parseInt(v1[i])
                 const num2 = parseInt(v2[i])
-    
+
                 if (num1 > num2) {
                     return 1
                 } else if (num1 < num2) {
@@ -357,18 +357,31 @@
         // 获取Steam
         function getPath(callback, r) {
             //查
-            child_process.exec(`REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam /v InstallPath`,{encoding: binaryEncoding}, function (error, stdout, stderr) {
+            child_process.exec(`REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Valve\\Steam /v InstallPath`, { encoding: binaryEncoding }, function (error, stdout, stderr) {
                 if (error != null) {
-                    console.warn(iconv.decode(error+'', encoding))
+                    console.warn(iconv.decode(error + '', encoding))
                     r(error)
                     return
                 }
                 callback(stdout, stderr)
             });
         }
-    
+        // 获取游戏exe
+        function getGameInstallPath(dir) {
+            return new Promise((rv, rj) => {
+                child_process.exec(`${dir}: && dir /S/B *Wizard*.exe`, { encoding: binaryEncoding }, function (error, stdout, stderr) {
+                    if (error != null) {
+                        console.warn(iconv.decode(error + '', encoding))
+                        rj(iconv.decode(error + '', encoding))
+                        return
+                    }
+                    rv(iconv.decode(stdout + '', encoding), iconv.decode(stderr + '', encoding))
+                });
+            })
+
+        }
         // 打开安装包
-    
+
         // 开始游戏
         function startGame(callback) {
             console.log(window.wizPath)
@@ -378,11 +391,11 @@
                     withFileTypes: true
                 })
                 let names = files.map(file => file.name)
-                let files_bin = fs.readdirSync(`${window.wizPath}\\Bin`,{
+                let files_bin = fs.readdirSync(`${window.wizPath}\\Bin`, {
                     withFileTypes: true
                 })
-                let names_bin = files_bin.map(file=>file.name)
-                if(!names_bin.includes('WizardGraphicalClient.exe')){
+                let names_bin = files_bin.map(file => file.name)
+                if (!names_bin.includes('WizardGraphicalClient.exe')) {
                     callback('出现错误：WizardGraphicalClient.exe不存在, 即将打开官方启动器')
                     return
                 }
@@ -393,7 +406,7 @@
                     // shell.openPath(exe)
                     runExe(exe)
                     callback(false, '')
-                }  else {
+                } else {
                     callback('没有在游戏根目录下')
                 }
             } catch (error) {
@@ -401,7 +414,7 @@
                     callback(error)
                 }
             }
-    
+
         }
         // 打开文件
         function openFile(path) {
@@ -410,7 +423,7 @@
             // window.confirm('请关闭程序之后进行更新')
         }
         // 获取游戏版本
-        function getGameVersion( callback ) {
+        function getGameVersion(callback) {
             try {
                 let logPath = `${window.wizPath}/Bin`
                 let files = fs.readdirSync(logPath, {
@@ -464,7 +477,7 @@
             callback(steamInstall, wizInstall, errors)
         }
         // 登录
-        function login(account, password, callback){
+        function login(account, password, callback) {
             console.log(window.wizPath)
             console.log(localStorage.getItem('steamPath'))
             try {
@@ -479,7 +492,7 @@
                 })
                 let names = files.map(file => file.name)
                 let names_root = files_root.map(file => file.name)
-                if(!names.includes('WizardGraphicalClient.exe')){
+                if (!names.includes('WizardGraphicalClient.exe')) {
                     callback(true, '出现错误：WizardGraphicalClient.exe不存在, 即将打开官方启动器')
                     return
                 }
@@ -491,21 +504,21 @@
                     callback()
                 } else if (!names_root.includes('launchWizard101.exe')) {
                     // startWizard.bat
-                    console.log('下载开始')        
+                    console.log('下载开始')
                     getFile(`http://${hrefNew}:3001/file/launchWizard101.exe`, `${wizPath}\\launchWizard101.exe`, (error) => {
                         console.log('添加launch.exe成功', error)
                         let exe = `${window.wizPath.split(':')[0]}: && "${wizPath}\\launchWizard101.exe" ${account} ${password} "${window.wizPath}\\Bin"`
                         console.log(exe)
                         // shell.openPath(exe)
-    
+
                         callback(1, '第一次启动, 稍等...')
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             // ()
                             runExe(exe)
                             callback()
                         }, 500)
                     }, (total, currentTotal) => {
-                        callback(false, `正在下载启动文件${Number.parseInt((( currentTotal / total ).toFixed(2) * 100))}%`)
+                        callback(false, `正在下载启动文件${Number.parseInt(((currentTotal / total).toFixed(2) * 100))}%`)
                     })
                 } else {
                     callback(true, '出现错误：游戏文件缺失')
@@ -513,28 +526,28 @@
             } catch (error) {
                 console.log(error)
                 if (error) {
-                    callback(true, JSON.stringify( error ))
+                    callback(true, JSON.stringify(error))
                 }
             }
         }
-        function runExe(exe){
-            cmdShell.run(exe,(err, stdout, stderr)=>{
-                if(err){
+        function runExe(exe) {
+            cmdShell.run(exe, (err, stdout, stderr) => {
+                if (err) {
                     // console.log('stdout1', iconv.decode(o, 'cp936'));
                     // console.log(new Buffer.from(err))
-                    console.log('报错了 ----->  ',err)
+                    console.log('报错了 ----->  ', err)
                     return false;
-                  }else{
+                } else {
                     console.log('进程打印内容')
                     console.log(stderr)
                     console.log(stdout)
-              　　}
-            }).on('close',(e, err, out)=>{
+                }
+            }).on('close', (e, err, out) => {
                 console.log(e, err, out)
                 console.log('已关闭')
             })
         }
-        function killExe (name) {
+        function killExe(name) {
             // process 不用引入，nodeJS 自带
             // 带有命令行的list进程命令是：“cmd.exe /c wmic process list full”
             //  tasklist 是没有带命令行参数的。可以把这两个命令再cmd里面执行一下看一下效果
@@ -555,9 +568,9 @@
                 })
             })
         }
-    
+
         // 读取本地文件
-        function readFile(path, callBack, code = 'utf-8'){
+        function readFile(path, callBack, code = 'utf-8') {
             try {
                 let str = fs.readFileSync(path, code)
                 // return str
@@ -567,7 +580,7 @@
             }
         }
         // 写本地文件
-        function writeFile(path, data, callBack, code = 'utf-8'){
+        function writeFile(path, data, callBack, code = 'utf-8') {
             try {
                 fs.writeFileSync(path, data, code)
                 callBack && callBack()
@@ -576,14 +589,14 @@
             }
         }
         // 选择目录
-        function choseDir(callback){
+        function choseDir(callback) {
             dialog.showOpenDialog({
                 // 标题
-                title:'保存路径',
+                title: '保存路径',
                 // 过滤器,name 后面的值随便写 extensions 里面写允许上传的类型
-                buttonLabel:'选择',
-                properties:['openDirectory'],
-                
+                buttonLabel: '选择',
+                properties: ['openDirectory'],
+
             }).then(result => {
                 // console.log(result.filePaths)
                 callback && callback(result.filePaths[0])
@@ -592,25 +605,25 @@
             })
         }
         // 读取目录
-        function readDir(path, callBack, callbackError){
+        function readDir(path, callBack, callbackError) {
             try {
-                let dir = fs.readdirSync(path, {withFileTypes: true})
+                let dir = fs.readdirSync(path, { withFileTypes: true })
                 callBack && callBack(dir)
             } catch (error) {
-                console.warn('报错但问题不大---->',error)
+                console.warn('报错但问题不大---->', error)
                 error && callbackError(error)
             }
         }
         // 获取软件
-        function getSoftWares(){
+        function getSoftWares() {
             let path = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\'
-            
+
             // regedit.list([path]).on('data',(res)=>{
             //     console.log(res)
             // })
         }
         // 获取ip
-        function getIpAddress(){
+        function getIpAddress() {
             let ip
             for (let devName in interfaces) {
                 let iface = interfaces[devName];
@@ -628,27 +641,27 @@
             const ifaces = interfaces
             let en0;
             Object.keys(ifaces).forEach((ifname) => {
-              let alias = 0;
-              ifaces[ifname].forEach(function (iface) {
-                if ("IPv4" !== iface.family || iface.internal !== false) {
-                  return;
-                }
-                if (alias >= 1) {
-                  en0 = iface.address;
-                  console.log(ifname + ":" + alias, iface.address);
-                } else {
-                  console.log(ifname, iface.address);
-                  en0 = iface.address;
-                }
-                ++alias;
-              });
+                let alias = 0;
+                ifaces[ifname].forEach(function (iface) {
+                    if ("IPv4" !== iface.family || iface.internal !== false) {
+                        return;
+                    }
+                    if (alias >= 1) {
+                        en0 = iface.address;
+                        console.log(ifname + ":" + alias, iface.address);
+                    } else {
+                        console.log(ifname, iface.address);
+                        en0 = iface.address;
+                    }
+                    ++alias;
+                });
             });
             return en0;
-          };
-          // 获取属地
-          function getIpLocaltion(ip){
-            return fetch(`https://ip.useragentinfo.com/json?ip=${ip}`).then(res=>res.json())
-          }
+        };
+        // 获取属地
+        function getIpLocaltion(ip) {
+            return fetch(`https://ip.useragentinfo.com/json?ip=${ip}`).then(res => res.json())
+        }
         window.tools = {
             initDns,
             connect,
@@ -673,7 +686,8 @@
             getSoftWares,
             getIpAddress,
             getPublicIP,
-            getIpLocaltion
+            getIpLocaltion,
+            getGameInstallPath
         }
     } catch (error) {
         console.log('浏览器环境报错', error)

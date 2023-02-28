@@ -6,15 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .dialog{
+        /* .dialog{
             border: none;
-            box-shadow: 1px 0px 20px rgb(116, 116, 116);
-            width: 400px;
-            height: 300px;
+            box-shadow: 0px 5px 20px rgb(116, 116, 116);
             border-radius: 10px;
         }
+        dialog::backdrop {
+            background: rgba(83, 83, 83, 0.564);
+        } */
     </style>
 </head>
 <body>
+    <script>
+        class Dialog{
+            constructor(config){
+                this.config = config
+                this.dialog = null
+            }
+            hide = ()=>{
+                this.dialog.close()
+                return this
+            }
+            show = ()=>{
+                this.dialog.showModal()
+                return this
+            }
+            init = ()=>{
+                this.dialog = document.createElement('dialog')
+                this.dialog.classList.add(this.config.classname)
+                if(this.config.style){
+                    Object.keys(this.config.style).forEach((name)=>{
+                        if(typeof value === "number"){
+                            console.warn(`Style 中存在 number 类型的数据，缺少单位(px、rem、em...)`)
+                        }
+                        this.dialog.style[name] = this.config.style[name]
+                    })
+                    console.log(this.dialog.style)
+                }
+                this.config.container.append(this.dialog)
+                return this
+            }
+            getRef = () => this.dialog
+        }
+    </script>
+    <script>
+        let dialog = new Dialog({
+            classname: 'dialog',
+            container: document.body,
+            style:{
+                width: '400px',
+                height: '300px'
+            }
+        })
+        dialog.init().show()
+    </script>
 </body>
 </html>

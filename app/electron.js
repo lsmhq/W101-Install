@@ -6,7 +6,7 @@ const url = require('url')
 let canQuit = false, work
 // const url = require('url');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
-let mainWindow, loading, tray, width = 740, height = 500
+let mainWindow, loading, tray, width = 1100, height = 650
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -52,14 +52,14 @@ function createWindow () {
   remote.initialize()
   remote.enable(mainWindow.webContents)
 
-  // mainWindow.loadURL(url.format({
-  //   pathname: path.join(__dirname, './build/index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, './build/index.html/#/main'),
+    protocol: 'file:',
+    slashes: true
+  }))
   
   // 加载应用 --开发阶段  需要运行 npm run start
-  mainWindow.loadURL('http://localhost:5000/#/');
+  // mainWindow.loadURL('http://localhost:5000/#/');
   // mainWindow.webContents.openDevTools()
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -78,7 +78,7 @@ function createWindow () {
   mainWindow.on('close', (e) => {
     if(!canQuit){
       e.preventDefault()
-      mainWindow.close()
+      mainWindow.hide()
     }
   });
   
