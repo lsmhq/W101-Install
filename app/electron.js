@@ -6,7 +6,7 @@ const url = require('url')
 let canQuit = false, work
 // const url = require('url');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
-let mainWindow, loading, tray, width = 1100, height = 650
+let mainWindow, loading, tray, width = 1200, height = 700
 const message = {
   error: '检查更新出错',
   checking: '正在检查更新…',
@@ -51,15 +51,16 @@ function createWindow () {
   });
   remote.initialize()
   remote.enable(mainWindow.webContents)
+  
 
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, './build/index.html/#/main'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.join(__dirname, './build/index.html/#/main'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // }))
   
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:5000/#/');
+  mainWindow.loadURL('http://localhost:5000/#/');
   // mainWindow.webContents.openDevTools()
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {
@@ -97,6 +98,21 @@ function createWindow () {
   ipcMain.on("downLoadFile",(e,type)=>{
     // 下载补丁
     console.log(type)
+  });
+  ipcMain.on("changeWindowSize",(e,type)=>{
+    // console.log(type)
+    // 改变窗口尺寸
+    if(type === 'max'){
+      mainWindow.maximize()
+    }
+    if(type === 'normal'){
+      mainWindow.restore();
+      mainWindow.setSize(parseInt(1200), parseInt(700))
+    }
+    if(type === 'mini'){
+      mainWindow.restore();
+      mainWindow.setSize(parseInt(700), parseInt(600))
+    }
   });
   // 打开调试窗口
   ipcMain.on('devWindow',(e, password)=>{

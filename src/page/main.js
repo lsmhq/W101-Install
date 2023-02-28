@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import '../css/main.css'
 import '../css/main_small.css'
 import {IconClose, IconMinus, IconSettings} from '@arco-design/web-react/icon'
-import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip } from '@arco-design/web-react';
+import { List, Button, Modal, Notification, Drawer, Collapse, Message, Input, Tooltip, Trigger } from '@arco-design/web-react';
 // import logo from '../image/WizardLogoRA.png'
 import QQ from '../image/QQ_share.jpg'
 import apiPath from './http/api'
@@ -15,6 +15,7 @@ import { installBtn_config } from './config/config.page';
 import '../i18n';
 import { useTranslation } from 'react-i18next'
 import finishAudio from '../audio/get.wav'
+import TriggerSelect from './components/TriggerSelect';
 let { getItem, setItem } = new LocalStorage_subata({
     filter: ['wizInstall', 'installPath', 'steamInstall', 'wizPath', 'gameDataPath']
 })
@@ -74,6 +75,7 @@ function Main(props) {
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
     let [bgShow, setBgShow] = useState(true) // 背景图显隐
     let [status, setStatus] = useState('') // webSocket 状态
+    let [popupVisible, setPopupVisible] = useState(false)
     const { t:translation } = useTranslation();
     useEffect(() => {
         // 初始化地址
@@ -615,12 +617,22 @@ function Main(props) {
 
                     <IconSettings style={{ fontSize: '20px' }} />
                 </div>
-                <div className='control-btn' onClick={(e) => {
-                    e.stopPropagation()
-                    window.electronAPI.mini()
-                }}>
-                    <IconMinus style={{ fontSize: '20px' }} />
-                </div>
+                <Trigger
+                    // popupVisible={popupVisible}
+                    
+                    popup={()=><TriggerSelect onClick={(type)=>{
+                        // setPopupVisible(false)
+                        window.electronAPI.changeSize(type)
+                    }}/>}
+                    trigger='hover'
+                >
+                    <div className='control-btn' 
+                     onClick={()=>{
+                        window.electronAPI.mini()
+                    }}>
+                        <IconMinus style={{ fontSize: '20px' }} />
+                    </div>
+                </Trigger>
                 <div className='control-btn btn-danger' onClick={(e) => {
                     e.stopPropagation()
                     console.log(getItem('btnSetting2'))
