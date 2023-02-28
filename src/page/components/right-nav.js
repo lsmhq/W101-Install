@@ -134,7 +134,7 @@ function RightNav(props){
                             <Button onClick={()=>{  
                                 let fileSelect = document.getElementById('selectWiz')
                                 fileSelect.click()
-                            }}>{translation('Btn1')}</Button>
+                            }}>{translation('Btn')}</Button>
                         </span>
                     })
                 })
