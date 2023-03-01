@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+// import { HashRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Main from './page/main';
 // import { ConfigProvider } from '@arco-design/web-react';
@@ -46,6 +47,11 @@ function App() {
   return (
     <div className="App">
       {/* <ConfigProvider locale={zhMap[local]}> */}
+      {/* <HashRouter>
+          <Routes>
+              <Route path='main' element={<Main/>}/>
+          </Routes>
+      </HashRouter> */}
         <Main/>
       {/* </ConfigProvider> */}
     </div>

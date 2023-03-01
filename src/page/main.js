@@ -75,7 +75,7 @@ function Main(props) {
     let [bgImg, setBgImg] = useState('') // 背景图blobUrl
     let [bgShow, setBgShow] = useState(true) // 背景图显隐
     let [status, setStatus] = useState('') // webSocket 状态
-    let [popupVisible, setPopupVisible] = useState(false)
+    // let [popupVisible, setPopupVisible] = useState(false)
     const { t:translation } = useTranslation();
     useEffect(() => {
         // 初始化地址

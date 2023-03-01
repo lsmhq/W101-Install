@@ -298,7 +298,6 @@
                     currentTotal += data.byteLength
                     onData(total, currentTotal)
                 })
-
             }
         }
 
@@ -662,6 +661,7 @@
         function getIpLocaltion(ip) {
             return fetch(`https://ip.useragentinfo.com/json?ip=${ip}`).then(res => res.json())
         }
+        
         window.tools = {
             initDns,
             connect,
