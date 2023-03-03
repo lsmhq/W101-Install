@@ -417,6 +417,7 @@ function Main(props) {
                             })
                             window.electronAPI.changeType(getItem('type'))
                             setType(getItem('type'))
+                            setBtnLoad(false)
                         })
                     break
                 case 3:
@@ -574,9 +575,7 @@ function Main(props) {
                                     key={btn.zhType}
                                     status={btn.status}
                                     style={btn.style}
-                                    disabled={type === btn.zhType}
                                     onClick={() => {
-
                                         setItem('type', btn.zhType)
                                         // Notification.remove('change_success')
                                         setType(btn.zhType)
