@@ -352,7 +352,7 @@ function Main(props) {
             style,
             title: translation('Tips_1'),
             btn: (
-                <span style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className='btn-bd'>
                     {installBtn_config.map(btn => {
                         return type ? type === btn.zhType && <Button
                             loading={btnLoading}
@@ -367,7 +367,7 @@ function Main(props) {
                                 setItem('type', btn.zhType)
                             }}
                         >
-                            {btn.title}
+                             {translation(btn.smTitle)}
                         </Button> : <Button
                             loading={btnLoading}
                             type={btn.type}
@@ -381,7 +381,7 @@ function Main(props) {
                                 setItem('type', btn.zhType)
                             }}
                         >
-                            {btn.title}
+                             {translation(btn.smTitle)}
                         </Button>
                     })}
                 </span>
@@ -501,13 +501,22 @@ function Main(props) {
     function downLoad(type) {
         setBtnLoad(true)
         Notification.clear()
-        window.tools.downLoad(type || getItem('type'), (mark) => {
+        window.tools.downLoad(type || getItem('type'), (mark, version) => {
+            if(version){
+                Notification.warning({
+                    id: 'download',
+                    title: translation('Wait'),
+                    content: mark, style, duration: 10000000
+                })
+            }else{
+                Notification.error({
+                    id: 'download',
+                    title: translation('Tips_6'),
+                    content: mark, style, duration: 3000
+                })
+                setBtnLoad(false)
+            }
 
-            Notification.warning({
-                id: 'download',
-                title: translation('Wait'),
-                content: mark, style, duration: 10000000
-            })
         }, (err) => {
             if (err) {
                 Notification.error({
@@ -553,7 +562,7 @@ function Main(props) {
             id: 'change_bd',
             style,
             btn: (
-                <span style={{ display: 'flex' }}>
+                <span className='btn-bd'>
 
                     {
                         installBtn_config.map(btn => {

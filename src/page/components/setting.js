@@ -389,6 +389,11 @@ function Setting(props){
                         </Col>
                     </Row> 
                     <Row style={{marginTop:'10px'}} align="center">
+                        <Col span={24}>
+                            <a href='http://101.43.174.221:3001/#/publishBd' target="_blank" rel="noreferrer"> 补丁版本管理 </a>
+                        </Col>
+                    </Row>
+                    <Row style={{marginTop:'10px'}} align="center">
                         <Col span={6}>{translation('Updater')}</Col>
                         <Col span={24}>
                             <Button

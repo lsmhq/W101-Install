@@ -1,0 +1,84 @@
+<head>
+    <style>
+        body,html{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url("data:image/svg+xml;base64,ICAgIDxzdmcKICAgICAgICBjbGFzcz0id2F2ZXMiCiAgICAgICAgdmlld0JveD0iMCAyNCAxNTAgMjgiCiAgICAgICAgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIKICAgICAgICBzaGFwZS1yZW5kZXJpbmc9ImF1dG8iCiAgICA+CiAgICAgICAgPGRlZnM+CiAgICAgICAgICAgIDxwYXRoCiAgICAgICAgICAgICAgICBpZD0iZ2VudGxlLXdhdmUiCiAgICAgICAgICAgICAgICBkPSJNLTE2MCA0NGMzMCAwIDU4LTE4IDg4LTE4cyA1OCAxOCA4OCAxOCA1OC0xOCA4OC0xOCA1OCAxOCA4OCAxOCB2NDRoLTM1MnoiCiAgICAgICAgICAgIC8+CiAgICAgICAgPC9kZWZzPgogICAgICAgIDxnIGNsYXNzPSJwYXJhbGxheCI+CiAgICAgICAgICAgIDx1c2UgeGxpbms6aHJlZj0iI2dlbnRsZS13YXZlIiB4PSI0OCIgeT0iNSIgZmlsbD0iI0NFMjExQyIgLz4KICAgICAgICA8L2c+CiAgICA8L3N2Zz4=");
+        }
+        .container {
+            width: 200px;
+            height: 200px;
+            border-radius: 200px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid red;
+            background-color: rgb(255, 203, 195);
+            /* background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%); */
+        }
+        .content {
+            /* height: 65vh; */
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .waves {
+            position: absolute;
+            width: 100%;
+            /* height: 15vh; */
+            height: 20px;
+            bottom: 0px;
+        } 
+
+        .parallax > use {
+            animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+        }
+        .parallax > use:nth-child(1) {
+            animation-delay: -2s;
+            animation-duration: 3s;
+        }
+        .parallax > use:nth-child(2) {
+            animation-delay: -3s;
+            animation-duration: 5s;
+        }
+        .parallax > use:nth-child(3) {
+            animation-delay: -4s;
+            animation-duration: 5s;
+        }
+        .parallax > use:nth-child(4) {
+            animation-delay: -5s;
+            animation-duration: 10s;
+        }
+        @keyframes move-forever {
+            0% {
+                transform: translate3d(-90px, 0, 0);
+            }
+            100% {
+                transform: translate3d(85px, 0, 0);
+            }
+        } 
+    </style>
+</head>
+
+<div class="container">
+    <div class="content">
+    </div>
+
+    <svg
+        viewBox="0 24 150 28"
+        preserveAspectRatio="none"
+        shape-rendering="auto"
+    >
+        <defs>
+            <path
+                id="gentle-wave"
+                d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
+            />
+        </defs>
+        <g class="parallax">
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="#CE211C" />
+        </g>
+    </svg>
+</div>
