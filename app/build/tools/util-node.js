@@ -22,13 +22,18 @@
             r: 'release',
             d: 'debug',
             c: 'chatonly',
-            s: 'subata'
+            g: 'german', 
+            f: 'french', 
+            i: 'italiana'
         }
         let obj = {
             r: '<剧情>',
             d: '<全汉化>',
             c: '<轻聊>',
-            s: '<启动器>'
+            s: '<启动器>',
+            g: '<german>', 
+            f: '<french>', 
+            i: '<italiana>'
         }
         // 初始化host
         function initDns(callback) {
@@ -214,7 +219,7 @@
                             console.log(`\n检测到最新${obj[type]}版 V ${url.split('/')[url.split('/').length - 2]}，正在更新`)
                             console.log(`\n此次更新的内容如下:\n`)
                             console.log(mark)
-                            getMark(mark)
+                            getMark(mark, version)
                             getFile(url, out, () => {
                                 fs.writeFileSync(window.gameDataPath + `version_zh_cn_${[type]}`, version)
                                 changeType(type, () => {
@@ -298,7 +303,6 @@
                     currentTotal += data.byteLength
                     onData(total, currentTotal)
                 })
-
             }
         }
 
@@ -662,6 +666,7 @@
         function getIpLocaltion(ip) {
             return fetch(`https://ip.useragentinfo.com/json?ip=${ip}`).then(res => res.json())
         }
+        
         window.tools = {
             initDns,
             connect,
