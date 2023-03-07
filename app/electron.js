@@ -53,11 +53,11 @@ function createWindow () {
   remote.enable(mainWindow.webContents)
   
   // 无路由加载可以使用
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, `./build/index.html`),
-    protocol: 'file:',
-    slashes: true
-  }))
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.join(__dirname, `./build/index.html`),
+  //   protocol: 'file:',
+  //   slashes: true
+  // }))
 
   // hash路由情况下使用下方加载
   // mainWindow.loadFile(`${__dirname}/./build/index.html`, {
@@ -70,7 +70,7 @@ function createWindow () {
   // })
 
   // 加载应用 --开发阶段  需要运行 npm run start
-  // mainWindow.loadURL('http://localhost:5000/#/');
+  mainWindow.loadURL('http://localhost:5000/#/');
   // mainWindow.webContents.openDevTools()
   // 解决应用启动白屏问题
   mainWindow.once('ready-to-show', () => {

@@ -8,7 +8,7 @@
         const cmdShell = require('node-cmd');
         const child_process = require('child_process'); //引入模块
         const { shell } = require('electron')
-        const { dialog, app } = require('@electron/remote')
+        const { dialog, app, desktopCapturer } = require('@electron/remote')
         console.log('version---->', app.getVersion())
         let binaryEncoding = 'binary' // 输出编码格式
         let encoding = 'cp936'; // 解码格式
@@ -666,7 +666,17 @@
         function getIpLocaltion(ip) {
             return fetch(`https://ip.useragentinfo.com/json?ip=${ip}`).then(res => res.json())
         }
-        
+        // 截图
+        function desktopPicture(){
+           return desktopCapturer.getSources(
+                { 
+                    types: ['window', 'screen'],
+                    thumbnailSize: {
+                        width: 200, height:200
+                    }
+                }
+            )
+        }
         window.tools = {
             initDns,
             connect,
@@ -692,7 +702,8 @@
             getIpAddress,
             getPublicIP,
             getIpLocaltion,
-            getGameInstallPath
+            getGameInstallPath,
+            desktopPicture
         }
     } catch (error) {
         console.log('浏览器环境报错', error)
