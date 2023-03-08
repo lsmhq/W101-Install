@@ -408,23 +408,23 @@ function Setting(props){
                             > {'更新游戏文件 ( 测试谨慎操作 )'}  </Button>
                         </Col>
                     </Row>
-                    <Row style={{marginTop:'10px'}} align="center">
+                    {/* <Row style={{marginTop:'10px'}} align="center">
                         <Col span={30}>
                             <Button
                                 type='primary'
                                 status='danger'
                                 loading={loadFile}
                                 onClick={()=>{  
-                                    window.tools.desktopPicture().then(source=>{
-                                        console.log(source[0].thumbnail.getSize())
+                                    // window.tools.desktopPicture().then(source=>{
+                                    //     console.log(source[0].thumbnail.getSize())
                                         
-                                    }).catch(err=>{
-                                        console.log(err)
-                                    })
+                                    // }).catch(err=>{
+                                    //     console.log(err)
+                                    // })
                                 }}
                             > 屏幕录制 </Button>
                         </Col>
-                    </Row>
+                    </Row> */}
             </div>
             <div className='setting-item' id='kf'>
                 <div className='kf-container-col'>
